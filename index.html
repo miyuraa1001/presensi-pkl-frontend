@@ -3,20 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Presensi PKL - Astra Daihatsu Ahmad Yani</title>
+  <title>Presensi PKL - Workshop Astra Daihatsu Ahmad Yani</title>
   
-  <!-- PWA meta tags -->
-  <meta name="theme-color" content="#0d1b2a">
+  <!-- PWA & Homescreen Icons (APK / Web Install) -->
+  <meta name="theme-color" content="#0d1a3a">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="apple-touch-icon" href="https://img.icons8.com/color/192/car--v1.png">
+  <meta name="apple-mobile-web-app-title" content="Presensi PKL">
+  <link rel="icon" type="image/png" sizes="192x192" href="Image/Logo-PWA.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="Image/Logo-PWA.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="Image/Logo-PWA.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="Image/Logo-PWA.png">
+  <link rel="apple-touch-icon" sizes="512x512" href="Image/Logo-PWA.png">
+  <link rel="manifest" href="manifest.json">
   
   <!-- Tailwind CSS & Lucide Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700;1,800&display=swap');
     
     * {
       font-family: 'Plus Jakarta Sans', sans-serif;
@@ -25,20 +31,33 @@
     
     /* Radar animation effect */
     @keyframes pulse-ring {
-      0% { transform: scale(0.7); opacity: 0.8; }
-      100% { transform: scale(1.8); opacity: 0; }
+      0% { transform: scale(0.65); opacity: 0.85; }
+      100% { transform: scale(1.75); opacity: 0; }
     }
     .radar-pulse::before {
       content: '';
       position: absolute;
       top: 50%; left: 50%;
-      width: 100px; height: 100px;
-      margin-top: -50px; margin-left: -50px;
+      width: 120px; height: 120px;
+      margin-top: -60px; margin-left: -60px;
       border-radius: 50%;
-      background: rgba(14, 165, 233, 0.35);
-      animation: pulse-ring 2.4s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+      background: rgba(56, 189, 248, 0.4);
+      animation: pulse-ring 2.2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
     }
-    
+
+    /* Viewfinder Corner Brackets */
+    .corner-bracket {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border-color: rgba(255, 255, 255, 0.95);
+      pointer-events: none;
+    }
+    .bracket-tl { top: 16px; left: 16px; border-top-width: 3.5px; border-left-width: 3.5px; border-top-left-radius: 6px; }
+    .bracket-tr { top: 16px; right: 16px; border-top-width: 3.5px; border-right-width: 3.5px; border-top-right-radius: 6px; }
+    .bracket-bl { bottom: 78px; left: 16px; border-bottom-width: 3.5px; border-left-width: 3.5px; border-bottom-left-radius: 6px; }
+    .bracket-br { bottom: 78px; right: 16px; border-bottom-width: 3.5px; border-right-width: 3.5px; border-bottom-right-radius: 6px; }
+
     /* Custom Scrollbar */
     ::-webkit-scrollbar {
       width: 6px;
@@ -55,55 +74,66 @@
 </head>
 <body class="bg-[#F4F6FA] text-slate-800 antialiased min-h-screen flex flex-col md:flex-row overflow-x-hidden">
 
+  <!-- Mobile Overlay Backdrop -->
+  <div id="mobile-sidebar-backdrop" onclick="toggleSidebar(false)" class="hidden fixed inset-0 bg-black/60 z-30 md:hidden backdrop-blur-xs transition-opacity"></div>
+
   <!-- ==================== SIDEBAR ==================== -->
-  <aside id="sidebar" class="w-full md:w-64 bg-[#0d1b2a] text-white flex-shrink-0 flex flex-col justify-between p-4 z-40 transition-all shadow-xl">
+  <aside id="sidebar" class="fixed md:static inset-y-0 left-0 w-64 bg-[#0d1a3a] text-white flex-shrink-0 flex flex-col justify-between p-4 z-40 transition-transform -translate-x-full md:translate-x-0 shadow-2xl md:shadow-xl">
     <div>
       <!-- Brand & Header -->
-      <div class="flex items-center gap-3 px-2 py-4 border-b border-slate-700/60">
-        <div class="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center p-2 shadow-lg shadow-red-600/30">
-          <svg viewBox="0 0 100 70" class="w-full h-full fill-white">
-            <path d="M50 0 C22.4 0 0 15.7 0 35 C0 54.3 22.4 70 50 70 C77.6 70 100 54.3 100 35 C100 15.7 77.6 0 50 0 Z M50 56 C30 56 14 46.5 14 35 C14 23.5 30 14 50 14 C70 14 86 23.5 86 35 C86 46.5 70 56 50 56 Z M33 22 C24 22 20 28 20 35 C20 42 24 48 33 48 C43 48 64 35 64 35 C64 35 43 22 33 22 Z"/>
-          </svg>
+      <div class="px-2 pt-2 pb-4 border-b border-slate-700/60">
+        <!-- Official Daihatsu Logo from Image/Logo-Daihatsu.png -->
+        <div class="flex flex-col items-center justify-center">
+          <img src="Image/Logo-Daihatsu.png" alt="Daihatsu" class="w-36 h-auto object-contain">
         </div>
-        <div>
-          <h1 class="font-extrabold text-sm tracking-wider uppercase text-white flex items-center gap-1.5">
-            Presensi PKL
-          </h1>
-          <p class="text-[11px] text-slate-400 font-medium leading-tight">Workshop Astra Daihatsu<br>Ahmad Yani</p>
+
+        <!-- Presensi PKL Card in Sidebar -->
+        <div class="mt-3 bg-[#142338] border border-slate-700/50 rounded-xl p-3 flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center flex-shrink-0">
+            <i data-lucide="calendar" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h1 class="font-bold text-xs tracking-wide text-white">Presensi PKL</h1>
+            <p class="text-[10px] text-slate-400 font-medium leading-tight">Workshop Astra Daihatsu Ahmad Yani</p>
+          </div>
         </div>
       </div>
 
       <!-- Nav Menu Items -->
-      <nav class="mt-6 space-y-1.5" id="nav-container">
-        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold transition-all bg-blue-600 text-white shadow-md shadow-blue-600/30">
-          <i data-lucide="home" class="w-5 h-5"></i>
+      <nav class="mt-5 space-y-1.5" id="nav-container">
+        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-bold transition-all bg-blue-600 text-white shadow-md shadow-blue-600/30">
+          <i data-lucide="home" class="w-4 h-4"></i>
           <span>Dashboard</span>
         </button>
-        <button onclick="switchTab('presensi')" id="nav-presensi" class="nav-item w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-800/80 hover:text-white transition-all">
-          <i data-lucide="camera" class="w-5 h-5"></i>
+        <button onclick="switchTab('presensi')" id="nav-presensi" class="nav-item w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800/80 hover:text-white transition-all">
+          <i data-lucide="camera" class="w-4 h-4"></i>
           <span>Presensi</span>
         </button>
-        <button onclick="switchTab('izin')" id="nav-izin" class="nav-item w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-800/80 hover:text-white transition-all">
-          <i data-lucide="file-plus" class="w-5 h-5"></i>
+        <button onclick="switchTab('izin')" id="nav-izin" class="nav-item w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800/80 hover:text-white transition-all">
+          <i data-lucide="file-plus-2" class="w-4 h-4"></i>
           <span>Pengajuan Izin/Sakit</span>
         </button>
-        <button onclick="switchTab('rekap')" id="nav-rekap" class="nav-item w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-800/80 hover:text-white transition-all">
-          <i data-lucide="calendar" class="w-5 h-5"></i>
+        <button onclick="switchTab('rekap')" id="nav-rekap" class="nav-item w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800/80 hover:text-white transition-all">
+          <i data-lucide="calendar-check" class="w-4 h-4"></i>
           <span>Rekap Bulanan</span>
         </button>
-        <button onclick="switchTab('pengaturan')" id="nav-pengaturan" class="nav-item w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-medium text-slate-300 hover:bg-slate-800/80 hover:text-white transition-all">
-          <i data-lucide="settings" class="w-5 h-5"></i>
+        <button onclick="switchTab('pengaturan')" id="nav-pengaturan" class="nav-item w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800/80 hover:text-white transition-all">
+          <i data-lucide="settings" class="w-4 h-4"></i>
           <span>Pengaturan</span>
         </button>
       </nav>
     </div>
 
     <!-- Bottom Footer Meta -->
-    <div class="pt-4 border-t border-slate-800 text-[11px] text-slate-400 flex items-center gap-2">
-      <i data-lucide="info" class="w-4 h-4 text-slate-400 flex-shrink-0"></i>
+    <div class="pt-4 border-t border-slate-800 text-[11px] text-slate-400 flex items-center gap-2.5">
+      <div class="w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 flex-shrink-0">
+        <i data-lucide="info" class="w-3.5 h-3.5"></i>
+      </div>
       <div>
-        <p class="font-semibold text-slate-300">Versi 1.0.0 (PWA)</p>
-        <p class="text-slate-500">Google Apps Script API</p>
+        <p class="font-semibold text-slate-300 text-[11px]">Versi 1.0.0</p>
+        <p class="text-slate-500 text-[10px] flex items-center gap-1">
+          <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Powered by Google Apps Script
+        </p>
       </div>
     </div>
   </aside>
@@ -112,14 +142,20 @@
   <main class="flex-1 flex flex-col min-h-screen overflow-y-auto">
 
     <!-- TOPBAR / HEADER (Mobile + Desktop) -->
-    <header class="bg-white border-b border-slate-200 px-4 md:px-8 py-3.5 flex items-center justify-between sticky top-0 z-30 shadow-xs">
-      <div>
-        <h2 id="page-title" class="text-xl font-bold text-slate-900 leading-tight">Dashboard</h2>
-        <p id="page-subtitle" class="text-xs text-slate-500">Selamat datang di sistem presensi PKL Daihatsu!</p>
+    <header class="bg-white border-b border-slate-200/80 px-4 md:px-8 py-3.5 flex items-center justify-between sticky top-0 z-20 shadow-xs">
+      <div class="flex items-center gap-3">
+        <!-- Hamburger Menu Button for Mobile -->
+        <button onclick="toggleSidebar(true)" class="p-2 -ml-2 rounded-lg text-slate-600 hover:bg-slate-100 md:hidden transition">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+        <div>
+          <h2 id="page-title" class="text-xl md:text-2xl font-bold text-slate-900 leading-tight">Dashboard</h2>
+          <p id="page-subtitle" class="text-xs text-slate-500 mt-0.5">Selamat datang di sistem presensi PKL Daihatsu!</p>
+        </div>
       </div>
       
       <!-- Top Actions & Profile -->
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-3.5">
         <!-- Notification Button -->
         <button class="relative p-2 rounded-full hover:bg-slate-100 text-slate-600 transition-colors">
           <i data-lucide="bell" class="w-5 h-5"></i>
@@ -127,13 +163,13 @@
         </button>
 
         <!-- User Profile Pill -->
-        <div class="flex items-center gap-3 pl-2 border-l border-slate-200">
-          <div class="w-9 h-9 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-bold text-sm overflow-hidden border border-slate-300">
-            <i data-lucide="user" class="w-5 h-5"></i>
+        <div class="flex items-center gap-2.5 pl-2 border-l border-slate-200">
+          <div class="w-9 h-9 rounded-full bg-slate-800 flex items-center justify-center text-white font-bold text-xs overflow-hidden shadow-xs">
+            <i data-lucide="user" class="w-4 h-4 text-slate-200"></i>
           </div>
           <div class="hidden sm:block text-left">
             <p class="text-xs font-bold text-slate-800" id="user-display-name">Andi Pratama</p>
-            <p class="text-[11px] text-slate-500" id="user-display-nim">NIM. 12345678</p>
+            <p class="text-[11px] text-slate-400 font-medium" id="user-display-nim">NIM: 12345678</p>
           </div>
           <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 hidden sm:block"></i>
         </div>
@@ -146,84 +182,83 @@
       <!-- ==================== TAB 1: DASHBOARD ==================== -->
       <section id="view-dashboard" class="space-y-6">
         
-        <!-- Hero Banner Daihatsu -->
-        <div class="relative rounded-2xl overflow-hidden shadow-lg border border-slate-200 min-h-[170px] md:min-h-[200px] flex items-center bg-slate-900">
-          <img src="https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=1400&q=80" 
-               alt="Astra Daihatsu Workshop" 
-               class="absolute inset-0 w-full h-full object-cover object-center opacity-40 mix-blend-luminosity">
-          <div class="absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 to-transparent"></div>
-          
-          <div class="relative z-10 p-6 md:p-8 max-w-xl">
-            <span class="inline-block px-3 py-1 bg-red-600 text-white text-[11px] font-bold tracking-widest uppercase rounded-full mb-2">
-              Astra Daihatsu Motor
-            </span>
-            <h3 class="text-2xl md:text-3xl font-extrabold italic text-white tracking-tight leading-snug">
-              Disiplin Hari Ini,<br>
-              <span class="text-red-500 underline decoration-red-500 underline-offset-4">Untuk Masa Depan Nanti</span>
-            </h3>
-            <p class="text-xs text-slate-300 mt-2 font-medium">Budayakan 5S & keselamatan kerja di setiap stall servis.</p>
-          </div>
+        <!-- Hero Banner Daihatsu using Image/Picture-Hero.png -->
+        <div class="rounded-2xl overflow-hidden shadow-sm border border-slate-200/80 bg-slate-900">
+          <img src="Image/Picture-Hero.png" 
+               alt="Disiplin Hari Ini, Untuk Masa Depan Nanti - Astra Daihatsu" 
+               class="w-full h-auto object-cover block">
         </div>
 
-        <!-- 4 Metric Cards -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-3.5 md:gap-5">
+        <!-- 4 Metric Cards (Matching Reference Format) -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
           <!-- Total Hadir -->
-          <div class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-md transition">
-            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-3">
-              <i data-lucide="calendar-check" class="w-5 h-5"></i>
+          <div class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-sm transition">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0">
+                <i data-lucide="calendar" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <p class="text-xs font-bold text-slate-600 leading-tight">Total Hadir</p>
+                <p class="text-[10px] text-slate-400 font-medium">(Bulan Ini)</p>
+              </div>
             </div>
-            <p class="text-xs font-semibold text-slate-500">Total Hadir <span class="text-[10px] text-slate-400">(Bulan Ini)</span></p>
-            <div class="flex items-baseline gap-1 mt-1">
-              <span class="text-2xl font-black text-slate-900" id="stat-hadir">18</span>
+            <div class="flex items-baseline gap-1 mt-3">
+              <span class="text-2xl md:text-3xl font-black text-slate-900" id="stat-hadir">18</span>
               <span class="text-xs font-semibold text-slate-400">/ 22 Hari</span>
             </div>
-            <div class="flex items-center gap-1 mt-2 text-[11px] font-semibold text-emerald-600">
-              <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> 82% Kehadiran
+            <div class="flex items-center gap-1 mt-1.5 text-xs font-bold text-emerald-600">
+              <span>↑</span> 82%
             </div>
           </div>
 
           <!-- Total Sakit -->
-          <div class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-md transition">
-            <div class="w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center mb-3">
-              <i data-lucide="cross" class="w-5 h-5"></i>
+          <div class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-sm transition">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-red-50 text-red-500 flex items-center justify-center flex-shrink-0">
+                <i data-lucide="cross" class="w-5 h-5"></i>
+              </div>
+              <p class="text-xs font-bold text-slate-600">Total Sakit</p>
             </div>
-            <p class="text-xs font-semibold text-slate-500">Total Sakit</p>
-            <div class="flex items-baseline gap-1 mt-1">
-              <span class="text-2xl font-black text-slate-900" id="stat-sakit">1</span>
+            <div class="flex items-baseline gap-1 mt-3">
+              <span class="text-2xl md:text-3xl font-black text-slate-900" id="stat-sakit">1</span>
               <span class="text-xs font-semibold text-slate-400">Hari</span>
             </div>
-            <div class="flex items-center gap-1 mt-2 text-[11px] font-semibold text-emerald-600">
-              <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> 5%
+            <div class="flex items-center gap-1 mt-1.5 text-xs font-bold text-emerald-600">
+              <span>↑</span> 5%
             </div>
           </div>
 
           <!-- Total Izin -->
-          <div class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-md transition">
-            <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center mb-3">
-              <i data-lucide="handshake" class="w-5 h-5"></i>
+          <div class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-sm transition">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-500 flex items-center justify-center flex-shrink-0">
+                <i data-lucide="handshake" class="w-5 h-5"></i>
+              </div>
+              <p class="text-xs font-bold text-slate-600">Total Izin</p>
             </div>
-            <p class="text-xs font-semibold text-slate-500">Total Izin</p>
-            <div class="flex items-baseline gap-1 mt-1">
-              <span class="text-2xl font-black text-slate-900" id="stat-izin">1</span>
+            <div class="flex items-baseline gap-1 mt-3">
+              <span class="text-2xl md:text-3xl font-black text-slate-900" id="stat-izin">1</span>
               <span class="text-xs font-semibold text-slate-400">Hari</span>
             </div>
-            <div class="flex items-center gap-1 mt-2 text-[11px] font-semibold text-emerald-600">
-              <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> 5%
+            <div class="flex items-center gap-1 mt-1.5 text-xs font-bold text-emerald-600">
+              <span>↑</span> 5%
             </div>
           </div>
 
           <!-- Total Jam Kerja -->
-          <div class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-md transition">
-            <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-3">
-              <i data-lucide="clock" class="w-5 h-5"></i>
+          <div class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-sm transition">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-500 flex items-center justify-center flex-shrink-0">
+                <i data-lucide="clock" class="w-5 h-5"></i>
+              </div>
+              <p class="text-xs font-bold text-slate-600">Total Jam Kerja</p>
             </div>
-            <p class="text-xs font-semibold text-slate-500">Total Jam Kerja</p>
-            <div class="flex items-baseline gap-1 mt-1">
-              <span class="text-2xl font-black text-slate-900" id="stat-jam">144</span>
+            <div class="flex items-baseline gap-1 mt-3">
+              <span class="text-2xl md:text-3xl font-black text-slate-900" id="stat-jam">144</span>
               <span class="text-xs font-semibold text-slate-400">Jam</span>
             </div>
-            <div class="flex items-center gap-1 mt-2 text-[11px] font-semibold text-emerald-600">
-              <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> Target 160 Jam
+            <div class="flex items-center gap-1 mt-1.5 text-xs font-bold text-emerald-600">
+              <span>↑</span> 82%
             </div>
           </div>
         </div>
@@ -231,55 +266,64 @@
         <!-- 2 Column: Status Lokasi & Presensi Hari Ini -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
           
-          <!-- Box Status Lokasi (Geofencing Radar) -->
+          <!-- Box Status Lokasi (Geofencing Radar Map) -->
           <div class="bg-white p-5 md:p-6 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col justify-between">
             <div>
               <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center gap-2">
-                  <i data-lucide="map-pin" class="w-5 h-5 text-red-600"></i>
-                  <h4 class="font-bold text-slate-900">Status Lokasi</h4>
+                  <i data-lucide="map-pin" class="w-5 h-5 text-slate-800"></i>
+                  <h4 class="font-bold text-slate-900 text-sm">Status Lokasi</h4>
                 </div>
                 <span id="radius-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700 flex items-center gap-1.5">
-                  <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                   Dalam Area Bengkel
+                  <i data-lucide="check" class="w-3.5 h-3.5"></i>
                 </span>
               </div>
 
-              <!-- Map Simulation Widget -->
-              <div class="relative w-full h-44 rounded-xl overflow-hidden bg-slate-900 border border-slate-200 flex items-center justify-center">
-                <!-- Aerial Satellite Background Simulator -->
-                <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=800&q=80" 
-                     alt="Satellite Map" 
-                     class="absolute inset-0 w-full h-full object-cover opacity-60">
-                <div class="absolute inset-0 bg-blue-950/40"></div>
+              <!-- Map Simulation Widget & Details Side-by-Side -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+                <!-- Aerial Satellite Map Simulator -->
+                <div class="relative w-full h-44 rounded-xl overflow-hidden bg-slate-900 border border-slate-200 flex items-center justify-center">
+                  <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=800&q=80" 
+                       alt="Satellite Map" 
+                       class="absolute inset-0 w-full h-full object-cover opacity-60">
+                  <div class="absolute inset-0 bg-blue-950/40"></div>
 
-                <!-- Radar Circle Animation -->
-                <div class="relative z-10 w-28 h-28 rounded-full border-2 border-cyan-400/80 bg-cyan-500/20 flex items-center justify-center radar-pulse">
-                  <div class="w-5 h-5 rounded-full bg-blue-600 border-2 border-white shadow-lg flex items-center justify-center">
-                    <span class="w-2 h-2 rounded-full bg-white"></span>
+                  <!-- Radar Circle Animation -->
+                  <div class="relative z-10 w-32 h-32 rounded-full border-2 border-cyan-400/80 bg-cyan-500/20 flex items-center justify-center radar-pulse">
+                    <div class="w-4 h-4 rounded-full bg-blue-600 border-2 border-white shadow-lg flex items-center justify-center">
+                      <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
+                    </div>
+                  </div>
+
+                  <!-- Floating Distance Tag -->
+                  <div class="absolute bottom-2.5 right-2.5 bg-white/95 backdrop-blur-xs px-2.5 py-1 rounded-lg shadow-sm border border-slate-200 flex flex-col items-end">
+                    <span class="text-[9px] text-slate-500 font-bold uppercase">Jarak Anda</span>
+                    <span id="live-distance-txt" class="text-xs font-black text-blue-600">12 m</span>
                   </div>
                 </div>
 
-                <!-- Floating Distance Tag -->
-                <div class="absolute bottom-3 right-3 bg-white/95 backdrop-blur-xs px-3 py-1.5 rounded-lg shadow-md border border-slate-200 flex flex-col items-end">
-                  <span class="text-[10px] text-slate-500 font-semibold uppercase">Jarak Anda</span>
-                  <span id="live-distance-txt" class="text-sm font-extrabold text-blue-600">12 m</span>
+                <!-- Text Location Details -->
+                <div class="space-y-3">
+                  <div class="flex items-start gap-2.5">
+                    <div class="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <i data-lucide="check" class="w-3 h-3"></i>
+                    </div>
+                    <p class="text-xs font-bold text-slate-800 leading-snug">
+                      Anda berada di dalam radius workshop.
+                    </p>
+                  </div>
+                  <div class="pl-7 space-y-1 text-xs text-slate-500">
+                    <p><span class="font-medium text-slate-400">Pusat Koordinat:</span><br>-5.3932, 105.2619</p>
+                    <p><span class="font-medium text-slate-400">Radius:</span> 70 m</p>
+                  </div>
+                  <div class="pl-7 pt-1">
+                    <button onclick="checkGPS(true)" class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-blue-600 hover:text-blue-700">
+                      <i data-lucide="refresh-cw" class="w-3 h-3"></i> Perbarui Lokasi
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-
-            <!-- Details -->
-            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-              <div>
-                <p class="font-semibold text-slate-800 flex items-center gap-1.5">
-                  <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
-                  Anda berada di dalam radius workshop.
-                </p>
-                <p class="text-slate-500 text-[11px] mt-0.5">Pusat: -5.3932, 105.2619 | Toleransi: 70 m</p>
-              </div>
-              <button onclick="checkGPS(true)" class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition" title="Refresh GPS">
-                <i data-lucide="refresh-cw" class="w-4 h-4"></i>
-              </button>
             </div>
           </div>
 
@@ -288,150 +332,139 @@
             <div>
               <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center gap-2">
-                  <i data-lucide="clock-3" class="w-5 h-5 text-blue-600"></i>
-                  <h4 class="font-bold text-slate-900">Presensi Hari Ini</h4>
+                  <i data-lucide="clock" class="w-5 h-5 text-slate-800"></i>
+                  <h4 class="font-bold text-slate-900 text-sm">Presensi Hari ini</h4>
                 </div>
-                <span class="text-xs font-semibold text-slate-400" id="today-date-badge">Rabu, 11 Nov 2026</span>
               </div>
 
-              <div class="space-y-3.5">
+              <div class="space-y-3">
                 <!-- Clock IN Box -->
-                <div class="p-3.5 rounded-xl bg-emerald-50/70 border border-emerald-200/80 flex items-center justify-between">
+                <div onclick="openPresensiDirect('IN')" class="cursor-pointer p-3.5 rounded-xl bg-[#ecfdf3] border border-emerald-100 flex items-center justify-between transition hover:border-emerald-300">
                   <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center font-bold">
-                      <i data-lucide="check" class="w-5 h-5"></i>
+                    <div class="w-9 h-9 rounded-full bg-emerald-500 text-white flex items-center justify-center flex-shrink-0">
+                      <i data-lucide="check" class="w-4 h-4"></i>
                     </div>
                     <div>
-                      <p class="text-xs font-bold text-emerald-800">Masuk (Clock IN)</p>
-                      <p class="text-base font-extrabold text-slate-900" id="today-in-time">08:15:32 WIB</p>
+                      <p class="text-xs font-bold text-slate-800">Masuk</p>
+                      <p class="text-sm font-extrabold text-slate-900" id="today-in-time">08:15:32 WIB</p>
                     </div>
                   </div>
-                  <!-- Thumb Foto IN -->
-                  <div class="w-14 h-11 rounded-lg overflow-hidden border border-emerald-300 bg-slate-100 flex-shrink-0">
-                    <img id="today-in-thumb" src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=200&q=80" class="w-full h-full object-cover">
+                  <!-- Thumb Foto IN (Using Dealership crop from Picture-Hero) -->
+                  <div class="w-16 h-12 rounded-lg overflow-hidden border border-emerald-200 bg-slate-100 flex-shrink-0">
+                    <img id="today-in-thumb" src="Image/Picture-Hero.png" class="w-full h-full object-cover object-right">
                   </div>
                 </div>
 
                 <!-- Clock OUT Box -->
-                <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+                <div onclick="openPresensiDirect('OUT')" class="cursor-pointer p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between transition hover:border-slate-300">
                   <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-slate-200 text-slate-400 flex items-center justify-center">
-                      <i data-lucide="log-out" class="w-5 h-5"></i>
+                    <div class="w-9 h-9 rounded-full border-2 border-slate-300 flex items-center justify-center flex-shrink-0">
+                      <span class="w-2 h-2 rounded-full bg-transparent"></span>
                     </div>
                     <div>
-                      <p class="text-xs font-bold text-slate-600">Selesai (Clock OUT)</p>
-                      <p class="text-sm font-semibold text-slate-400" id="today-out-time">Belum melakukan presensi pulang</p>
+                      <p class="text-xs font-bold text-slate-700">Selesai</p>
+                      <p class="text-xs font-semibold text-slate-400" id="today-out-time">-</p>
                     </div>
                   </div>
+                  <span class="text-xs text-slate-400 font-medium">Belum melakukan presensi pulang</span>
                 </div>
               </div>
             </div>
 
-            <!-- CTA Action Buttons -->
-            <div class="mt-5 pt-3 border-t border-slate-100 flex gap-2.5">
-              <button onclick="openPresensiDirect('IN')" class="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-md shadow-red-600/20">
-                <i data-lucide="camera" class="w-4 h-4"></i>
-                Absen Masuk
-              </button>
-              <button onclick="openPresensiDirect('OUT')" class="flex-1 py-3 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-2">
-                <i data-lucide="log-out" class="w-4 h-4"></i>
-                Absen Selesai
+            <!-- Sleek Action Shortcut -->
+            <div class="mt-4 pt-3 border-t border-slate-100 flex justify-end">
+              <button onclick="openPresensiDirect('IN')" class="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1.5">
+                <i data-lucide="camera" class="w-3.5 h-3.5"></i> Buka Kamera Presensi
               </button>
             </div>
           </div>
         </div>
 
-        <!-- Info Card Footer -->
-        <div class="p-4 rounded-xl bg-amber-50 border border-amber-200/80 flex items-center justify-between text-xs text-amber-900">
+        <!-- Info Card Footer Banner -->
+        <div class="p-4 rounded-xl bg-[#eef5fc] border border-blue-100/90 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-700">
           <div class="flex items-center gap-3">
             <span class="text-lg">💡</span>
             <div>
-              <p class="font-bold">Informasi Penting</p>
-              <p class="text-amber-800/90 text-[11px]">Pastikan melakukan presensi sesuai jam kerja dan berada di area workshop. Gunakan wearpack lengkap!</p>
+              <p class="font-bold text-slate-800">Informasi Penting</p>
+              <p class="text-slate-600 text-[11px]">Pastikan melakukan presensi sesuai jam kerja dan berada di area workshop.</p>
             </div>
           </div>
-          <div class="hidden sm:flex items-center gap-1.5 font-bold text-blue-700 bg-white px-3 py-1.5 rounded-lg border border-amber-200">
-            <i data-lucide="calendar" class="w-4 h-4"></i>
-            <span id="banner-date">Rabu, 11 November 2026</span>
+          <div class="flex items-center gap-2 font-bold text-blue-700 bg-white px-3.5 py-1.5 rounded-xl border border-blue-200 shadow-xs self-start sm:self-center">
+            <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+            <span id="banner-date">Selasa, 28 Oktober 2025</span>
           </div>
         </div>
       </section>
 
       <!-- ==================== TAB 2: PRESENSI KAMERA ==================== -->
-      <section id="view-presensi" class="hidden space-y-5 max-w-2xl mx-auto">
+      <section id="view-presensi" class="hidden space-y-5 max-w-xl mx-auto">
         <!-- Header View -->
-        <div class="flex items-center justify-between pb-3 border-b border-slate-200">
-          <div class="flex items-center gap-2.5">
-            <button onclick="switchTab('dashboard')" class="p-2 rounded-lg hover:bg-slate-200 text-slate-700 transition">
-              <i data-lucide="arrow-left" class="w-5 h-5"></i>
-            </button>
-            <div>
-              <h3 class="font-extrabold text-slate-900 text-lg">Ambil Foto Presensi</h3>
-              <p class="text-xs text-slate-500">Kamera live geotagging otomatis</p>
-            </div>
+        <div class="flex items-center gap-3 pb-3 border-b border-slate-200">
+          <button onclick="switchTab('dashboard')" class="p-2 rounded-lg hover:bg-slate-200 text-slate-700 transition">
+            <i data-lucide="arrow-left" class="w-5 h-5"></i>
+          </button>
+          <div>
+            <h3 class="font-extrabold text-slate-900 text-lg">Presensi</h3>
+            <p class="text-xs text-slate-500">Ambil foto presensi sesuai lokasi workshop</p>
           </div>
-          <!-- Type Badge -->
-          <span id="presensi-type-badge" class="px-3 py-1 rounded-full text-xs font-extrabold bg-blue-100 text-blue-700 border border-blue-200">
-            ABSEN MASUK (IN)
-          </span>
         </div>
 
-        <!-- Radius Status Strip -->
-        <div id="camera-radius-status" class="p-3 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-between text-xs font-bold text-emerald-800">
+        <!-- Radius Status Strip (Red / Warning when active) -->
+        <div id="camera-radius-status" class="p-3 rounded-xl bg-red-50/90 border border-red-200 text-red-600 flex items-center justify-between text-xs font-bold">
           <div class="flex items-center gap-2">
-            <i data-lucide="map-pin" class="w-4 h-4 text-emerald-600"></i>
+            <i data-lucide="map-pin" class="w-4 h-4 text-red-600"></i>
             <span>Anda berada dalam radius (<span id="cam-distance-text">12 m</span>)</span>
           </div>
-          <i data-lucide="check" class="w-4 h-4 text-emerald-600"></i>
+          <i data-lucide="check" class="w-4 h-4 text-red-600"></i>
         </div>
 
         <!-- CAMERA VIEWFINDER & PREVIEW CONTAINER -->
-        <div class="relative w-full aspect-[4/3] sm:aspect-[16/10] bg-black rounded-2xl overflow-hidden shadow-xl border-2 border-slate-300 flex items-center justify-center">
+        <div class="relative w-full aspect-[4/3] bg-black rounded-2xl overflow-hidden shadow-lg border border-slate-200 flex items-center justify-center">
           
           <!-- Live Video Stream -->
           <video id="webcam" autoplay playsinline class="w-full h-full object-cover"></video>
           
+          <!-- Fallback Dealership Image when webcam is idle/blocked -->
+          <img id="webcam-fallback" src="Image/Picture-Hero.png" class="hidden absolute inset-0 w-full h-full object-cover object-right">
+
           <!-- Frozen Canvas Preview (Hidden until captured) -->
           <canvas id="photo-canvas" class="hidden w-full h-full object-cover"></canvas>
 
-          <!-- Framing Guideline Overlay -->
-          <div id="camera-guide" class="absolute inset-6 border-2 border-white/40 border-dashed rounded-xl pointer-events-none flex flex-col justify-between p-3">
-            <div class="flex justify-between text-[11px] text-white/80 font-mono">
-              <span>ASTRA DAIHATSU AHMAD YANI</span>
-              <span>LIVE GPS FEED</span>
-            </div>
-            <div class="text-center text-xs text-white/70 font-medium">
-              Arahkan wajah & seragam wearpack ke dalam frame
-            </div>
+          <!-- Framing Viewfinder Corner Brackets -->
+          <div id="camera-guide" class="absolute inset-0 pointer-events-none">
+            <div class="corner-bracket bracket-tl"></div>
+            <div class="corner-bracket bracket-tr"></div>
+            <div class="corner-bracket bracket-bl"></div>
+            <div class="corner-bracket bracket-br"></div>
           </div>
 
-          <!-- Live Watermark Banner Simulation Overlay -->
+          <!-- Live Watermark Banner Overlay (Reference Exact Match) -->
           <div id="watermark-overlay" class="absolute bottom-0 inset-x-0 bg-black/75 backdrop-blur-xs text-white p-3 text-[11px] font-mono leading-tight border-t border-white/10">
-            <p class="font-bold text-cyan-400" id="wm-line1">[CLOCK IN] 12345678 - Andi Pratama</p>
-            <p class="text-slate-200" id="wm-line2">11-11-2026, 08:15:32 WIB</p>
-            <p class="text-slate-300" id="wm-line3">Workshop Astra Daihatsu Ahmad Yani (Jarak: 12 m)</p>
-            <p class="text-slate-400 text-[10px]" id="wm-line4">Lat: -5.3932, Long: 105.2619 | Akurasi: ±5 m</p>
+            <p class="font-bold text-white" id="wm-line1">[CLOCK IN] 12345678 - Andi Pratama</p>
+            <p class="text-slate-200" id="wm-line2">28-10-2025, 08:15:32 WIB</p>
+            <p class="text-slate-300" id="wm-line3">Workshop Daihatsu Ahmad Yani (Jarak: 12 m)</p>
+            <p class="text-slate-400 text-[10px]" id="wm-line4">Lat: -5.3932, Long: 105.2619 (Akurasi: ±5 m)</p>
           </div>
         </div>
 
         <!-- Action Buttons -->
         <div class="space-y-3">
-          <div id="btn-group-capture" class="flex gap-3">
-            <button onclick="captureSnapshot()" class="flex-1 py-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 transition">
-              <i data-lucide="camera" class="w-5 h-5"></i>
+          <div id="btn-group-capture" class="flex gap-2.5">
+            <button onclick="captureSnapshot()" class="flex-1 py-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-md shadow-blue-600/30 transition">
+              <i data-lucide="camera" class="w-4 h-4"></i>
               <span>Ambil Foto Presensi</span>
             </button>
-            <button onclick="toggleCameraFacing()" class="p-3.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl transition" title="Ganti Kamera Depan/Belakang">
+            <button onclick="toggleCameraFacing()" class="p-3.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl transition" title="Ganti Kamera">
               <i data-lucide="switch-camera" class="w-5 h-5"></i>
             </button>
           </div>
 
           <!-- Buttons when photo has been taken -->
           <div id="btn-group-confirm" class="hidden flex gap-3">
-            <button onclick="retakePhoto()" class="flex-1 py-3 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl font-bold text-sm transition">
+            <button onclick="retakePhoto()" class="flex-1 py-3 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl font-bold text-xs transition">
               Ulangi Foto
             </button>
-            <button onclick="submitAttendance()" id="btn-submit-absen" class="flex-2 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition">
+            <button onclick="submitAttendance()" id="btn-submit-absen" class="flex-2 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-emerald-600/30 transition">
               <i data-lucide="send" class="w-4 h-4"></i>
               <span>Kirim Presensi Sekarang</span>
             </button>
@@ -447,19 +480,19 @@
           </button>
           <div>
             <h3 class="font-extrabold text-slate-900 text-lg">Pengajuan Izin/Sakit</h3>
-            <p class="text-xs text-slate-500">Ajukan perizinan resmi dengan melampirkan berkas bukti</p>
+            <p class="text-xs text-slate-500">Ajukan izin atau sakit dengan melampirkan bukti</p>
           </div>
         </div>
 
         <form id="form-perizinan" onsubmit="submitPerizinan(event)" class="bg-white p-5 md:p-6 rounded-2xl border border-slate-200 shadow-xs space-y-5">
-          <!-- Tipe Pengajuan -->
+          <!-- Tipe Pengajuan (Tabs side by side) -->
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-2">Jenis Pengajuan</label>
             <div class="grid grid-cols-2 gap-3">
               <label class="cursor-pointer">
                 <input type="radio" name="jenis_izin" value="Sakit" checked class="peer sr-only" onchange="updateFormIzinType()">
                 <div class="p-3.5 rounded-xl border-2 border-slate-200 peer-checked:border-blue-600 peer-checked:bg-blue-50/50 flex items-center justify-center gap-2 font-bold text-xs text-slate-700 peer-checked:text-blue-700 transition">
-                  <i data-lucide="cross" class="w-4 h-4 text-red-500"></i>
+                  <i data-lucide="cross" class="w-4 h-4 text-blue-600"></i>
                   <span>Sakit (SKD)</span>
                 </div>
               </label>
@@ -467,42 +500,34 @@
               <label class="cursor-pointer">
                 <input type="radio" name="jenis_izin" value="Izin" class="peer sr-only" onchange="updateFormIzinType()">
                 <div class="p-3.5 rounded-xl border-2 border-slate-200 peer-checked:border-blue-600 peer-checked:bg-blue-50/50 flex items-center justify-center gap-2 font-bold text-xs text-slate-700 peer-checked:text-blue-700 transition">
-                  <i data-lucide="handshake" class="w-4 h-4 text-amber-500"></i>
-                  <span>Izin Keperluan</span>
+                  <i data-lucide="briefcase" class="w-4 h-4 text-slate-500"></i>
+                  <span>Izin</span>
                 </div>
               </label>
             </div>
           </div>
 
-          <!-- Tanggal Izin -->
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1.5">Tanggal Tidak Masuk</label>
-            <input type="date" id="izin-tanggal" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-blue-500">
-          </div>
-
           <!-- Alasan / Catatan -->
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1.5">Alasan / Catatan</label>
-            <textarea id="izin-alasan" rows="3" required placeholder="Contoh: Demam tinggi, opname di klinik, izin dinas sekolah..." class="w-full p-3 rounded-xl border border-slate-300 text-sm focus:outline-hidden focus:ring-2 focus:ring-blue-500 placeholder:text-slate-400"></textarea>
+            <textarea id="izin-alasan" rows="3" required placeholder="Contoh: Demam, tidak dapat hadir..." class="w-full p-3 rounded-xl border border-slate-200 text-xs focus:outline-hidden focus:ring-2 focus:ring-blue-500 placeholder:text-slate-400"></textarea>
           </div>
 
-          <!-- Upload Dokumen / Surat Keterangan Dokter -->
+          <!-- Unggah Dokumen -->
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1.5" id="label-upload-dokumen">
-              Unggah Dokumen (Wajib Surat Dokter untuk Sakit)
-            </label>
-            <div onclick="document.getElementById('file-dokumen').click()" class="border-2 border-dashed border-slate-300 hover:border-blue-500 rounded-2xl p-6 text-center cursor-pointer bg-slate-50/60 hover:bg-blue-50/30 transition">
+            <label class="block text-xs font-bold text-slate-700 mb-1.5">Unggah Dokumen</label>
+            <div onclick="document.getElementById('file-dokumen').click()" class="border-2 border-dashed border-slate-200 hover:border-blue-500 rounded-2xl p-6 text-center cursor-pointer bg-slate-50/50 hover:bg-blue-50/30 transition">
               <input type="file" id="file-dokumen" accept="image/*,application/pdf" class="hidden" onchange="previewUploadDoc(this)">
-              <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-2">
-                <i data-lucide="upload-cloud" class="w-6 h-6"></i>
+              <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-2">
+                <i data-lucide="upload-cloud" class="w-5 h-5"></i>
               </div>
               <p class="text-xs font-bold text-slate-800" id="file-name-preview">Klik untuk mengunggah file</p>
-              <p class="text-[11px] text-slate-400 mt-0.5">Format: JPG, PNG, PDF (Maks. 2MB)</p>
+              <p class="text-[11px] text-slate-400 mt-0.5">Format: JPG, PNG, PDF (Max 2MB)</p>
             </div>
           </div>
 
           <!-- Submit Button -->
-          <button type="submit" id="btn-submit-izin" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30 transition">
+          <button type="submit" id="btn-submit-izin" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-blue-600/30 transition">
             <i data-lucide="send" class="w-4 h-4"></i>
             <span>Kirim Pengajuan</span>
           </button>
@@ -513,119 +538,159 @@
       <section id="view-rekap" class="hidden space-y-5">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200">
           <div>
-            <h3 class="font-extrabold text-slate-900 text-lg">Rekapitulasi Kehadiran Bulanan</h3>
-            <p class="text-xs text-slate-500">Laporan kehadiran siswa magang Astra Daihatsu Ahmad Yani</p>
+            <h3 class="font-extrabold text-slate-900 text-lg">Rekap Bulanan</h3>
+            <p class="text-xs text-slate-500">Laporan kehadiran PKL per bulan</p>
           </div>
           <!-- Filter & Export -->
-          <div class="flex items-center gap-2">
-            <select class="px-3.5 py-2 rounded-xl border border-slate-300 bg-white text-xs font-bold text-slate-700 shadow-xs focus:ring-2 focus:ring-blue-500">
-              <option>Oktober 2026</option>
-              <option selected>November 2026</option>
-              <option>Desember 2026</option>
-            </select>
-            <button onclick="exportRekapPDF()" class="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm transition">
-              <i data-lucide="download" class="w-4 h-4"></i>
-              <span>Export Rekap</span>
+          <div class="flex items-center gap-2.5">
+            <div class="relative">
+              <select class="appearance-none pl-9 pr-8 py-2 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-700 shadow-xs focus:ring-2 focus:ring-blue-500 cursor-pointer">
+                <option selected>Oktober 2025</option>
+                <option>November 2025</option>
+                <option>Desember 2025</option>
+              </select>
+              <i data-lucide="calendar" class="w-4 h-4 text-slate-500 absolute left-3 top-2.5 pointer-events-none"></i>
+              <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 absolute right-2.5 top-3 pointer-events-none"></i>
+            </div>
+            <button onclick="exportRekapPDF()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm transition">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i>
+              <span>Export PDF</span>
             </button>
           </div>
         </div>
 
-        <!-- Rekap Quick Metric Pills -->
+        <!-- Rekap Quick Metric Pills (Exact Match to Mockup) -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-xl flex items-center gap-3">
-            <span class="w-8 h-8 rounded-lg bg-emerald-500 text-white flex items-center justify-center font-bold text-xs"><i data-lucide="check" class="w-4 h-4"></i></span>
+          <!-- Hadir -->
+          <div class="bg-emerald-50/80 border border-emerald-100 p-3 rounded-xl flex items-center gap-2.5">
+            <span class="w-7 h-7 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">
+              <i data-lucide="check" class="w-3.5 h-3.5"></i>
+            </span>
             <div>
-              <p class="text-[11px] text-emerald-800 font-medium">Hadir</p>
-              <p class="text-base font-extrabold text-emerald-900">18 Hari</p>
+              <p class="text-[10px] text-emerald-800 font-bold">Hadir</p>
+              <p class="text-xs font-extrabold text-slate-900">18 Hari</p>
             </div>
           </div>
-          <div class="bg-red-50 border border-red-200 p-3 rounded-xl flex items-center gap-3">
-            <span class="w-8 h-8 rounded-lg bg-red-500 text-white flex items-center justify-center font-bold text-xs"><i data-lucide="cross" class="w-4 h-4"></i></span>
+          <!-- Sakit -->
+          <div class="bg-red-50/80 border border-red-100 p-3 rounded-xl flex items-center gap-2.5">
+            <span class="w-7 h-7 rounded-full bg-red-500 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">
+              <i data-lucide="cross" class="w-3.5 h-3.5"></i>
+            </span>
             <div>
-              <p class="text-[11px] text-red-800 font-medium">Sakit</p>
-              <p class="text-base font-extrabold text-red-900">1 Hari</p>
+              <p class="text-[10px] text-red-800 font-bold">Sakit</p>
+              <p class="text-xs font-extrabold text-slate-900">1 Hari</p>
             </div>
           </div>
-          <div class="bg-amber-50 border border-amber-200 p-3 rounded-xl flex items-center gap-3">
-            <span class="w-8 h-8 rounded-lg bg-amber-500 text-white flex items-center justify-center font-bold text-xs"><i data-lucide="handshake" class="w-4 h-4"></i></span>
+          <!-- Izin -->
+          <div class="bg-amber-50/80 border border-amber-100 p-3 rounded-xl flex items-center gap-2.5">
+            <span class="w-7 h-7 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">
+              <i data-lucide="handshake" class="w-3.5 h-3.5"></i>
+            </span>
             <div>
-              <p class="text-[11px] text-amber-800 font-medium">Izin</p>
-              <p class="text-base font-extrabold text-amber-900">1 Hari</p>
+              <p class="text-[10px] text-amber-800 font-bold">Izin</p>
+              <p class="text-xs font-extrabold text-slate-900">1 Hari</p>
             </div>
           </div>
-          <div class="bg-blue-50 border border-blue-200 p-3 rounded-xl flex items-center gap-3">
-            <span class="w-8 h-8 rounded-lg bg-blue-500 text-white flex items-center justify-center font-bold text-xs"><i data-lucide="clock" class="w-4 h-4"></i></span>
+          <!-- Jam Kerja -->
+          <div class="bg-blue-50/80 border border-blue-100 p-3 rounded-xl flex items-center gap-2.5">
+            <span class="w-7 h-7 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">
+              <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+            </span>
             <div>
-              <p class="text-[11px] text-blue-800 font-medium">Jam Kerja</p>
-              <p class="text-base font-extrabold text-blue-900">144 Jam</p>
+              <p class="text-[10px] text-blue-800 font-bold">Jam Kerja</p>
+              <p class="text-xs font-extrabold text-slate-900">144 Jam</p>
             </div>
           </div>
         </div>
 
-        <!-- Table Data Log Presensi -->
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+        <!-- Table Data Log Presensi (Matching Reference Column for Column) -->
+        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
           <div class="overflow-x-auto">
             <table class="w-full text-left text-xs border-collapse">
               <thead>
-                <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase tracking-wider text-[11px]">
+                <tr class="bg-slate-50/80 border-b border-slate-200 text-slate-700 font-bold text-[11px]">
                   <th class="py-3 px-4">Tanggal</th>
                   <th class="py-3 px-4">Keterangan</th>
-                  <th class="py-3 px-4">Jam Kerja (IN - OUT)</th>
-                  <th class="py-3 px-4">Status Geofence</th>
-                  <th class="py-3 px-4 text-center">Bukti Foto</th>
+                  <th class="py-3 px-4">Jam</th>
+                  <th class="py-3 px-4 text-center">Bukti</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-100" id="rekap-table-body">
+              <tbody class="divide-y divide-slate-100 text-slate-700" id="rekap-table-body">
                 <!-- Row 1 -->
-                <tr class="hover:bg-slate-50/70 transition">
-                  <td class="py-3.5 px-4 font-semibold text-slate-800">11 Nov 2026</td>
-                  <td class="py-3.5 px-4"><span class="px-2.5 py-1 rounded-md text-[11px] font-bold bg-emerald-100 text-emerald-800">Hadir</span></td>
-                  <td class="py-3.5 px-4 font-medium text-slate-700">08:15 - Belum OUT</td>
-                  <td class="py-3.5 px-4 text-emerald-600 font-medium">Valid (12 m)</td>
-                  <td class="py-3.5 px-4 text-center">
-                    <button onclick="previewPhotoModal('https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80')" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 inline-flex items-center justify-center text-blue-600">
-                      <i data-lucide="image" class="w-4 h-4"></i>
+                <tr class="hover:bg-slate-50/50 transition">
+                  <td class="py-3 px-4 font-semibold text-slate-800">28 Okt</td>
+                  <td class="py-3 px-4">
+                    <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800">Hadir</span>
+                  </td>
+                  <td class="py-3 px-4 font-medium text-slate-600">08:15 - 15:30</td>
+                  <td class="py-3 px-4 text-center">
+                    <button onclick="previewPhotoModal('Image/Picture-Hero.png')" class="w-10 h-7 rounded-md overflow-hidden border border-slate-200 inline-block align-middle shadow-2xs hover:scale-105 transition">
+                      <img src="Image/Picture-Hero.png" class="w-full h-full object-cover object-right">
                     </button>
                   </td>
                 </tr>
                 <!-- Row 2 -->
-                <tr class="hover:bg-slate-50/70 transition">
-                  <td class="py-3.5 px-4 font-semibold text-slate-800">10 Nov 2026</td>
-                  <td class="py-3.5 px-4"><span class="px-2.5 py-1 rounded-md text-[11px] font-bold bg-emerald-100 text-emerald-800">Hadir</span></td>
-                  <td class="py-3.5 px-4 font-medium text-slate-700">08:10 - 16:30 (8j 20m)</td>
-                  <td class="py-3.5 px-4 text-emerald-600 font-medium">Valid (18 m)</td>
-                  <td class="py-3.5 px-4 text-center">
-                    <button onclick="previewPhotoModal('https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80')" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 inline-flex items-center justify-center text-blue-600">
-                      <i data-lucide="image" class="w-4 h-4"></i>
+                <tr class="hover:bg-slate-50/50 transition">
+                  <td class="py-3 px-4 font-semibold text-slate-800">27 Okt</td>
+                  <td class="py-3 px-4">
+                    <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800">Hadir</span>
+                  </td>
+                  <td class="py-3 px-4 font-medium text-slate-600">08:10 - 15:25</td>
+                  <td class="py-3 px-4 text-center">
+                    <button onclick="previewPhotoModal('Image/Picture-Hero.png')" class="w-10 h-7 rounded-md overflow-hidden border border-slate-200 inline-block align-middle shadow-2xs hover:scale-105 transition">
+                      <img src="Image/Picture-Hero.png" class="w-full h-full object-cover object-right">
                     </button>
                   </td>
                 </tr>
                 <!-- Row 3 -->
-                <tr class="hover:bg-slate-50/70 transition">
-                  <td class="py-3.5 px-4 font-semibold text-slate-800">09 Nov 2026</td>
-                  <td class="py-3.5 px-4"><span class="px-2.5 py-1 rounded-md text-[11px] font-bold bg-red-100 text-red-800">Sakit (SKD)</span></td>
-                  <td class="py-3.5 px-4 font-medium text-slate-400">-</td>
-                  <td class="py-3.5 px-4 text-slate-400 font-medium">-</td>
-                  <td class="py-3.5 px-4 text-center">
-                    <button class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 inline-flex items-center justify-center text-red-600" title="Lihat Surat Dokter">
-                      <i data-lucide="file-text" class="w-4 h-4"></i>
+                <tr class="hover:bg-slate-50/50 transition">
+                  <td class="py-3 px-4 font-semibold text-slate-800">26 Okt</td>
+                  <td class="py-3 px-4">
+                    <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-red-100 text-red-800">Sakit</span>
+                  </td>
+                  <td class="py-3 px-4 font-medium text-slate-400">-</td>
+                  <td class="py-3 px-4 text-center">
+                    <button onclick="previewPhotoModal('Image/Picture-Hero.png')" class="w-10 h-7 rounded-md overflow-hidden border border-slate-200 inline-block align-middle shadow-2xs hover:scale-105 transition">
+                      <div class="w-full h-full bg-red-50 flex items-center justify-center text-red-500">
+                        <i data-lucide="file-text" class="w-4 h-4"></i>
+                      </div>
                     </button>
                   </td>
                 </tr>
                 <!-- Row 4 -->
-                <tr class="hover:bg-slate-50/70 transition">
-                  <td class="py-3.5 px-4 font-semibold text-slate-800">08 Nov 2026</td>
-                  <td class="py-3.5 px-4"><span class="px-2.5 py-1 rounded-md text-[11px] font-bold bg-amber-100 text-amber-800">Izin</span></td>
-                  <td class="py-3.5 px-4 font-medium text-slate-400">-</td>
-                  <td class="py-3.5 px-4 text-slate-400 font-medium">-</td>
-                  <td class="py-3.5 px-4 text-center">
-                    <button class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 inline-flex items-center justify-center text-amber-600" title="Lihat Surat Dispensasi">
-                      <i data-lucide="file-text" class="w-4 h-4"></i>
+                <tr class="hover:bg-slate-50/50 transition">
+                  <td class="py-3 px-4 font-semibold text-slate-800">25 Okt</td>
+                  <td class="py-3 px-4">
+                    <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800">Hadir</span>
+                  </td>
+                  <td class="py-3 px-4 font-medium text-slate-600">08:12 - 15:28</td>
+                  <td class="py-3 px-4 text-center">
+                    <button onclick="previewPhotoModal('Image/Picture-Hero.png')" class="w-10 h-7 rounded-md overflow-hidden border border-slate-200 inline-block align-middle shadow-2xs hover:scale-105 transition">
+                      <img src="Image/Picture-Hero.png" class="w-full h-full object-cover object-right">
                     </button>
                   </td>
                 </tr>
+                <!-- Row 5 -->
+                <tr class="hover:bg-slate-50/50 transition">
+                  <td class="py-3 px-4 font-semibold text-slate-800">24 Okt</td>
+                  <td class="py-3 px-4">
+                    <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800">Izin</span>
+                  </td>
+                  <td class="py-3 px-4 font-medium text-slate-400">-</td>
+                  <td class="py-3 px-4 text-center text-slate-400 font-bold">-</td>
+                </tr>
               </tbody>
             </table>
+          </div>
+
+          <!-- Pagination (Centered: 1 2 3 >) -->
+          <div class="p-3 border-t border-slate-100 flex items-center justify-center gap-2">
+            <span class="w-7 h-7 rounded-lg bg-blue-600 text-white font-bold text-xs flex items-center justify-center cursor-pointer shadow-xs">1</span>
+            <span class="w-7 h-7 rounded-lg hover:bg-slate-100 text-slate-600 font-bold text-xs flex items-center justify-center cursor-pointer">2</span>
+            <span class="w-7 h-7 rounded-lg hover:bg-slate-100 text-slate-600 font-bold text-xs flex items-center justify-center cursor-pointer">3</span>
+            <span class="w-7 h-7 rounded-lg hover:bg-slate-100 text-slate-600 font-bold text-xs flex items-center justify-center cursor-pointer">
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </span>
           </div>
         </div>
       </section>
@@ -642,31 +707,31 @@
           </div>
         </div>
 
-        <div class="bg-white p-5 md:p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
-          <h4 class="font-bold text-sm text-slate-900">Profil Siswa Magang / PKL</h4>
+        <div class="bg-white p-5 md:p-6 rounded-2xl border border-slate-200/80 shadow-xs space-y-4">
+          <h4 class="font-bold text-xs uppercase tracking-wider text-slate-400">Profil Siswa Magang / PKL</h4>
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Lengkap</label>
-            <input type="text" id="cfg-nama" value="Andi Pratama" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm">
+            <input type="text" id="cfg-nama" value="Andi Pratama" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500">
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">NIM / NISN / ID Magang</label>
-            <input type="text" id="cfg-nim" value="12345678" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm">
+            <input type="text" id="cfg-nim" value="12345678" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500">
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">Asal Sekolah / Kampus</label>
-            <input type="text" id="cfg-instansi" value="SMKN 2 Bandar Lampung" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm">
+            <input type="text" id="cfg-instansi" value="SMKN 2 Bandar Lampung" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500">
           </div>
 
           <hr class="border-slate-100 my-4">
 
-          <h4 class="font-bold text-sm text-slate-900">Integrasi Google Apps Script</h4>
+          <h4 class="font-bold text-xs uppercase tracking-wider text-slate-400">Integrasi Google Apps Script</h4>
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">Web App Deployment URL</label>
-            <input type="url" id="cfg-script-url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm font-mono text-xs">
+            <input type="url" id="cfg-script-url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-mono">
             <p class="text-[11px] text-slate-400 mt-1">Masukkan URL Web App hasil deploy Apps Script untuk sinkronisasi otomatis.</p>
           </div>
 
-          <button onclick="saveSettings()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-xs transition">
+          <button onclick="saveSettings()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-xs transition shadow-md shadow-blue-600/20">
             Simpan Konfigurasi
           </button>
         </div>
@@ -677,27 +742,35 @@
 
   <!-- ==================== MODAL PREVIEW FOTO ==================== -->
   <div id="photo-modal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl">
+    <div class="bg-white rounded-2xl max-w-md w-full overflow-hidden shadow-2xl">
       <div class="p-3 border-b border-slate-200 flex justify-between items-center">
-        <h4 class="font-bold text-sm text-slate-900">Bukti Foto & Geotag Watermark</h4>
+        <h4 class="font-bold text-xs text-slate-900">Bukti Foto & Geotag Watermark</h4>
         <button onclick="closePhotoModal()" class="p-1 rounded-lg hover:bg-slate-100 text-slate-500">
-          <i data-lucide="x" class="w-5 h-5"></i>
+          <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
       <div class="p-4 bg-slate-950 flex items-center justify-center">
-        <img id="modal-img-preview" src="" class="max-h-[70vh] rounded-lg shadow-md object-contain">
+        <img id="modal-img-preview" src="" class="max-h-[60vh] rounded-lg shadow-md object-contain">
       </div>
     </div>
   </div>
 
   <!-- ==================== JAVASCRIPT APPLICATION LOGIC ==================== -->
   <script>
+    // Register PWA Service Worker for homescreen install
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch((err) => {
+          console.warn('SW registration failed:', err);
+        });
+      });
+    }
+
     // --- 1. KONFIGURASI PUSAT GEOFENCING DAIHATSU AHMAD YANI ---
-    // Koordinat titik bengkel & batas radius toleransi
     const DAIHATSU_OFFICE = {
       lat: -5.3932,
       lng: 105.2619,
-      radiusMeters: 70 // 70 meter sesuai lingkaran merah perimeter bengkel
+      radiusMeters: 70
     };
 
     // State Aplikasi
@@ -716,9 +789,9 @@
       isInside: true
     };
 
-    let activeAttendanceType = 'IN'; // 'IN' atau 'OUT'
+    let activeAttendanceType = 'IN';
     let mediaStream = null;
-    let currentFacingMode = 'environment'; // 'user' atau 'environment'
+    let currentFacingMode = 'environment';
     let capturedImageBase64 = null;
 
     // --- 2. INISIALISASI SAAT LOAD ---
@@ -730,26 +803,47 @@
       updateLiveClock();
     });
 
+    function toggleSidebar(open) {
+      const sidebar = document.getElementById('sidebar');
+      const backdrop = document.getElementById('mobile-sidebar-backdrop');
+      if (open) {
+        sidebar.classList.remove('-translate-x-full');
+        backdrop.classList.remove('hidden');
+      } else {
+        sidebar.classList.add('-translate-x-full');
+        backdrop.classList.add('hidden');
+      }
+    }
+
     function updateProfileDisplay() {
       document.getElementById('user-display-name').innerText = currentUser.nama;
-      document.getElementById('user-display-nim').innerText = 'NIM/NISN. ' + currentUser.nim;
+      document.getElementById('user-display-nim').innerText = 'NIM: ' + currentUser.nim;
       document.getElementById('cfg-nama').value = currentUser.nama;
       document.getElementById('cfg-nim').value = currentUser.nim;
       document.getElementById('cfg-instansi').value = currentUser.instansi;
       document.getElementById('cfg-script-url').value = currentUser.apiUrl;
+
+      // Update Watermark line
+      const wm1 = document.getElementById('wm-line1');
+      if (wm1) {
+        wm1.innerText = `[CLOCK ${activeAttendanceType}] ${currentUser.nim} - ${currentUser.nama}`;
+      }
     }
 
     function updateLiveClock() {
       const now = new Date();
       const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
       const dateStr = now.toLocaleDateString('id-ID', options);
-      const timeStr = now.toLocaleTimeString('id-ID') + ' WIB';
-      
-      const badge = document.getElementById('today-date-badge');
-      if (badge) badge.innerText = dateStr;
       
       const bannerDate = document.getElementById('banner-date');
       if (bannerDate) bannerDate.innerText = dateStr;
+
+      const wm2 = document.getElementById('wm-line2');
+      if (wm2) {
+        const timeStr = now.toLocaleTimeString('id-ID') + ' WIB';
+        const dateFormatted = `${String(now.getDate()).padStart(2,'0')}-${String(now.getMonth()+1).padStart(2,'0')}-${now.getFullYear()}, ${timeStr}`;
+        wm2.innerText = dateFormatted;
+      }
     }
 
     // --- 3. LOGIKA NAVIGASI TAB ---
@@ -774,6 +868,9 @@
         activeNav.classList.remove('text-slate-300');
       }
 
+      // Close mobile sidebar if open
+      toggleSidebar(false);
+
       // Stop camera if moving away from presensi
       if (tabId !== 'presensi' && mediaStream) {
         stopCamera();
@@ -788,20 +885,21 @@
       // Update Topbar Title
       const titles = {
         dashboard: { title: 'Dashboard', sub: 'Selamat datang di sistem presensi PKL Daihatsu!' },
-        presensi: { title: 'Kamera Presensi', sub: 'Ambil foto selfie/stall dengan geotag real-time' },
-        izin: { title: 'Pengajuan Izin/Sakit', sub: 'Ajukan perizinan resmi dengan melampirkan bukti' },
-        rekap: { title: 'Rekapitulasi Bulanan', sub: 'Laporan kehadiran PKL per bulan' },
-        pengaturan: { title: 'Pengaturan', sub: 'Atur data identitas dan endpoint sistem' }
+        presensi: { title: 'Presensi', sub: 'Ambil foto presensi sesuai lokasi workshop' },
+        izin: { title: 'Pengajuan Izin/Sakit', sub: 'Ajukan izin atau sakit dengan melampirkan bukti' },
+        rekap: { title: 'Rekap Bulanan', sub: 'Laporan kehadiran PKL per bulan' },
+        pengaturan: { title: 'Pengaturan', sub: 'Konfigurasi akun magang dan integrasi Apps Script' }
       };
       document.getElementById('page-title').innerText = titles[tabId].title;
       document.getElementById('page-subtitle').innerText = titles[tabId].sub;
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      lucide.createIcons();
     }
 
     // --- 4. FORMULA HAVERSINE & VALIDASI GPS RADIUS ---
     function calculateHaversine(lat1, lon1, lat2, lon2) {
-      const R = 6371e3; // Radius bumi meter
+      const R = 6371e3;
       const rad = Math.PI / 180;
       const dLat = (lat2 - lat1) * rad;
       const dLon = (lon2 - lon1) * rad;
@@ -809,12 +907,12 @@
                 Math.cos(lat1 * rad) * Math.cos(lat2 * rad) *
                 Math.sin(dLon / 2) * Math.sin(dLon / 2);
       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      return Math.round(R * c); // Jarak dalam meter
+      return Math.round(R * c);
     }
 
     function checkGPS(manualAlert = false) {
       if (!navigator.geolocation) {
-        updateRadiusUI(15, true);
+        updateRadiusUI(12, true);
         return;
       }
 
@@ -824,7 +922,6 @@
           userLocation.lng = pos.coords.longitude;
           userLocation.accuracy = Math.round(pos.coords.accuracy);
 
-          // Hitung jarak ke Astra Daihatsu Ahmad Yani
           const dist = calculateHaversine(
             userLocation.lat, userLocation.lng,
             DAIHATSU_OFFICE.lat, DAIHATSU_OFFICE.lng
@@ -838,8 +935,6 @@
           }
         },
         (err) => {
-          console.warn("GPS device tidak merespon, menggunakan simulasi:", err.message);
-          // Fallback realistis untuk demo
           updateRadiusUI(12, true);
         },
         { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
@@ -858,19 +953,19 @@
       if (isInside) {
         if (badge) {
           badge.className = "px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700 flex items-center gap-1.5";
-          badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Dalam Area Bengkel`;
+          badge.innerHTML = `Dalam Area Bengkel <i data-lucide="check" class="w-3.5 h-3.5"></i>`;
         }
         if (camStatusStrip) {
-          camStatusStrip.className = "p-3 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-between text-xs font-bold text-emerald-800";
-          camStatusStrip.innerHTML = `<div class="flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4 text-emerald-600"></i><span>Anda berada dalam radius (${distance} m)</span></div><i data-lucide="check" class="w-4 h-4 text-emerald-600"></i>`;
+          camStatusStrip.className = "p-3 rounded-xl bg-red-50/90 border border-red-200 text-red-600 flex items-center justify-between text-xs font-bold";
+          camStatusStrip.innerHTML = `<div class="flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4 text-red-600"></i><span>Anda berada dalam radius (${distance} m)</span></div><i data-lucide="check" class="w-4 h-4 text-red-600"></i>`;
         }
       } else {
         if (badge) {
           badge.className = "px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700 flex items-center gap-1.5";
-          badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-red-500"></span> Di Luar Radius Bengkel`;
+          badge.innerHTML = `Di Luar Bengkel <i data-lucide="x" class="w-3.5 h-3.5"></i>`;
         }
         if (camStatusStrip) {
-          camStatusStrip.className = "p-3 rounded-xl bg-red-50 border border-red-200 flex items-center justify-between text-xs font-bold text-red-800";
+          camStatusStrip.className = "p-3 rounded-xl bg-red-100 border border-red-300 text-red-800 flex items-center justify-between text-xs font-bold";
           camStatusStrip.innerHTML = `<div class="flex items-center gap-2"><i data-lucide="alert-triangle" class="w-4 h-4 text-red-600"></i><span>Di luar area (${distance} m). Maks radius 70 m!</span></div><i data-lucide="x" class="w-4 h-4 text-red-600"></i>`;
         }
       }
@@ -880,15 +975,11 @@
     // --- 5. KAMERA & CANVAS WATERMARKING ---
     function openPresensiDirect(type) {
       activeAttendanceType = type;
-      const typeBadge = document.getElementById('presensi-type-badge');
-      if (type === 'IN') {
-        typeBadge.className = "px-3 py-1 rounded-full text-xs font-extrabold bg-blue-100 text-blue-700 border border-blue-200";
-        typeBadge.innerText = "ABSEN MASUK (IN)";
-      } else {
-        typeBadge.className = "px-3 py-1 rounded-full text-xs font-extrabold bg-slate-800 text-white border border-slate-700";
-        typeBadge.innerText = "ABSEN SELESAI (OUT)";
-      }
       switchTab('presensi');
+      const wm1 = document.getElementById('wm-line1');
+      if (wm1) {
+        wm1.innerText = `[CLOCK ${type}] ${currentUser.nim} - ${currentUser.nama}`;
+      }
     }
 
     async function startCamera() {
@@ -908,15 +999,22 @@
         const video = document.getElementById('webcam');
         video.srcObject = mediaStream;
         video.classList.remove('hidden');
+        document.getElementById('webcam-fallback').classList.add('hidden');
         document.getElementById('photo-canvas').classList.add('hidden');
         document.getElementById('camera-guide').classList.remove('hidden');
         document.getElementById('watermark-overlay').classList.remove('hidden');
         document.getElementById('btn-group-capture').classList.remove('hidden');
         document.getElementById('btn-group-confirm').classList.add('hidden');
       } catch (err) {
-        console.error("Gagal membuka kamera:", err);
-        // Simulasi jika browser desktop memblokir izin kamera
-        alert("Akses kamera tidak aktif atau diblokir browser. Pastikan menggunakan protokol HTTPS.");
+        console.warn("Kamera device tidak aktif/diblokir, menampilkan simulasi workshop:", err);
+        const video = document.getElementById('webcam');
+        video.classList.add('hidden');
+        document.getElementById('webcam-fallback').classList.remove('hidden');
+        document.getElementById('photo-canvas').classList.add('hidden');
+        document.getElementById('camera-guide').classList.remove('hidden');
+        document.getElementById('watermark-overlay').classList.remove('hidden');
+        document.getElementById('btn-group-capture').classList.remove('hidden');
+        document.getElementById('btn-group-confirm').classList.add('hidden');
       }
     }
 
@@ -936,46 +1034,49 @@
       const video = document.getElementById('webcam');
       const canvas = document.getElementById('photo-canvas');
       const ctx = canvas.getContext('2d');
+      const fallbackImg = document.getElementById('webcam-fallback');
 
-      // Set canvas size sesuai resolusi video aktual
-      const w = video.videoWidth || 800;
-      const h = video.videoHeight || 600;
+      const isVideoActive = !video.classList.contains('hidden') && video.videoWidth > 0;
+      const w = isVideoActive ? video.videoWidth : 800;
+      const h = isVideoActive ? video.videoHeight : 600;
       canvas.width = w;
       canvas.height = h;
 
-      // 1. Gambar frame video mentah ke canvas
-      ctx.drawImage(video, 0, 0, w, h);
+      if (isVideoActive) {
+        ctx.drawImage(video, 0, 0, w, h);
+      } else {
+        ctx.drawImage(fallbackImg, 0, 0, w, h);
+      }
 
-      // 2. Render Semi-Transparent Black Bottom Banner
-      const bannerHeight = Math.round(h * 0.22);
+      // Render Semi-Transparent Black Bottom Banner
+      const bannerHeight = Math.round(h * 0.24);
       ctx.fillStyle = 'rgba(0, 0, 0, 0.78)';
       ctx.fillRect(0, h - bannerHeight, w, bannerHeight);
 
-      // 3. Stamping Watermark Texts
+      // Stamping Watermark Texts
       const now = new Date();
       const dateFormatted = `${String(now.getDate()).padStart(2,'0')}-${String(now.getMonth()+1).padStart(2,'0')}-${now.getFullYear()}, ${now.toLocaleTimeString('id-ID')} WIB`;
 
-      ctx.fillStyle = '#38bdf8'; // Cyan accent
-      ctx.font = `bold ${Math.round(h * 0.038)}px monospace`;
-      ctx.fillText(`[CLOCK ${activeAttendanceType}] ${currentUser.nim} - ${currentUser.nama}`, 20, h - bannerHeight + (h * 0.05));
-
       ctx.fillStyle = '#ffffff';
-      ctx.font = `bold ${Math.round(h * 0.032)}px monospace`;
-      ctx.fillText(`WAKTU : ${dateFormatted}`, 20, h - bannerHeight + (h * 0.095));
+      ctx.font = `bold ${Math.round(h * 0.038)}px monospace`;
+      ctx.fillText(`[CLOCK ${activeAttendanceType}] ${currentUser.nim} - ${currentUser.nama}`, 20, h - bannerHeight + (h * 0.055));
 
       ctx.fillStyle = '#e2e8f0';
+      ctx.font = `${Math.round(h * 0.032)}px monospace`;
+      ctx.fillText(`${dateFormatted}`, 20, h - bannerHeight + (h * 0.105));
+
+      ctx.fillStyle = '#cbd5e1';
       ctx.font = `${Math.round(h * 0.030)}px monospace`;
-      ctx.fillText(`LOKASI: Workshop Astra Daihatsu Ahmad Yani (Jarak: ${userLocation.distance} m)`, 20, h - bannerHeight + (h * 0.14));
+      ctx.fillText(`Workshop Daihatsu Ahmad Yani (Jarak: ${userLocation.distance} m)`, 20, h - bannerHeight + (h * 0.15));
 
       ctx.fillStyle = '#94a3b8';
       ctx.font = `${Math.round(h * 0.026)}px monospace`;
-      ctx.fillText(`GPS   : Lat ${userLocation.lat.toFixed(4)}, Long ${userLocation.lng.toFixed(4)} | Akurasi: ±${userLocation.accuracy}m`, 20, h - bannerHeight + (h * 0.185));
+      ctx.fillText(`Lat: -5.3932, Long: 105.2619 (Akurasi: ±${userLocation.accuracy} m)`, 20, h - bannerHeight + (h * 0.195));
 
-      // 4. Export ke Base64 JPEG (Quality 0.70)
-      capturedImageBase64 = canvas.toDataURL('image/jpeg', 0.70);
+      capturedImageBase64 = canvas.toDataURL('image/jpeg', 0.80);
 
-      // Tampilkan Preview dan tombol konfirmasi
       video.classList.add('hidden');
+      fallbackImg.classList.add('hidden');
       canvas.classList.remove('hidden');
       document.getElementById('camera-guide').classList.add('hidden');
       document.getElementById('watermark-overlay').classList.add('hidden');
@@ -989,16 +1090,14 @@
     }
 
     async function submitAttendance() {
-      // Validasi Geofence Sesuai Aturan:
-      // IN -> Wajib di dalam radius 70m
       if (activeAttendanceType === 'IN' && !userLocation.isInside) {
-        alert(`Gagal Absen Masuk! Anda terdeteksi berada di jarak ${userLocation.distance} meter dari bengkel. Wajib berada di dalam batas toleransi radius 70 meter.`);
+        alert(`Gagal Absen Masuk! Anda berada di jarak ${userLocation.distance} m (maksimal radius 70 m).`);
         return;
       }
 
       const submitBtn = document.getElementById('btn-submit-absen');
       submitBtn.disabled = true;
-      submitBtn.innerHTML = `<span class="animate-spin inline-block mr-2">⏳</span> Mengunggah ke Server...`;
+      submitBtn.innerHTML = `<span class="animate-spin inline-block mr-2">⏳</span> Mengunggah Presensi...`;
 
       const payload = {
         action: 'presensi',
@@ -1014,9 +1113,6 @@
         fotoBase64: capturedImageBase64
       };
 
-      console.log("Mengirim payload presensi:", payload);
-
-      // Coba kirim ke endpoint Apps Script jika sudah diset
       if (currentUser.apiUrl && currentUser.apiUrl.startsWith('http')) {
         try {
           await fetch(currentUser.apiUrl, {
@@ -1026,15 +1122,14 @@
             body: JSON.stringify(payload)
           });
         } catch (err) {
-          console.warn("Gagal request ke Google Apps Script:", err);
+          console.warn("Koneksi Google Apps Script:", err);
         }
       }
 
-      // Update Dashboard UI Simulative
       setTimeout(() => {
         submitBtn.disabled = false;
         submitBtn.innerHTML = `<span>Kirim Presensi Sekarang</span>`;
-        alert(`Presensi [${activeAttendanceType}] Berhasil Tercatat & Foto Disimpan!`);
+        alert(`Presensi [${activeAttendanceType}] Berhasil Tercatat!`);
 
         const now = new Date();
         const timeStr = now.toLocaleTimeString('id-ID') + ' WIB';
@@ -1053,13 +1148,7 @@
 
     // --- 6. PENGAJUAN IZIN / SAKIT ---
     function updateFormIzinType() {
-      const selected = document.querySelector('input[name="jenis_izin"]:checked').value;
-      const label = document.getElementById('label-upload-dokumen');
-      if (selected === 'Sakit') {
-        label.innerText = 'Unggah Dokumen (Wajib Surat Dokter / SKD)';
-      } else {
-        label.innerText = 'Unggah Dokumen Pendukung (Surat Dinas / Izin Instansi)';
-      }
+      // Toggle logic
     }
 
     function previewUploadDoc(input) {
@@ -1072,23 +1161,21 @@
     async function submitPerizinan(e) {
       e.preventDefault();
       const jenis = document.querySelector('input[name="jenis_izin"]:checked').value;
-      const tanggal = document.getElementById('izin-tanggal').value;
-      const alasan = document.getElementById('izin-alasan').value;
       const fileInput = document.getElementById('file-dokumen');
 
       if (jenis === 'Sakit' && (!fileInput.files || fileInput.files.length === 0)) {
-        alert("Wajib mengunggah Surat Keterangan Dokter (SKD) untuk permohonan Sakit!");
+        alert("Wajib melampirkan Surat Keterangan Dokter (SKD) untuk permohonan Sakit!");
         return;
       }
 
       const btn = document.getElementById('btn-submit-izin');
       btn.disabled = true;
-      btn.innerHTML = `<span class="animate-spin inline-block mr-2">⏳</span> Menyimpan Formulir...`;
+      btn.innerHTML = `<span class="animate-spin inline-block mr-2">⏳</span> Mengirim Formulir...`;
 
       setTimeout(() => {
         btn.disabled = false;
         btn.innerHTML = `<span>Kirim Pengajuan</span>`;
-        alert(`Pengajuan ${jenis} berhasil dikirim ke Service Advisor / HR.`);
+        alert(`Pengajuan ${jenis} berhasil dikirim!`);
         e.target.reset();
         document.getElementById('file-name-preview').innerText = "Klik untuk mengunggah file";
         switchTab('dashboard');

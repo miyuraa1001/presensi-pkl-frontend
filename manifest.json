@@ -1,9 +1,31 @@
 {
-  "name": "Presensi PKL Daihatsu",
+  "name": "Presensi PKL Astra Daihatsu",
   "short_name": "Presensi PKL",
-  "start_url": "./",
+  "description": "Sistem Presensi PKL Workshop Astra Daihatsu Ahmad Yani",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#f4f6fb",
-  "theme_color": "#101f40",
-  "icons": []
+  "orientation": "portrait-primary",
+  "background_color": "#0d1a3a",
+  "theme_color": "#0d1a3a",
+  "icons": [
+    {
+      "src": "Image/Logo-PWA.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "Image/Logo-PWA.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "Image/Logo-PWA.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
 }
