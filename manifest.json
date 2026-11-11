@@ -1,0 +1,9 @@
+{
+  "name": "Presensi PKL Daihatsu",
+  "short_name": "Presensi PKL",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f4f6fb",
+  "theme_color": "#101f40",
+  "icons": []
+}
