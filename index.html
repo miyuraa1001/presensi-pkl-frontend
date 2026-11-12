@@ -206,8 +206,9 @@
 
         <!-- User Profile Pill -->
         <div class="flex items-center gap-2 pl-2 border-l border-slate-200 cursor-pointer" onclick="switchTab('pengaturan')">
-          <div class="w-8 h-8 rounded-full bg-[#0d1a3a] flex items-center justify-center text-white font-bold text-xs overflow-hidden shadow-xs">
-            <i data-lucide="user" class="w-4 h-4 text-blue-300"></i>
+          <div id="topbar-avatar-container" class="w-8 h-8 rounded-full bg-[#0d1a3a] flex items-center justify-center text-white font-bold text-xs overflow-hidden shadow-xs border border-slate-200 flex-shrink-0">
+            <span id="topbar-avatar-initials">M</span>
+            <img id="topbar-avatar-img" src="" alt="Avatar" class="w-full h-full object-cover hidden">
           </div>
           <div class="hidden sm:block text-left">
             <p class="text-xs font-bold text-slate-800 leading-tight" id="user-display-name">Mekanik Magang</p>
@@ -775,12 +776,12 @@
             <i data-lucide="arrow-left" class="w-5 h-5"></i>
           </button>
           <div>
-            <h3 class="font-extrabold text-slate-900 text-lg">Pengaturan & Geofencing</h3>
-            <p class="text-xs text-slate-500">Profil siswa magang, kalibrasi titik bengkel, dan server</p>
+            <h3 class="font-extrabold text-slate-900 text-lg">Pengaturan & Akun</h3>
+            <p class="text-xs text-slate-500">Profil siswa magang, foto, kata sandi, Web APK, dan geofencing</p>
           </div>
         </div>
 
-        <!-- ==================== PWA INSTALL / DOWNLOAD APK CARD ==================== -->
+        <!-- ==================== 1. PWA INSTALL / DOWNLOAD APK CARD ==================== -->
         <div class="bg-gradient-to-br from-[#0d1a3a] via-[#142338] to-[#1e3a8a] text-white p-5 md:p-6 rounded-2xl shadow-sm border border-slate-700/60 relative overflow-hidden">
           <div class="absolute inset-0 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:16px_16px] opacity-15 pointer-events-none"></div>
 
@@ -817,41 +818,139 @@
           </div>
         </div>
 
-        <!-- Profile Form Card -->
+        <!-- ==================== 2. EDIT PROFIL & FOTO PESERTA MAGANG ==================== -->
         <div class="bg-white p-5 md:p-6 rounded-2xl border border-slate-200/80 shadow-xs space-y-4">
-          <div class="flex items-center justify-between border-b border-slate-100 pb-2">
-            <h4 class="font-bold text-xs uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
-              <i data-lucide="user" class="w-3.5 h-3.5"></i> Profil Peserta Magang / PKL
-            </h4>
-            <span class="text-[10px] text-blue-600 font-bold">Sheet: Master_PKL</span>
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div class="flex items-center gap-2">
+              <div class="w-7 h-7 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center">
+                <i data-lucide="user" class="w-4 h-4"></i>
+              </div>
+              <h4 class="font-extrabold text-sm text-slate-900">Profil Peserta PKL</h4>
+            </div>
+            <span class="text-[10px] font-bold text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-200/60">Astra Daihatsu</span>
           </div>
 
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Lengkap Siswa</label>
-            <input type="text" id="cfg-nama" placeholder="Contoh: Muhammad Rizky" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-semibold">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">NISN / NIM / ID Magang</label>
-            <input type="text" id="cfg-nim" placeholder="Contoh: 20241001" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Asal Sekolah / Kampus (Instansi)</label>
-            <input type="text" id="cfg-instansi" placeholder="SMKN 2 Bandar Lampung" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Jurusan / Program Keahlian</label>
-            <input type="text" id="cfg-jurusan" placeholder="Teknik Kendaraan Ringan (TKR) / Otomotif" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500">
+          <!-- Avatar Upload & Preview -->
+          <div class="flex flex-col sm:flex-row items-center gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-200/80">
+            <div class="relative group">
+              <div id="settings-avatar-container" class="w-20 h-20 rounded-2xl bg-[#0d1a3a] flex items-center justify-center text-white font-extrabold text-2xl overflow-hidden shadow-md border-2 border-white ring-2 ring-slate-200 flex-shrink-0">
+                <span id="settings-avatar-initials">M</span>
+                <img id="settings-avatar-img" src="" alt="Foto Profil" class="w-full h-full object-cover hidden">
+              </div>
+              <button type="button" onclick="document.getElementById('avatar-file-input').click()" class="absolute -bottom-1.5 -right-1.5 w-7 h-7 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-md hover:bg-blue-700 active:scale-95 transition" title="Ganti Foto Profil">
+                <i data-lucide="camera" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+            <div class="text-center sm:text-left flex-1 space-y-1">
+              <h5 class="text-xs font-bold text-slate-800">Foto Profil Peserta Magang</h5>
+              <p class="text-[11px] text-slate-500">Format JPG, PNG atau WebP (otomatis dioptimalkan)</p>
+              <div class="flex items-center justify-center sm:justify-start gap-2 pt-1">
+                <button type="button" onclick="document.getElementById('avatar-file-input').click()" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-xl text-[11px] font-bold flex items-center gap-1.5 shadow-xs transition">
+                  <i data-lucide="upload" class="w-3 h-3"></i> Unggah Foto
+                </button>
+                <button type="button" id="btn-delete-avatar" onclick="deleteAvatar()" class="px-2.5 py-1.5 bg-slate-200 hover:bg-slate-300 active:scale-95 text-slate-700 rounded-xl text-[11px] font-semibold transition hidden">
+                  Hapus Foto
+                </button>
+              </div>
+              <input type="file" id="avatar-file-input" accept="image/*" class="hidden" onchange="handleAvatarUpload(event)">
+            </div>
           </div>
 
-          <!-- Workshop Center & Geofencing Calibration Settings -->
-          <div class="pt-3 border-t border-slate-100 space-y-3">
-            <div class="flex items-center justify-between">
-              <h5 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-                <i data-lucide="map-pin" class="w-3.5 h-3.5 text-blue-600"></i> Titik Pusat & Radius Bengkel
-              </h5>
-              <span class="text-[10px] text-emerald-700 font-bold bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">Geofence Acuan</span>
+          <!-- Input Fields Profil -->
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Lengkap Siswa</label>
+              <input type="text" id="cfg-nama" placeholder="Contoh: Muhammad Rizky" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-semibold">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">NISN / NIM / ID Magang</label>
+              <input type="text" id="cfg-nim" placeholder="Contoh: 20241001" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Asal Sekolah / Kampus (Instansi)</label>
+              <input type="text" id="cfg-instansi" placeholder="SMKN 2 Bandar Lampung" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Jurusan / Program Keahlian</label>
+              <input type="text" id="cfg-jurusan" placeholder="Teknik Kendaraan Ringan (TKR) / Otomotif" class="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500">
             </div>
 
+            <button type="button" onclick="saveProfile()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-xl font-bold text-xs transition shadow-md shadow-blue-600/25 flex items-center justify-center gap-2">
+              <i data-lucide="check" class="w-4 h-4"></i>
+              <span>Simpan Perubahan Profil</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ==================== 3. KEAMANAN & GANTI KATA SANDI ==================== -->
+        <div class="bg-white p-5 md:p-6 rounded-2xl border border-slate-200/80 shadow-xs space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div class="flex items-center gap-2">
+              <div class="w-7 h-7 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center">
+                <i data-lucide="lock" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <h4 class="font-extrabold text-sm text-slate-900">Keamanan & Kata Sandi</h4>
+                <p class="text-[10px] text-slate-500">Perbarui kata sandi akun untuk keamanan akses presensi</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Kata Sandi Lama / Saat Ini</label>
+              <div class="relative">
+                <input type="password" id="cfg-old-pwd" placeholder="Masukkan kata sandi lama (default: daihatsu123)" class="w-full px-3 py-2.5 pr-10 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-amber-500 font-mono">
+                <button type="button" onclick="togglePasswordVisibility('cfg-old-pwd', 'eye-old-pwd')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
+                  <i data-lucide="eye" id="eye-old-pwd" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Kata Sandi Baru</label>
+                <div class="relative">
+                  <input type="password" id="cfg-new-pwd" placeholder="Minimal 6 karakter" class="w-full px-3 py-2.5 pr-10 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-amber-500 font-mono">
+                  <button type="button" onclick="togglePasswordVisibility('cfg-new-pwd', 'eye-new-pwd')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
+                    <i data-lucide="eye" id="eye-new-pwd" class="w-4 h-4"></i>
+                  </button>
+                </div>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Konfirmasi Kata Sandi Baru</label>
+                <div class="relative">
+                  <input type="password" id="cfg-confirm-pwd" placeholder="Ulangi kata sandi baru" class="w-full px-3 py-2.5 pr-10 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-amber-500 font-mono">
+                  <button type="button" onclick="togglePasswordVisibility('cfg-confirm-pwd', 'eye-confirm-pwd')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
+                    <i data-lucide="eye" id="eye-confirm-pwd" class="w-4 h-4"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <button type="button" onclick="saveNewPassword()" class="w-full py-2.5 bg-amber-600 hover:bg-amber-700 active:scale-95 text-white rounded-xl font-bold text-xs transition shadow-sm flex items-center justify-center gap-1.5">
+              <i data-lucide="key" class="w-3.5 h-3.5"></i>
+              <span>Simpan Kata Sandi Baru</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ==================== 4. KALIBRASI GEOFENCING & SERVER ==================== -->
+        <div class="bg-white p-5 md:p-6 rounded-2xl border border-slate-200/80 shadow-xs space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div class="flex items-center gap-2">
+              <div class="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                <i data-lucide="map-pin" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <h4 class="font-extrabold text-sm text-slate-900">Titik Pusat & Radius Bengkel</h4>
+                <p class="text-[10px] text-slate-500">Koordinat geofence acuan Astra Daihatsu Ahmad Yani</p>
+              </div>
+            </div>
+            <span class="text-[10px] text-emerald-700 font-bold bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">Geofence Acuan</span>
+          </div>
+
+          <div class="space-y-3">
             <div class="grid grid-cols-2 gap-3">
               <div>
                 <label class="block text-[11px] font-semibold text-slate-600 mb-1">Latitude Pusat</label>
@@ -884,57 +983,80 @@
                 <i data-lucide="crosshair" class="w-3.5 h-3.5"></i>
                 <span>Gunakan Lokasi Saya Saat Ini (Kalibrasi)</span>
               </button>
-              <button type="button" onclick="resetWorkshopLocationDefault()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs font-semibold transition" title="Kembalikan koordinat ke acuan PRD">
-                Reset Default PRD
+              <button type="button" onclick="resetWorkshopLocationDefault()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs font-semibold transition" title="Kembalikan koordinat ke titik resmi Daihatsu A. Yani">
+                Reset Default Bengkel
               </button>
             </div>
-          </div>
 
-          <!-- Sensor GPS Asli Perangkat (Strict Geofencing) -->
-          <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
-            <div>
-              <p class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                <i data-lucide="satellite" class="w-3.5 h-3.5 text-blue-600"></i>
-                Sensor Geolocation GPS
+            <!-- Sensor GPS Asli Perangkat -->
+            <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
+              <div>
+                <p class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                  <i data-lucide="satellite" class="w-3.5 h-3.5 text-blue-600"></i>
+                  Sensor Geolocation GPS
+                </p>
+                <p class="text-[11px] text-slate-400 mt-0.5">High-Accuracy WGS84 GPS asli perangkat</p>
+              </div>
+              <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-200 flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                GPS Aktif
+              </span>
+              <input type="hidden" id="cfg-gps-mode" value="real">
+            </div>
+
+            <!-- Google Apps Script Web App Integration -->
+            <div class="pt-2 border-t border-slate-100">
+              <div class="flex items-center justify-between mb-1">
+                <label class="text-xs font-semibold text-slate-700">Google Apps Script Web App URL</label>
+                <span class="text-[10px] text-emerald-600 font-bold">Zero-Cost Backend</span>
+              </div>
+              <input type="url" id="cfg-script-url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-mono">
+              <p class="text-[11px] text-slate-400 mt-1">
+                Data presensi dan izin akan dikirim langsung ke Google Sheets & Google Drive.
               </p>
-              <p class="text-[11px] text-slate-400 mt-0.5">High-Accuracy WGS84 GPS asli perangkat (Tanpa Simulasi)</p>
+              <div class="mt-2 flex gap-2">
+                <button type="button" onclick="testGasConnection()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-[11px] font-bold transition flex items-center gap-1.5">
+                  <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-500"></i>
+                  <span>Test Endpoint</span>
+                </button>
+                <button type="button" onclick="showGasGuideModal()" class="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-[11px] font-bold transition flex items-center gap-1.5">
+                  <i data-lucide="code" class="w-3.5 h-3.5 text-blue-600"></i>
+                  <span>Panduan Backend Code.gs</span>
+                </button>
+              </div>
             </div>
-            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-200 flex items-center gap-1">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              GPS Aktif
-            </span>
-            <input type="hidden" id="cfg-gps-mode" value="real">
-          </div>
 
-          <!-- Google Apps Script Web App Integration -->
-          <div class="pt-3 border-t border-slate-100">
-            <div class="flex items-center justify-between mb-1">
-              <label class="text-xs font-semibold text-slate-700">Google Apps Script Web App URL</label>
-              <span class="text-[10px] text-emerald-600 font-bold">Zero-Cost Backend</span>
-            </div>
-            <input type="url" id="cfg-script-url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-mono">
-            <p class="text-[11px] text-slate-400 mt-1">
-              URL Web App hasil deployment Google Apps Script (Execute as: Me, Access: Anyone). Data presensi dan izin akan dikirim langsung ke Google Sheets & Google Drive.
-            </p>
-            <div class="mt-2 flex gap-2">
-              <button type="button" onclick="testGasConnection()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-[11px] font-bold transition flex items-center gap-1.5">
-                <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-500"></i>
-                <span>Test Endpoint</span>
-              </button>
-              <button type="button" onclick="showGasGuideModal()" class="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-[11px] font-bold transition flex items-center gap-1.5">
-                <i data-lucide="code" class="w-3.5 h-3.5 text-blue-600"></i>
-                <span>Panduan Backend Code.gs</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Action Buttons -->
-          <div class="pt-3 flex flex-col gap-2">
-            <button onclick="saveSettings()" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-xs transition shadow-md shadow-blue-600/20">
-              Simpan Pengaturan
+            <button type="button" onclick="saveGeofenceSettings()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-900 active:scale-95 text-white rounded-xl font-bold text-xs transition shadow-sm flex items-center justify-center gap-1.5">
+              <i data-lucide="save" class="w-3.5 h-3.5"></i>
+              <span>Simpan Parameter Geofencing & Server</span>
             </button>
-            <button onclick="resetDemoData()" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-semibold text-xs transition">
-              Bersihkan Riwayat Presensi & Izin Lokal
+          </div>
+        </div>
+
+        <!-- ==================== 5. SESI & MANAJEMEN AKUN (LOGOUT) ==================== -->
+        <div class="bg-white p-5 md:p-6 rounded-2xl border border-slate-200/80 shadow-xs space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div class="flex items-center gap-2">
+              <div class="w-7 h-7 rounded-lg bg-red-100 text-red-600 flex items-center justify-center">
+                <i data-lucide="shield-alert" class="w-4 h-4"></i>
+              </div>
+              <h4 class="font-extrabold text-sm text-slate-900">Sesi & Manajemen Akun</h4>
+            </div>
+            <span class="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60">Sesi Aktif</span>
+          </div>
+
+          <p class="text-xs text-slate-500 leading-relaxed">
+            Keluar dari sesi untuk mengunci aplikasi atau berganti akun siswa magang lainnya.
+          </p>
+
+          <div class="flex flex-col sm:flex-row gap-2 pt-1">
+            <button type="button" onclick="handleLogout()" class="flex-1 py-3 px-4 bg-red-600 hover:bg-red-700 active:scale-95 text-white rounded-xl font-bold text-xs transition shadow-md shadow-red-600/20 flex items-center justify-center gap-2">
+              <i data-lucide="log-out" class="w-4 h-4"></i>
+              <span>Keluar Akun (Logout)</span>
+            </button>
+            <button type="button" onclick="resetDemoData()" class="py-3 px-4 bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-600 rounded-xl font-semibold text-xs transition flex items-center justify-center gap-1.5" title="Bersihkan riwayat offline">
+              <i data-lucide="trash-2" class="w-4 h-4 text-slate-500"></i>
+              <span>Hapus Riwayat Presensi</span>
             </button>
           </div>
         </div>
@@ -1149,6 +1271,53 @@
     </div>
   </div>
 
+  <!-- ==================== MODAL LOGIN / MASUK AKUN ==================== -->
+  <div id="login-modal" class="hidden fixed inset-0 bg-slate-900/90 backdrop-blur-md z-[300] flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-200 space-y-5">
+      
+      <!-- Logo Header -->
+      <div class="text-center space-y-2">
+        <div class="w-16 h-16 mx-auto rounded-2xl bg-[#0d1a3a] p-2 flex items-center justify-center shadow-lg shadow-blue-900/20">
+          <img src="Image/Logo-PWA.png" alt="Daihatsu" class="w-full h-full object-contain rounded-xl">
+        </div>
+        <h3 class="text-lg font-black text-slate-900">Masuk Akun Presensi</h3>
+        <p class="text-xs text-slate-500">Sistem Presensi PKL Astra Daihatsu Ahmad Yani</p>
+      </div>
+
+      <!-- Login Form -->
+      <form onsubmit="handleLoginSubmit(event)" class="space-y-3.5">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">NIM / NISN / ID Magang</label>
+          <div class="relative">
+            <input type="text" id="login-nim" required placeholder="Masukkan NIM / NISN" class="w-full px-3 py-2.5 pl-9 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono">
+            <i data-lucide="badge-id" class="w-4 h-4 text-slate-400 absolute left-3 top-3"></i>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Kata Sandi</label>
+          <div class="relative">
+            <input type="password" id="login-password" required placeholder="Masukkan kata sandi" class="w-full px-3 py-2.5 pl-9 pr-10 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono">
+            <i data-lucide="lock" class="w-4 h-4 text-slate-400 absolute left-3 top-3"></i>
+            <button type="button" onclick="togglePasswordVisibility('login-password', 'eye-login-pwd')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
+              <i data-lucide="eye" id="eye-login-pwd" class="w-4 h-4"></i>
+            </button>
+          </div>
+          <p class="text-[10px] text-slate-400 mt-1">Kata sandi default: <span class="font-mono font-bold text-slate-600">daihatsu123</span></p>
+        </div>
+
+        <button type="submit" class="w-full py-3 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs rounded-xl shadow-md shadow-blue-600/30 flex items-center justify-center gap-2 transition">
+          <i data-lucide="log-in" class="w-4 h-4"></i>
+          <span>Masuk Sekarang</span>
+        </button>
+      </form>
+
+      <div class="text-center pt-2 border-t border-slate-100">
+        <p class="text-[11px] text-slate-400">Workshop & Service Astra Daihatsu Ahmad Yani</p>
+      </div>
+    </div>
+  </div>
+
   <!-- ==================== JAVASCRIPT APPLICATION LOGIC ==================== -->
   <script>
     // Register PWA Service Worker for homescreen install
@@ -1247,6 +1416,7 @@
       instansi: localStorage.getItem('pkl_instansi') || 'SMKN 2 Bandar Lampung',
       jurusan: localStorage.getItem('pkl_jurusan') || 'Teknik Kendaraan Ringan (TKR) / Otomotif',
       apiUrl: localStorage.getItem('pkl_script_url') || '',
+      foto: localStorage.getItem('pkl_foto_profil') || '',
       gpsMode: 'real'
     };
 
@@ -1318,6 +1488,7 @@
 
       lucide.createIcons();
       updateProfileDisplay();
+      checkLoginSession();
       initDates();
       initLiveMap();
       checkGPS(false);
@@ -1493,22 +1664,67 @@
       document.getElementById('user-display-nim').innerText = 'NIM: ' + currentUser.nim;
       document.getElementById('print-user-meta').innerText = `Nama: ${currentUser.nama} | NIM: ${currentUser.nim} | Jurusan: ${currentUser.jurusan}`;
 
-      document.getElementById('cfg-nama').value = currentUser.nama;
-      document.getElementById('cfg-nim').value = currentUser.nim;
-      document.getElementById('cfg-instansi').value = currentUser.instansi;
-      document.getElementById('cfg-jurusan').value = currentUser.jurusan;
-      document.getElementById('cfg-script-url').value = currentUser.apiUrl;
-      document.getElementById('cfg-gps-mode').value = currentUser.gpsMode;
+      // Avatar & Inisial Handling (Topbar + Settings)
+      const initials = currentUser.nama ? currentUser.nama.split(' ').filter(Boolean).map(w => w[0]).slice(0, 2).join('').toUpperCase() : 'M';
+      const topbarInitials = document.getElementById('topbar-avatar-initials');
+      const topbarImg = document.getElementById('topbar-avatar-img');
+      const settingsInitials = document.getElementById('settings-avatar-initials');
+      const settingsImg = document.getElementById('settings-avatar-img');
+      const btnDeleteAvatar = document.getElementById('btn-delete-avatar');
+
+      if (topbarInitials) topbarInitials.innerText = initials;
+      if (settingsInitials) settingsInitials.innerText = initials;
+
+      if (currentUser.foto) {
+        if (topbarImg) {
+          topbarImg.src = currentUser.foto;
+          topbarImg.classList.remove('hidden');
+        }
+        if (topbarInitials) topbarInitials.classList.add('hidden');
+
+        if (settingsImg) {
+          settingsImg.src = currentUser.foto;
+          settingsImg.classList.remove('hidden');
+        }
+        if (settingsInitials) settingsInitials.classList.add('hidden');
+        if (btnDeleteAvatar) btnDeleteAvatar.classList.remove('hidden');
+      } else {
+        if (topbarImg) topbarImg.classList.add('hidden');
+        if (topbarInitials) topbarInitials.classList.remove('hidden');
+
+        if (settingsImg) settingsImg.classList.add('hidden');
+        if (settingsInitials) settingsInitials.classList.remove('hidden');
+        if (btnDeleteAvatar) btnDeleteAvatar.classList.add('hidden');
+      }
+
+      const cfgNama = document.getElementById('cfg-nama');
+      if (cfgNama) cfgNama.value = currentUser.nama;
+      const cfgNim = document.getElementById('cfg-nim');
+      if (cfgNim) cfgNim.value = (currentUser.nim && currentUser.nim !== '-') ? currentUser.nim : '';
+      const cfgInstansi = document.getElementById('cfg-instansi');
+      if (cfgInstansi) cfgInstansi.value = currentUser.instansi;
+      const cfgJurusan = document.getElementById('cfg-jurusan');
+      if (cfgJurusan) cfgJurusan.value = currentUser.jurusan;
+      const cfgScript = document.getElementById('cfg-script-url');
+      if (cfgScript) cfgScript.value = currentUser.apiUrl;
+      const cfgGps = document.getElementById('cfg-gps-mode');
+      if (cfgGps) cfgGps.value = currentUser.gpsMode;
 
       // Workshop Settings Inputs
-      document.getElementById('cfg-workshop-lat').value = workshopConfig.lat;
-      document.getElementById('cfg-workshop-lng').value = workshopConfig.lng;
-      document.getElementById('cfg-workshop-radius').value = workshopConfig.radiusMeters;
-      document.getElementById('radius-val-display').innerText = workshopConfig.radiusMeters + ' meter';
+      const cfgWLat = document.getElementById('cfg-workshop-lat');
+      if (cfgWLat) cfgWLat.value = workshopConfig.lat;
+      const cfgWLng = document.getElementById('cfg-workshop-lng');
+      if (cfgWLng) cfgWLng.value = workshopConfig.lng;
+      const cfgWRad = document.getElementById('cfg-workshop-radius');
+      if (cfgWRad) cfgWRad.value = workshopConfig.radiusMeters;
+      const radDisplay = document.getElementById('radius-val-display');
+      if (radDisplay) radDisplay.innerText = workshopConfig.radiusMeters + ' meter';
 
       // Dashboard Labels
-      document.getElementById('lbl-workshop-coords').innerText = `${workshopConfig.lat.toFixed(4)}, ${workshopConfig.lng.toFixed(4)}`;
-      document.getElementById('lbl-workshop-radius').innerText = `${workshopConfig.radiusMeters} meter`;
+      const lblCoords = document.getElementById('lbl-workshop-coords');
+      if (lblCoords) lblCoords.innerText = `${workshopConfig.lat.toFixed(4)}, ${workshopConfig.lng.toFixed(4)}`;
+      const lblRad = document.getElementById('lbl-workshop-radius');
+      if (lblRad) lblRad.innerText = `${workshopConfig.radiusMeters} meter`;
 
       updateWatermarkLabels();
     }
@@ -2390,19 +2606,92 @@
       }
     }
 
-    // --- 12. PENGATURAN UMUM & MODAL ---
-    function saveSettings() {
-      currentUser.nama = document.getElementById('cfg-nama').value.trim();
-      currentUser.nim = document.getElementById('cfg-nim').value.trim();
-      currentUser.instansi = document.getElementById('cfg-instansi').value.trim();
-      currentUser.jurusan = document.getElementById('cfg-jurusan').value.trim();
-      currentUser.apiUrl = document.getElementById('cfg-script-url').value.trim();
-      currentUser.gpsMode = document.getElementById('cfg-gps-mode').value;
+    // --- 12. PENGATURAN UMUM, PROFIL, PASSWORD & SESI AKUN ---
+    function handleAvatarUpload(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
 
-      // Workshop Settings
+      if (!file.type.startsWith('image/')) {
+        alert("Pilih file foto yang valid (JPG, PNG, WebP)!");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const maxDim = 256;
+          let width = img.width;
+          let height = img.height;
+          if (width > height) {
+            if (width > maxDim) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            }
+          } else {
+            if (height > maxDim) {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+          currentUser.foto = dataUrl;
+          localStorage.setItem('pkl_foto_profil', dataUrl);
+          updateProfileDisplay();
+          alert("Foto profil peserta magang berhasil diperbarui!");
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function deleteAvatar() {
+      if (confirm("Hapus foto profil dan gunakan inisial nama?")) {
+        currentUser.foto = '';
+        localStorage.removeItem('pkl_foto_profil');
+        const fileInput = document.getElementById('avatar-file-input');
+        if (fileInput) fileInput.value = '';
+        updateProfileDisplay();
+        alert("Foto profil berhasil dihapus.");
+      }
+    }
+
+    function saveProfile() {
+      const nama = document.getElementById('cfg-nama').value.trim();
+      const nim = document.getElementById('cfg-nim').value.trim();
+      const instansi = document.getElementById('cfg-instansi').value.trim();
+      const jurusan = document.getElementById('cfg-jurusan').value.trim();
+
+      if (!nama) {
+        alert("Nama lengkap siswa wajib diisi!");
+        return;
+      }
+
+      currentUser.nama = nama;
+      currentUser.nim = nim || '-';
+      currentUser.instansi = instansi;
+      currentUser.jurusan = jurusan;
+
+      localStorage.setItem('pkl_nama', currentUser.nama);
+      localStorage.setItem('pkl_nim', currentUser.nim);
+      localStorage.setItem('pkl_instansi', currentUser.instansi);
+      localStorage.setItem('pkl_jurusan', currentUser.jurusan);
+
+      updateProfileDisplay();
+      alert("Profil peserta magang berhasil diperbarui!");
+    }
+
+    function saveGeofenceSettings() {
       const wLat = parseFloat(document.getElementById('cfg-workshop-lat').value);
       const wLng = parseFloat(document.getElementById('cfg-workshop-lng').value);
       const wRad = parseInt(document.getElementById('cfg-workshop-radius').value);
+      const scriptUrl = document.getElementById('cfg-script-url').value.trim();
 
       if (!isNaN(wLat) && !isNaN(wLng)) {
         workshopConfig.lat = wLat;
@@ -2414,18 +2703,113 @@
         workshopConfig.radiusMeters = wRad;
         localStorage.setItem('pkl_workshop_radius', wRad);
       }
-
-      localStorage.setItem('pkl_nama', currentUser.nama);
-      localStorage.setItem('pkl_nim', currentUser.nim);
-      localStorage.setItem('pkl_instansi', currentUser.instansi);
-      localStorage.setItem('pkl_jurusan', currentUser.jurusan);
-      localStorage.setItem('pkl_script_url', currentUser.apiUrl);
-      localStorage.setItem('pkl_gps_mode', 'real');
+      currentUser.apiUrl = scriptUrl;
+      localStorage.setItem('pkl_script_url', scriptUrl);
 
       updateProfileDisplay();
       checkGPS(false);
-      alert("Pengaturan profil & parameter geofencing berhasil disimpan!");
-      switchTab('dashboard');
+      alert("Parameter geofencing & server berhasil disimpan!");
+    }
+
+    function saveSettings() {
+      saveProfile();
+      saveGeofenceSettings();
+    }
+
+    function togglePasswordVisibility(inputId, iconId) {
+      const inp = document.getElementById(inputId);
+      const icon = document.getElementById(iconId);
+      if (!inp) return;
+      if (inp.type === 'password') {
+        inp.type = 'text';
+        if (icon) icon.setAttribute('data-lucide', 'eye-off');
+      } else {
+        inp.type = 'password';
+        if (icon) icon.setAttribute('data-lucide', 'eye');
+      }
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function saveNewPassword() {
+      const oldPwd = document.getElementById('cfg-old-pwd').value;
+      const newPwd = document.getElementById('cfg-new-pwd').value;
+      const confirmPwd = document.getElementById('cfg-confirm-pwd').value;
+
+      const currentStoredPwd = localStorage.getItem('pkl_user_password') || 'daihatsu123';
+
+      if (!oldPwd) {
+        alert("Masukkan kata sandi lama / saat ini terlebih dahulu!");
+        return;
+      }
+      if (oldPwd !== currentStoredPwd) {
+        alert("Kata sandi lama yang Anda masukkan salah!");
+        return;
+      }
+      if (!newPwd || newPwd.length < 6) {
+        alert("Kata sandi baru minimal harus 6 karakter!");
+        return;
+      }
+      if (newPwd !== confirmPwd) {
+        alert("Konfirmasi kata sandi baru tidak cocok!");
+        return;
+      }
+
+      localStorage.setItem('pkl_user_password', newPwd);
+      document.getElementById('cfg-old-pwd').value = '';
+      document.getElementById('cfg-new-pwd').value = '';
+      document.getElementById('cfg-confirm-pwd').value = '';
+      alert("Kata sandi akun Anda berhasil diperbarui!");
+    }
+
+    function handleLogout() {
+      if (confirm("Apakah Anda yakin ingin keluar dari akun Presensi PKL Astra Daihatsu?")) {
+        localStorage.setItem('pkl_is_logged_in', 'false');
+        showLoginModal();
+      }
+    }
+
+    function showLoginModal() {
+      const modal = document.getElementById('login-modal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        const nimInput = document.getElementById('login-nim');
+        if (nimInput) {
+          nimInput.value = (currentUser.nim && currentUser.nim !== '-') ? currentUser.nim : '';
+        }
+        const pwdInput = document.getElementById('login-password');
+        if (pwdInput) pwdInput.value = '';
+        if (window.lucide) lucide.createIcons();
+      }
+    }
+
+    function handleLoginSubmit(event) {
+      event.preventDefault();
+      const inputNim = document.getElementById('login-nim').value.trim();
+      const inputPwd = document.getElementById('login-password').value;
+      const validPwd = localStorage.getItem('pkl_user_password') || 'daihatsu123';
+
+      if (!inputNim) {
+        alert("Masukkan NIM / NISN Anda!");
+        return;
+      }
+      if (inputPwd !== validPwd) {
+        alert("Kata sandi salah! (Default: daihatsu123)");
+        return;
+      }
+
+      currentUser.nim = inputNim;
+      localStorage.setItem('pkl_nim', inputNim);
+      localStorage.setItem('pkl_is_logged_in', 'true');
+      document.getElementById('login-modal').classList.add('hidden');
+      updateProfileDisplay();
+      alert(`Selamat datang kembali, ${currentUser.nama}!`);
+    }
+
+    function checkLoginSession() {
+      const isLoggedIn = localStorage.getItem('pkl_is_logged_in');
+      if (isLoggedIn === 'false') {
+        showLoginModal();
+      }
     }
 
     function resetDemoData() {
