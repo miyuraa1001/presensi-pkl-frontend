@@ -902,53 +902,55 @@
     </div>
   </main>
 
-  <!-- ==================== MOBILE BOTTOM NAVBAR ==================== -->
-  <nav id="mobile-bottom-nav" class="md:hidden fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-slate-200/90 z-40 px-2 py-1 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] flex items-center justify-around">
-    
-    <!-- 1. Dashboard -->
-    <button onclick="switchTab('dashboard')" id="bnav-dashboard" class="bnav-item flex-1 flex flex-col items-center justify-center py-1 text-blue-600 font-bold transition">
-      <div class="relative">
-        <i data-lucide="home" class="w-5 h-5"></i>
-        <span class="bnav-indicator absolute -top-1 -right-1 w-2 h-2 rounded-full bg-blue-600"></span>
-      </div>
-      <span class="text-[10px] mt-0.5">Beranda</span>
-    </button>
+  <!-- ==================== FLOATING iOS STYLE BOTTOM NAVBAR (DOCK) ==================== -->
+  <div class="md:hidden fixed bottom-4 inset-x-0 z-40 flex justify-center px-4 pointer-events-none">
+    <nav id="mobile-bottom-nav" class="pointer-events-auto w-full max-w-sm bg-white/85 backdrop-blur-2xl border border-white/60 shadow-[0_12px_36px_rgba(15,23,42,0.16),0_2px_8px_rgba(0,0,0,0.06)] rounded-[32px] px-2 py-1.5 flex items-center justify-between transition-all duration-300">
+      
+      <!-- 1. Dashboard -->
+      <button onclick="switchTab('dashboard')" id="bnav-dashboard" class="bnav-item flex-1 flex flex-col items-center justify-center py-1 text-blue-600 font-bold transition-all duration-200 active:scale-95 group">
+        <div class="relative flex items-center justify-center">
+          <i data-lucide="home" class="w-5 h-5 transition-transform group-hover:scale-110"></i>
+          <span class="bnav-indicator absolute -top-1 -right-1 w-2 h-2 rounded-full bg-blue-600 shadow-xs shadow-blue-500/50"></span>
+        </div>
+        <span class="text-[10px] mt-0.5 tracking-tight">Beranda</span>
+      </button>
 
-    <!-- 2. Izin/Sakit -->
-    <button onclick="switchTab('izin')" id="bnav-izin" class="bnav-item flex-1 flex flex-col items-center justify-center py-1 text-slate-400 font-medium transition">
-      <div class="relative">
-        <i data-lucide="file-plus-2" class="w-5 h-5"></i>
-        <span class="bnav-indicator hidden absolute -top-1 -right-1 w-2 h-2 rounded-full bg-blue-600"></span>
-      </div>
-      <span class="text-[10px] mt-0.5">Izin/Sakit</span>
-    </button>
+      <!-- 2. Izin/Sakit -->
+      <button onclick="switchTab('izin')" id="bnav-izin" class="bnav-item flex-1 flex flex-col items-center justify-center py-1 text-slate-400 font-medium transition-all duration-200 active:scale-95 group">
+        <div class="relative flex items-center justify-center">
+          <i data-lucide="file-plus-2" class="w-5 h-5 transition-transform group-hover:scale-110"></i>
+          <span class="bnav-indicator hidden absolute -top-1 -right-1 w-2 h-2 rounded-full bg-blue-600 shadow-xs shadow-blue-500/50"></span>
+        </div>
+        <span class="text-[10px] mt-0.5 tracking-tight">Izin/Sakit</span>
+      </button>
 
-    <!-- 3. Presensi Kamera (Prominent Elevated Center Button) -->
-    <button onclick="switchTab('presensi')" id="bnav-presensi" class="bnav-item flex-1 flex flex-col items-center justify-center -mt-4 transition group">
-      <div class="w-11 h-11 rounded-full bg-blue-600 group-hover:bg-blue-700 text-white flex items-center justify-center shadow-lg shadow-blue-600/40 border-2 border-white transition transform active:scale-95">
-        <i data-lucide="camera" class="w-5 h-5"></i>
-      </div>
-      <span class="text-[10px] font-bold text-blue-600 mt-0.5">Presensi</span>
-    </button>
+      <!-- 3. Presensi Kamera (Prominent Floating iOS Center Trigger) -->
+      <button onclick="switchTab('presensi')" id="bnav-presensi" class="bnav-item flex-1 flex flex-col items-center justify-center -translate-y-3.5 transition-all duration-200 active:scale-90 group">
+        <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-500 text-white flex items-center justify-center shadow-lg shadow-blue-600/45 border-2 border-white ring-2 ring-blue-500/20 transition transform group-hover:scale-105">
+          <i data-lucide="camera" class="w-5 h-5 drop-shadow-xs"></i>
+        </div>
+        <span class="text-[10px] font-black text-blue-600 mt-0.5 tracking-tight">Presensi</span>
+      </button>
 
-    <!-- 4. Rekap Bulanan -->
-    <button onclick="switchTab('rekap')" id="bnav-rekap" class="bnav-item flex-1 flex flex-col items-center justify-center py-1 text-slate-400 font-medium transition">
-      <div class="relative">
-        <i data-lucide="calendar-check" class="w-5 h-5"></i>
-        <span class="bnav-indicator hidden absolute -top-1 -right-1 w-2 h-2 rounded-full bg-blue-600"></span>
-      </div>
-      <span class="text-[10px] mt-0.5">Rekap</span>
-    </button>
+      <!-- 4. Rekap Bulanan -->
+      <button onclick="switchTab('rekap')" id="bnav-rekap" class="bnav-item flex-1 flex flex-col items-center justify-center py-1 text-slate-400 font-medium transition-all duration-200 active:scale-95 group">
+        <div class="relative flex items-center justify-center">
+          <i data-lucide="calendar-check" class="w-5 h-5 transition-transform group-hover:scale-110"></i>
+          <span class="bnav-indicator hidden absolute -top-1 -right-1 w-2 h-2 rounded-full bg-blue-600 shadow-xs shadow-blue-500/50"></span>
+        </div>
+        <span class="text-[10px] mt-0.5 tracking-tight">Rekap</span>
+      </button>
 
-    <!-- 5. Pengaturan & Geofence -->
-    <button onclick="switchTab('pengaturan')" id="bnav-pengaturan" class="bnav-item flex-1 flex flex-col items-center justify-center py-1 text-slate-400 font-medium transition">
-      <div class="relative">
-        <i data-lucide="settings" class="w-5 h-5"></i>
-        <span class="bnav-indicator hidden absolute -top-1 -right-1 w-2 h-2 rounded-full bg-blue-600"></span>
-      </div>
-      <span class="text-[10px] mt-0.5">Pengaturan</span>
-    </button>
-  </nav>
+      <!-- 5. Pengaturan & Geofence -->
+      <button onclick="switchTab('pengaturan')" id="bnav-pengaturan" class="bnav-item flex-1 flex flex-col items-center justify-center py-1 text-slate-400 font-medium transition-all duration-200 active:scale-95 group">
+        <div class="relative flex items-center justify-center">
+          <i data-lucide="settings" class="w-5 h-5 transition-transform group-hover:scale-110"></i>
+          <span class="bnav-indicator hidden absolute -top-1 -right-1 w-2 h-2 rounded-full bg-blue-600 shadow-xs shadow-blue-500/50"></span>
+        </div>
+        <span class="text-[10px] mt-0.5 tracking-tight">Pengaturan</span>
+      </button>
+    </nav>
+  </div>
 
   <!-- ==================== MODAL PREVIEW FOTO BUKTI ==================== -->
   <div id="photo-modal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
