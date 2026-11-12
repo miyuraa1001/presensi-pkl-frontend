@@ -6,10 +6,12 @@
  * 
  * PANDUAN RINGKAS PENYIAPAN:
  * 1. Buat 1 Google Spreadsheet baru di Google Drive Anda.
- * 2. Buat 2 Folder di Google Drive Anda:
- *    - Folder 1: "Foto_Presensi_PKL" (untuk menampung foto kehadiran & watermark)
+ * 2. Buat 3 Folder di Google Drive Anda:
+ *    - Folder 1: "Foto_Presensi_PKL" (untuk menampung foto kehadiran & watermark presensi)
  *    - Folder 2: "Foto_Profil_PKL"   (untuk menampung foto profil peserta magang)
- * 3. Salin ID Spreadsheet dan kedua ID Folder Drive ke variabel di bawah (baris 23-25).
+ *    - Folder 3: "Dokumen_SKD_PKL"   (untuk menampung berkas/foto surat sakit & Surat Keterangan Dokter)
+ *    (Tips: Anda juga bisa menjalankan fungsi `createDriveFoldersAutomated` di bawah untuk membuat ke-3 folder ini secara otomatis!)
+ * 3. Salin ID Spreadsheet dan ketiga ID Folder Drive ke variabel di bawah (baris 28-31).
  * 4. Buka menu Extensions > Apps Script pada Spreadsheet Anda, lalu tempel kode ini.
  * 5. Jalankan fungsi `setupDatabaseSheets` (klik tombol 'Run' / 'Jalankan')
  *    -> Spreadsheet Anda akan otomatis dibuatkan semua sheet dan nama kolom secara rapi!
@@ -26,6 +28,7 @@
 const SPREADSHEET_ID     = "MASUKKAN_SPREADSHEET_ID_DISINI";
 const FOLDER_PRESENSI_ID = "MASUKKAN_ID_FOLDER_FOTO_ABSENSI_DISINI";
 const FOLDER_PROFIL_ID   = "MASUKKAN_ID_FOLDER_FOTO_PROFIL_DISINI";
+const FOLDER_SKD_ID      = "MASUKKAN_ID_FOLDER_SURAT_DOKTER_SKD_DISINI";
 
 /**
  * Endpoint HTTP GET (Untuk Test Ping & Pengecekan Status Koneksi)
@@ -192,30 +195,38 @@ function doPost(e) {
     }
 
     // ===================================================================
-    // 3. ACTION: PENGAJUAN PERIZINAN / SAKIT
+    // 3. ACTION: PENGAJUAN PERIZINAN / SAKIT & SURAT DOKTER (SKD)
     // ===================================================================
     if (data.action === "izin_sakit") {
       let docUrl = "-";
 
-      // Upload Bukti Surat Dokter / Dokumen ke Drive
+      // Upload Bukti Surat Dokter / Dokumen SKD ke Google Drive (Folder SKD)
       if (data.fileBase64) {
         try {
-          const folderPresensi = DriveApp.getFolderById(FOLDER_PRESENSI_ID);
+          // Gunakan FOLDER_SKD_ID jika sudah dikonfigurasi, atau fallback ke FOLDER_PRESENSI_ID
+          const targetFolderId = (FOLDER_SKD_ID && FOLDER_SKD_ID !== "MASUKKAN_ID_FOLDER_SURAT_DOKTER_SKD_DISINI")
+            ? FOLDER_SKD_ID
+            : FOLDER_PRESENSI_ID;
+
+          const folderSKD = DriveApp.getFolderById(targetFolderId);
           const cleanDoc = data.fileBase64.replace(/^data:.*?;base64,/, "");
-          const mime = data.fileBase64.indexOf("data:application/pdf") !== -1 ? "application/pdf" : "image/jpeg";
-          const ext = mime === "application/pdf" ? "pdf" : "jpg";
-          const fileName = `BUKTI_${data.jenis}_${data.nim}_${Date.now()}.${ext}`;
+          const isPdf = data.fileBase64.indexOf("data:application/pdf") !== -1 || (data.fileName && data.fileName.toLowerCase().endsWith(".pdf"));
+          const mime = isPdf ? "application/pdf" : "image/jpeg";
+          const ext = isPdf ? "pdf" : "jpg";
+          const timeStampStr = Utilities.formatDate(new Date(), "GMT+7", "yyyyMMdd_HHmmss");
+          const safeJenis = (data.jenis || "IZIN").replace(/\s+/g, "_").toUpperCase();
+          const fileName = `SKD_${safeJenis}_${data.nim}_${timeStampStr}.${ext}`;
 
           const docBlob = Utilities.newBlob(
             Utilities.base64Decode(cleanDoc), 
             mime, 
             fileName
           );
-          const docFile = folderPresensi.createFile(docBlob);
+          const docFile = folderSKD.createFile(docBlob);
           docFile.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
           docUrl = docFile.getUrl();
         } catch (driveErr) {
-          docUrl = "Error upload bukti: " + driveErr.toString();
+          docUrl = "Error upload SKD: " + driveErr.toString();
         }
       }
 
@@ -322,12 +333,41 @@ function updateRekapBulanan(ss, nim, nama, tipe) {
 // FUNGSI OTOMATIS GENERATE DATABASE & TABEL (CUKUP JALANKAN 1 KALI)
 // =======================================================================
 /**
+ * FUNGSI BANTU OTOMATIS: BUAT 3 FOLDER GOOGLE DRIVE DALAM 1-KLIK
+ * Jalankan fungsi ini langsung dari editor Apps Script untuk membuat:
+ * 1. "Foto_Presensi_PKL" -> Menampung foto selfie absensi & watermark
+ * 2. "Foto_Profil_PKL"   -> Menampung foto profil peserta magang
+ * 3. "Dokumen_SKD_PKL"   -> Menampung berkas/foto surat sakit & surat dokter
+ * 
+ * Folder ID akan otomatis ditampilkan di Execution Log (Ctrl + Enter)
+ */
+function createDriveFoldersAutomated() {
+  const root = DriveApp.getRootFolder();
+  
+  const fPresensi = root.createFolder("Foto_Presensi_PKL");
+  const fProfil   = root.createFolder("Foto_Profil_PKL");
+  const fSKD      = root.createFolder("Dokumen_SKD_PKL");
+
+  fPresensi.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  fProfil.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  fSKD.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+
+  Logger.log("==================================================");
+  Logger.log("BERHASIL MEMBUAT 3 FOLDER GOOGLE DRIVE:");
+  Logger.log("1. FOLDER_PRESENSI_ID = \"" + fPresensi.getId() + "\";");
+  Logger.log("2. FOLDER_PROFIL_ID   = \"" + fProfil.getId() + "\";");
+  Logger.log("3. FOLDER_SKD_ID      = \"" + fSKD.getId() + "\";");
+  Logger.log("Silakan salin ID ketiga folder di atas ke baris 29-31 Code.gs");
+  Logger.log("==================================================");
+}
+
+/**
  * Jalankan fungsi ini langsung dari editor Apps Script untuk membuat semua sheet
  * dan nama kolom secara otomatis dengan styling resmi Astra Daihatsu!
  */
 function setupDatabaseSheets() {
   if (SPREADSHEET_ID === "MASUKKAN_SPREADSHEET_ID_DISINI") {
-    throw new Error("Silakan masukkan SPREADSHEET_ID Anda di baris 23 sebelum menjalankan fungsi ini!");
+    throw new Error("Silakan masukkan SPREADSHEET_ID Anda di baris 28 sebelum menjalankan fungsi ini!");
   }
 
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);

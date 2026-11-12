@@ -1156,16 +1156,18 @@
         <div class="bg-blue-50 border border-blue-200 rounded-xl p-3">
           <p class="font-bold text-blue-900">Langkah Konfigurasi Backend:</p>
           <ol class="list-decimal pl-4 mt-1.5 space-y-1.5 text-blue-900">
-            <li>Buka <a href="https://drive.google.com" target="_blank" class="underline font-bold text-blue-700">Google Drive</a> dan buat <strong>2 Folder</strong>:
-              <ul class="list-disc pl-4 mt-1 text-[11px] text-blue-800">
-                <li><code class="bg-white px-1.5 py-0.5 rounded font-bold">Foto_Presensi_PKL</code> (untuk nampung foto absensi & watermark)</li>
+            <li>Buka <a href="https://drive.google.com" target="_blank" class="underline font-bold text-blue-700">Google Drive</a> dan buat <strong>3 Folder</strong>:
+              <ul class="list-disc pl-4 mt-1 text-[11px] text-blue-800 space-y-0.5">
+                <li><code class="bg-white px-1.5 py-0.5 rounded font-bold">Foto_Presensi_PKL</code> (untuk nampung foto absensi & watermark IN/OUT)</li>
                 <li><code class="bg-white px-1.5 py-0.5 rounded font-bold">Foto_Profil_PKL</code> (untuk nampung foto profil peserta magang)</li>
+                <li><code class="bg-white px-1.5 py-0.5 rounded font-bold text-emerald-900">Dokumen_SKD_PKL</code> (untuk nampung berkas/foto surat sakit & Surat Keterangan Dokter)</li>
               </ul>
+              <p class="text-[10.5px] text-blue-700 mt-1 italic">Tip: Anda juga bisa menjalankan fungsi <code class="bg-white px-1 rounded font-bold">createDriveFoldersAutomated</code> di Code.gs untuk membuat ketiga folder ini otomatis!</p>
             </li>
             <li>Buka <a href="https://sheets.new" target="_blank" class="underline font-bold text-blue-700">Google Spreadsheet Baru</a>.</li>
             <li>Buka menu <strong>Extensions &gt; Apps Script</strong> pada Spreadsheet Anda.</li>
             <li>Salin seluruh isi file <code class="bg-white px-1.5 py-0.5 rounded font-bold">Code.gs</code> dari root repo ini ke editor Apps Script.</li>
-            <li>Isi <code class="bg-white px-1 rounded">SPREADSHEET_ID</code>, <code class="bg-white px-1 rounded">FOLDER_PRESENSI_ID</code>, dan <code class="bg-white px-1 rounded">FOLDER_PROFIL_ID</code> di baris 23-25 file Code.gs.</li>
+            <li>Isi <code class="bg-white px-1 rounded">SPREADSHEET_ID</code>, <code class="bg-white px-1 rounded">FOLDER_PRESENSI_ID</code>, <code class="bg-white px-1 rounded">FOLDER_PROFIL_ID</code>, dan <code class="bg-white px-1 rounded">FOLDER_SKD_ID</code> di baris 28-31 file Code.gs.</li>
             <li><strong>Auto-Generate Database:</strong> Pilih fungsi <code class="bg-white px-1.5 py-0.5 rounded font-bold text-emerald-800">setupDatabaseSheets</code> di toolbar atas lalu klik <strong>Run (Jalankan)</strong>. Seluruh sheet & kolom akan dibuat otomatis!</li>
             <li>Klik menu <strong>Deploy &gt; New deployment</strong>, pilih tipe <strong>Web app</strong>. Atur <em>Execute as: Me</em> dan <em>Who has access: Anyone</em>.</li>
             <li>Salin URL Web App yang dihasilkan ke input URL di tab Pengaturan aplikasi!</li>
@@ -2723,8 +2725,9 @@
       submitBtn.disabled = false;
       submitBtn.innerHTML = `<span>Kirim Presensi Sekarang</span>`;
       
-      const serverMsg = currentUser.apiUrl ? (backendSuccess ? " & tersinkronisasi ke Google Apps Script!" : " (Disimpan lokal; periksa URL Apps Script Anda)") : " (Tersimpan di perangkat lokal).";
-      alert(`Presensi [${activeAttendanceType}] Berhasil Tercatat!${serverMsg}`);
+      const serverMsg = currentUser.apiUrl ? (backendSuccess ? " & tersinkronisasi ke Google Spreadsheet & Google Drive!" : " (Disimpan secara lokal; periksa kembali URL Apps Script Anda)") : " (Tersimpan di perangkat lokal).";
+      showAppAlert(`Presensi [${activeAttendanceType}] Berhasil Tercatat!${serverMsg}`, "Presensi Berhasil", "success");
+      showAppToast(`Presensi ${activeAttendanceType} Berhasil!`, "success");
 
       renderDashboardStats();
       renderRekapTable();
@@ -2768,13 +2771,13 @@
       const fileInput = document.getElementById('file-dokumen');
 
       if (jenis === 'Sakit' && (!fileInput.files || fileInput.files.length === 0)) {
-        alert("Wajib melampirkan Surat Keterangan Dokter (SKD) untuk permohonan Sakit!");
+        showAppAlert("Wajib melampirkan berkas foto atau file Surat Keterangan Dokter (SKD) untuk permohonan Sakit!", "Lampiran SKD Diperlukan", "warning");
         return;
       }
 
       const btn = document.getElementById('btn-submit-izin');
       btn.disabled = true;
-      btn.innerHTML = `<span class="animate-spin inline-block mr-2">⏳</span> Mengirim Formulir...`;
+      btn.innerHTML = `<span class="animate-spin inline-block mr-2">⏳</span> Mengunggah SKD & Mengirim Formulir...`;
 
       let fileBase64Data = "";
       let fileNameData = "";
@@ -2824,7 +2827,8 @@
 
       btn.disabled = false;
       btn.innerHTML = `<span>Kirim Permohonan Izin / Sakit</span>`;
-      alert(`Pengajuan ${jenis} berhasil dikirim dan tersimpan!`);
+      showAppAlert(`Permohonan ${jenis} berhasil dikirim dan tersimpan di database Google Sheets & Google Drive (Folder Dokumen SKD)!`, "Permohonan Terkirim", "success");
+      showAppToast(`Pengajuan ${jenis} berhasil dikirim!`, "success");
       
       e.target.reset();
       document.getElementById('file-name-preview').innerText = "Klik untuk mengunggah foto / file surat dokter";
