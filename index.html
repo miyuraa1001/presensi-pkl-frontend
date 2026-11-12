@@ -20,6 +20,10 @@
   <!-- Tailwind CSS & Lucide Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Leaflet.js Real Interactive Map (OpenStreetMap) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700;1,800&display=swap');
@@ -27,6 +31,28 @@
     * {
       font-family: 'Plus Jakarta Sans', sans-serif;
       -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Leaflet Map custom styles */
+    #live-geofence-map {
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+    .leaflet-container {
+      font-family: inherit;
+    }
+    .user-pulse-marker {
+      position: relative;
+    }
+    .user-pulse-marker::after {
+      content: '';
+      position: absolute;
+      top: -6px; left: -6px;
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: rgba(37, 99, 235, 0.45);
+      animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
     }
     
     /* Radar animation effect */
@@ -307,38 +333,29 @@
 
               <!-- Map Simulation Widget & Details Side-by-Side -->
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
-                <!-- High-Tech Geofencing Radar Widget (Astra Daihatsu Ahmad Yani) -->
-                <div class="relative w-full h-44 rounded-xl overflow-hidden bg-[#070d1e] border border-slate-700/60 flex items-center justify-center shadow-inner">
-                  <!-- Grid Pattern Background -->
-                  <div class="absolute inset-0 bg-[radial-gradient(#1e3a8a_1px,transparent_1px)] [background-size:16px_16px] opacity-40"></div>
-                  <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-slate-950/40"></div>
+                <!-- Real Interactive Leaflet OpenStreetMap Container -->
+                <div class="relative w-full h-52 sm:h-56 rounded-xl overflow-hidden border border-slate-300 shadow-xs bg-slate-100 flex flex-col justify-end">
+                  <div id="live-geofence-map" class="absolute inset-0 w-full h-full"></div>
 
-                  <!-- Crosshairs & Coordinate Grid Lines -->
-                  <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <div class="w-full h-px bg-cyan-500/20"></div>
-                    <div class="h-full w-px bg-cyan-500/20 absolute"></div>
+                  <!-- Overlay Top-Left: Badge Info Workshop -->
+                  <div class="absolute top-2 left-2 z-[400] bg-white/95 backdrop-blur-xs px-2.5 py-1 rounded-lg shadow-xs border border-slate-200 text-[10px] font-bold text-slate-800 flex items-center gap-1.5 pointer-events-none">
+                    <span class="w-2 h-2 rounded-full bg-red-600 animate-pulse"></span>
+                    <span>Astra Daihatsu A. Yani</span>
                   </div>
 
-                  <!-- Range Rings -->
-                  <div class="absolute w-36 h-36 rounded-full border border-dashed border-cyan-500/25"></div>
-                  <div class="absolute w-24 h-24 rounded-full border border-cyan-500/30"></div>
-
-                  <!-- Center Radar Circle Animation -->
-                  <div class="relative z-10 w-32 h-32 rounded-full border-2 border-cyan-400/80 bg-cyan-500/20 flex items-center justify-center radar-pulse">
-                    <div class="w-4 h-4 rounded-full bg-blue-500 border-2 border-white shadow-lg flex items-center justify-center">
-                      <span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>
-                    </div>
+                  <!-- Overlay Top-Right: Map View Action Shortcuts -->
+                  <div class="absolute top-2 right-2 z-[400] flex gap-1">
+                    <button type="button" onclick="focusOnWorkshop()" class="bg-white/95 hover:bg-slate-100 text-slate-700 px-2 py-1 rounded-lg shadow-xs border border-slate-200 text-[10px] font-bold flex items-center gap-1 transition" title="Fokuskan ke Bengkel">
+                      <i data-lucide="building-2" class="w-3 h-3 text-red-600"></i> Bengkel
+                    </button>
+                    <button type="button" onclick="recenterMap()" class="bg-white/95 hover:bg-slate-100 text-blue-600 px-2 py-1 rounded-lg shadow-xs border border-slate-200 text-[10px] font-bold flex items-center gap-1 transition" title="Fokuskan ke Posisi Saya">
+                      <i data-lucide="crosshair" class="w-3 h-3"></i> Posisi Saya
+                    </button>
                   </div>
 
-                  <!-- Floating Location Tag (Top Left) -->
-                  <div class="absolute top-2.5 left-2.5 bg-slate-900/90 backdrop-blur-xs px-2.5 py-1 rounded-lg border border-slate-700 text-[10px] text-cyan-300 font-mono flex items-center gap-1.5 shadow-xs">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                    <span>Jl. A. Yani No. 1</span>
-                  </div>
-
-                  <!-- Floating Distance Tag (Bottom Right) -->
-                  <div class="absolute bottom-2.5 right-2.5 bg-white/95 backdrop-blur-xs px-2.5 py-1 rounded-lg shadow-sm border border-slate-200 flex flex-col items-end">
-                    <span class="text-[9px] text-slate-500 font-bold uppercase">Jarak Terhitung</span>
+                  <!-- Overlay Bottom-Right: Live Distance Display -->
+                  <div class="absolute bottom-2 right-2 z-[400] bg-white/95 backdrop-blur-xs px-2.5 py-1 rounded-lg shadow border border-slate-200 flex flex-col items-end pointer-events-none">
+                    <span class="text-[9px] text-slate-500 font-bold uppercase tracking-wider">Jarak Terhitung</span>
                     <span id="live-distance-txt" class="text-xs font-black text-blue-600">0 m</span>
                   </div>
                 </div>
@@ -1010,10 +1027,15 @@
     };
 
     // Auto-migrasi jika browser masih menyimpan titik lama PRD (-5.3932) yang meleset 3.26 km ke Rajabasa
-    const savedLat = localStorage.getItem('pkl_workshop_lat');
-    if (savedLat === '-5.3932' || savedLat === null) {
+    const savedLatRaw = localStorage.getItem('pkl_workshop_lat');
+    const parsedLat = parseFloat(savedLatRaw);
+    if (!savedLatRaw || isNaN(parsedLat) || Math.abs(parsedLat - (-5.3932)) < 0.005) {
       localStorage.setItem('pkl_workshop_lat', REAL_DAIHATSU_AHMAD_YANI.lat);
       localStorage.setItem('pkl_workshop_lng', REAL_DAIHATSU_AHMAD_YANI.lng);
+      localStorage.setItem('pkl_workshop_radius', REAL_DAIHATSU_AHMAD_YANI.radiusMeters);
+    }
+    const savedRadius = parseInt(localStorage.getItem('pkl_workshop_radius'));
+    if (!savedRadius || savedRadius <= 70) {
       localStorage.setItem('pkl_workshop_radius', REAL_DAIHATSU_AHMAD_YANI.radiusMeters);
     }
 
@@ -1022,6 +1044,12 @@
       lng: parseFloat(localStorage.getItem('pkl_workshop_lng')) || REAL_DAIHATSU_AHMAD_YANI.lng,
       radiusMeters: parseInt(localStorage.getItem('pkl_workshop_radius')) || REAL_DAIHATSU_AHMAD_YANI.radiusMeters
     };
+
+    // Leaflet Interactive Real Map State
+    let liveMap = null;
+    let workshopMarker = null;
+    let geofenceCircle = null;
+    let userMarker = null;
 
     // State Pengguna
     let currentUser = {
@@ -1121,12 +1149,150 @@
       lucide.createIcons();
       updateProfileDisplay();
       initDates();
+      initLiveMap();
       checkGPS(false);
       setInterval(updateLiveClock, 1000);
       updateLiveClock();
       renderDashboardStats();
       renderRekapTable();
     });
+
+    // --- 3.1 REAL INTERACTIVE MAP (LEAFLET + OPENSTREETMAP) ---
+    function initLiveMap() {
+      const mapContainer = document.getElementById('live-geofence-map');
+      if (!mapContainer || liveMap) return;
+
+      try {
+        liveMap = L.map('live-geofence-map', {
+          center: [workshopConfig.lat, workshopConfig.lng],
+          zoom: 17,
+          zoomControl: false,
+          attributionControl: false
+        });
+
+        // OpenStreetMap Tile Layer Resmi & Gratis (Jalanan Nyata Bandar Lampung)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution: '&copy; OpenStreetMap'
+        }).addTo(liveMap);
+
+        // Zoom Controls di sudut kiri bawah
+        L.control.zoom({ position: 'bottomleft' }).addTo(liveMap);
+
+        // Custom Icon Daihatsu Workshop (Pin Merah)
+        const workshopIcon = L.divIcon({
+          className: 'custom-workshop-icon',
+          html: `
+            <div style="background-color: #dc2626; color: white; width: 34px; height: 34px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.35); border: 2.5px solid white;">
+              <span style="transform: rotate(45deg); font-weight: 900; font-size: 13px; letter-spacing: -0.5px;">D</span>
+            </div>
+          `,
+          iconSize: [34, 34],
+          iconAnchor: [17, 34],
+          popupAnchor: [0, -32]
+        });
+
+        workshopMarker = L.marker([workshopConfig.lat, workshopConfig.lng], { icon: workshopIcon })
+          .addTo(liveMap)
+          .bindPopup(`
+            <div style="font-family: inherit; font-size: 12px; line-height: 1.4;">
+              <strong style="color: #dc2626; font-size: 13px;">Astra Daihatsu Ahmad Yani</strong><br>
+              Jl. Jend. A. Yani No. 1, Palapa, Tj. Karang Pusat<br>
+              <span style="color: #64748b; font-size: 11px;">Pusat Geofence Presensi PKL</span>
+            </div>
+          `);
+
+        // Lingkaran Radius Geofence (150m)
+        geofenceCircle = L.circle([workshopConfig.lat, workshopConfig.lng], {
+          radius: workshopConfig.radiusMeters,
+          color: '#10b981',
+          fillColor: '#10b981',
+          fillOpacity: 0.18,
+          weight: 2,
+          dashArray: '5, 5'
+        }).addTo(liveMap).bindPopup(`Radius Geofence: ${workshopConfig.radiusMeters} meter`);
+
+        // Custom User Location Pin Marker (Blue dot with pulse animation)
+        const userDotIcon = L.divIcon({
+          className: 'user-pulse-marker',
+          html: `
+            <div style="width: 14px; height: 14px; border-radius: 50%; background: #2563eb; border: 2.5px solid #ffffff; box-shadow: 0 2px 6px rgba(37,99,235,0.6);"></div>
+          `,
+          iconSize: [14, 14],
+          iconAnchor: [7, 7]
+        });
+
+        userMarker = L.marker([userLocation.lat, userLocation.lng], { icon: userDotIcon })
+          .addTo(liveMap)
+          .bindPopup(`
+            <div style="font-family: inherit; font-size: 11px;">
+              <strong style="color: #2563eb;">Posisi Anda Saat Ini</strong><br>
+              Jarak ke Bengkel: <b>${userLocation.distance} meter</b>
+            </div>
+          `);
+
+        updateMapPositions();
+      } catch (err) {
+        console.warn("Leaflet map initialization warning:", err);
+      }
+    }
+
+    function updateMapPositions() {
+      if (!liveMap) return;
+
+      // Update Workshop Marker & Circle
+      if (workshopMarker) {
+        workshopMarker.setLatLng([workshopConfig.lat, workshopConfig.lng]);
+      }
+
+      if (geofenceCircle) {
+        geofenceCircle.setLatLng([workshopConfig.lat, workshopConfig.lng]);
+        geofenceCircle.setRadius(workshopConfig.radiusMeters);
+
+        // Hijau jika dalam radius, Merah jika di luar
+        if (userLocation.isInside) {
+          geofenceCircle.setStyle({ color: '#10b981', fillColor: '#10b981', fillOpacity: 0.18 });
+        } else {
+          geofenceCircle.setStyle({ color: '#ef4444', fillColor: '#ef4444', fillOpacity: 0.22 });
+        }
+      }
+
+      // Update User Marker
+      if (userMarker) {
+        userMarker.setLatLng([userLocation.lat, userLocation.lng]);
+        userMarker.setPopupContent(`
+          <div style="font-family: inherit; font-size: 11px; line-height: 1.4;">
+            <strong style="color: #2563eb;">Posisi Anda Saat Ini</strong><br>
+            Jarak: <b>${userLocation.distance} meter</b><br>
+            Akurasi GPS: &plusmn;${userLocation.accuracy} m<br>
+            Status: <b style="color: ${userLocation.isInside ? '#16a34a' : '#dc2626'};">${userLocation.isInside ? 'Dalam Radius Bengkel' : 'Di Luar Radius Bengkel'}</b>
+          </div>
+        `);
+      }
+
+      // Fit bounds agar Workshop dan Posisi User terlihat berdampingan
+      try {
+        const bounds = L.latLngBounds([
+          [workshopConfig.lat, workshopConfig.lng],
+          [userLocation.lat, userLocation.lng]
+        ]);
+        liveMap.fitBounds(bounds, { padding: [40, 40], maxZoom: 18 });
+      } catch (e) {
+        liveMap.setView([workshopConfig.lat, workshopConfig.lng], 16);
+      }
+    }
+
+    function recenterMap() {
+      if (!liveMap) return;
+      liveMap.setView([userLocation.lat, userLocation.lng], 17, { animate: true });
+      if (userMarker) userMarker.openPopup();
+    }
+
+    function focusOnWorkshop() {
+      if (!liveMap) return;
+      liveMap.setView([workshopConfig.lat, workshopConfig.lng], 17, { animate: true });
+      if (workshopMarker) workshopMarker.openPopup();
+    }
 
     function initDates() {
       const now = new Date();
@@ -1358,6 +1524,7 @@
       }
 
       updateWatermarkLabels();
+      updateMapPositions();
       lucide.createIcons();
     }
 
@@ -1414,6 +1581,12 @@
 
       if (tabId === 'dashboard') {
         renderDashboardStats();
+        if (liveMap) {
+          setTimeout(() => {
+            liveMap.invalidateSize();
+            updateMapPositions();
+          }, 200);
+        }
       }
 
       const titles = {
