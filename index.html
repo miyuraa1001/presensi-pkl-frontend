@@ -186,9 +186,9 @@
     <!-- TOPBAR / HEADER (Mobile + Desktop) -->
     <header class="bg-white border-b border-slate-200/80 px-4 md:px-8 py-3.5 flex items-center justify-between sticky top-0 z-20 shadow-xs">
       <div class="flex items-center gap-3">
-        <!-- Small Mobile Brand Emblem (Daihatsu Red 'D') -->
-        <div class="w-8 h-8 rounded-lg bg-red-600 text-white flex items-center justify-center font-black text-sm md:hidden shadow-xs flex-shrink-0">
-          <span>D</span>
+        <!-- Mobile Official Daihatsu Logo Emblem -->
+        <div class="h-10 px-2.5 rounded-xl bg-white border border-slate-200/90 flex items-center justify-center md:hidden shadow-2xs flex-shrink-0">
+          <img src="Image/Logo-Daihatsu.png" alt="Astra Daihatsu" class="h-6 w-auto object-contain">
         </div>
         <div>
           <h2 id="page-title" class="text-lg md:text-2xl font-bold text-slate-900 leading-tight">Dashboard</h2>
@@ -781,6 +781,43 @@
           </div>
         </div>
 
+        <!-- ==================== PWA INSTALL / DOWNLOAD APK CARD ==================== -->
+        <div class="bg-gradient-to-br from-[#0d1a3a] via-[#142338] to-[#1e3a8a] text-white p-5 md:p-6 rounded-2xl shadow-sm border border-slate-700/60 relative overflow-hidden">
+          <div class="absolute inset-0 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:16px_16px] opacity-15 pointer-events-none"></div>
+
+          <div class="relative z-10 space-y-3.5">
+            <div class="flex items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-xl bg-white p-1.5 shadow-md flex items-center justify-center flex-shrink-0">
+                  <img src="Image/Logo-PWA.png" alt="Presensi PKL" class="w-full h-full object-contain rounded-lg">
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <h4 class="font-extrabold text-sm text-white">Download Aplikasi ke HP</h4>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">Web APK</span>
+                  </div>
+                  <p class="text-[11px] text-slate-300 mt-0.5">Tampilkan icon aplikasi di Home Screen smartphone Anda</p>
+                </div>
+              </div>
+            </div>
+
+            <p class="text-xs text-slate-200/90 leading-relaxed bg-white/10 p-3 rounded-xl border border-white/10">
+              Pasang aplikasi presensi langsung di layar utama smartphone Android / iPhone. Membuka presensi jauh lebih cepat tanpa mengetik URL, hemat kuota, dan mendukung mode offline!
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-2 pt-1">
+              <button type="button" onclick="triggerPwaInstall()" id="btn-pwa-install" class="flex-1 py-3 px-4 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs rounded-xl shadow-lg shadow-emerald-500/30 flex items-center justify-center gap-2 transition active:scale-95">
+                <i data-lucide="download" class="w-4 h-4"></i>
+                <span id="btn-pwa-install-txt">Pasang Aplikasi ke Home Screen</span>
+              </button>
+              <button type="button" onclick="showPwaGuideModal()" class="py-3 px-4 bg-white/15 hover:bg-white/25 text-white font-semibold text-xs rounded-xl border border-white/20 flex items-center justify-center gap-1.5 transition">
+                <i data-lucide="smartphone" class="w-4 h-4 text-cyan-300"></i>
+                <span>Petunjuk HP</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
         <!-- Profile Form Card -->
         <div class="bg-white p-5 md:p-6 rounded-2xl border border-slate-200/80 shadow-xs space-y-4">
           <div class="flex items-center justify-between border-b border-slate-100 pb-2">
@@ -1014,6 +1051,105 @@
     </div>
   </div>
 
+  <!-- ==================== MODAL PANDUAN DOWNLOAD / PASANG WEB APK ==================== -->
+  <div id="pwa-guide-modal" class="hidden fixed inset-0 bg-black/75 backdrop-blur-xs z-50 flex items-center justify-center p-4 transition-all">
+    <div class="bg-white rounded-3xl max-w-lg w-full max-h-[90vh] flex flex-col overflow-hidden shadow-2xl border border-slate-200/80">
+      
+      <!-- Modal Header -->
+      <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-gradient-to-r from-slate-900 via-[#102244] to-[#1e3a8a] text-white">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-white p-1.5 shadow-md flex items-center justify-center flex-shrink-0">
+            <img src="Image/Logo-PWA.png" alt="Daihatsu Presensi" class="w-full h-full object-contain rounded-lg">
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h4 class="font-extrabold text-sm text-white">Download Web APK ke HP</h4>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500 text-white">Resmi PWA</span>
+            </div>
+            <p class="text-[11px] text-slate-300">Tampilkan icon di Layar Utama HP tanpa install dari Play Store</p>
+          </div>
+        </div>
+        <button onclick="closePwaGuideModal()" class="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 flex items-center justify-center transition" aria-label="Tutup Modal">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-5 overflow-y-auto space-y-4 text-xs text-slate-700">
+        
+        <!-- Action Button Auto Install -->
+        <div class="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-between gap-3">
+          <div class="space-y-0.5">
+            <p class="font-bold text-emerald-950 text-xs flex items-center gap-1.5">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5 text-emerald-600"></i> Pasang Otomatis (1-Klik)
+            </p>
+            <p class="text-[11px] text-emerald-800">Browser modern Android / Chrome langsung memunculkan pop-up instalasi</p>
+          </div>
+          <button type="button" onclick="triggerPwaInstall()" class="px-3.5 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs rounded-xl shadow-md shadow-emerald-600/25 flex items-center gap-1.5 flex-shrink-0 transition">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+            <span>Pasang</span>
+          </button>
+        </div>
+
+        <!-- Android Guide -->
+        <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 space-y-2.5">
+          <div class="flex items-center gap-2">
+            <div class="w-6 h-6 rounded-lg bg-emerald-600 text-white flex items-center justify-center text-xs font-black">
+              A
+            </div>
+            <h5 class="font-bold text-slate-900 text-xs">Cara di HP Android (Chrome / Samsung Internet / Edge)</h5>
+          </div>
+          <ol class="list-decimal pl-4 space-y-1.5 text-[11.5px] text-slate-600 leading-relaxed">
+            <li>Klik tombol <strong>"Pasang"</strong> di atas atau tombol di kartu Pengaturan.</li>
+            <li>Jika pop-up tidak muncul, tap <strong>menu titik tiga (⋮)</strong> di sudut kanan atas browser Chrome / Samsung Internet.</li>
+            <li>Pilih opsi <span class="font-bold text-slate-800 bg-white px-1.5 py-0.5 rounded border border-slate-200">"Tambahkan ke Layar Utama"</span> atau <span class="font-bold text-slate-800 bg-white px-1.5 py-0.5 rounded border border-slate-200">"Install Aplikasi"</span>.</li>
+            <li>Klik <strong>"Install / Tambahkan"</strong>. Icon aplikasi Astra Daihatsu akan langsung terpasang di layar utama HP Anda layaknya aplikasi Android APK!</li>
+          </ol>
+        </div>
+
+        <!-- iOS Safari Guide -->
+        <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 space-y-2.5">
+          <div class="flex items-center gap-2">
+            <div class="w-6 h-6 rounded-lg bg-slate-900 text-white flex items-center justify-center text-xs font-black">
+              iOS
+            </div>
+            <h5 class="font-bold text-slate-900 text-xs">Cara di iPhone / iPad (Safari)</h5>
+          </div>
+          <ol class="list-decimal pl-4 space-y-1.5 text-[11.5px] text-slate-600 leading-relaxed">
+            <li>Buka halaman web ini di browser bawaan <strong>Safari</strong> (bukan browser di dalam WA/IG).</li>
+            <li>Tap ikon <strong>Share / Bagikan</strong> <i data-lucide="share" class="inline w-3 h-3 text-blue-600"></i> (kotak dengan panah ke atas) di bar navigasi bawah Safari.</li>
+            <li>Scroll ke bawah pada menu yang muncul, lalu pilih <span class="font-bold text-slate-800 bg-white px-1.5 py-0.5 rounded border border-slate-200">"Tambah ke Layar Utama"</span> (Add to Home Screen <i data-lucide="plus-square" class="inline w-3 h-3"></i>).</li>
+            <li>Tap tombol <strong>"Tambah"</strong> di pojok kanan atas layar. Selesai! Icon aplikasi presensi akan muncul di Home Screen iPhone Anda.</li>
+          </ol>
+        </div>
+
+        <!-- Keunggulan Web APK -->
+        <div class="p-3 bg-blue-50 border border-blue-200/70 rounded-xl space-y-1 text-blue-950">
+          <p class="font-bold text-[11px] flex items-center gap-1.5">
+            <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-blue-600"></i> Keuntungan Memasang ke Layar Utama:
+          </p>
+          <ul class="list-disc pl-4 text-[11px] text-blue-900/90 space-y-0.5">
+            <li>Membuka presensi 1-tap langsung tanpa perlu repot mengetik link web lagi.</li>
+            <li>Layar penuh (full-screen) tanpa address bar browser yang mengganggu.</li>
+            <li>Akses lokasi GPS bengkel & kamera presensi berjalan lebih cepat dan presisi.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 border-t border-slate-200/80 bg-slate-50 flex items-center justify-end gap-2">
+        <button type="button" onclick="closePwaGuideModal()" class="px-4 py-2.5 bg-slate-200 hover:bg-slate-300 active:scale-95 text-slate-800 font-bold text-xs rounded-xl transition">
+          Tutup
+        </button>
+        <button type="button" onclick="triggerPwaInstall()" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs rounded-xl shadow-md shadow-emerald-600/25 flex items-center gap-1.5 transition">
+          <i data-lucide="download" class="w-3.5 h-3.5"></i>
+          <span>Pasang ke HP Sekarang</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
   <!-- ==================== JAVASCRIPT APPLICATION LOGIC ==================== -->
   <script>
     // Register PWA Service Worker for homescreen install
@@ -1023,6 +1159,53 @@
           console.warn('SW registration failed:', err);
         });
       });
+    }
+
+    // PWA Install / Home Screen Handling
+    let deferredPwaPrompt = null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPwaPrompt = e;
+      const btnTxt = document.getElementById('btn-pwa-install-txt');
+      if (btnTxt) {
+        btnTxt.innerText = "Download & Pasang Sekarang";
+      }
+    });
+
+    window.addEventListener('appinstalled', () => {
+      deferredPwaPrompt = null;
+      const btnTxt = document.getElementById('btn-pwa-install-txt');
+      if (btnTxt) {
+        btnTxt.innerText = "Aplikasi Sudah Terpasang";
+      }
+      alert("Selamat! Aplikasi Presensi PKL Astra Daihatsu berhasil terpasang di Layar Utama HP Anda.");
+    });
+
+    async function triggerPwaInstall() {
+      if (deferredPwaPrompt) {
+        deferredPwaPrompt.prompt();
+        const { outcome } = await deferredPwaPrompt.userChoice;
+        if (outcome === 'accepted') {
+          deferredPwaPrompt = null;
+        }
+      } else {
+        showPwaGuideModal();
+      }
+    }
+
+    function showPwaGuideModal() {
+      const modal = document.getElementById('pwa-guide-modal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        if (window.lucide) lucide.createIcons();
+      }
+    }
+
+    function closePwaGuideModal() {
+      const modal = document.getElementById('pwa-guide-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+      }
     }
 
     // --- 1. KONFIGURASI PARAMETER GEOFENCING (ASTRA DAIHATSU AHMAD YANI) ---
@@ -1167,17 +1350,19 @@
         // Zoom Controls di sudut kiri bawah
         L.control.zoom({ position: 'bottomleft' }).addTo(liveMap);
 
-        // Custom Icon Daihatsu Workshop (Pin Merah)
+        // Custom Icon Daihatsu Workshop (Pin Merah dengan Logo Daihatsu)
         const workshopIcon = L.divIcon({
           className: 'custom-workshop-icon',
           html: `
-            <div style="background-color: #dc2626; color: white; width: 34px; height: 34px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.35); border: 2.5px solid white;">
-              <span style="transform: rotate(45deg); font-weight: 900; font-size: 13px; letter-spacing: -0.5px;">D</span>
+            <div style="background-color: #dc2626; color: white; width: 36px; height: 36px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(220,38,38,0.45); border: 2.5px solid white;">
+              <div style="transform: rotate(45deg); width: 22px; height: 22px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; padding: 2px; overflow: hidden; box-shadow: inset 0 1px 2px rgba(0,0,0,0.15);">
+                <img src="Image/Logo-PWA.png" style="width: 100%; height: 100%; object-fit: contain;" alt="Daihatsu">
+              </div>
             </div>
           `,
-          iconSize: [34, 34],
-          iconAnchor: [17, 34],
-          popupAnchor: [0, -32]
+          iconSize: [36, 36],
+          iconAnchor: [18, 36],
+          popupAnchor: [0, -34]
         });
 
         workshopMarker = L.marker([workshopConfig.lat, workshopConfig.lng], { icon: workshopIcon })
