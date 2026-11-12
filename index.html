@@ -5,16 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Presensi PKL - Workshop Astra Daihatsu Ahmad Yani</title>
   
-  <!-- PWA & Homescreen Icons (APK / Web Install) -->
-  <meta name="theme-color" content="#0d1a3a">
+  <!-- PWA & Homescreen Icons (WebAPK / Native Install) -->
+  <meta name="theme-color" content="#08132b">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Presensi PKL">
-  <link rel="icon" type="image/png" sizes="192x192" href="Image/Logo-PWA.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="Image/Logo-PWA.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="Image/Logo-PWA.png">
-  <link rel="apple-touch-icon" sizes="192x192" href="Image/Logo-PWA.png">
-  <link rel="apple-touch-icon" sizes="512x512" href="Image/Logo-PWA.png">
+  <meta name="application-name" content="Presensi PKL">
+  <link rel="icon" type="image/png" sizes="192x192" href="Image/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="Image/icon-512.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="Image/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="Image/icon-192.png">
+  <link rel="apple-touch-icon" sizes="512x512" href="Image/icon-512.png">
   <link rel="manifest" href="manifest.json">
   
   <!-- Tailwind CSS & Lucide Icons -->
@@ -1218,13 +1220,14 @@
             <div class="w-6 h-6 rounded-lg bg-emerald-600 text-white flex items-center justify-center text-xs font-black">
               A
             </div>
-            <h5 class="font-bold text-slate-900 text-xs">Cara di HP Android (Chrome / Samsung Internet / Edge)</h5>
+            <h5 class="font-bold text-slate-900 text-xs">Cara Pasang WebAPK di HP Android (Tanpa Logo Chrome)</h5>
           </div>
-          <ol class="list-decimal pl-4 space-y-1.5 text-[11.5px] text-slate-600 leading-relaxed">
-            <li>Klik tombol <strong>"Pasang"</strong> di atas atau tombol di kartu Pengaturan.</li>
-            <li>Jika pop-up tidak muncul, tap <strong>menu titik tiga (⋮)</strong> di sudut kanan atas browser Chrome / Samsung Internet.</li>
-            <li>Pilih opsi <span class="font-bold text-slate-800 bg-white px-1.5 py-0.5 rounded border border-slate-200">"Tambahkan ke Layar Utama"</span> atau <span class="font-bold text-slate-800 bg-white px-1.5 py-0.5 rounded border border-slate-200">"Install Aplikasi"</span>.</li>
-            <li>Klik <strong>"Install / Tambahkan"</strong>. Icon aplikasi Astra Daihatsu akan langsung terpasang di layar utama HP Anda layaknya aplikasi Android APK!</li>
+          <ol class="list-decimal pl-4 space-y-2 text-[11.5px] text-slate-600 leading-relaxed">
+            <li><strong>Hapus icon lama:</strong> Jika sebelumnya sudah ada icon dengan badge Chrome kecil di layar utama, hapus/uninstall terlebih dahulu.</li>
+            <li>Klik tombol hijau <strong>"Pasang"</strong> di atas atau tombol pada kartu Pengaturan.</li>
+            <li>Jika menggunakan menu browser titik tiga (⋮) di Chrome, pastikan memilih opsi <span class="font-bold text-slate-900 bg-white px-1.5 py-0.5 rounded border border-slate-300">"Instal Aplikasi"</span> (bukan "Tambahkan pintasan").</li>
+            <li>Konfirmasi <strong>"Instal"</strong> pada pop-up resmi Google Play Services.</li>
+            <li>Aplikasi <strong>Presensi PKL</strong> akan otomatis terpasang dengan icon resmi Astra Daihatsu beresolusi tinggi <strong>tanpa ada logo Chrome</strong>, persis seperti aplikasi Stockyard!</li>
           </ol>
         </div>
 
