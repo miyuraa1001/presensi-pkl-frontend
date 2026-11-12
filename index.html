@@ -1321,8 +1321,214 @@
     </div>
   </div>
 
+  <!-- ==================== CUSTOM APP ALERT MODAL ==================== -->
+  <div id="app-alert-modal" class="hidden fixed inset-0 bg-slate-950/75 backdrop-blur-xs z-[500] flex items-center justify-center p-4 transition-all duration-200">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-100 flex flex-col items-center text-center space-y-4 animate-in fade-in zoom-in-95 duration-150">
+      
+      <!-- Icon Container -->
+      <div id="alert-icon-box" class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-inner">
+        <i id="alert-icon" data-lucide="info" class="w-7 h-7"></i>
+      </div>
+
+      <!-- Text Container -->
+      <div class="space-y-1.5 w-full">
+        <h3 id="alert-title" class="font-extrabold text-base text-slate-900 leading-snug">Pemberitahuan</h3>
+        <div id="alert-message" class="text-xs text-slate-600 leading-relaxed font-medium break-words text-left bg-slate-50 p-3.5 rounded-2xl border border-slate-100 max-h-48 overflow-y-auto"></div>
+      </div>
+
+      <!-- Action Button -->
+      <button type="button" id="alert-confirm-btn" onclick="closeAppAlert()" class="w-full py-3 px-4 rounded-xl font-bold text-xs text-white shadow-md active:scale-95 transition flex items-center justify-center gap-1.5">
+        <span>Mengerti</span>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- ==================== CUSTOM APP CONFIRM MODAL ==================== -->
+  <div id="app-confirm-modal" class="hidden fixed inset-0 bg-slate-950/75 backdrop-blur-xs z-[500] flex items-center justify-center p-4 transition-all duration-200">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-100 flex flex-col items-center text-center space-y-4 animate-in fade-in zoom-in-95 duration-150">
+      
+      <!-- Icon Container -->
+      <div id="confirm-icon-box" class="w-14 h-14 rounded-2xl flex items-center justify-center shadow-inner bg-amber-50 text-amber-600 border border-amber-200">
+        <i id="confirm-icon" data-lucide="help-circle" class="w-7 h-7"></i>
+      </div>
+
+      <!-- Text Container -->
+      <div class="space-y-1.5 w-full">
+        <h3 id="confirm-title" class="font-extrabold text-base text-slate-900 leading-snug">Konfirmasi Tindakan</h3>
+        <div id="confirm-message" class="text-xs text-slate-600 leading-relaxed font-medium break-words text-left bg-slate-50 p-3.5 rounded-2xl border border-slate-100 max-h-48 overflow-y-auto"></div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="grid grid-cols-2 gap-2.5 w-full pt-1">
+        <button type="button" id="confirm-cancel-btn" onclick="resolveConfirmModal(false)" class="py-2.5 px-3 rounded-xl font-bold text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 active:scale-95 transition">
+          Batal
+        </button>
+        <button type="button" id="confirm-ok-btn" onclick="resolveConfirmModal(true)" class="py-2.5 px-3 rounded-xl font-bold text-xs text-white bg-blue-600 hover:bg-blue-700 shadow-md active:scale-95 transition">
+          Ya, Lanjutkan
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== TOAST NOTIFICATION CONTAINER ==================== -->
+  <div id="toast-container" class="fixed top-5 inset-x-0 z-[600] flex flex-col items-center pointer-events-none px-4 space-y-2"></div>
+
   <!-- ==================== JAVASCRIPT APPLICATION LOGIC ==================== -->
   <script>
+    // --- 0. CUSTOM DIALOG, ALERT, CONFIRM & TOAST SYSTEM (ASTRA DAIHATSU) ---
+    let alertResolveCallback = null;
+    let confirmResolveCallback = null;
+
+    function showAppAlert(message, type = 'info', title = null) {
+      return new Promise((resolve) => {
+        alertResolveCallback = resolve;
+        const modal = document.getElementById('app-alert-modal');
+        const titleEl = document.getElementById('alert-title');
+        const msgEl = document.getElementById('alert-message');
+        const iconBox = document.getElementById('alert-icon-box');
+        const iconEl = document.getElementById('alert-icon');
+        const btn = document.getElementById('alert-confirm-btn');
+
+        const msgLower = (message || '').toLowerCase();
+        if (!type || type === 'info') {
+          if (msgLower.includes('berhasil') || msgLower.includes('sukses') || msgLower.includes('selamat')) {
+            type = 'success';
+          } else if (msgLower.includes('gagal') || msgLower.includes('ditolak') || msgLower.includes('salah') || msgLower.includes('error')) {
+            type = 'error';
+          } else if (msgLower.includes('wajib') || msgLower.includes('peringatan') || msgLower.includes('pastikan') || msgLower.includes('perhatian')) {
+            type = 'warning';
+          }
+        }
+
+        if (!title) {
+          if (type === 'success') title = "Berhasil!";
+          else if (type === 'error') title = "Aksi Gagal / Ditolak";
+          else if (type === 'warning') title = "Peringatan";
+          else title = "Informasi Presensi";
+        }
+
+        titleEl.innerText = title;
+        msgEl.innerHTML = (message || '').replace(/\n/g, '<br>');
+
+        if (type === 'success') {
+          iconBox.className = "w-14 h-14 rounded-2xl flex items-center justify-center shadow-inner bg-emerald-50 text-emerald-600 border border-emerald-200";
+          iconEl.setAttribute('data-lucide', 'check-circle-2');
+          btn.className = "w-full py-3 px-4 rounded-xl font-bold text-xs text-white bg-emerald-600 hover:bg-emerald-700 shadow-md shadow-emerald-600/30 active:scale-95 transition flex items-center justify-center gap-1.5";
+          btn.innerText = "Mengerti";
+        } else if (type === 'error') {
+          iconBox.className = "w-14 h-14 rounded-2xl flex items-center justify-center shadow-inner bg-red-50 text-red-600 border border-red-200";
+          iconEl.setAttribute('data-lucide', 'alert-circle');
+          btn.className = "w-full py-3 px-4 rounded-xl font-bold text-xs text-white bg-red-600 hover:bg-red-700 shadow-md shadow-red-600/30 active:scale-95 transition flex items-center justify-center gap-1.5";
+          btn.innerText = "Tutup & Coba Lagi";
+        } else if (type === 'warning') {
+          iconBox.className = "w-14 h-14 rounded-2xl flex items-center justify-center shadow-inner bg-amber-50 text-amber-600 border border-amber-200";
+          iconEl.setAttribute('data-lucide', 'alert-triangle');
+          btn.className = "w-full py-3 px-4 rounded-xl font-bold text-xs text-white bg-amber-600 hover:bg-amber-700 shadow-md shadow-amber-600/30 active:scale-95 transition flex items-center justify-center gap-1.5";
+          btn.innerText = "Mengerti";
+        } else {
+          iconBox.className = "w-14 h-14 rounded-2xl flex items-center justify-center shadow-inner bg-blue-50 text-blue-600 border border-blue-200";
+          iconEl.setAttribute('data-lucide', 'info');
+          btn.className = "w-full py-3 px-4 rounded-xl font-bold text-xs text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-600/30 active:scale-95 transition flex items-center justify-center gap-1.5";
+          btn.innerText = "OK";
+        }
+
+        if (window.lucide) lucide.createIcons();
+        modal.classList.remove('hidden');
+      });
+    }
+
+    function closeAppAlert() {
+      const modal = document.getElementById('app-alert-modal');
+      if (modal) modal.classList.add('hidden');
+      if (alertResolveCallback) {
+        alertResolveCallback();
+        alertResolveCallback = null;
+      }
+    }
+
+    // Override native window.alert so all popups look modern & unified
+    window.alert = function(msg) {
+      return showAppAlert(msg);
+    };
+
+    function showAppConfirm(message, title = "Konfirmasi Tindakan", options = {}) {
+      return new Promise((resolve) => {
+        confirmResolveCallback = resolve;
+        const modal = document.getElementById('app-confirm-modal');
+        const titleEl = document.getElementById('confirm-title');
+        const msgEl = document.getElementById('confirm-message');
+        const okBtn = document.getElementById('confirm-ok-btn');
+        const cancelBtn = document.getElementById('confirm-cancel-btn');
+        const iconBox = document.getElementById('confirm-icon-box');
+        const iconEl = document.getElementById('confirm-icon');
+
+        titleEl.innerText = title;
+        msgEl.innerHTML = (message || '').replace(/\n/g, '<br>');
+
+        okBtn.innerText = options.okText || "Ya, Lanjutkan";
+        cancelBtn.innerText = options.cancelText || "Batal";
+
+        if (options.isDanger) {
+          iconBox.className = "w-14 h-14 rounded-2xl flex items-center justify-center shadow-inner bg-red-50 text-red-600 border border-red-200";
+          iconEl.setAttribute('data-lucide', 'alert-triangle');
+          okBtn.className = "py-2.5 px-3 rounded-xl font-bold text-xs text-white bg-red-600 hover:bg-red-700 shadow-md shadow-red-600/25 active:scale-95 transition";
+        } else {
+          iconBox.className = "w-14 h-14 rounded-2xl flex items-center justify-center shadow-inner bg-blue-50 text-blue-600 border border-blue-200";
+          iconEl.setAttribute('data-lucide', 'help-circle');
+          okBtn.className = "py-2.5 px-3 rounded-xl font-bold text-xs text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-600/25 active:scale-95 transition";
+        }
+
+        if (window.lucide) lucide.createIcons();
+        modal.classList.remove('hidden');
+      });
+    }
+
+    function resolveConfirmModal(result) {
+      const modal = document.getElementById('app-confirm-modal');
+      if (modal) modal.classList.add('hidden');
+      if (confirmResolveCallback) {
+        confirmResolveCallback(result);
+        confirmResolveCallback = null;
+      }
+    }
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const toast = document.createElement('div');
+      
+      let bg = "bg-slate-900 text-white";
+      let icon = "info";
+      if (type === 'success') {
+        bg = "bg-emerald-600 text-white shadow-emerald-600/25";
+        icon = "check-circle";
+      } else if (type === 'error') {
+        bg = "bg-red-600 text-white shadow-red-600/25";
+        icon = "alert-circle";
+      } else if (type === 'warning') {
+        bg = "bg-amber-600 text-white shadow-amber-600/25";
+        icon = "alert-triangle";
+      }
+
+      toast.className = `pointer-events-auto flex items-center gap-2 px-4 py-2.5 rounded-2xl shadow-xl ${bg} text-xs font-bold transition-all duration-300 transform -translate-y-2 opacity-0`;
+      toast.innerHTML = `<i data-lucide="${icon}" class="w-4 h-4"></i><span>${message}</span>`;
+      container.appendChild(toast);
+      if (window.lucide) lucide.createIcons();
+
+      requestAnimationFrame(() => {
+        toast.classList.remove('-translate-y-2', 'opacity-0');
+        toast.classList.add('translate-y-0', 'opacity-100');
+      });
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('-translate-y-2', 'opacity-0');
+        setTimeout(() => toast.remove(), 300);
+      }, 3200);
+    }
+
     // Register PWA Service Worker for homescreen install
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
@@ -2551,12 +2757,16 @@
       }
 
       navigator.geolocation.getCurrentPosition(
-        (pos) => {
+        async (pos) => {
           const curLat = parseFloat(pos.coords.latitude.toFixed(6));
           const curLng = parseFloat(pos.coords.longitude.toFixed(6));
           const acc = Math.round(pos.coords.accuracy);
 
-          const ok = confirm(`KALIBRASI LOKASI BENGKEL:\n\nJadikan posisi GPS Anda saat ini:\nLatitude: ${curLat}\nLongitude: ${curLng}\n(Akurasi GPS: ±${acc} meter)\n\nsebagai TITIK PUSAT Workshop Astra Daihatsu Ahmad Yani?`);
+          const ok = await showAppConfirm(
+            `Jadikan posisi GPS Anda saat ini:\n\n• Latitude: ${curLat}\n• Longitude: ${curLng}\n• Akurasi: ±${acc} meter\n\nsebagai TITIK PUSAT Workshop Astra Daihatsu Ahmad Yani?`,
+            "Kalibrasi Titik Bengkel",
+            { okText: "Gunakan Titik Ini", isDanger: false }
+          );
           if (ok) {
             workshopConfig.lat = curLat;
             workshopConfig.lng = curLng;
@@ -2589,8 +2799,13 @@
       document.getElementById('radius-val-display').innerText = val + ' meter';
     }
 
-    function resetWorkshopLocationDefault() {
-      if (confirm("Kembalikan koordinat pusat bengkel ke titik resmi Astra Daihatsu Ahmad Yani (-5.4217, 105.2528, radius 150m)?")) {
+    async function resetWorkshopLocationDefault() {
+      const ok = await showAppConfirm(
+        "Kembalikan koordinat pusat bengkel ke titik resmi Astra Daihatsu Ahmad Yani (-5.4217, 105.2528, radius 150m)?",
+        "Reset Titik Bengkel",
+        { okText: "Reset ke Default", isDanger: false }
+      );
+      if (ok) {
         workshopConfig.lat = REAL_DAIHATSU_AHMAD_YANI.lat;
         workshopConfig.lng = REAL_DAIHATSU_AHMAD_YANI.lng;
         workshopConfig.radiusMeters = REAL_DAIHATSU_AHMAD_YANI.radiusMeters;
@@ -2654,14 +2869,19 @@
       reader.readAsDataURL(file);
     }
 
-    function deleteAvatar() {
-      if (confirm("Hapus foto profil dan gunakan inisial nama?")) {
+    async function deleteAvatar() {
+      const ok = await showAppConfirm(
+        "Hapus foto profil dan gunakan inisial nama?",
+        "Hapus Foto Profil",
+        { okText: "Hapus Foto", isDanger: true }
+      );
+      if (ok) {
         currentUser.foto = '';
         localStorage.removeItem('pkl_foto_profil');
         const fileInput = document.getElementById('avatar-file-input');
         if (fileInput) fileInput.value = '';
         updateProfileDisplay();
-        alert("Foto profil berhasil dihapus.");
+        showToast("Foto profil berhasil dihapus.", "info");
       }
     }
 
@@ -2764,8 +2984,13 @@
       alert("Kata sandi akun Anda berhasil diperbarui!");
     }
 
-    function handleLogout() {
-      if (confirm("Apakah Anda yakin ingin keluar dari akun Presensi PKL Astra Daihatsu?")) {
+    async function handleLogout() {
+      const ok = await showAppConfirm(
+        "Apakah Anda yakin ingin keluar dari akun Presensi PKL Astra Daihatsu?",
+        "Keluar Akun",
+        { okText: "Ya, Keluar Akun", isDanger: true }
+      );
+      if (ok) {
         localStorage.setItem('pkl_is_logged_in', 'false');
         showLoginModal();
       }
@@ -2815,13 +3040,18 @@
       }
     }
 
-    function resetDemoData() {
-      if (confirm("Hapus semua riwayat catatan presensi & izin lokal di perangkat ini?")) {
+    async function resetDemoData() {
+      const ok = await showAppConfirm(
+        "Hapus semua riwayat catatan presensi & izin lokal di perangkat ini?",
+        "Bersihkan Riwayat Presensi",
+        { okText: "Hapus Riwayat", isDanger: true }
+      );
+      if (ok) {
         localStorage.removeItem('pkl_logs_presensi');
         localStorage.removeItem('pkl_logs_izin');
         renderDashboardStats();
         renderRekapTable();
-        alert("Riwayat data berhasil dibersihkan!");
+        showToast("Riwayat data berhasil dibersihkan!", "success");
       }
     }
 

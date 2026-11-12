@@ -1,4 +1,4 @@
-const CACHE_NAME = "presensi-pkl-v10";
+const CACHE_NAME = "presensi-pkl-v11";
 const ASSETS_TO_CACHE = [
   "./",
   "./index.html",
