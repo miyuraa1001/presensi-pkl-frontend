@@ -307,24 +307,39 @@
 
               <!-- Map Simulation Widget & Details Side-by-Side -->
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
-                <!-- Aerial Satellite Map Simulator -->
-                <div class="relative w-full h-44 rounded-xl overflow-hidden bg-slate-900 border border-slate-200 flex items-center justify-center">
-                  <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=800&q=80" 
-                       alt="Satellite Map" 
-                       class="absolute inset-0 w-full h-full object-cover opacity-60">
-                  <div class="absolute inset-0 bg-blue-950/40"></div>
+                <!-- High-Tech Geofencing Radar Widget (Astra Daihatsu Ahmad Yani) -->
+                <div class="relative w-full h-44 rounded-xl overflow-hidden bg-[#070d1e] border border-slate-700/60 flex items-center justify-center shadow-inner">
+                  <!-- Grid Pattern Background -->
+                  <div class="absolute inset-0 bg-[radial-gradient(#1e3a8a_1px,transparent_1px)] [background-size:16px_16px] opacity-40"></div>
+                  <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-slate-950/40"></div>
 
-                  <!-- Radar Circle Animation -->
+                  <!-- Crosshairs & Coordinate Grid Lines -->
+                  <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div class="w-full h-px bg-cyan-500/20"></div>
+                    <div class="h-full w-px bg-cyan-500/20 absolute"></div>
+                  </div>
+
+                  <!-- Range Rings -->
+                  <div class="absolute w-36 h-36 rounded-full border border-dashed border-cyan-500/25"></div>
+                  <div class="absolute w-24 h-24 rounded-full border border-cyan-500/30"></div>
+
+                  <!-- Center Radar Circle Animation -->
                   <div class="relative z-10 w-32 h-32 rounded-full border-2 border-cyan-400/80 bg-cyan-500/20 flex items-center justify-center radar-pulse">
-                    <div class="w-4 h-4 rounded-full bg-blue-600 border-2 border-white shadow-lg flex items-center justify-center">
-                      <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
+                    <div class="w-4 h-4 rounded-full bg-blue-500 border-2 border-white shadow-lg flex items-center justify-center">
+                      <span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>
                     </div>
                   </div>
 
-                  <!-- Floating Distance Tag -->
+                  <!-- Floating Location Tag (Top Left) -->
+                  <div class="absolute top-2.5 left-2.5 bg-slate-900/90 backdrop-blur-xs px-2.5 py-1 rounded-lg border border-slate-700 text-[10px] text-cyan-300 font-mono flex items-center gap-1.5 shadow-xs">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                    <span>Jl. A. Yani No. 1</span>
+                  </div>
+
+                  <!-- Floating Distance Tag (Bottom Right) -->
                   <div class="absolute bottom-2.5 right-2.5 bg-white/95 backdrop-blur-xs px-2.5 py-1 rounded-lg shadow-sm border border-slate-200 flex flex-col items-end">
                     <span class="text-[9px] text-slate-500 font-bold uppercase">Jarak Terhitung</span>
-                    <span id="live-distance-txt" class="text-xs font-black text-blue-600">12 m</span>
+                    <span id="live-distance-txt" class="text-xs font-black text-blue-600">0 m</span>
                   </div>
                 </div>
 
@@ -335,7 +350,7 @@
                       <i data-lucide="check" class="w-3 h-3"></i>
                     </div>
                     <p id="radius-desc-txt" class="text-xs font-bold text-slate-800 leading-snug">
-                      Anda berada di dalam radius workshop (≤ 70 m).
+                      Anda berada di dalam radius workshop (≤ 150 m).
                     </p>
                   </div>
                   
@@ -343,15 +358,15 @@
                   <div class="pl-7 space-y-1 text-[11px] text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
                     <p class="flex justify-between items-center">
                       <span class="font-medium text-slate-400">Pusat Bengkel:</span>
-                      <span id="lbl-workshop-coords" class="font-mono font-bold text-slate-700">-5.3932, 105.2619</span>
+                      <span id="lbl-workshop-coords" class="font-mono font-bold text-slate-700">-5.4217, 105.2528</span>
                     </p>
                     <p class="flex justify-between items-center">
                       <span class="font-medium text-slate-400">Posisi Anda:</span>
-                      <span id="lbl-user-coords" class="font-mono font-bold text-slate-700">-5.3932, 105.2619</span>
+                      <span id="lbl-user-coords" class="font-mono font-bold text-slate-700">-5.4217, 105.2528</span>
                     </p>
                     <p class="flex justify-between items-center">
                       <span class="font-medium text-slate-400">Toleransi Radius:</span>
-                      <span id="lbl-workshop-radius" class="font-bold text-blue-600">70 meter</span>
+                      <span id="lbl-workshop-radius" class="font-bold text-blue-600">150 meter</span>
                     </p>
                   </div>
 
@@ -530,7 +545,7 @@
             <p class="font-bold text-cyan-400" id="wm-line1">[CLOCK IN] 12345678 - Andi Pratama</p>
             <p class="text-white" id="wm-line2">WAKTU : 28-10-2025, 08:15:32 WIB</p>
             <p class="text-slate-200" id="wm-line3">LOKASI: Workshop Astra Daihatsu Ahmad Yani (Jarak: 12 m)</p>
-            <p class="text-slate-400 text-[10px]" id="wm-line4">GPS   : Lat -5.3932, Long 105.2619 | Akurasi: ±5m</p>
+            <p class="text-slate-400 text-[10px]" id="wm-line4">GPS   : Lat -5.4217, Long 105.2528 | Akurasi: ±5m</p>
           </div>
         </div>
 
@@ -797,9 +812,9 @@
             <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 space-y-2">
               <div class="flex justify-between items-center">
                 <label class="text-[11px] font-bold text-slate-700">Toleransi Radius Geofencing</label>
-                <span id="radius-val-display" class="text-xs font-black text-blue-600">70 meter</span>
+                <span id="radius-val-display" class="text-xs font-black text-blue-600">150 meter</span>
               </div>
-              <input type="range" id="cfg-workshop-radius" min="30" max="300" step="5" value="70" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600" oninput="document.getElementById('radius-val-display').innerText = this.value + ' meter'">
+              <input type="range" id="cfg-workshop-radius" min="30" max="300" step="5" value="150" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600" oninput="document.getElementById('radius-val-display').innerText = this.value + ' meter'">
               <div class="flex justify-between gap-1.5 pt-1">
                 <button type="button" onclick="setRadiusPreset(70)" class="flex-1 py-1 bg-white hover:bg-slate-200 border border-slate-200 text-[10px] font-bold rounded-lg text-slate-700 transition">70 m (PRD)</button>
                 <button type="button" onclick="setRadiusPreset(100)" class="flex-1 py-1 bg-white hover:bg-slate-200 border border-slate-200 text-[10px] font-bold rounded-lg text-slate-700 transition">100 m</button>
@@ -986,17 +1001,26 @@
       });
     }
 
-    // --- 1. KONFIGURASI PARAMETER GEOFENCING (DAPAT DIKALIBRASI) ---
-    const PRD_DEFAULT_COORDS = {
-      lat: -5.3932,
-      lng: 105.2619,
-      radiusMeters: 70
+    // --- 1. KONFIGURASI PARAMETER GEOFENCING (ASTRA DAIHATSU AHMAD YANI) ---
+    // Alamat Riil: Jl. Jenderal Ahmad Yani No. 1, Palapa, Tanjung Karang Pusat, Bandar Lampung
+    const REAL_DAIHATSU_AHMAD_YANI = {
+      lat: -5.4217,
+      lng: 105.2528,
+      radiusMeters: 150 // 150 meter mencakup seluruh stall bengkel mekanik, showroom & parkiran
     };
 
+    // Auto-migrasi jika browser masih menyimpan titik lama PRD (-5.3932) yang meleset 3.26 km ke Rajabasa
+    const savedLat = localStorage.getItem('pkl_workshop_lat');
+    if (savedLat === '-5.3932' || savedLat === null) {
+      localStorage.setItem('pkl_workshop_lat', REAL_DAIHATSU_AHMAD_YANI.lat);
+      localStorage.setItem('pkl_workshop_lng', REAL_DAIHATSU_AHMAD_YANI.lng);
+      localStorage.setItem('pkl_workshop_radius', REAL_DAIHATSU_AHMAD_YANI.radiusMeters);
+    }
+
     let workshopConfig = {
-      lat: parseFloat(localStorage.getItem('pkl_workshop_lat')) || PRD_DEFAULT_COORDS.lat,
-      lng: parseFloat(localStorage.getItem('pkl_workshop_lng')) || PRD_DEFAULT_COORDS.lng,
-      radiusMeters: parseInt(localStorage.getItem('pkl_workshop_radius')) || PRD_DEFAULT_COORDS.radiusMeters
+      lat: parseFloat(localStorage.getItem('pkl_workshop_lat')) || REAL_DAIHATSU_AHMAD_YANI.lat,
+      lng: parseFloat(localStorage.getItem('pkl_workshop_lng')) || REAL_DAIHATSU_AHMAD_YANI.lng,
+      radiusMeters: parseInt(localStorage.getItem('pkl_workshop_radius')) || REAL_DAIHATSU_AHMAD_YANI.radiusMeters
     };
 
     // State Pengguna
@@ -1932,22 +1956,22 @@
     }
 
     function resetWorkshopLocationDefault() {
-      if (confirm("Kembalikan koordinat pusat bengkel ke nilai acuan default PRD (-5.3932, 105.2619, 70m)?")) {
-        workshopConfig.lat = PRD_DEFAULT_COORDS.lat;
-        workshopConfig.lng = PRD_DEFAULT_COORDS.lng;
-        workshopConfig.radiusMeters = PRD_DEFAULT_COORDS.radiusMeters;
+      if (confirm("Kembalikan koordinat pusat bengkel ke titik resmi Astra Daihatsu Ahmad Yani (-5.4217, 105.2528, radius 150m)?")) {
+        workshopConfig.lat = REAL_DAIHATSU_AHMAD_YANI.lat;
+        workshopConfig.lng = REAL_DAIHATSU_AHMAD_YANI.lng;
+        workshopConfig.radiusMeters = REAL_DAIHATSU_AHMAD_YANI.radiusMeters;
 
-        localStorage.removeItem('pkl_workshop_lat');
-        localStorage.removeItem('pkl_workshop_lng');
-        localStorage.removeItem('pkl_workshop_radius');
+        localStorage.setItem('pkl_workshop_lat', REAL_DAIHATSU_AHMAD_YANI.lat);
+        localStorage.setItem('pkl_workshop_lng', REAL_DAIHATSU_AHMAD_YANI.lng);
+        localStorage.setItem('pkl_workshop_radius', REAL_DAIHATSU_AHMAD_YANI.radiusMeters);
 
-        document.getElementById('cfg-workshop-lat').value = PRD_DEFAULT_COORDS.lat;
-        document.getElementById('cfg-workshop-lng').value = PRD_DEFAULT_COORDS.lng;
-        document.getElementById('cfg-workshop-radius').value = PRD_DEFAULT_COORDS.radiusMeters;
-        document.getElementById('radius-val-display').innerText = PRD_DEFAULT_COORDS.radiusMeters + ' meter';
+        document.getElementById('cfg-workshop-lat').value = REAL_DAIHATSU_AHMAD_YANI.lat;
+        document.getElementById('cfg-workshop-lng').value = REAL_DAIHATSU_AHMAD_YANI.lng;
+        document.getElementById('cfg-workshop-radius').value = REAL_DAIHATSU_AHMAD_YANI.radiusMeters;
+        document.getElementById('radius-val-display').innerText = REAL_DAIHATSU_AHMAD_YANI.radiusMeters + ' meter';
 
         checkGPS(false);
-        alert("Koordinat pusat bengkel berhasil dikembalikan ke default PRD.");
+        alert("Koordinat pusat bengkel berhasil dikembalikan ke titik resmi Astra Daihatsu Ahmad Yani.");
       }
     }
 

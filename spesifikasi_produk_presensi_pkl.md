@@ -23,9 +23,10 @@ Aplikasi ini bertujuan untuk mendigitalkan dan mengamankan alur absensi serta pe
 
 ## 2. Parameter Geofencing (Astra Daihatsu Ahmad Yani)
 
-- **Latitude:** `-5.3932`
-- **Longitude:** `105.2619`
-- **Maksimum Radius Toleransi:** `70 meter` (mencakup showroom depan, area stall service/workshop pit, ruang istirahat, hingga pagar perimeter belakang).
+- **Alamat:** Jl. Jenderal Ahmad Yani No.1, Palapa, Tanjung Karang Pusat, Kota Bandar Lampung
+- **Latitude Resmi:** `-5.4217` *(Catatan: Nilai lama `-5.3932` berada di Rajabasa/Kedaton berjarak 3.26 km, telah dikoreksi ke titik resmi Jl. Ahmad Yani)*
+- **Longitude Resmi:** `105.2528`
+- **Maksimum Radius Toleransi:** `150 meter` (mencakup showroom depan, area stall service/workshop pit, ruang istirahat, hingga pagar perimeter belakang). Dilengkapi fitur kalibrasi 1-klik di aplikasi.
 
 ### Rumus Geodesik Haversine (Implementasi Client & Server):
 $$d = 2R \cdot \arcsin\left(\sqrt{\sin^2\left(\frac{\Delta \varphi}{2}\right) + \cos(\varphi_1)\cos(\varphi_2)\sin^2\left(\frac{\Delta \lambda}{2}\right)}\right)$$
