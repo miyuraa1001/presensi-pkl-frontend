@@ -138,7 +138,7 @@
         </button>
         <button onclick="switchTab('pengaturan')" id="nav-pengaturan" class="nav-item w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800/80 hover:text-white transition-all">
           <i data-lucide="settings" class="w-4 h-4"></i>
-          <span>Pengaturan & GPS</span>
+          <span>Pengaturan & Geofence</span>
         </button>
       </nav>
     </div>
@@ -151,7 +151,7 @@
       <div>
         <p class="font-semibold text-slate-300 text-[11px]">Sistem PRD v1.0.0</p>
         <p class="text-slate-500 text-[10px] flex items-center gap-1">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Geofencing & GAS Sync
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Kalibrasi GPS Presisi
         </p>
       </div>
     </div>
@@ -294,7 +294,7 @@
         <!-- 2 Column: Status Lokasi & Presensi Hari Ini -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
           
-          <!-- Box Status Lokasi (Geofencing Radar Map) -->
+          <!-- Box Status Lokasi (Geofencing Radar Map with Calibration) -->
           <div class="bg-white p-5 md:p-6 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col justify-between">
             <div>
               <div class="flex items-center justify-between mb-4">
@@ -326,13 +326,13 @@
 
                   <!-- Floating Distance Tag -->
                   <div class="absolute bottom-2.5 right-2.5 bg-white/95 backdrop-blur-xs px-2.5 py-1 rounded-lg shadow-sm border border-slate-200 flex flex-col items-end">
-                    <span class="text-[9px] text-slate-500 font-bold uppercase">Jarak Dihitung</span>
+                    <span class="text-[9px] text-slate-500 font-bold uppercase">Jarak Terhitung</span>
                     <span id="live-distance-txt" class="text-xs font-black text-blue-600">12 m</span>
                   </div>
                 </div>
 
                 <!-- Text Location Details -->
-                <div class="space-y-3">
+                <div class="space-y-2.5">
                   <div class="flex items-start gap-2.5">
                     <div id="radius-icon-box" class="w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center flex-shrink-0 mt-0.5">
                       <i data-lucide="check" class="w-3 h-3"></i>
@@ -341,16 +341,33 @@
                       Anda berada di dalam radius workshop (≤ 70 m).
                     </p>
                   </div>
-                  <div class="pl-7 space-y-1 text-xs text-slate-500">
-                    <p><span class="font-medium text-slate-400">Titik Workshop:</span><br>Astra Daihatsu Ahmad Yani<br>(-5.3932, 105.2619)</p>
-                    <p><span class="font-medium text-slate-400">Toleransi Radius:</span> 70 meter</p>
+                  
+                  <!-- Real Coordinates Box -->
+                  <div class="pl-7 space-y-1 text-[11px] text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                    <p class="flex justify-between items-center">
+                      <span class="font-medium text-slate-400">Pusat Bengkel:</span>
+                      <span id="lbl-workshop-coords" class="font-mono font-bold text-slate-700">-5.3932, 105.2619</span>
+                    </p>
+                    <p class="flex justify-between items-center">
+                      <span class="font-medium text-slate-400">Posisi Anda:</span>
+                      <span id="lbl-user-coords" class="font-mono font-bold text-slate-700">-5.3932, 105.2619</span>
+                    </p>
+                    <p class="flex justify-between items-center">
+                      <span class="font-medium text-slate-400">Toleransi Radius:</span>
+                      <span id="lbl-workshop-radius" class="font-bold text-blue-600">70 meter</span>
+                    </p>
                   </div>
-                  <div class="pl-7 pt-1 flex items-center gap-3">
-                    <button onclick="checkGPS(true)" class="inline-flex items-center gap-1.5 text-[11px] font-semibold text-blue-600 hover:text-blue-700">
-                      <i data-lucide="refresh-cw" class="w-3 h-3"></i> Perbarui GPS
+
+                  <!-- Interactive Calibration Actions -->
+                  <div class="pl-7 pt-0.5 flex flex-wrap items-center gap-2">
+                    <button onclick="checkGPS(true)" class="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-600 hover:text-blue-700 bg-blue-50 px-2.5 py-1 rounded-lg transition">
+                      <i data-lucide="refresh-cw" class="w-3 h-3"></i> Refresh GPS
                     </button>
-                    <button onclick="switchTab('pengaturan')" class="text-[11px] text-slate-400 hover:text-slate-600 underline">
-                      Mode Simulasi
+                    <button onclick="calibrateCurrentLocation()" class="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 hover:text-emerald-800 bg-emerald-50 hover:bg-emerald-100 px-2.5 py-1 rounded-lg transition" title="Jadikan koordinat Anda saat ini sebagai titik pusat workshop">
+                      <i data-lucide="crosshair" class="w-3 h-3 text-emerald-600"></i> Kalibrasi Titik Saya
+                    </button>
+                    <button onclick="switchTab('pengaturan')" class="text-[11px] text-slate-400 hover:text-slate-600 underline ml-auto">
+                      Atur Radius
                     </button>
                   </div>
                 </div>
@@ -423,7 +440,7 @@
             <span class="text-xl">⚠️</span>
             <div>
               <p class="font-bold text-slate-800">Aturan Geofencing Presensi PKL Astra Daihatsu</p>
-              <p class="text-slate-600 text-[11px]">Clock IN wajib di dalam radius workshop (≤ 70m). Foto wajib diambil langsung dari kamera dengan geotag watermark otomatis.</p>
+              <p class="text-slate-600 text-[11px]">Clock IN wajib di dalam radius workshop. Jika berada di lokasi namun terdeteksi di luar, gunakan tombol <strong>Kalibrasi Titik Saya</strong>.</p>
             </div>
           </div>
           <div class="flex items-center gap-2 font-bold text-blue-700 bg-white px-3.5 py-1.5 rounded-xl border border-blue-200 shadow-xs self-start sm:self-center">
@@ -460,7 +477,7 @@
           </button>
         </div>
 
-        <!-- Radius Status Strip (PRD Compliant: Green <=70m, Red >70m) -->
+        <!-- Radius Status Strip (PRD Compliant: Green <= Radius, Red > Radius) -->
         <div id="camera-radius-status" class="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center justify-between text-xs font-bold transition">
           <div class="flex items-center gap-2">
             <i data-lucide="map-pin" class="w-4 h-4 text-emerald-600"></i>
@@ -469,13 +486,24 @@
           <span id="camera-radius-icon" class="px-2 py-0.5 rounded-md bg-emerald-200/60 text-emerald-800 text-[10px] uppercase font-bold">Valid IN</span>
         </div>
 
-        <!-- Geofence Block Callout for Clock IN (Hidden if valid) -->
+        <!-- Geofence Block Callout for Clock IN (With Direct Calibration Action) -->
         <div id="clock-in-blocker-callout" class="hidden p-3.5 rounded-xl bg-red-100 border border-red-300 text-red-900 text-xs">
           <div class="flex items-start gap-2.5">
             <i data-lucide="alert-octagon" class="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5"></i>
-            <div>
+            <div class="space-y-1.5 flex-1">
               <p class="font-extrabold">Clock IN Terkunci (Di Luar Radius)!</p>
-              <p class="text-[11px] text-red-700 mt-0.5">Sesuai PRD, Absen Masuk wajib berada di dalam radius workshop (≤ 70 m). Dekati lokasi bengkel Astra Daihatsu Ahmad Yani atau gunakan mode simulasi untuk pengujian.</p>
+              <p class="text-[11px] text-red-700">
+                Posisi Anda terdeteksi berjarak <span id="blocker-dist-val" class="font-bold">...</span> meter dari titik pusat workshop.
+              </p>
+              <div class="pt-1 flex flex-wrap gap-2">
+                <button onclick="calibrateCurrentLocation()" class="px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold text-[11px] flex items-center gap-1 shadow-xs transition">
+                  <i data-lucide="crosshair" class="w-3.5 h-3.5"></i>
+                  <span>Kalibrasi: Saya Sedang di Bengkel</span>
+                </button>
+                <button onclick="switchTab('pengaturan')" class="px-2.5 py-1.5 bg-white hover:bg-slate-100 text-slate-700 rounded-lg font-bold text-[11px] border border-slate-300 transition">
+                  Atur Radius di Pengaturan
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -717,8 +745,8 @@
             <i data-lucide="arrow-left" class="w-5 h-5"></i>
           </button>
           <div>
-            <h3 class="font-extrabold text-slate-900 text-lg">Pengaturan & Konfigurasi</h3>
-            <p class="text-xs text-slate-500">Profil siswa magang, mode GPS, dan sinkronisasi server</p>
+            <h3 class="font-extrabold text-slate-900 text-lg">Pengaturan & Geofencing</h3>
+            <p class="text-xs text-slate-500">Profil siswa magang, kalibrasi titik bengkel, dan server</p>
           </div>
         </div>
 
@@ -748,21 +776,68 @@
             <input type="text" id="cfg-jurusan" value="Teknik Kendaraan Ringan (TKR) / Otomotif" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500">
           </div>
 
+          <!-- Workshop Center & Geofencing Calibration Settings -->
+          <div class="pt-3 border-t border-slate-100 space-y-3">
+            <div class="flex items-center justify-between">
+              <h5 class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                <i data-lucide="map-pin" class="w-3.5 h-3.5 text-blue-600"></i> Titik Pusat & Radius Bengkel
+              </h5>
+              <span class="text-[10px] text-emerald-700 font-bold bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">Geofence Acuan</span>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Latitude Pusat</label>
+                <input type="number" step="any" id="cfg-workshop-lat" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-mono font-semibold">
+              </div>
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Longitude Pusat</label>
+                <input type="number" step="any" id="cfg-workshop-lng" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-mono font-semibold">
+              </div>
+            </div>
+
+            <!-- Radius Tolerance Slider & Presets -->
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 space-y-2">
+              <div class="flex justify-between items-center">
+                <label class="text-[11px] font-bold text-slate-700">Toleransi Radius Geofencing</label>
+                <span id="radius-val-display" class="text-xs font-black text-blue-600">70 meter</span>
+              </div>
+              <input type="range" id="cfg-workshop-radius" min="30" max="300" step="5" value="70" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600" oninput="document.getElementById('radius-val-display').innerText = this.value + ' meter'">
+              <div class="flex justify-between gap-1.5 pt-1">
+                <button type="button" onclick="setRadiusPreset(70)" class="flex-1 py-1 bg-white hover:bg-slate-200 border border-slate-200 text-[10px] font-bold rounded-lg text-slate-700 transition">70 m (PRD)</button>
+                <button type="button" onclick="setRadiusPreset(100)" class="flex-1 py-1 bg-white hover:bg-slate-200 border border-slate-200 text-[10px] font-bold rounded-lg text-slate-700 transition">100 m</button>
+                <button type="button" onclick="setRadiusPreset(150)" class="flex-1 py-1 bg-blue-50 hover:bg-blue-100 border border-blue-200 text-[10px] font-bold rounded-lg text-blue-700 transition">150 m (Bengkel)</button>
+                <button type="button" onclick="setRadiusPreset(200)" class="flex-1 py-1 bg-white hover:bg-slate-200 border border-slate-200 text-[10px] font-bold rounded-lg text-slate-700 transition">200 m</button>
+              </div>
+            </div>
+
+            <!-- Calibration Action Buttons -->
+            <div class="flex flex-wrap gap-2 pt-1">
+              <button type="button" onclick="calibrateCurrentLocation()" class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm">
+                <i data-lucide="crosshair" class="w-3.5 h-3.5"></i>
+                <span>Gunakan Lokasi Saya Saat Ini (Kalibrasi)</span>
+              </button>
+              <button type="button" onclick="resetWorkshopLocationDefault()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs font-semibold transition" title="Kembalikan koordinat ke acuan PRD">
+                Reset Default PRD
+              </button>
+            </div>
+          </div>
+
           <!-- GPS Mode Configuration (Allows Testing anywhere) -->
-          <div class="pt-2 border-t border-slate-100">
+          <div class="pt-3 border-t border-slate-100">
             <label class="block text-xs font-semibold text-slate-700 mb-1">Mode Geolocation GPS</label>
             <select id="cfg-gps-mode" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 focus:ring-2 focus:ring-blue-500">
               <option value="real">📡 Sensor GPS Asli Perangkat (High Accuracy)</option>
               <option value="sim_in">🏢 Simulasi: Di Dalam Workshop (Jarak 12 m - Clock IN Diizinkan)</option>
-              <option value="sim_out">⛔ Simulasi: Di Luar Workshop (Jarak 150 m - Clock IN Diblokir)</option>
+              <option value="sim_out">⛔ Simulasi: Di Luar Workshop (Jarak 250 m - Clock IN Diblokir)</option>
             </select>
             <p class="text-[11px] text-slate-400 mt-1">
-              Gunakan mode simulasi untuk menguji validasi geofencing tanpa harus berada di lokasi fisik bengkel.
+              Pilih 'Sensor GPS Asli Perangkat' saat berada di bengkel fisik untuk presensi harian.
             </p>
           </div>
 
           <!-- Google Apps Script Web App Integration -->
-          <div class="pt-2 border-t border-slate-100">
+          <div class="pt-3 border-t border-slate-100">
             <div class="flex items-center justify-between mb-1">
               <label class="text-xs font-semibold text-slate-700">Google Apps Script Web App URL</label>
               <span class="text-[10px] text-emerald-600 font-bold">Zero-Cost Backend</span>
@@ -866,11 +941,17 @@
       });
     }
 
-    // --- 1. KONFIGURASI PARAMETER GEOFENCING PRD ---
-    const DAIHATSU_OFFICE = {
+    // --- 1. KONFIGURASI PARAMETER GEOFENCING (DAPAT DIKALIBRASI) ---
+    const PRD_DEFAULT_COORDS = {
       lat: -5.3932,
       lng: 105.2619,
       radiusMeters: 70
+    };
+
+    let workshopConfig = {
+      lat: parseFloat(localStorage.getItem('pkl_workshop_lat')) || PRD_DEFAULT_COORDS.lat,
+      lng: parseFloat(localStorage.getItem('pkl_workshop_lng')) || PRD_DEFAULT_COORDS.lng,
+      radiusMeters: parseInt(localStorage.getItem('pkl_workshop_radius')) || PRD_DEFAULT_COORDS.radiusMeters
     };
 
     // State Pengguna
@@ -885,10 +966,10 @@
 
     // State Geolocation
     let userLocation = {
-      lat: -5.3932,
-      lng: 105.2619,
+      lat: workshopConfig.lat,
+      lng: workshopConfig.lng,
       accuracy: 5,
-      distance: 12,
+      distance: 0,
       isInside: true
     };
 
@@ -1020,6 +1101,16 @@
       document.getElementById('cfg-script-url').value = currentUser.apiUrl;
       document.getElementById('cfg-gps-mode').value = currentUser.gpsMode;
 
+      // Workshop Settings Inputs
+      document.getElementById('cfg-workshop-lat').value = workshopConfig.lat;
+      document.getElementById('cfg-workshop-lng').value = workshopConfig.lng;
+      document.getElementById('cfg-workshop-radius').value = workshopConfig.radiusMeters;
+      document.getElementById('radius-val-display').innerText = workshopConfig.radiusMeters + ' meter';
+
+      // Dashboard Labels
+      document.getElementById('lbl-workshop-coords').innerText = `${workshopConfig.lat.toFixed(4)}, ${workshopConfig.lng.toFixed(4)}`;
+      document.getElementById('lbl-workshop-radius').innerText = `${workshopConfig.radiusMeters} meter`;
+
       updateWatermarkLabels();
     }
 
@@ -1064,8 +1155,8 @@
     function checkGPS(manualAlert = false) {
       // Periksa apakah pengguna menggunakan mode simulasi
       if (currentUser.gpsMode === 'sim_in') {
-        userLocation.lat = DAIHATSU_OFFICE.lat;
-        userLocation.lng = DAIHATSU_OFFICE.lng;
+        userLocation.lat = workshopConfig.lat;
+        userLocation.lng = workshopConfig.lng;
         userLocation.accuracy = 4;
         userLocation.distance = 12;
         userLocation.isInside = true;
@@ -1075,19 +1166,20 @@
       }
 
       if (currentUser.gpsMode === 'sim_out') {
-        userLocation.lat = DAIHATSU_OFFICE.lat + 0.0014;
-        userLocation.lng = DAIHATSU_OFFICE.lng + 0.0014;
+        userLocation.lat = workshopConfig.lat + 0.0020;
+        userLocation.lng = workshopConfig.lng + 0.0020;
         userLocation.accuracy = 8;
-        userLocation.distance = 150;
+        userLocation.distance = 250;
         userLocation.isInside = false;
-        updateRadiusUI(150, false);
-        if (manualAlert) alert("Mode Simulasi Aktif: Di Luar Workshop (Jarak 150 meter, Clock IN diblokir).");
+        updateRadiusUI(250, false);
+        if (manualAlert) alert("Mode Simulasi Aktif: Di Luar Workshop (Jarak 250 meter, Clock IN diblokir).");
         return;
       }
 
       // Gunakan GPS Sensor Asli Perangkat
       if (!navigator.geolocation) {
-        updateRadiusUI(12, true);
+        alert("Browser tidak mendukung sensor Geolocation.");
+        updateRadiusUI(userLocation.distance, userLocation.isInside);
         return;
       }
 
@@ -1099,21 +1191,30 @@
 
           const dist = calculateHaversine(
             userLocation.lat, userLocation.lng,
-            DAIHATSU_OFFICE.lat, DAIHATSU_OFFICE.lng
+            workshopConfig.lat, workshopConfig.lng
           );
           userLocation.distance = dist;
-          userLocation.isInside = dist <= DAIHATSU_OFFICE.radiusMeters;
+
+          // Toleransi Cerdas Sensor Smartphone di Dalam Bengkel/Gedung Baja:
+          // Jika ponsel mendeteksi akurasi satelit agak renggang (e.g. ±15m-30m karena atap seng stall),
+          // sistem memperhitungkan buffer akurasi agar tidak false-rejection bagi teknisi di lokasi.
+          const accuracyBuffer = Math.min(25, Math.round(userLocation.accuracy / 2));
+          const effectiveDist = Math.max(0, dist - accuracyBuffer);
+          userLocation.isInside = (dist <= workshopConfig.radiusMeters) || (effectiveDist <= workshopConfig.radiusMeters);
 
           updateRadiusUI(dist, userLocation.isInside);
           if (manualAlert) {
-            alert(`GPS Terkunci: Jarak ${dist} meter dari pusat workshop (Akurasi: ±${userLocation.accuracy}m).`);
+            alert(`GPS Terkunci:\nPosisi Anda: ${userLocation.lat.toFixed(6)}, ${userLocation.lng.toFixed(6)}\nPusat Bengkel: ${workshopConfig.lat.toFixed(6)}, ${workshopConfig.lng.toFixed(6)}\nJarak: ${dist} meter (Radius: ${workshopConfig.radiusMeters} m, Akurasi: ±${userLocation.accuracy}m).`);
           }
         },
         (err) => {
-          console.warn("Sensor GPS gagal/ditolak, fallback ke simulasi 12m:", err);
-          updateRadiusUI(12, true);
+          console.warn("Sensor GPS gagal membaca posisi:", err);
+          if (manualAlert) {
+            alert(`Gagal membaca sinyal GPS: ${err.message}.\nPastikan izin lokasi telah diizinkan di browser Anda.`);
+          }
+          updateRadiusUI(userLocation.distance, userLocation.isInside);
         },
-        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
       );
     }
 
@@ -1127,20 +1228,30 @@
       const radiusDescTxt = document.getElementById('radius-desc-txt');
       const radiusIconBox = document.getElementById('radius-icon-box');
       const blockerCallout = document.getElementById('clock-in-blocker-callout');
+      const blockerDistVal = document.getElementById('blocker-dist-val');
       const btnCaptureAction = document.getElementById('btn-capture-action');
 
+      // Update Live Displays
       if (distTxt) distTxt.innerText = `${distance} m`;
       if (camDistTxt) camDistTxt.innerText = `${distance} m`;
       if (topbarGpsText) topbarGpsText.innerText = `Radius Workshop: ${distance} m`;
+      if (blockerDistVal) blockerDistVal.innerText = `${distance}`;
+
+      const lblUserCoords = document.getElementById('lbl-user-coords');
+      const lblWorkshopCoords = document.getElementById('lbl-workshop-coords');
+      const lblWorkshopRadius = document.getElementById('lbl-workshop-radius');
+      if (lblUserCoords) lblUserCoords.innerText = `${userLocation.lat.toFixed(4)}, ${userLocation.lng.toFixed(4)}`;
+      if (lblWorkshopCoords) lblWorkshopCoords.innerText = `${workshopConfig.lat.toFixed(4)}, ${workshopConfig.lng.toFixed(4)}`;
+      if (lblWorkshopRadius) lblWorkshopRadius.innerText = `${workshopConfig.radiusMeters} meter`;
 
       if (isInside) {
-        // Status HIJAU (Dalam area bengkel <= 70m)
+        // Status HIJAU (Dalam area bengkel <= radius)
         if (badge) {
           badge.className = "px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700 flex items-center gap-1.5";
           badge.innerHTML = `Dalam Area Bengkel <i data-lucide="check" class="w-3.5 h-3.5"></i>`;
         }
         if (radiusDescTxt) {
-          radiusDescTxt.innerText = `Anda berada di dalam radius workshop (${distance} m ≤ 70 m).`;
+          radiusDescTxt.innerText = `Anda berada di dalam radius workshop (${distance} m ≤ ${workshopConfig.radiusMeters} m).`;
         }
         if (radiusIconBox) {
           radiusIconBox.className = "w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center flex-shrink-0 mt-0.5";
@@ -1148,7 +1259,7 @@
         }
         if (camStatusStrip) {
           camStatusStrip.className = "p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center justify-between text-xs font-bold";
-          camStatusStrip.innerHTML = `<div class="flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4 text-emerald-600"></i><span>Dalam radius workshop (${distance} m ≤ 70 m)</span></div><span class="px-2 py-0.5 rounded-md bg-emerald-200/60 text-emerald-800 text-[10px] uppercase font-bold">Valid IN</span>`;
+          camStatusStrip.innerHTML = `<div class="flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4 text-emerald-600"></i><span>Dalam radius workshop (${distance} m ≤ ${workshopConfig.radiusMeters} m)</span></div><span class="px-2 py-0.5 rounded-md bg-emerald-200/60 text-emerald-800 text-[10px] uppercase font-bold">Valid IN</span>`;
         }
         if (topbarGpsPill) {
           topbarGpsPill.className = "hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200";
@@ -1161,13 +1272,13 @@
           btnCaptureAction.removeAttribute('disabled');
         }
       } else {
-        // Status MERAH (Di luar bengkel > 70m)
+        // Status MERAH (Di luar bengkel > radius)
         if (badge) {
           badge.className = "px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700 flex items-center gap-1.5";
           badge.innerHTML = `Di Luar Bengkel <i data-lucide="x" class="w-3.5 h-3.5"></i>`;
         }
         if (radiusDescTxt) {
-          radiusDescTxt.innerText = `Anda berada di luar perimeter workshop (${distance} m > 70 m). Clock IN diblokir.`;
+          radiusDescTxt.innerText = `Anda berada di luar perimeter workshop (${distance} m > ${workshopConfig.radiusMeters} m). Clock IN diblokir.`;
         }
         if (radiusIconBox) {
           radiusIconBox.className = "w-5 h-5 rounded-full bg-red-500 text-white flex items-center justify-center flex-shrink-0 mt-0.5";
@@ -1175,7 +1286,7 @@
         }
         if (camStatusStrip) {
           camStatusStrip.className = "p-3 rounded-xl bg-red-100 border border-red-300 text-red-800 flex items-center justify-between text-xs font-bold";
-          camStatusStrip.innerHTML = `<div class="flex items-center gap-2"><i data-lucide="alert-octagon" class="w-4 h-4 text-red-600"></i><span>Di luar area (${distance} m). Maks radius 70 m!</span></div><span class="px-2 py-0.5 rounded-md bg-red-200 text-red-800 text-[10px] uppercase font-bold">Luar Area</span>`;
+          camStatusStrip.innerHTML = `<div class="flex items-center gap-2"><i data-lucide="alert-octagon" class="w-4 h-4 text-red-600"></i><span>Di luar area (${distance} m). Maks radius ${workshopConfig.radiusMeters} m!</span></div><span class="px-2 py-0.5 rounded-md bg-red-200 text-red-800 text-[10px] uppercase font-bold">Luar Area</span>`;
         }
         if (topbarGpsPill) {
           topbarGpsPill.className = "hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-red-50 text-red-700 border border-red-200";
@@ -1236,7 +1347,7 @@
         presensi: { title: 'Presensi Kamera', sub: 'Live Camera Stream + Automated Geotag Watermark' },
         izin: { title: 'Pengajuan Izin / Sakit', sub: 'Formulir ketidakhadiran mekanik magang PKL' },
         rekap: { title: 'Rekapitulasi Kehadiran', sub: 'Laporan kehadiran & perizinan magang teknisi bengkel' },
-        pengaturan: { title: 'Pengaturan & Konfigurasi', sub: 'Profil siswa magang, mode GPS, dan sinkronisasi server' }
+        pengaturan: { title: 'Pengaturan & Geofencing', sub: 'Profil siswa magang, kalibrasi titik bengkel, dan server' }
       };
       document.getElementById('page-title').innerText = titles[tabId].title;
       document.getElementById('page-subtitle').innerText = titles[tabId].sub;
@@ -1328,7 +1439,7 @@
     function captureSnapshot() {
       // Validasi Pemblokir Geofencing untuk Clock IN
       if (activeAttendanceType === 'IN' && !userLocation.isInside) {
-        alert(`Aksi Ditolak!\nJarak Anda: ${userLocation.distance} meter dari bengkel.\nSesuai PRD, Clock IN wajib berada di dalam radius workshop (≤ 70 m).`);
+        alert(`Aksi Ditolak!\nJarak Anda: ${userLocation.distance} meter dari bengkel.\nSesuai PRD, Clock IN wajib berada di dalam radius workshop (≤ ${workshopConfig.radiusMeters} m).\n\nJika Anda sudah berada di lokasi bengkel, silakan klik tombol 'Kalibrasi Titik Saya'.`);
         return;
       }
 
@@ -1405,7 +1516,7 @@
     async function submitAttendance() {
       // Verifikasi Geofencing Sekali Lagi Sebelum Transmisi
       if (activeAttendanceType === 'IN' && !userLocation.isInside) {
-        alert(`Gagal Absen Masuk! Anda berada di jarak ${userLocation.distance} m (maksimal radius 70 m).`);
+        alert(`Gagal Absen Masuk! Anda berada di jarak ${userLocation.distance} m (maksimal radius ${workshopConfig.radiusMeters} m).`);
         return;
       }
 
@@ -1682,7 +1793,6 @@
         if (item.kategori === 'Sakit') badgeClass = "bg-red-100 text-red-800";
         if (item.kategori === 'Izin') badgeClass = "bg-amber-100 text-amber-800";
 
-        // Format tanggal ringkas (e.g., 28 Okt)
         let formattedDate = item.tanggal;
         try {
           const d = new Date(item.tanggal);
@@ -1714,7 +1824,84 @@
       lucide.createIcons();
     }
 
-    // --- 11. PENGATURAN & MODAL ---
+    // --- 11. KALIBRASI LOKASI & PENGATURAN BENGKEL ---
+    function calibrateCurrentLocation() {
+      if (!navigator.geolocation) {
+        alert("Sensor Geolocation tidak didukung pada browser ini.");
+        return;
+      }
+
+      if (currentUser.gpsMode !== 'real') {
+        const switchReal = confirm("Mode simulasi sedang aktif. Beralih ke sensor GPS Asli untuk kalibrasi titik bengkel?");
+        if (switchReal) {
+          currentUser.gpsMode = 'real';
+          localStorage.setItem('pkl_gps_mode', 'real');
+          document.getElementById('cfg-gps-mode').value = 'real';
+        } else {
+          return;
+        }
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const curLat = parseFloat(pos.coords.latitude.toFixed(6));
+          const curLng = parseFloat(pos.coords.longitude.toFixed(6));
+          const acc = Math.round(pos.coords.accuracy);
+
+          const ok = confirm(`KALIBRASI LOKASI BENGKEL:\n\nJadikan posisi GPS Anda saat ini:\nLatitude: ${curLat}\nLongitude: ${curLng}\n(Akurasi GPS: ±${acc} meter)\n\nsebagai TITIK PUSAT Workshop Astra Daihatsu Ahmad Yani?`);
+          if (ok) {
+            workshopConfig.lat = curLat;
+            workshopConfig.lng = curLng;
+            localStorage.setItem('pkl_workshop_lat', curLat);
+            localStorage.setItem('pkl_workshop_lng', curLng);
+
+            document.getElementById('cfg-workshop-lat').value = curLat;
+            document.getElementById('cfg-workshop-lng').value = curLng;
+
+            // Recalculate & Reset Live State
+            userLocation.lat = curLat;
+            userLocation.lng = curLng;
+            userLocation.accuracy = acc;
+            userLocation.distance = 0;
+            userLocation.isInside = true;
+
+            updateRadiusUI(0, true);
+            alert(`Kalibrasi Berhasil!\n\nTitik pusat bengkel kini diatur ke koordinat Anda saat ini (${curLat}, ${curLng}). Jarak Anda sekarang 0 meter (Dalam Area Bengkel).`);
+          }
+        },
+        (err) => {
+          alert(`Gagal mengambil koordinat saat ini: ${err.message}\nPastikan GPS perangkat dan izin lokasi browser aktif.`);
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+      );
+    }
+
+    function setRadiusPreset(val) {
+      document.getElementById('cfg-workshop-radius').value = val;
+      document.getElementById('radius-val-display').innerText = val + ' meter';
+    }
+
+    function resetWorkshopLocationDefault() {
+      if (confirm("Kembalikan koordinat pusat bengkel ke nilai acuan default PRD (-5.3932, 105.2619, 70m)?")) {
+        workshopConfig.lat = PRD_DEFAULT_COORDS.lat;
+        workshopConfig.lng = PRD_DEFAULT_COORDS.lng;
+        workshopConfig.radiusMeters = PRD_DEFAULT_COORDS.radiusMeters;
+
+        localStorage.removeItem('pkl_workshop_lat');
+        localStorage.removeItem('pkl_workshop_lng');
+        localStorage.removeItem('pkl_workshop_radius');
+
+        document.getElementById('cfg-workshop-lat').value = PRD_DEFAULT_COORDS.lat;
+        document.getElementById('cfg-workshop-lng').value = PRD_DEFAULT_COORDS.lng;
+        document.getElementById('cfg-workshop-radius').value = PRD_DEFAULT_COORDS.radiusMeters;
+        document.getElementById('radius-val-display').innerText = PRD_DEFAULT_COORDS.radiusMeters + ' meter';
+
+        checkGPS(false);
+        alert("Koordinat pusat bengkel berhasil dikembalikan ke default PRD.");
+      }
+    }
+
+    // --- 12. PENGATURAN UMUM & MODAL ---
     function saveSettings() {
       currentUser.nama = document.getElementById('cfg-nama').value.trim();
       currentUser.nim = document.getElementById('cfg-nim').value.trim();
@@ -1722,6 +1909,22 @@
       currentUser.jurusan = document.getElementById('cfg-jurusan').value.trim();
       currentUser.apiUrl = document.getElementById('cfg-script-url').value.trim();
       currentUser.gpsMode = document.getElementById('cfg-gps-mode').value;
+
+      // Workshop Settings
+      const wLat = parseFloat(document.getElementById('cfg-workshop-lat').value);
+      const wLng = parseFloat(document.getElementById('cfg-workshop-lng').value);
+      const wRad = parseInt(document.getElementById('cfg-workshop-radius').value);
+
+      if (!isNaN(wLat) && !isNaN(wLng)) {
+        workshopConfig.lat = wLat;
+        workshopConfig.lng = wLng;
+        localStorage.setItem('pkl_workshop_lat', wLat);
+        localStorage.setItem('pkl_workshop_lng', wLng);
+      }
+      if (!isNaN(wRad) && wRad > 0) {
+        workshopConfig.radiusMeters = wRad;
+        localStorage.setItem('pkl_workshop_radius', wRad);
+      }
 
       localStorage.setItem('pkl_nama', currentUser.nama);
       localStorage.setItem('pkl_nim', currentUser.nim);
@@ -1732,7 +1935,7 @@
 
       updateProfileDisplay();
       checkGPS(false);
-      alert("Pengaturan profil & mode GPS berhasil disimpan!");
+      alert("Pengaturan profil & parameter geofencing berhasil disimpan!");
       switchTab('dashboard');
     }
 
