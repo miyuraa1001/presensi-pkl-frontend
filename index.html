@@ -73,7 +73,7 @@
 
     /* Print styling for Rekap Bulanan Export */
     @media print {
-      aside, header, #btn-export-pdf, .no-print {
+      aside, header, nav, #btn-export-pdf, .no-print {
         display: none !important;
       }
       body {
@@ -94,11 +94,8 @@
 </head>
 <body class="bg-[#F4F6FA] text-slate-800 antialiased min-h-screen flex flex-col md:flex-row overflow-x-hidden">
 
-  <!-- Mobile Overlay Backdrop -->
-  <div id="mobile-sidebar-backdrop" onclick="toggleSidebar(false)" class="hidden fixed inset-0 bg-black/60 z-30 md:hidden backdrop-blur-xs transition-opacity"></div>
-
-  <!-- ==================== SIDEBAR ==================== -->
-  <aside id="sidebar" class="fixed md:static inset-y-0 left-0 w-64 bg-[#0d1a3a] text-white flex-shrink-0 flex flex-col justify-between p-4 z-40 transition-transform -translate-x-full md:translate-x-0 shadow-2xl md:shadow-xl">
+  <!-- ==================== DESKTOP SIDEBAR ==================== -->
+  <aside id="sidebar" class="hidden md:flex md:static inset-y-0 left-0 w-64 bg-[#0d1a3a] text-white flex-shrink-0 flex-col justify-between p-4 z-40 shadow-xl">
     <div>
       <!-- Brand & Header -->
       <div class="px-2 pt-2 pb-4 border-b border-slate-700/60">
@@ -118,7 +115,7 @@
         </div>
       </div>
 
-      <!-- Nav Menu Items -->
+      <!-- Nav Menu Items (Desktop) -->
       <nav class="mt-5 space-y-1.5" id="nav-container">
         <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-bold transition-all bg-blue-600 text-white shadow-md shadow-blue-600/30">
           <i data-lucide="home" class="w-4 h-4"></i>
@@ -163,13 +160,13 @@
     <!-- TOPBAR / HEADER (Mobile + Desktop) -->
     <header class="bg-white border-b border-slate-200/80 px-4 md:px-8 py-3.5 flex items-center justify-between sticky top-0 z-20 shadow-xs">
       <div class="flex items-center gap-3">
-        <!-- Hamburger Menu Button for Mobile -->
-        <button onclick="toggleSidebar(true)" class="p-2 -ml-2 rounded-lg text-slate-600 hover:bg-slate-100 md:hidden transition" aria-label="Buka Menu">
-          <i data-lucide="menu" class="w-5 h-5"></i>
-        </button>
+        <!-- Small Mobile Brand Emblem (Daihatsu Red 'D') -->
+        <div class="w-8 h-8 rounded-lg bg-red-600 text-white flex items-center justify-center font-black text-sm md:hidden shadow-xs flex-shrink-0">
+          <span>D</span>
+        </div>
         <div>
-          <h2 id="page-title" class="text-xl md:text-2xl font-bold text-slate-900 leading-tight">Dashboard</h2>
-          <p id="page-subtitle" class="text-xs text-slate-500 mt-0.5">Sistem Presensi Geofencing PKL Astra Daihatsu Ahmad Yani</p>
+          <h2 id="page-title" class="text-lg md:text-2xl font-bold text-slate-900 leading-tight">Dashboard</h2>
+          <p id="page-subtitle" class="text-[11px] md:text-xs text-slate-500 mt-0.5">Sistem Presensi Geofencing PKL Astra Daihatsu Ahmad Yani</p>
         </div>
       </div>
       
@@ -195,8 +192,8 @@
       </div>
     </header>
 
-    <!-- CONTENT BODY CONTAINER -->
-    <div class="p-4 md:p-8 flex-1 max-w-7xl w-full mx-auto">
+    <!-- CONTENT BODY CONTAINER (Extra padding-bottom on mobile for Bottom Navbar) -->
+    <div class="p-4 md:p-8 flex-1 max-w-7xl w-full mx-auto pb-28 md:pb-8">
 
       <!-- ==================== TAB 1: DASHBOARD ==================== -->
       <section id="view-dashboard" class="space-y-6">
@@ -873,6 +870,54 @@
     </div>
   </main>
 
+  <!-- ==================== MOBILE BOTTOM NAVBAR ==================== -->
+  <nav id="mobile-bottom-nav" class="md:hidden fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-slate-200/90 z-40 px-2 py-1 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] flex items-center justify-around">
+    
+    <!-- 1. Dashboard -->
+    <button onclick="switchTab('dashboard')" id="bnav-dashboard" class="bnav-item flex-1 flex flex-col items-center justify-center py-1 text-blue-600 font-bold transition">
+      <div class="relative">
+        <i data-lucide="home" class="w-5 h-5"></i>
+        <span class="bnav-indicator absolute -top-1 -right-1 w-2 h-2 rounded-full bg-blue-600"></span>
+      </div>
+      <span class="text-[10px] mt-0.5">Beranda</span>
+    </button>
+
+    <!-- 2. Izin/Sakit -->
+    <button onclick="switchTab('izin')" id="bnav-izin" class="bnav-item flex-1 flex flex-col items-center justify-center py-1 text-slate-400 font-medium transition">
+      <div class="relative">
+        <i data-lucide="file-plus-2" class="w-5 h-5"></i>
+        <span class="bnav-indicator hidden absolute -top-1 -right-1 w-2 h-2 rounded-full bg-blue-600"></span>
+      </div>
+      <span class="text-[10px] mt-0.5">Izin/Sakit</span>
+    </button>
+
+    <!-- 3. Presensi Kamera (Prominent Elevated Center Button) -->
+    <button onclick="switchTab('presensi')" id="bnav-presensi" class="bnav-item flex-1 flex flex-col items-center justify-center -mt-4 transition group">
+      <div class="w-11 h-11 rounded-full bg-blue-600 group-hover:bg-blue-700 text-white flex items-center justify-center shadow-lg shadow-blue-600/40 border-2 border-white transition transform active:scale-95">
+        <i data-lucide="camera" class="w-5 h-5"></i>
+      </div>
+      <span class="text-[10px] font-bold text-blue-600 mt-0.5">Presensi</span>
+    </button>
+
+    <!-- 4. Rekap Bulanan -->
+    <button onclick="switchTab('rekap')" id="bnav-rekap" class="bnav-item flex-1 flex flex-col items-center justify-center py-1 text-slate-400 font-medium transition">
+      <div class="relative">
+        <i data-lucide="calendar-check" class="w-5 h-5"></i>
+        <span class="bnav-indicator hidden absolute -top-1 -right-1 w-2 h-2 rounded-full bg-blue-600"></span>
+      </div>
+      <span class="text-[10px] mt-0.5">Rekap</span>
+    </button>
+
+    <!-- 5. Pengaturan & Geofence -->
+    <button onclick="switchTab('pengaturan')" id="bnav-pengaturan" class="bnav-item flex-1 flex flex-col items-center justify-center py-1 text-slate-400 font-medium transition">
+      <div class="relative">
+        <i data-lucide="settings" class="w-5 h-5"></i>
+        <span class="bnav-indicator hidden absolute -top-1 -right-1 w-2 h-2 rounded-full bg-blue-600"></span>
+      </div>
+      <span class="text-[10px] mt-0.5">Pengaturan</span>
+    </button>
+  </nav>
+
   <!-- ==================== MODAL PREVIEW FOTO BUKTI ==================== -->
   <div id="photo-modal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl">
@@ -1078,15 +1123,7 @@
     }
 
     function toggleSidebar(open) {
-      const sidebar = document.getElementById('sidebar');
-      const backdrop = document.getElementById('mobile-sidebar-backdrop');
-      if (open) {
-        sidebar.classList.remove('-translate-x-full');
-        backdrop.classList.remove('hidden');
-      } else {
-        sidebar.classList.add('-translate-x-full');
-        backdrop.classList.add('hidden');
-      }
+      // Kept for backward compatibility
     }
 
     function updateProfileDisplay() {
@@ -1196,8 +1233,6 @@
           userLocation.distance = dist;
 
           // Toleransi Cerdas Sensor Smartphone di Dalam Bengkel/Gedung Baja:
-          // Jika ponsel mendeteksi akurasi satelit agak renggang (e.g. ±15m-30m karena atap seng stall),
-          // sistem memperhitungkan buffer akurasi agar tidak false-rejection bagi teknisi di lokasi.
           const accuracyBuffer = Math.min(25, Math.round(userLocation.accuracy / 2));
           const effectiveDist = Math.max(0, dist - accuracyBuffer);
           userLocation.isInside = (dist <= workshopConfig.radiusMeters) || (effectiveDist <= workshopConfig.radiusMeters);
@@ -1282,7 +1317,7 @@
         }
         if (radiusIconBox) {
           radiusIconBox.className = "w-5 h-5 rounded-full bg-red-500 text-white flex items-center justify-center flex-shrink-0 mt-0.5";
-          radiusIconBox.innerHTML = `<i data-lucide="x" class="w-3 h-3"></i>`;
+          radiusIconBox.innerHTML = `<i data-lucide="x" class="w-3.5 h-3.5"></i>`;
         }
         if (camStatusStrip) {
           camStatusStrip.className = "p-3 rounded-xl bg-red-100 border border-red-300 text-red-800 flex items-center justify-between text-xs font-bold";
@@ -1302,28 +1337,43 @@
       lucide.createIcons();
     }
 
-    // --- 5. LOGIKA NAVIGASI TAB ---
+    // --- 5. LOGIKA NAVIGASI TAB (SYNC SIDEBAR & MOBILE BOTTOM NAVBAR) ---
     function switchTab(tabId) {
       const tabs = ['dashboard', 'presensi', 'izin', 'rekap', 'pengaturan'];
       tabs.forEach(t => {
         const viewEl = document.getElementById(`view-${t}`);
         const navEl = document.getElementById(`nav-${t}`);
+        const bnavEl = document.getElementById(`bnav-${t}`);
+
         if (viewEl) viewEl.classList.add('hidden');
         if (navEl) {
           navEl.classList.remove('bg-blue-600', 'text-white', 'shadow-md', 'shadow-blue-600/30');
           navEl.classList.add('text-slate-300');
         }
+        if (bnavEl) {
+          bnavEl.classList.remove('text-blue-600', 'font-bold');
+          bnavEl.classList.add('text-slate-400');
+          const indicator = bnavEl.querySelector('.bnav-indicator');
+          if (indicator) indicator.classList.add('hidden');
+        }
       });
 
+      // Activate selected in Desktop Sidebar & Mobile Bottom Nav
       const activeView = document.getElementById(`view-${tabId}`);
       const activeNav = document.getElementById(`nav-${tabId}`);
+      const activeBnav = document.getElementById(`bnav-${tabId}`);
+
       if (activeView) activeView.classList.remove('hidden');
       if (activeNav) {
         activeNav.classList.add('bg-blue-600', 'text-white', 'shadow-md', 'shadow-blue-600/30');
         activeNav.classList.remove('text-slate-300');
       }
-
-      toggleSidebar(false);
+      if (activeBnav) {
+        activeBnav.classList.add('text-blue-600', 'font-bold');
+        activeBnav.classList.remove('text-slate-400');
+        const indicator = activeBnav.querySelector('.bnav-indicator');
+        if (indicator) indicator.classList.remove('hidden');
+      }
 
       if (tabId !== 'presensi' && mediaStream) {
         stopCamera();
