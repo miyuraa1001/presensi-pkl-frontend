@@ -198,22 +198,21 @@
       
       <!-- Top Actions & Profile -->
       <div class="flex items-center gap-3.5">
-        <!-- GPS Status Pill in Topbar -->
-        <div id="topbar-gps-pill" class="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-          <span id="topbar-gps-text">Radius Workshop: 12 m</span>
+        <!-- GPS Status Pill in Topbar (Visible on Mobile & Desktop) -->
+        <div id="topbar-gps-pill" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-2xs">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span id="topbar-gps-text">Radius: 0 m</span>
         </div>
 
         <!-- User Profile Pill -->
-        <div class="flex items-center gap-2.5 pl-2 border-l border-slate-200 cursor-pointer" onclick="switchTab('pengaturan')">
-          <div class="w-9 h-9 rounded-full bg-[#0d1a3a] flex items-center justify-center text-white font-bold text-xs overflow-hidden shadow-xs">
+        <div class="flex items-center gap-2 pl-2 border-l border-slate-200 cursor-pointer" onclick="switchTab('pengaturan')">
+          <div class="w-8 h-8 rounded-full bg-[#0d1a3a] flex items-center justify-center text-white font-bold text-xs overflow-hidden shadow-xs">
             <i data-lucide="user" class="w-4 h-4 text-blue-300"></i>
           </div>
           <div class="hidden sm:block text-left">
-            <p class="text-xs font-bold text-slate-800" id="user-display-name">Andi Pratama</p>
-            <p class="text-[11px] text-slate-400 font-medium" id="user-display-nim">NIM: 12345678</p>
+            <p class="text-xs font-bold text-slate-800 leading-tight" id="user-display-name">Mekanik Magang</p>
+            <p class="text-[10px] text-slate-400 font-medium" id="user-display-nim">NIM: -</p>
           </div>
-          <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 hidden sm:block"></i>
         </div>
       </div>
     </header>
@@ -231,7 +230,7 @@
                class="w-full h-auto object-cover block">
         </div>
 
-        <!-- 4 Metric Cards (Dynamically computed from actual logs) -->
+        <!-- 4 Metric Cards (Dynamically computed from real logs) -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
           <!-- Total Hadir -->
           <div class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-sm transition">
@@ -245,11 +244,11 @@
               </div>
             </div>
             <div class="flex items-baseline gap-1 mt-3">
-              <span class="text-2xl md:text-3xl font-black text-slate-900" id="stat-hadir">18</span>
-              <span class="text-xs font-semibold text-slate-400">/ 22 Hari</span>
+              <span class="text-2xl md:text-3xl font-black text-slate-900" id="stat-hadir">0</span>
+              <span class="text-xs font-semibold text-slate-400">Hari</span>
             </div>
             <div class="flex items-center gap-1 mt-1.5 text-xs font-bold text-emerald-600" id="stat-hadir-percent">
-              <span>↑</span> 82%
+              <span>Presensi Valid Masuk</span>
             </div>
           </div>
 
@@ -265,11 +264,11 @@
               </div>
             </div>
             <div class="flex items-baseline gap-1 mt-3">
-              <span class="text-2xl md:text-3xl font-black text-slate-900" id="stat-sakit">1</span>
+              <span class="text-2xl md:text-3xl font-black text-slate-900" id="stat-sakit">0</span>
               <span class="text-xs font-semibold text-slate-400">Hari</span>
             </div>
-            <div class="flex items-center gap-1 mt-1.5 text-xs font-bold text-slate-500">
-              Terverifikasi
+            <div class="flex items-center gap-1 mt-1.5 text-xs font-semibold text-slate-400">
+              Surat Dokter Terverifikasi
             </div>
           </div>
 
@@ -285,11 +284,11 @@
               </div>
             </div>
             <div class="flex items-baseline gap-1 mt-3">
-              <span class="text-2xl md:text-3xl font-black text-slate-900" id="stat-izin">1</span>
+              <span class="text-2xl md:text-3xl font-black text-slate-900" id="stat-izin">0</span>
               <span class="text-xs font-semibold text-slate-400">Hari</span>
             </div>
-            <div class="flex items-center gap-1 mt-1.5 text-xs font-bold text-slate-500">
-              Disetujui
+            <div class="flex items-center gap-1 mt-1.5 text-xs font-semibold text-slate-400">
+              Dispensasi Disetujui
             </div>
           </div>
 
@@ -305,11 +304,11 @@
               </div>
             </div>
             <div class="flex items-baseline gap-1 mt-3">
-              <span class="text-2xl md:text-3xl font-black text-slate-900" id="stat-jam">144</span>
+              <span class="text-2xl md:text-3xl font-black text-slate-900" id="stat-jam">0</span>
               <span class="text-xs font-semibold text-slate-400">Jam</span>
             </div>
-            <div class="flex items-center gap-1 mt-1.5 text-xs font-bold text-emerald-600">
-              Memenuhi target PKL
+            <div class="flex items-center gap-1 mt-1.5 text-xs font-semibold text-slate-400" id="stat-jam-status">
+              Akumulasi 8 Jam/Shift
             </div>
           </div>
         </div>
@@ -417,37 +416,40 @@
 
               <div class="space-y-3">
                 <!-- Clock IN Box -->
-                <div onclick="openPresensiDirect('IN')" class="cursor-pointer p-3.5 rounded-xl bg-[#ecfdf3] border border-emerald-100 flex items-center justify-between transition hover:border-emerald-300 group">
+                <div onclick="openPresensiDirect('IN')" id="today-in-box" class="cursor-pointer p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between transition hover:border-emerald-300 group">
                   <div class="flex items-center gap-3">
-                    <div id="today-in-indicator" class="w-9 h-9 rounded-full bg-emerald-500 text-white flex items-center justify-center flex-shrink-0 shadow-xs">
+                    <div id="today-in-indicator" class="w-9 h-9 rounded-full border-2 border-slate-300 text-slate-400 flex items-center justify-center flex-shrink-0 transition">
                       <i data-lucide="log-in" class="w-4 h-4"></i>
                     </div>
                     <div>
                       <p class="text-xs font-bold text-slate-800">Masuk (Clock IN)</p>
-                      <p class="text-sm font-extrabold text-slate-900" id="today-in-time">08:15:32 WIB</p>
-                      <p class="text-[10px] text-emerald-700 font-semibold" id="today-in-status">VALID_IN (≤ 70m)</p>
+                      <p class="text-xs font-semibold text-slate-500" id="today-in-time">Belum presensi masuk</p>
+                      <p class="text-[10px] text-slate-400 font-medium" id="today-in-status">Klik untuk ambil foto presensi masuk</p>
                     </div>
                   </div>
                   <!-- Thumb Foto IN -->
-                  <div class="w-16 h-12 rounded-lg overflow-hidden border border-emerald-200 bg-slate-100 flex-shrink-0 group-hover:scale-105 transition">
-                    <img id="today-in-thumb" src="Image/Picture-Hero.png" alt="Bukti Masuk" class="w-full h-full object-cover object-right">
+                  <div id="today-in-thumb-wrap" class="w-16 h-12 rounded-lg border border-dashed border-slate-300 bg-slate-100 flex items-center justify-center text-slate-400 text-xs flex-shrink-0 group-hover:scale-105 transition overflow-hidden">
+                    <img id="today-in-thumb" src="" alt="Bukti Masuk" class="w-full h-full object-cover hidden">
+                    <i data-lucide="camera" class="w-4 h-4 text-slate-400" id="today-in-cam-icon"></i>
                   </div>
                 </div>
 
                 <!-- Clock OUT Box -->
-                <div onclick="openPresensiDirect('OUT')" class="cursor-pointer p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between transition hover:border-blue-300 group">
+                <div onclick="openPresensiDirect('OUT')" id="today-out-box" class="cursor-pointer p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between transition hover:border-blue-300 group">
                   <div class="flex items-center gap-3">
-                    <div id="today-out-indicator" class="w-9 h-9 rounded-full border-2 border-slate-300 text-slate-400 flex items-center justify-center flex-shrink-0">
+                    <div id="today-out-indicator" class="w-9 h-9 rounded-full border-2 border-slate-300 text-slate-400 flex items-center justify-center flex-shrink-0 transition">
                       <i data-lucide="log-out" class="w-4 h-4"></i>
                     </div>
                     <div>
-                      <p class="text-xs font-bold text-slate-700">Pulang / Selesai (Clock OUT)</p>
-                      <p class="text-xs font-semibold text-slate-500" id="today-out-time">Belum melakukan presensi pulang</p>
+                      <p class="text-xs font-bold text-slate-800">Pulang (Clock OUT)</p>
+                      <p class="text-xs font-semibold text-slate-500" id="today-out-time">Belum presensi pulang</p>
                       <p class="text-[10px] text-slate-400 font-medium" id="today-out-status">Klik untuk presensi selesai shift</p>
                     </div>
                   </div>
-                  <div class="w-16 h-12 rounded-lg border border-dashed border-slate-300 flex items-center justify-center text-slate-400 text-xs">
-                    <i data-lucide="camera" class="w-4 h-4"></i>
+                  <!-- Thumb Foto OUT -->
+                  <div id="today-out-thumb-wrap" class="w-16 h-12 rounded-lg border border-dashed border-slate-300 bg-slate-100 flex items-center justify-center text-slate-400 text-xs flex-shrink-0 group-hover:scale-105 transition overflow-hidden">
+                    <img id="today-out-thumb" src="" alt="Bukti Pulang" class="w-full h-full object-cover hidden">
+                    <i data-lucide="camera" class="w-4 h-4 text-slate-400" id="today-out-cam-icon"></i>
                   </div>
                 </div>
               </div>
@@ -678,7 +680,7 @@
         <div class="print-only-header mb-4">
           <h1 class="text-xl font-bold text-slate-900">LAPORAN REKAPITULASI PRESENSI PKL MEKANIK</h1>
           <p class="text-sm text-slate-600">Astra Daihatsu Ahmad Yani, Bandar Lampung</p>
-          <p class="text-xs text-slate-500" id="print-user-meta">Nama: Andi Pratama | NIM: 12345678</p>
+          <p class="text-xs text-slate-500" id="print-user-meta">Nama: Mekanik Magang | NIM: -</p>
           <hr class="my-2 border-slate-300">
         </div>
 
@@ -711,7 +713,7 @@
             </span>
             <div>
               <p class="text-[10px] text-emerald-800 font-bold">Hadir</p>
-              <p class="text-xs font-extrabold text-slate-900" id="rekap-metric-hadir">18 Hari</p>
+              <p class="text-xs font-extrabold text-slate-900" id="rekap-metric-hadir">0 Hari</p>
             </div>
           </div>
           <!-- Sakit -->
@@ -721,7 +723,7 @@
             </span>
             <div>
               <p class="text-[10px] text-red-800 font-bold">Sakit</p>
-              <p class="text-xs font-extrabold text-slate-900" id="rekap-metric-sakit">1 Hari</p>
+              <p class="text-xs font-extrabold text-slate-900" id="rekap-metric-sakit">0 Hari</p>
             </div>
           </div>
           <!-- Izin -->
@@ -731,7 +733,7 @@
             </span>
             <div>
               <p class="text-[10px] text-amber-800 font-bold">Izin</p>
-              <p class="text-xs font-extrabold text-slate-900" id="rekap-metric-izin">1 Hari</p>
+              <p class="text-xs font-extrabold text-slate-900" id="rekap-metric-izin">0 Hari</p>
             </div>
           </div>
           <!-- Jam Kerja -->
@@ -741,7 +743,7 @@
             </span>
             <div>
               <p class="text-[10px] text-blue-800 font-bold">Jam Kerja</p>
-              <p class="text-xs font-extrabold text-slate-900" id="rekap-metric-jam">144 Jam</p>
+              <p class="text-xs font-extrabold text-slate-900" id="rekap-metric-jam">0 Jam</p>
             </div>
           </div>
         </div>
@@ -790,19 +792,19 @@
 
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Lengkap Siswa</label>
-            <input type="text" id="cfg-nama" value="Andi Pratama" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-semibold">
+            <input type="text" id="cfg-nama" placeholder="Contoh: Muhammad Rizky" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-semibold">
           </div>
           <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">NIM / NISN / ID Magang</label>
-            <input type="text" id="cfg-nim" value="12345678" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono">
+            <label class="block text-xs font-semibold text-slate-600 mb-1">NISN / NIM / ID Magang</label>
+            <input type="text" id="cfg-nim" placeholder="Contoh: 20241001" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono">
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">Asal Sekolah / Kampus (Instansi)</label>
-            <input type="text" id="cfg-instansi" value="SMKN 2 Bandar Lampung" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500">
+            <input type="text" id="cfg-instansi" placeholder="SMKN 2 Bandar Lampung" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500">
           </div>
           <div>
             <label class="block text-xs font-semibold text-slate-600 mb-1">Jurusan / Program Keahlian</label>
-            <input type="text" id="cfg-jurusan" value="Teknik Kendaraan Ringan (TKR) / Otomotif" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500">
+            <input type="text" id="cfg-jurusan" placeholder="Teknik Kendaraan Ringan (TKR) / Otomotif" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500">
           </div>
 
           <!-- Workshop Center & Geofencing Calibration Settings -->
@@ -852,17 +854,20 @@
             </div>
           </div>
 
-          <!-- GPS Mode Configuration (Allows Testing anywhere) -->
-          <div class="pt-3 border-t border-slate-100">
-            <label class="block text-xs font-semibold text-slate-700 mb-1">Mode Geolocation GPS</label>
-            <select id="cfg-gps-mode" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-700 focus:ring-2 focus:ring-blue-500">
-              <option value="real">📡 Sensor GPS Asli Perangkat (High Accuracy)</option>
-              <option value="sim_in">🏢 Simulasi: Di Dalam Workshop (Jarak 12 m - Clock IN Diizinkan)</option>
-              <option value="sim_out">⛔ Simulasi: Di Luar Workshop (Jarak 250 m - Clock IN Diblokir)</option>
-            </select>
-            <p class="text-[11px] text-slate-400 mt-1">
-              Pilih 'Sensor GPS Asli Perangkat' saat berada di bengkel fisik untuk presensi harian.
-            </p>
+          <!-- Sensor GPS Asli Perangkat (Strict Geofencing) -->
+          <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+            <div>
+              <p class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                <i data-lucide="satellite" class="w-3.5 h-3.5 text-blue-600"></i>
+                Sensor Geolocation GPS
+              </p>
+              <p class="text-[11px] text-slate-400 mt-0.5">High-Accuracy WGS84 GPS asli perangkat (Tanpa Simulasi)</p>
+            </div>
+            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-700 border border-emerald-200 flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              GPS Aktif
+            </span>
+            <input type="hidden" id="cfg-gps-mode" value="real">
           </div>
 
           <!-- Google Apps Script Web App Integration -->
@@ -893,7 +898,7 @@
               Simpan Pengaturan
             </button>
             <button onclick="resetDemoData()" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-semibold text-xs transition">
-              Reset Data Demo ke Kondisi Awal
+              Bersihkan Riwayat Presensi & Izin Lokal
             </button>
           </div>
         </div>
@@ -1053,14 +1058,14 @@
     let geofenceCircle = null;
     let userMarker = null;
 
-    // State Pengguna
+    // State Pengguna Murni (Tanpa Mock Data)
     let currentUser = {
-      nama: localStorage.getItem('pkl_nama') || 'Andi Pratama',
-      nim: localStorage.getItem('pkl_nim') || '12345678',
+      nama: (localStorage.getItem('pkl_nama') && localStorage.getItem('pkl_nama') !== 'Andi Pratama') ? localStorage.getItem('pkl_nama') : 'Mekanik Magang PKL',
+      nim: (localStorage.getItem('pkl_nim') && localStorage.getItem('pkl_nim') !== '12345678') ? localStorage.getItem('pkl_nim') : '-',
       instansi: localStorage.getItem('pkl_instansi') || 'SMKN 2 Bandar Lampung',
       jurusan: localStorage.getItem('pkl_jurusan') || 'Teknik Kendaraan Ringan (TKR) / Otomotif',
       apiUrl: localStorage.getItem('pkl_script_url') || '',
-      gpsMode: localStorage.getItem('pkl_gps_mode') || 'real'
+      gpsMode: 'real'
     };
 
     // State Geolocation
@@ -1078,76 +1083,57 @@
     let currentFacingMode = 'environment'; // PRD 4.2: default environment
     let capturedImageBase64 = null;
 
-    // --- 2. SAMPLE INITIAL LOGS (Untuk Rekap & Statistik Pertama Kali) ---
-    const DEFAULT_PRESENSI_LOGS = [
-      {
-        logId: "ABS-20251028-12345678-IN",
-        tanggal: "2025-10-28",
-        waktu: "08:15:32",
-        tipe: "IN",
-        jarak: 12,
-        statusRadius: "VALID_IN",
-        photoUrl: "Image/Picture-Hero.png"
-      },
-      {
-        logId: "ABS-20251027-12345678-IN",
-        tanggal: "2025-10-27",
-        waktu: "08:10:14",
-        tipe: "IN",
-        jarak: 15,
-        statusRadius: "VALID_IN",
-        photoUrl: "Image/Picture-Hero.png"
-      },
-      {
-        logId: "ABS-20251025-12345678-IN",
-        tanggal: "2025-10-25",
-        waktu: "08:12:45",
-        tipe: "IN",
-        jarak: 20,
-        statusRadius: "VALID_IN",
-        photoUrl: "Image/Picture-Hero.png"
-      }
-    ];
-
-    const DEFAULT_IZIN_LOGS = [
-      {
-        izinId: "IZN-20251026-12345678",
-        tanggal: "2025-10-26",
-        jenis: "Sakit",
-        alasan: "Demam panas dan radang tenggorokan",
-        docUrl: "Image/Picture-Hero.png",
-        statusApproval: "Approved"
-      },
-      {
-        izinId: "IZN-20251024-12345678",
-        tanggal: "2025-10-24",
-        jenis: "Izin",
-        alasan: "Ujian praktikum sekolah di SMKN 2",
-        docUrl: "",
-        statusApproval: "Approved"
-      }
-    ];
-
+    // --- 2. PENYIMPANAN LOG PRESENSI & PERIZINAN MURNI (TANPA DATA SIMULASI) ---
     function getAttendanceLogs() {
       const saved = localStorage.getItem('pkl_logs_presensi');
       if (saved) {
-        try { return JSON.parse(saved); } catch(e) {}
+        try {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed)) {
+            // Filter out any legacy sample records
+            return parsed.filter(p => p.logId && !p.logId.includes('20251028') && !p.logId.includes('20251027') && !p.logId.includes('20251025'));
+          }
+        } catch(e) {}
       }
-      localStorage.setItem('pkl_logs_presensi', JSON.stringify(DEFAULT_PRESENSI_LOGS));
-      return DEFAULT_PRESENSI_LOGS;
+      return [];
     }
 
     function getIzinLogs() {
       const saved = localStorage.getItem('pkl_logs_izin');
       if (saved) {
-        try { return JSON.parse(saved); } catch(e) {}
+        try {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed)) {
+            // Filter out any legacy sample records
+            return parsed.filter(i => i.izinId && !i.izinId.includes('20251026') && !i.izinId.includes('20251024'));
+          }
+        } catch(e) {}
       }
-      localStorage.setItem('pkl_logs_izin', JSON.stringify(DEFAULT_IZIN_LOGS));
-      return DEFAULT_IZIN_LOGS;
+      return [];
     }
 
     // --- 3. INISIALISASI HALAMAN ---
     document.addEventListener('DOMContentLoaded', () => {
+      // Pembersihan otomatis data dummy/palsu lama dari localStorage browser
+      try {
+        const pLogs = localStorage.getItem('pkl_logs_presensi');
+        if (pLogs) {
+          const p = JSON.parse(pLogs).filter(l => l.logId && !l.logId.includes('20251028') && !l.logId.includes('20251027') && !l.logId.includes('20251025'));
+          localStorage.setItem('pkl_logs_presensi', JSON.stringify(p));
+        }
+        const iLogs = localStorage.getItem('pkl_logs_izin');
+        if (iLogs) {
+          const i = JSON.parse(iLogs).filter(l => l.izinId && !l.izinId.includes('20251026') && !l.izinId.includes('20251024'));
+          localStorage.setItem('pkl_logs_izin', JSON.stringify(i));
+        }
+        if (localStorage.getItem('pkl_nama') === 'Andi Pratama') {
+          localStorage.removeItem('pkl_nama');
+        }
+        if (localStorage.getItem('pkl_nim') === '12345678') {
+          localStorage.removeItem('pkl_nim');
+        }
+      } catch(e) {}
+
       lucide.createIcons();
       updateProfileDisplay();
       initDates();
@@ -1382,32 +1368,9 @@
     }
 
     function checkGPS(manualAlert = false) {
-      // Periksa apakah pengguna menggunakan mode simulasi
-      if (currentUser.gpsMode === 'sim_in') {
-        userLocation.lat = workshopConfig.lat;
-        userLocation.lng = workshopConfig.lng;
-        userLocation.accuracy = 4;
-        userLocation.distance = 12;
-        userLocation.isInside = true;
-        updateRadiusUI(12, true);
-        if (manualAlert) alert("Mode Simulasi Aktif: Di Dalam Workshop (Jarak 12 meter, Valid IN).");
-        return;
-      }
-
-      if (currentUser.gpsMode === 'sim_out') {
-        userLocation.lat = workshopConfig.lat + 0.0020;
-        userLocation.lng = workshopConfig.lng + 0.0020;
-        userLocation.accuracy = 8;
-        userLocation.distance = 250;
-        userLocation.isInside = false;
-        updateRadiusUI(250, false);
-        if (manualAlert) alert("Mode Simulasi Aktif: Di Luar Workshop (Jarak 250 meter, Clock IN diblokir).");
-        return;
-      }
-
-      // Gunakan GPS Sensor Asli Perangkat
+      // Gunakan Sensor GPS Asli Perangkat (Strict High-Accuracy Geolocation)
       if (!navigator.geolocation) {
-        alert("Browser tidak mendukung sensor Geolocation.");
+        alert("Browser atau perangkat tidak mendukung sensor Geolocation.");
         updateRadiusUI(userLocation.distance, userLocation.isInside);
         return;
       }
@@ -1985,10 +1948,101 @@
       document.getElementById('stat-jam').innerText = totalJam;
 
       // Update di Rekap
-      document.getElementById('rekap-metric-hadir').innerText = `${totalHadir} Hari`;
-      document.getElementById('rekap-metric-sakit').innerText = `${totalSakit} Hari`;
-      document.getElementById('rekap-metric-izin').innerText = `${totalIzin} Hari`;
-      document.getElementById('rekap-metric-jam').innerText = `${totalJam} Jam`;
+      const rHadir = document.getElementById('rekap-metric-hadir');
+      const rSakit = document.getElementById('rekap-metric-sakit');
+      const rIzin = document.getElementById('rekap-metric-izin');
+      const rJam = document.getElementById('rekap-metric-jam');
+      if (rHadir) rHadir.innerText = `${totalHadir} Hari`;
+      if (rSakit) rSakit.innerText = `${totalSakit} Hari`;
+      if (rIzin) rIzin.innerText = `${totalIzin} Hari`;
+      if (rJam) rJam.innerText = `${totalJam} Jam`;
+
+      // Update Status Presensi Hari Ini (Clock IN & Clock OUT) Murni Berdasarkan Data Nyata
+      const now = new Date();
+      const todayISO = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+
+      const todayIn = presensiLogs.find(l => l.tanggal === todayISO && l.tipe === 'IN');
+      const todayOut = presensiLogs.find(l => l.tanggal === todayISO && l.tipe === 'OUT');
+
+      // Update Clock IN UI
+      const inBox = document.getElementById('today-in-box');
+      const inIndicator = document.getElementById('today-in-indicator');
+      const inTime = document.getElementById('today-in-time');
+      const inStatus = document.getElementById('today-in-status');
+      const inThumb = document.getElementById('today-in-thumb');
+      const inCamIcon = document.getElementById('today-in-cam-icon');
+
+      if (todayIn) {
+        if (inBox) inBox.className = "cursor-pointer p-3.5 rounded-xl bg-emerald-50/70 border border-emerald-200 flex items-center justify-between transition hover:border-emerald-300 group";
+        if (inIndicator) inIndicator.className = "w-9 h-9 rounded-full bg-emerald-500 text-white flex items-center justify-center flex-shrink-0 shadow-xs";
+        if (inTime) {
+          inTime.className = "text-sm font-extrabold text-slate-900";
+          inTime.innerText = `${todayIn.waktu} WIB`;
+        }
+        if (inStatus) {
+          inStatus.className = "text-[10px] text-emerald-700 font-semibold";
+          inStatus.innerText = `${todayIn.statusRadius} (${todayIn.jarak}m)`;
+        }
+        if (todayIn.photoUrl && inThumb) {
+          inThumb.src = todayIn.photoUrl;
+          inThumb.classList.remove('hidden');
+          if (inCamIcon) inCamIcon.classList.add('hidden');
+        }
+      } else {
+        if (inBox) inBox.className = "cursor-pointer p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between transition hover:border-emerald-300 group";
+        if (inIndicator) inIndicator.className = "w-9 h-9 rounded-full border-2 border-slate-300 text-slate-400 flex items-center justify-center flex-shrink-0";
+        if (inTime) {
+          inTime.className = "text-xs font-semibold text-slate-500";
+          inTime.innerText = "Belum presensi masuk";
+        }
+        if (inStatus) {
+          inStatus.className = "text-[10px] text-slate-400 font-medium";
+          inStatus.innerText = "Klik untuk ambil foto presensi masuk";
+        }
+        if (inThumb) inThumb.classList.add('hidden');
+        if (inCamIcon) inCamIcon.classList.remove('hidden');
+      }
+
+      // Update Clock OUT UI
+      const outBox = document.getElementById('today-out-box');
+      const outIndicator = document.getElementById('today-out-indicator');
+      const outTime = document.getElementById('today-out-time');
+      const outStatus = document.getElementById('today-out-status');
+      const outThumb = document.getElementById('today-out-thumb');
+      const outCamIcon = document.getElementById('today-out-cam-icon');
+
+      if (todayOut) {
+        if (outBox) outBox.className = "cursor-pointer p-3.5 rounded-xl bg-blue-50/70 border border-blue-200 flex items-center justify-between transition hover:border-blue-300 group";
+        if (outIndicator) outIndicator.className = "w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center flex-shrink-0 shadow-xs";
+        if (outTime) {
+          outTime.className = "text-sm font-extrabold text-slate-900";
+          outTime.innerText = `${todayOut.waktu} WIB`;
+        }
+        if (outStatus) {
+          outStatus.className = "text-[10px] text-blue-700 font-semibold";
+          outStatus.innerText = `${todayOut.statusRadius} (${todayOut.jarak}m)`;
+        }
+        if (todayOut.photoUrl && outThumb) {
+          outThumb.src = todayOut.photoUrl;
+          outThumb.classList.remove('hidden');
+          if (outCamIcon) outCamIcon.classList.add('hidden');
+        }
+      } else {
+        if (outBox) outBox.className = "cursor-pointer p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between transition hover:border-blue-300 group";
+        if (outIndicator) outIndicator.className = "w-9 h-9 rounded-full border-2 border-slate-300 text-slate-400 flex items-center justify-center flex-shrink-0";
+        if (outTime) {
+          outTime.className = "text-xs font-semibold text-slate-500";
+          outTime.innerText = "Belum presensi pulang";
+        }
+        if (outStatus) {
+          outStatus.className = "text-[10px] text-slate-400 font-medium";
+          outStatus.innerText = "Klik untuk presensi selesai shift";
+        }
+        if (outThumb) outThumb.classList.add('hidden');
+        if (outCamIcon) outCamIcon.classList.remove('hidden');
+      }
+
+      lucide.createIcons();
     }
 
     function renderRekapTable() {
@@ -2033,7 +2087,20 @@
       }
 
       if (combined.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-slate-400 font-medium">Tidak ada data untuk filter ini.</td></tr>`;
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" class="py-12 text-center">
+              <div class="flex flex-col items-center justify-center text-slate-400 space-y-2">
+                <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
+                  <i data-lucide="clipboard-list" class="w-5 h-5"></i>
+                </div>
+                <p class="text-xs font-bold text-slate-700">Belum Ada Riwayat Presensi</p>
+                <p class="text-[11px] text-slate-400 max-w-xs">Data presensi masuk, pulang, dan perizinan Anda akan otomatis tersimpan dan tampil di sini.</p>
+              </div>
+            </td>
+          </tr>
+        `;
+        lucide.createIcons();
         return;
       }
 
@@ -2078,17 +2145,6 @@
       if (!navigator.geolocation) {
         alert("Sensor Geolocation tidak didukung pada browser ini.");
         return;
-      }
-
-      if (currentUser.gpsMode !== 'real') {
-        const switchReal = confirm("Mode simulasi sedang aktif. Beralih ke sensor GPS Asli untuk kalibrasi titik bengkel?");
-        if (switchReal) {
-          currentUser.gpsMode = 'real';
-          localStorage.setItem('pkl_gps_mode', 'real');
-          document.getElementById('cfg-gps-mode').value = 'real';
-        } else {
-          return;
-        }
       }
 
       navigator.geolocation.getCurrentPosition(
@@ -2180,7 +2236,7 @@
       localStorage.setItem('pkl_instansi', currentUser.instansi);
       localStorage.setItem('pkl_jurusan', currentUser.jurusan);
       localStorage.setItem('pkl_script_url', currentUser.apiUrl);
-      localStorage.setItem('pkl_gps_mode', currentUser.gpsMode);
+      localStorage.setItem('pkl_gps_mode', 'real');
 
       updateProfileDisplay();
       checkGPS(false);
@@ -2189,12 +2245,12 @@
     }
 
     function resetDemoData() {
-      if (confirm("Reset data transaksi presensi demo ke kondisi awal?")) {
+      if (confirm("Hapus semua riwayat catatan presensi & izin lokal di perangkat ini?")) {
         localStorage.removeItem('pkl_logs_presensi');
         localStorage.removeItem('pkl_logs_izin');
         renderDashboardStats();
         renderRekapTable();
-        alert("Data demo berhasil di-reset!");
+        alert("Riwayat data berhasil dibersihkan!");
       }
     }
 
