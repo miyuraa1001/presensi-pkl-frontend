@@ -1,10 +1,11 @@
-const CACHE_NAME = "presensi-pkl-v12";
+const CACHE_NAME = "presensi-pkl-v13";
 const ASSETS_TO_CACHE = [
   "./",
   "./index.html",
   "./manifest.json",
   "./Image/icon-192.png",
   "./Image/icon-512.png",
+  "./Image/icon-maskable-192.png",
   "./Image/icon-maskable.png",
   "./Image/apple-touch-icon.png",
   "./Image/Logo-PWA.png",

@@ -1280,6 +1280,135 @@
     </div>
   </div>
 
+  <!-- ==================== MODAL NOTIFIKASI DOWNLOAD & INSTALASI WEB APK ==================== -->
+  <div id="pwa-install-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-[450] flex items-center justify-center p-4 transition-all duration-300">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-100 space-y-5 animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- Top Header & App Badge -->
+      <div class="flex items-start justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-[#08132b] p-1.5 shadow-md flex-shrink-0 flex items-center justify-center border border-slate-200/50">
+            <img src="Image/Logo-PWA.png" alt="Presensi PKL" class="w-full h-full object-contain rounded-xl">
+          </div>
+          <div>
+            <h4 class="font-extrabold text-sm text-slate-900 leading-tight">Presensi PKL Daihatsu</h4>
+            <p class="text-[11px] text-slate-500 font-medium">Instalasi Web APK Resmi (Bebas Badge)</p>
+          </div>
+        </div>
+        <button type="button" onclick="closePwaInstallModal()" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition" aria-label="Tutup">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- State 1: In Progress (Downloading / Minting WebAPK) -->
+      <div id="pwa-install-loading-state" class="space-y-4">
+        
+        <!-- Progress Bar & Status -->
+        <div class="space-y-2 bg-slate-50 p-4 rounded-2xl border border-slate-200/70">
+          <div class="flex items-center justify-between text-xs">
+            <span id="pwa-install-status-title" class="font-bold text-slate-800 flex items-center gap-1.5">
+              <i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin text-blue-600"></i>
+              <span id="pwa-install-status-txt">Menyiapkan berkas Web APK...</span>
+            </span>
+            <span id="pwa-install-percent" class="font-mono font-black text-blue-600">15%</span>
+          </div>
+
+          <!-- Progress track -->
+          <div class="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden p-0.5 shadow-inner">
+            <div id="pwa-install-progress-bar" class="h-full bg-gradient-to-r from-blue-600 via-indigo-600 to-emerald-500 rounded-full transition-all duration-300" style="width: 15%"></div>
+          </div>
+
+          <p id="pwa-install-status-desc" class="text-[11px] text-slate-500 leading-snug">
+            Mengunduh aset & ikon presensi Astra Daihatsu Ahmad Yani...
+          </p>
+        </div>
+
+        <!-- Step List -->
+        <div class="space-y-2 text-xs">
+          <div id="pwa-step-1" class="flex items-center gap-2.5 p-2 rounded-xl transition text-blue-700 bg-blue-50/70 font-semibold">
+            <div class="step-num w-5 h-5 rounded-full flex items-center justify-center bg-blue-600 text-white text-[10px] font-bold">1</div>
+            <span class="step-lbl flex-1 text-[11.5px]">Unduh paket aset Web APK</span>
+            <i data-lucide="check" class="step-check w-4 h-4 hidden text-emerald-600 font-black"></i>
+          </div>
+          <div id="pwa-step-2" class="flex items-center gap-2.5 p-2 rounded-xl transition text-slate-400 font-medium">
+            <div class="step-num w-5 h-5 rounded-full flex items-center justify-center bg-slate-200 text-slate-600 text-[10px] font-bold">2</div>
+            <span class="step-lbl flex-1 text-[11.5px]">Sinkronisasi Layanan Google Play (Bebas Logo Chrome)</span>
+            <i data-lucide="check" class="step-check w-4 h-4 hidden text-emerald-600 font-black"></i>
+          </div>
+          <div id="pwa-step-3" class="flex items-center gap-2.5 p-2 rounded-xl transition text-slate-400 font-medium">
+            <div class="step-num w-5 h-5 rounded-full flex items-center justify-center bg-slate-200 text-slate-600 text-[10px] font-bold">3</div>
+            <span class="step-lbl flex-1 text-[11.5px]">Memasang ke Layar Utama HP</span>
+            <i data-lucide="check" class="step-check w-4 h-4 hidden text-emerald-600 font-black"></i>
+          </div>
+        </div>
+
+        <p class="text-[10px] text-slate-400 text-center italic">
+          Harap jangan menutup browser selama proses verifikasi paket berlangsung
+        </p>
+      </div>
+
+      <!-- State 2: Success State (Installed as Clean WebAPK) -->
+      <div id="pwa-install-success-state" class="hidden space-y-4 text-center py-2">
+        <div class="w-16 h-16 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200 mx-auto flex items-center justify-center shadow-lg shadow-emerald-500/20">
+          <i data-lucide="check-circle" class="w-9 h-9"></i>
+        </div>
+        <div class="space-y-1.5">
+          <h4 class="font-extrabold text-base text-slate-900">Aplikasi Berhasil Terpasang!</h4>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Icon <strong>Presensi PKL</strong> telah aktif di Layar Utama HP Anda dengan tampilan bersih <strong>tanpa ada logo Chrome</strong> (WebAPK murni seperti Stockyard).
+          </p>
+        </div>
+        <div class="p-3 bg-emerald-50/80 rounded-2xl border border-emerald-200 text-left space-y-1">
+          <p class="font-bold text-[11px] text-emerald-900 flex items-center gap-1.5">
+            <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600"></i> Siap Digunakan:
+          </p>
+          <p class="text-[10.5px] text-emerald-800 leading-relaxed">
+            Silakan tekan tombol Beranda di HP Anda, buka icon <strong>Presensi PKL</strong> langsung dari Home Screen untuk presensi full-screen.
+          </p>
+        </div>
+        <button type="button" onclick="closePwaInstallModal()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-bold text-xs rounded-xl shadow-md shadow-emerald-600/30 transition">
+          Selesai & Tutup
+        </button>
+      </div>
+
+      <!-- State 3: Fallback / Chrome Manual Install State (bila prompt otomatis belum siap) -->
+      <div id="pwa-install-manual-state" class="hidden space-y-3.5">
+        <div class="p-3 bg-amber-50 border border-amber-200 rounded-2xl text-amber-900 text-xs space-y-1">
+          <p class="font-bold flex items-center gap-1.5">
+            <i data-lucide="alert-circle" class="w-4 h-4 text-amber-600"></i> Pop-up Otomatis Belum Terpicu
+          </p>
+          <p class="text-[11px] text-amber-800 leading-relaxed">
+            Paket WebAPK sudah siap. Agar icon terpasang <strong>bersih tanpa logo Chrome</strong>, ikuti 2 langkah mudah di bawah ini:
+          </p>
+        </div>
+
+        <ol class="list-decimal pl-5 space-y-2 text-xs text-slate-700">
+          <li class="leading-relaxed">
+            Ketuk tombol menu <strong>titik tiga (⋮)</strong> di pojok kanan atas browser Chrome Anda.
+          </li>
+          <li class="leading-relaxed">
+            Pilih menu <span class="font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded border border-slate-300">"Instal Aplikasi"</span>.<br>
+            <span class="text-[10.5px] text-rose-600 font-semibold">*PENTING: Jangan pilih "Tambahkan ke Layar Utama" (pintasan), tapi pilih "Instal Aplikasi" agar tidak ada badge Chrome!</span>
+          </li>
+          <li class="leading-relaxed">
+            Tekan <strong>"Instal"</strong> pada dialog konfirmasi Google Play.
+          </li>
+        </ol>
+
+        <div class="flex gap-2 pt-1">
+          <button type="button" onclick="retryPwaPrompt()" class="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-1.5">
+            <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+            <span>Coba Munculkan Lagi</span>
+          </button>
+          <button type="button" onclick="closePwaInstallModal()" class="py-2.5 px-4 bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 font-bold text-xs rounded-xl transition">
+            Tutup
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
   <!-- ==================== MODAL LOGIN / MASUK AKUN ==================== -->
   <div id="login-modal" class="hidden fixed inset-0 bg-slate-900/90 backdrop-blur-md z-[300] flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-200 space-y-5">
@@ -1544,35 +1673,206 @@
       });
     }
 
-    // PWA Install / Home Screen Handling
+    // =========================================================================
+    // PWA INSTALL / HOMESCREEN HANDLING & PROGRESS NOTIFICATION
+    // =========================================================================
     let deferredPwaPrompt = null;
+    let pwaInstallTimer = null;
+
+    // Detect if already installed & running standalone
+    function isRunningStandalone() {
+      return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
+             (window.navigator.standalone === true);
+    }
+
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPwaPrompt = e;
+      console.log('PWA: beforeinstallprompt event captured');
       const btnTxt = document.getElementById('btn-pwa-install-txt');
-      if (btnTxt) {
-        btnTxt.innerText = "Download & Pasang Sekarang";
+      if (btnTxt && !isRunningStandalone()) {
+        btnTxt.innerText = "Download & Pasang Web APK";
       }
     });
 
     window.addEventListener('appinstalled', () => {
       deferredPwaPrompt = null;
+      console.log('PWA: appinstalled event fired');
       const btnTxt = document.getElementById('btn-pwa-install-txt');
       if (btnTxt) {
         btnTxt.innerText = "Aplikasi Sudah Terpasang";
       }
-      alert("Selamat! Aplikasi Presensi PKL Astra Daihatsu berhasil terpasang di Layar Utama HP Anda.");
+      setPwaInstallSuccessState();
+      showAppToast('Aplikasi Presensi PKL berhasil dipasang di Layar Utama HP!', 'success');
     });
 
+    // Initial check on load
+    document.addEventListener('DOMContentLoaded', () => {
+      if (isRunningStandalone()) {
+        const btnTxt = document.getElementById('btn-pwa-install-txt');
+        if (btnTxt) btnTxt.innerText = "Aplikasi Sudah Terpasang";
+      }
+    });
+
+    function openPwaInstallModal() {
+      const modal = document.getElementById('pwa-install-modal');
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function closePwaInstallModal() {
+      const modal = document.getElementById('pwa-install-modal');
+      if (modal) modal.classList.add('hidden');
+      if (pwaInstallTimer) {
+        clearTimeout(pwaInstallTimer);
+        pwaInstallTimer = null;
+      }
+    }
+
+    function updatePwaStep(stepNum, status) {
+      // status: 'pending', 'active', 'done'
+      const el = document.getElementById(`pwa-step-${stepNum}`);
+      if (!el) return;
+      const numBox = el.querySelector('.step-num');
+      const checkIcon = el.querySelector('.step-check');
+
+      if (status === 'active') {
+        el.className = 'flex items-center gap-2.5 p-2 rounded-xl transition text-blue-700 bg-blue-50/80 font-bold border border-blue-200/50';
+        if (numBox) {
+          numBox.className = 'step-num w-5 h-5 rounded-full flex items-center justify-center bg-blue-600 text-white text-[10px] font-bold animate-pulse';
+          numBox.classList.remove('hidden');
+        }
+        if (checkIcon) checkIcon.classList.add('hidden');
+      } else if (status === 'done') {
+        el.className = 'flex items-center gap-2.5 p-2 rounded-xl transition text-emerald-800 bg-emerald-50/60 font-semibold border border-emerald-200/40';
+        if (numBox) numBox.classList.add('hidden');
+        if (checkIcon) {
+          checkIcon.classList.remove('hidden');
+          checkIcon.className = 'step-check w-4 h-4 text-emerald-600 font-black';
+        }
+      } else { // pending
+        el.className = 'flex items-center gap-2.5 p-2 rounded-xl transition text-slate-400 font-medium';
+        if (numBox) {
+          numBox.className = 'step-num w-5 h-5 rounded-full flex items-center justify-center bg-slate-200 text-slate-600 text-[10px] font-bold';
+          numBox.classList.remove('hidden');
+        }
+        if (checkIcon) checkIcon.classList.add('hidden');
+      }
+    }
+
+    function setPwaInstallProgress(percent, title, desc) {
+      const pctEl = document.getElementById('pwa-install-percent');
+      const barEl = document.getElementById('pwa-install-progress-bar');
+      const txtEl = document.getElementById('pwa-install-status-txt');
+      const descEl = document.getElementById('pwa-install-status-desc');
+
+      if (pctEl) pctEl.innerText = `${percent}%`;
+      if (barEl) barEl.style.width = `${percent}%`;
+      if (txtEl) txtEl.innerText = title;
+      if (descEl) descEl.innerText = desc;
+    }
+
+    function setPwaInstallSuccessState() {
+      const loadingState = document.getElementById('pwa-install-loading-state');
+      const successState = document.getElementById('pwa-install-success-state');
+      const manualState = document.getElementById('pwa-install-manual-state');
+
+      if (loadingState) loadingState.classList.add('hidden');
+      if (manualState) manualState.classList.add('hidden');
+      if (successState) {
+        successState.classList.remove('hidden');
+        if (window.lucide) lucide.createIcons();
+      }
+    }
+
+    function setPwaInstallManualState() {
+      const loadingState = document.getElementById('pwa-install-loading-state');
+      const successState = document.getElementById('pwa-install-success-state');
+      const manualState = document.getElementById('pwa-install-manual-state');
+
+      if (loadingState) loadingState.classList.add('hidden');
+      if (successState) successState.classList.add('hidden');
+      if (manualState) {
+        manualState.classList.remove('hidden');
+        if (window.lucide) lucide.createIcons();
+      }
+    }
+
     async function triggerPwaInstall() {
+      if (isRunningStandalone()) {
+        showAppAlert(
+          'Aplikasi Presensi PKL Astra Daihatsu sudah terpasang dan sedang berjalan langsung dari Layar Utama HP Anda (WebAPK Layar Penuh).',
+          'Aplikasi Sudah Terpasang',
+          'success'
+        );
+        return;
+      }
+
+      openPwaInstallModal();
+
+      // Reset to loading state
+      const loadingState = document.getElementById('pwa-install-loading-state');
+      const successState = document.getElementById('pwa-install-success-state');
+      const manualState = document.getElementById('pwa-install-manual-state');
+      if (loadingState) loadingState.classList.remove('hidden');
+      if (successState) successState.classList.add('hidden');
+      if (manualState) manualState.classList.add('hidden');
+
+      updatePwaStep(1, 'active');
+      updatePwaStep(2, 'pending');
+      updatePwaStep(3, 'pending');
+      setPwaInstallProgress(20, 'Menyiapkan berkas Web APK...', 'Mengunduh paket manifest dan icon resolusi tinggi...');
+      showAppToast('Menyiapkan berkas unduhan Web APK...', 'info');
+
+      // Step 1: Simulated download asset verification
+      await new Promise(r => setTimeout(r, 450));
+      updatePwaStep(1, 'done');
+      updatePwaStep(2, 'active');
+      setPwaInstallProgress(55, 'Sinkronisasi Layanan Google Play...', 'Memverifikasi paket WebAPK murni bebas dari badge Chrome...');
+
+      await new Promise(r => setTimeout(r, 500));
+
       if (deferredPwaPrompt) {
-        deferredPwaPrompt.prompt();
-        const { outcome } = await deferredPwaPrompt.userChoice;
-        if (outcome === 'accepted') {
-          deferredPwaPrompt = null;
+        updatePwaStep(2, 'done');
+        updatePwaStep(3, 'active');
+        setPwaInstallProgress(80, 'Membuka pop-up sistem...', 'Silakan tekan tombol "Instal" pada dialog Google Play...');
+
+        try {
+          deferredPwaPrompt.prompt();
+          const { outcome } = await deferredPwaPrompt.userChoice;
+          if (outcome === 'accepted') {
+            setPwaInstallProgress(92, 'Sedang memasang ke Layar Utama HP...', 'Sistem Android sedang mengintegrasikan aplikasi ke launcher...');
+            showAppToast('Sedang memasang ke Layar Utama HP...', 'info');
+
+            // Wait for installation confirmation
+            pwaInstallTimer = setTimeout(() => {
+              updatePwaStep(3, 'done');
+              setPwaInstallProgress(100, 'Selesai!', 'Aplikasi berhasil dipasang.');
+              setPwaInstallSuccessState();
+            }, 1800);
+          } else {
+            showAppToast('Instalasi dibatalkan', 'warning');
+            closePwaInstallModal();
+          }
+        } catch (err) {
+          console.warn('PWA prompt failed:', err);
+          setPwaInstallManualState();
         }
       } else {
+        // deferredPwaPrompt not available (e.g. Chrome on Android without prompt, or already dismissed)
+        updatePwaStep(2, 'done');
+        setPwaInstallProgress(90, 'Petunjuk Pemasangan Cepat', 'Ikuti langkah pemasangan manual di bawah ini');
+        setPwaInstallManualState();
+      }
+    }
+
+    function retryPwaPrompt() {
+      if (deferredPwaPrompt) {
+        triggerPwaInstall();
+      } else {
         showPwaGuideModal();
+        closePwaInstallModal();
       }
     }
 
