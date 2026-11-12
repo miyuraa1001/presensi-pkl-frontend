@@ -1,4 +1,4 @@
-const CACHE_NAME = "presensi-pkl-v3";
+const CACHE_NAME = "presensi-pkl-v4";
 const ASSETS_TO_CACHE = [
   "./",
   "./index.html",
@@ -30,6 +30,21 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method === "GET") {
+    // Network-First untuk navigasi halaman HTML agar user langsung mendapat update terbaru
+    if (event.request.mode === 'navigate' || event.request.destination === 'document') {
+      event.respondWith(
+        fetch(event.request)
+          .then((networkResponse) => {
+            const copy = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+            return networkResponse;
+          })
+          .catch(() => caches.match(event.request).then((res) => res || caches.match("./index.html")))
+      );
+      return;
+    }
+
+    // Cache-First untuk aset gambar & file statis lainnya
     event.respondWith(
       caches.match(event.request).then((cachedResponse) => {
         return (
