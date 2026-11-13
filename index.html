@@ -886,80 +886,94 @@
       </section>
 
       <!-- ==================== TAB 5: PENGATURAN & GPS CONFIG ==================== -->
-      <section id="view-pengaturan" class="hidden space-y-5 max-w-xl mx-auto">
+      <section id="view-pengaturan" class="hidden space-y-6 max-w-4xl lg:max-w-5xl mx-auto">
 
         <!-- ==================== SCREEN A: MAIN SETTINGS & INFO OVERVIEW ==================== -->
-        <div id="settings-main-screen" class="space-y-5">
-          <div class="flex items-center gap-3 pb-3 border-b border-slate-200">
-            <button onclick="switchTab('dashboard')" class="p-2 rounded-lg hover:bg-slate-200 text-slate-700 transition" aria-label="Kembali ke Dashboard">
-              <i data-lucide="arrow-left" class="w-5 h-5"></i>
-            </button>
-            <div>
-              <h3 class="font-extrabold text-slate-900 text-lg">Pengaturan & Akun</h3>
-              <p class="text-xs text-slate-500">Profil siswa magang, foto, kata sandi, Web APK, dan geofencing</p>
+        <div id="settings-main-screen" class="space-y-6">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+            <div class="flex items-center gap-3">
+              <button onclick="switchTab('dashboard')" class="p-2 rounded-xl hover:bg-slate-200 active:scale-95 text-slate-700 transition" aria-label="Kembali ke Dashboard">
+                <i data-lucide="arrow-left" class="w-5 h-5"></i>
+              </button>
+              <div>
+                <h3 class="font-extrabold text-slate-900 text-lg md:text-xl">Pengaturan & Akun</h3>
+                <p class="text-xs text-slate-500">Profil siswa magang, foto, kata sandi, Web APK, dan geofencing</p>
+              </div>
             </div>
+            <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700 border border-slate-200">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              Sesi Bengkel Aktif
+            </span>
           </div>
 
           <!-- ==================== 1. KARTU INFORMASI PROFIL PESERTA PKL (DISPLAY ONLY) ==================== -->
-          <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
+          <div class="bg-white rounded-2xl md:rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden">
             <!-- Card Header Strip -->
-            <div class="bg-gradient-to-r from-[#0d1a3a] via-[#162a54] to-[#1e3a8a] p-4 text-white flex items-center justify-between">
-              <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20">
-                  <i data-lucide="user-check" class="w-4 h-4 text-cyan-300"></i>
+            <div class="bg-gradient-to-r from-[#0d1a3a] via-[#162a54] to-[#1e3a8a] p-4 md:p-5 text-white flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20">
+                  <i data-lucide="user-check" class="w-5 h-5 text-cyan-300"></i>
                 </div>
                 <div>
-                  <h4 class="font-extrabold text-sm text-white leading-tight">Informasi Peserta PKL</h4>
-                  <p class="text-[10px] text-slate-300">Data identitas resmi teknisi magang</p>
+                  <h4 class="font-extrabold text-sm md:text-base text-white leading-tight">Informasi Peserta PKL</h4>
+                  <p class="text-[10px] md:text-xs text-slate-300">Data identitas resmi teknisi magang Astra Daihatsu</p>
                 </div>
               </div>
-              <span class="text-[10px] font-bold text-cyan-300 bg-white/10 px-2.5 py-1 rounded-full border border-white/15">
+              <span class="text-[10px] md:text-xs font-bold text-cyan-300 bg-white/10 px-3 py-1 rounded-full border border-white/15">
                 Terverifikasi
               </span>
             </div>
 
-            <div class="p-5 space-y-4">
+            <div class="p-5 md:p-6 space-y-5">
               <!-- Hero Profile Details with Avatar -->
-              <div class="flex items-center gap-4">
-                <div class="w-20 h-20 rounded-2xl bg-[#0d1a3a] flex items-center justify-center text-white font-black text-2xl overflow-hidden shadow-md border-2 border-white ring-2 ring-slate-200 flex-shrink-0">
+              <div class="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-4 md:gap-5">
+                <div class="w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-[#0d1a3a] flex items-center justify-center text-white font-black text-2xl md:text-3xl overflow-hidden shadow-md border-2 border-white ring-2 ring-slate-200 flex-shrink-0">
                   <span id="info-avatar-initials">M</span>
                   <img id="info-avatar-img" src="" alt="Foto Profil" class="w-full h-full object-cover hidden">
                 </div>
                 <div class="flex-1 min-w-0">
-                  <div class="flex items-center gap-2">
-                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200/60">
-                      Siswa PKL
+                  <div class="flex items-center justify-center sm:justify-start gap-2">
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] md:text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200/60">
+                      Siswa PKL Teknisi
                     </span>
-                    <span class="text-[10px] text-slate-400 font-medium">Astra Daihatsu</span>
+                    <span class="text-[11px] text-slate-400 font-medium">Workshop Astra Daihatsu</span>
                   </div>
-                  <h3 id="info-profile-nama" class="font-black text-slate-900 text-lg tracking-tight mt-0.5 truncate">Mekanik Magang</h3>
-                  <p class="text-xs font-mono font-semibold text-slate-500 mt-0.5">NISN / NIM: <span id="info-profile-nim" class="font-bold text-slate-700">-</span></p>
+                  <h3 id="info-profile-nama" class="font-black text-slate-900 text-lg md:text-2xl tracking-tight mt-1 truncate">Mekanik Magang</h3>
+                  <p class="text-xs md:text-sm font-mono font-semibold text-slate-500 mt-0.5">NISN / NIM: <span id="info-profile-nim" class="font-bold text-slate-700">-</span></p>
+                </div>
+
+                <!-- Desktop Action Button (Top Right) -->
+                <div class="hidden sm:block flex-shrink-0 self-center">
+                  <button type="button" onclick="openEditProfilePage()" class="px-5 py-2.5 bg-[#0d59a8] hover:bg-[#0b4a8c] active:scale-[0.98] text-white rounded-xl font-bold text-xs md:text-sm transition shadow-md shadow-blue-700/25 flex items-center gap-2 cursor-pointer">
+                    <i data-lucide="edit-3" class="w-4 h-4"></i>
+                    <span>Edit Informasi Profil</span>
+                  </button>
                 </div>
               </div>
 
-              <!-- Data Grid Info -->
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2 border-t border-slate-100">
-                <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
-                  <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Asal Sekolah / Kampus</p>
-                  <p id="info-profile-instansi" class="font-bold text-slate-800 text-xs mt-0.5 truncate">-</p>
+              <!-- Data Grid Info (1 col on mobile, 3 cols on tablet/desktop) -->
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3 border-t border-slate-100">
+                <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-100">
+                  <p class="text-[10px] md:text-[11px] font-bold text-slate-400 uppercase tracking-wider">Asal Sekolah / Kampus</p>
+                  <p id="info-profile-instansi" class="font-bold text-slate-800 text-xs md:text-sm mt-0.5 truncate">-</p>
                 </div>
-                <div class="p-3 rounded-xl bg-slate-50 border border-slate-100">
-                  <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Program Keahlian</p>
-                  <p id="info-profile-jurusan" class="font-bold text-slate-800 text-xs mt-0.5 truncate">Teknik Kendaraan Ringan (TKR)</p>
+                <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-100">
+                  <p class="text-[10px] md:text-[11px] font-bold text-slate-400 uppercase tracking-wider">Program Keahlian</p>
+                  <p id="info-profile-jurusan" class="font-bold text-slate-800 text-xs md:text-sm mt-0.5 truncate">Teknik Kendaraan Ringan (TKR)</p>
                 </div>
-                <div class="p-3 rounded-xl bg-slate-50 border border-slate-100 sm:col-span-2 flex items-center justify-between">
+                <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between sm:flex-col sm:items-start sm:justify-center">
                   <div>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Penempatan Praktik (PKL)</p>
-                    <p class="font-bold text-slate-800 text-xs mt-0.5">Workshop Astra Daihatsu Ahmad Yani</p>
+                    <p class="text-[10px] md:text-[11px] font-bold text-slate-400 uppercase tracking-wider">Penempatan Praktik (PKL)</p>
+                    <p class="font-bold text-slate-800 text-xs md:text-sm mt-0.5">Workshop Astra Daihatsu</p>
                   </div>
-                  <span class="px-2 py-1 rounded-lg text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 flex-shrink-0">
-                    Bandar Lampung
+                  <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 mt-1">
+                    A. Yani Lampung
                   </span>
                 </div>
               </div>
 
-              <!-- Cukup 1 Button untuk Mengedit Info (Beralih ke Page Edit Baru) -->
-              <div class="pt-1">
+              <!-- Mobile-Only Action Button (Bottom Full Width) -->
+              <div class="sm:hidden pt-1">
                 <button type="button" onclick="openEditProfilePage()" class="w-full py-3.5 px-4 bg-[#0d59a8] hover:bg-[#0b4a8c] active:scale-[0.98] text-white rounded-xl font-bold text-xs transition shadow-md shadow-blue-700/25 flex items-center justify-center gap-2 cursor-pointer">
                   <i data-lucide="edit-3" class="w-4 h-4"></i>
                   <span>Edit Informasi Profil</span>
@@ -968,44 +982,12 @@
             </div>
           </div>
 
-          <!-- ==================== 2. PWA INSTALL / DOWNLOAD APK CARD ==================== -->
-          <div class="bg-gradient-to-br from-[#0d1a3a] via-[#142338] to-[#1e3a8a] text-white p-5 md:p-6 rounded-2xl shadow-sm border border-slate-700/60 relative overflow-hidden">
-            <div class="absolute inset-0 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:16px_16px] opacity-15 pointer-events-none"></div>
-
-            <div class="relative z-10 space-y-3.5">
-              <div class="flex items-center justify-between gap-3">
-                <div class="flex items-center gap-3">
-                  <div class="w-12 h-12 rounded-xl bg-white p-1.5 shadow-md flex items-center justify-center flex-shrink-0">
-                    <img src="Image/Logo-PWA.png" alt="Presensi PKL" class="w-full h-full object-contain rounded-lg">
-                  </div>
-                  <div>
-                    <div class="flex items-center gap-2">
-                      <h4 class="font-extrabold text-sm text-white">Download Aplikasi ke HP</h4>
-                      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">Web APK</span>
-                    </div>
-                    <p class="text-[11px] text-slate-300 mt-0.5">Tampilkan icon aplikasi di Home Screen smartphone Anda</p>
-                  </div>
-                </div>
-              </div>
-
-              <p class="text-xs text-slate-200/90 leading-relaxed bg-white/10 p-3 rounded-xl border border-white/10">
-                Pasang aplikasi presensi langsung di layar utama smartphone Android / iPhone. Membuka presensi jauh lebih cepat tanpa mengetik URL, hemat kuota, dan mendukung mode offline!
-              </p>
-
-              <div class="flex flex-col sm:flex-row gap-2 pt-1">
-                <button type="button" onclick="triggerPwaInstall()" id="btn-pwa-install" class="flex-1 py-3 px-4 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs rounded-xl shadow-lg shadow-emerald-500/30 flex items-center justify-center gap-2 transition active:scale-95">
-                  <i data-lucide="download" class="w-4 h-4"></i>
-                  <span id="btn-pwa-install-txt">Pasang Aplikasi ke Home Screen</span>
-                </button>
-                <button type="button" onclick="showPwaGuideModal()" class="py-3 px-4 bg-white/15 hover:bg-white/25 text-white font-semibold text-xs rounded-xl border border-white/20 flex items-center justify-center gap-1.5 transition">
-                  <i data-lucide="smartphone" class="w-4 h-4 text-cyan-300"></i>
-                  <span>Petunjuk HP</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-        <!-- ==================== 3. KEAMANAN & GANTI KATA SANDI ==================== -->
+          <!-- ==================== 2 COLUMNS ON DESKTOP: SECURITY/ACCOUNT & APPLICATION/WORKSHOP ==================== -->
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 md:gap-6">
+            
+            <!-- COLUMN 1: AKUN, KEAMANAN & SESI -->
+            <div class="space-y-5 md:space-y-6 flex flex-col justify-between">
+              <!-- ==================== 3. KEAMANAN & GANTI KATA SANDI ==================== -->
         <div class="bg-white p-5 md:p-6 rounded-2xl border border-slate-200/80 shadow-xs space-y-4">
           <div class="flex items-center justify-between border-b border-slate-100 pb-3">
             <div class="flex items-center gap-2">
@@ -1058,7 +1040,75 @@
           </div>
         </div>
 
-        <!-- ==================== 4. KALIBRASI GEOFENCING & SERVER ==================== -->
+              <!-- ==================== 5. SESI & MANAJEMEN AKUN (LOGOUT) ==================== -->
+        <div class="bg-white p-5 md:p-6 rounded-2xl border border-slate-200/80 shadow-xs space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div class="flex items-center gap-2">
+              <div class="w-7 h-7 rounded-lg bg-red-100 text-red-600 flex items-center justify-center">
+                <i data-lucide="shield-alert" class="w-4 h-4"></i>
+              </div>
+              <h4 class="font-extrabold text-sm text-slate-900">Sesi & Manajemen Akun</h4>
+            </div>
+            <span class="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60">Sesi Aktif</span>
+          </div>
+
+          <p class="text-xs text-slate-500 leading-relaxed">
+            Keluar dari sesi untuk mengunci aplikasi atau berganti akun siswa magang lainnya.
+          </p>
+
+          <div class="flex flex-col sm:flex-row gap-2 pt-1">
+            <button type="button" onclick="handleLogout()" class="flex-1 py-3 px-4 bg-red-600 hover:bg-red-700 active:scale-95 text-white rounded-xl font-bold text-xs transition shadow-md shadow-red-600/20 flex items-center justify-center gap-2">
+              <i data-lucide="log-out" class="w-4 h-4"></i>
+              <span>Keluar Akun (Logout)</span>
+            </button>
+            <button type="button" onclick="resetDemoData()" class="py-3 px-4 bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-600 rounded-xl font-semibold text-xs transition flex items-center justify-center gap-1.5" title="Bersihkan riwayat offline">
+              <i data-lucide="trash-2" class="w-4 h-4 text-slate-500"></i>
+              <span>Hapus Riwayat Presensi</span>
+            </button>
+          </div>
+        </div>
+            </div>
+
+            <!-- COLUMN 2: DOWNLOAD APLIKASI & GEOFENCING WORKSHOP -->
+            <div class="space-y-5 md:space-y-6 flex flex-col justify-between">
+              <!-- ==================== 2. PWA INSTALL / DOWNLOAD APK CARD ==================== -->
+          <div class="bg-gradient-to-br from-[#0d1a3a] via-[#142338] to-[#1e3a8a] text-white p-5 md:p-6 rounded-2xl shadow-sm border border-slate-700/60 relative overflow-hidden">
+            <div class="absolute inset-0 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:16px_16px] opacity-15 pointer-events-none"></div>
+
+            <div class="relative z-10 space-y-3.5">
+              <div class="flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 rounded-xl bg-white p-1.5 shadow-md flex items-center justify-center flex-shrink-0">
+                    <img src="Image/Logo-PWA.png" alt="Presensi PKL" class="w-full h-full object-contain rounded-lg">
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <h4 class="font-extrabold text-sm text-white">Download Aplikasi ke HP</h4>
+                      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">Web APK</span>
+                    </div>
+                    <p class="text-[11px] text-slate-300 mt-0.5">Tampilkan icon aplikasi di Home Screen smartphone Anda</p>
+                  </div>
+                </div>
+              </div>
+
+              <p class="text-xs text-slate-200/90 leading-relaxed bg-white/10 p-3 rounded-xl border border-white/10">
+                Pasang aplikasi presensi langsung di layar utama smartphone Android / iPhone. Membuka presensi jauh lebih cepat tanpa mengetik URL, hemat kuota, dan mendukung mode offline!
+              </p>
+
+              <div class="flex flex-col sm:flex-row gap-2 pt-1">
+                <button type="button" onclick="triggerPwaInstall()" id="btn-pwa-install" class="flex-1 py-3 px-4 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs rounded-xl shadow-lg shadow-emerald-500/30 flex items-center justify-center gap-2 transition active:scale-95">
+                  <i data-lucide="download" class="w-4 h-4"></i>
+                  <span id="btn-pwa-install-txt">Pasang Aplikasi ke Home Screen</span>
+                </button>
+                <button type="button" onclick="showPwaGuideModal()" class="py-3 px-4 bg-white/15 hover:bg-white/25 text-white font-semibold text-xs rounded-xl border border-white/20 flex items-center justify-center gap-1.5 transition">
+                  <i data-lucide="smartphone" class="w-4 h-4 text-cyan-300"></i>
+                  <span>Petunjuk HP</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+              <!-- ==================== 4. KALIBRASI GEOFENCING & SERVER ==================== -->
         <div class="bg-white p-5 md:p-6 rounded-2xl border border-slate-200/80 shadow-xs space-y-4">
           <div class="flex items-center justify-between border-b border-slate-100 pb-3">
             <div class="flex items-center gap-2">
@@ -1170,39 +1220,14 @@
             </button>
           </div>
         </div>
-
-        <!-- ==================== 5. SESI & MANAJEMEN AKUN (LOGOUT) ==================== -->
-        <div class="bg-white p-5 md:p-6 rounded-2xl border border-slate-200/80 shadow-xs space-y-3">
-          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-            <div class="flex items-center gap-2">
-              <div class="w-7 h-7 rounded-lg bg-red-100 text-red-600 flex items-center justify-center">
-                <i data-lucide="shield-alert" class="w-4 h-4"></i>
-              </div>
-              <h4 class="font-extrabold text-sm text-slate-900">Sesi & Manajemen Akun</h4>
             </div>
-            <span class="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60">Sesi Aktif</span>
-          </div>
 
-          <p class="text-xs text-slate-500 leading-relaxed">
-            Keluar dari sesi untuk mengunci aplikasi atau berganti akun siswa magang lainnya.
-          </p>
-
-          <div class="flex flex-col sm:flex-row gap-2 pt-1">
-            <button type="button" onclick="handleLogout()" class="flex-1 py-3 px-4 bg-red-600 hover:bg-red-700 active:scale-95 text-white rounded-xl font-bold text-xs transition shadow-md shadow-red-600/20 flex items-center justify-center gap-2">
-              <i data-lucide="log-out" class="w-4 h-4"></i>
-              <span>Keluar Akun (Logout)</span>
-            </button>
-            <button type="button" onclick="resetDemoData()" class="py-3 px-4 bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-600 rounded-xl font-semibold text-xs transition flex items-center justify-center gap-1.5" title="Bersihkan riwayat offline">
-              <i data-lucide="trash-2" class="w-4 h-4 text-slate-500"></i>
-              <span>Hapus Riwayat Presensi</span>
-            </button>
           </div>
-        </div>
         </div>
         <!-- ==================== END SCREEN A: MAIN SETTINGS ==================== -->
 
         <!-- ==================== SCREEN B: EDIT PROFIL SISWA (SUBPAGE) ==================== -->
-        <div id="settings-edit-profile-screen" class="hidden space-y-5">
+        <div id="settings-edit-profile-screen" class="hidden space-y-6 max-w-2xl mx-auto">
           <!-- Top Header with Back Navigation Button -->
           <div class="flex items-center justify-between pb-3 border-b border-slate-200">
             <div class="flex items-center gap-3">
@@ -1210,37 +1235,37 @@
                 <i data-lucide="arrow-left" class="w-5 h-5"></i>
               </button>
               <div>
-                <h3 class="font-extrabold text-slate-900 text-lg leading-tight">Edit Profil Peserta Magang</h3>
+                <h3 class="font-extrabold text-slate-900 text-lg md:text-xl leading-tight">Edit Profil Peserta Magang</h3>
                 <p class="text-xs text-slate-500">Ubah identitas dan foto profil siswa PKL</p>
               </div>
             </div>
-            <span class="text-[10px] font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200">
+            <span class="text-[10px] md:text-xs font-bold text-blue-700 bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
               Mode Edit
             </span>
           </div>
 
           <!-- Form Edit Card -->
-          <div class="bg-white p-5 md:p-6 rounded-2xl border border-slate-200/80 shadow-xs space-y-5">
+          <div class="bg-white p-5 md:p-8 rounded-2xl md:rounded-3xl border border-slate-200/80 shadow-xs space-y-6">
             
             <!-- Avatar Upload & Preview -->
-            <div class="flex flex-col sm:flex-row items-center gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-200/80">
-              <div class="relative group">
-                <div id="settings-avatar-container" class="w-20 h-20 rounded-2xl bg-[#0d1a3a] flex items-center justify-center text-white font-extrabold text-2xl overflow-hidden shadow-md border-2 border-white ring-2 ring-slate-200 flex-shrink-0">
+            <div class="flex flex-col sm:flex-row items-center gap-5 p-4 md:p-5 rounded-2xl bg-slate-50 border border-slate-200/80">
+              <div class="relative group flex-shrink-0">
+                <div id="settings-avatar-container" class="w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-[#0d1a3a] flex items-center justify-center text-white font-extrabold text-2xl md:text-3xl overflow-hidden shadow-md border-2 border-white ring-2 ring-slate-200">
                   <span id="settings-avatar-initials">M</span>
                   <img id="settings-avatar-img" src="" alt="Foto Profil" class="w-full h-full object-cover hidden">
                 </div>
-                <button type="button" onclick="document.getElementById('avatar-file-input').click()" class="absolute -bottom-1.5 -right-1.5 w-7 h-7 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-md hover:bg-blue-700 active:scale-95 transition" title="Ganti Foto Profil">
-                  <i data-lucide="camera" class="w-3.5 h-3.5"></i>
+                <button type="button" onclick="document.getElementById('avatar-file-input').click()" class="absolute -bottom-1.5 -right-1.5 w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-md hover:bg-blue-700 active:scale-95 transition" title="Ganti Foto Profil">
+                  <i data-lucide="camera" class="w-4 h-4"></i>
                 </button>
               </div>
               <div class="text-center sm:text-left flex-1 space-y-1">
-                <h5 class="text-xs font-bold text-slate-800">Foto Profil Peserta Magang</h5>
+                <h5 class="text-xs md:text-sm font-bold text-slate-800">Foto Profil Peserta Magang</h5>
                 <p class="text-[11px] text-slate-500">Format JPG, PNG atau WebP (otomatis dioptimalkan)</p>
-                <div class="flex items-center justify-center sm:justify-start gap-2 pt-1">
-                  <button type="button" onclick="document.getElementById('avatar-file-input').click()" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-xl text-[11px] font-bold flex items-center gap-1.5 shadow-xs transition">
-                    <i data-lucide="upload" class="w-3 h-3"></i> Unggah Foto
+                <div class="flex items-center justify-center sm:justify-start gap-2 pt-1.5">
+                  <button type="button" onclick="document.getElementById('avatar-file-input').click()" class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-xl text-[11px] md:text-xs font-bold flex items-center gap-1.5 shadow-xs transition">
+                    <i data-lucide="upload" class="w-3.5 h-3.5"></i> Unggah Foto
                   </button>
-                  <button type="button" id="btn-delete-avatar" onclick="deleteAvatar()" class="px-2.5 py-1.5 bg-slate-200 hover:bg-slate-300 active:scale-95 text-slate-700 rounded-xl text-[11px] font-semibold transition hidden">
+                  <button type="button" id="btn-delete-avatar" onclick="deleteAvatar()" class="px-3 py-1.5 bg-slate-200 hover:bg-slate-300 active:scale-95 text-slate-700 rounded-xl text-[11px] md:text-xs font-semibold transition hidden">
                     Hapus Foto
                   </button>
                 </div>
@@ -1248,34 +1273,34 @@
               </div>
             </div>
 
-            <!-- Input Fields Profil -->
-            <div class="space-y-3.5">
-              <div>
+            <!-- Responsive 2-Column Input Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="sm:col-span-2">
                 <label class="block text-xs font-bold text-slate-700 mb-1">Nama Lengkap Siswa <span class="text-red-500">*</span></label>
-                <input type="text" id="cfg-nama" placeholder="Contoh: Muhammad Rizky" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-semibold text-slate-800">
+                <input type="text" id="cfg-nama" placeholder="Contoh: Muhammad Rizky" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs md:text-sm focus:ring-2 focus:ring-blue-500 font-semibold text-slate-800">
               </div>
               <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">NISN / NIM / ID Magang</label>
-                <input type="text" id="cfg-nim" placeholder="Contoh: 20241001" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono text-slate-800">
+                <input type="text" id="cfg-nim" placeholder="Contoh: 20241001" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs md:text-sm focus:ring-2 focus:ring-blue-500 font-mono text-slate-800">
               </div>
               <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Asal Sekolah / Kampus (Instansi)</label>
-                <input type="text" id="cfg-instansi" placeholder="SMKN 2 Bandar Lampung" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 text-slate-800 font-medium">
+                <input type="text" id="cfg-instansi" placeholder="SMKN 2 Bandar Lampung" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs md:text-sm focus:ring-2 focus:ring-blue-500 text-slate-800 font-medium">
               </div>
-              <div>
+              <div class="sm:col-span-2">
                 <label class="block text-xs font-bold text-slate-700 mb-1">Jurusan / Program Keahlian</label>
-                <input type="text" id="cfg-jurusan" placeholder="Teknik Kendaraan Ringan (TKR) / Otomotif" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 text-slate-800 font-medium">
+                <input type="text" id="cfg-jurusan" placeholder="Teknik Kendaraan Ringan (TKR) / Otomotif" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs md:text-sm focus:ring-2 focus:ring-blue-500 text-slate-800 font-medium">
               </div>
             </div>
 
-            <!-- Bottom Buttons: Simpan & Batal -->
-            <div class="pt-2 space-y-2">
-              <button type="button" onclick="saveProfileAndReturn()" class="w-full py-3.5 bg-[#0d59a8] hover:bg-[#0b4a8c] active:scale-[0.98] text-white rounded-xl font-bold text-xs transition shadow-md shadow-blue-700/25 flex items-center justify-center gap-2 cursor-pointer">
+            <!-- Responsive Bottom Buttons: Side-by-side on desktop, stacked on mobile -->
+            <div class="flex flex-col-reverse sm:flex-row gap-3 pt-3 border-t border-slate-100">
+              <button type="button" onclick="closeEditProfilePage()" class="w-full sm:w-36 py-3.5 bg-white hover:bg-slate-100 active:scale-[0.98] text-slate-700 rounded-xl font-bold text-xs md:text-sm border border-slate-200 transition">
+                Batal
+              </button>
+              <button type="button" onclick="saveProfileAndReturn()" class="w-full flex-1 py-3.5 bg-[#0d59a8] hover:bg-[#0b4a8c] active:scale-[0.98] text-white rounded-xl font-bold text-xs md:text-sm transition shadow-md shadow-blue-700/25 flex items-center justify-center gap-2 cursor-pointer">
                 <i data-lucide="check" class="w-4 h-4"></i>
                 <span>Simpan Perubahan</span>
-              </button>
-              <button type="button" onclick="closeEditProfilePage()" class="w-full py-3 bg-white hover:bg-slate-100 active:scale-[0.98] text-slate-600 rounded-xl font-semibold text-xs border border-slate-200 transition">
-                Batal
               </button>
             </div>
 
