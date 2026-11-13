@@ -19,8 +19,14 @@ export default async function handler(req, res) {
     return;
   }
 
-  // Baca Environment Variables dari Dashboard Vercel
-  const gasUrl = process.env.GAS_URL || process.env.VITE_GAS_URL;
+  // Parse body jika ada
+  let payload = {};
+  if (req.body) {
+    payload = typeof req.body === 'object' ? { ...req.body } : JSON.parse(req.body || '{}');
+  }
+
+  // Baca Environment Variables dari Dashboard Vercel atau directGasUrl dari client
+  const gasUrl = payload.directGasUrl || req.headers['x-gas-url'] || process.env.GAS_URL || process.env.VITE_GAS_URL;
   const secretCode = process.env.GAS_SECRET_CODE || process.env.API_SECRET_CODE || "DAIHATSU_PKL_SEC_2026";
 
   // Endpoint GET: Status Check & Verifikasi Konfigurasi
@@ -32,7 +38,7 @@ export default async function handler(req, res) {
       secretConfigured: Boolean(secretCode),
       message: gasUrl 
         ? "Vercel Proxy aktif dan terhubung ke Google Apps Script."
-        : "GAS_URL belum dikonfigurasi di Environment Variables Vercel. Silakan tambahkan variabel GAS_URL di Dashboard Vercel > Settings > Environment Variables."
+        : "GAS_URL belum dikonfigurasi di Environment Variables Vercel. Silakan tambahkan variabel GAS_URL di Dashboard Vercel > Settings > Environment Variables atau masukkan Web App URL di menu Pengaturan aplikasi."
     });
   }
 
@@ -41,13 +47,11 @@ export default async function handler(req, res) {
     if (!gasUrl) {
       return res.status(400).json({
         status: "error",
-        message: "GAS_URL belum disetel di Vercel Environment Variables. Silakan buka Dashboard Vercel > Settings > Environment Variables dan tambahkan GAS_URL."
+        message: "GAS_URL belum disetel di Vercel Environment Variables atau menu Pengaturan aplikasi. Silakan isi URL Google Apps Script Web App Anda."
       });
     }
 
     try {
-      const payload = typeof req.body === 'object' ? { ...req.body } : JSON.parse(req.body || '{}');
-      
       // Sisipkan Secret Code secara otomatis jika belum ada di payload
       if (!payload.secretToken && secretCode) {
         payload.secretToken = secretCode;

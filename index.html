@@ -206,6 +206,12 @@
       
       <!-- Top Actions & Profile -->
       <div class="flex items-center gap-2 sm:gap-3.5">
+        <!-- Tombol Sinkronisasi Real-time Database Google Sheets -->
+        <button type="button" onclick="syncDataFromDatabase(true)" class="px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-2xs border bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200 active:scale-95" title="Sinkronkan data langsung dari Google Spreadsheet">
+          <i data-lucide="refresh-cw" class="w-3.5 h-3.5 sync-spin-icon text-blue-600"></i>
+          <span class="hidden sm:inline">Sinkron DB</span>
+        </button>
+
         <!-- Role Badge Button (Switch Role / Profile) -->
         <button type="button" onclick="showLoginModal()" id="topbar-role-badge" class="px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-2xs border bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100" title="Klik untuk berganti akun / peran">
           <span id="role-badge-icon">👨‍🎓</span>
@@ -1912,9 +1918,6 @@
           <button type="button" onclick="quickLoginDemo('sunoo')" class="w-full py-2 bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-200 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
             <span>⚡ Masuk Cepat: Sunoo (Siswa Magang - 654553)</span>
           </button>
-          <button type="button" onclick="quickLoginDemo('student')" class="w-full py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-xl text-[10px] font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
-            <span>⚡ Masuk Cepat: Budi Santoso (210103045)</span>
-          </button>
         </div>
 
         <div class="text-center pt-2 border-t border-slate-100">
@@ -2843,7 +2846,7 @@
       showAppToast("Cabang Workshop Diubah", `Titik pusat presensi disesuaikan ke ${branch.name}`, "info");
     }
 
-    // --- DATA INDUK SISWA MAGANG (MASTER DATA UNTUK HRD) ---
+    // --- DATA INDUK SISWA MAGANG (MASTER DATA REAL DARI SPREADSHEET ASTRA DAIHATSU) ---
     const DEFAULT_STUDENTS = [
       {
         nim: '654553',
@@ -2855,10 +2858,10 @@
         phone: '0812-7890-3344',
         status: 'Aktif',
         statusRole: 'Anak Magang',
-        todayStatus: 'Sedang Shift',
-        todayIn: '07:45 WIB',
+        todayStatus: 'Belum Presensi',
+        todayIn: '-',
         todayOut: '-',
-        todayJarak: 65,
+        todayJarak: null,
         avatar: ''
       },
       {
@@ -2876,70 +2879,6 @@
         todayOut: '-',
         todayJarak: null,
         avatar: ''
-      },
-      {
-        nim: '210103045',
-        nama: 'Budi Santoso',
-        username: 'Budi Santoso',
-        cabang: 'Ahmad Yani',
-        instansi: 'SMKN 2 Bandar Lampung',
-        jurusan: 'Teknik Kendaraan Ringan (TKR)',
-        phone: '0812-7890-1122',
-        status: 'Aktif',
-        statusRole: 'Anak Magang',
-        todayStatus: 'Hadir Lengkap',
-        todayIn: '07:48 WIB',
-        todayOut: '16:30 WIB',
-        todayJarak: 65,
-        avatar: ''
-      },
-      {
-        nim: '210103050',
-        nama: 'Rizky Pratama',
-        username: 'Rizky Pratama',
-        cabang: 'Ahmad Yani',
-        instansi: 'SMKN 2 Bandar Lampung',
-        jurusan: 'Teknik Kendaraan Ringan (TKR)',
-        phone: '0813-9876-5432',
-        status: 'Aktif',
-        statusRole: 'Anak Magang',
-        todayStatus: 'Sedang Shift',
-        todayIn: '07:55 WIB',
-        todayOut: '-',
-        todayJarak: 80,
-        avatar: ''
-      },
-      {
-        nim: '220401012',
-        nama: 'Siti Nurhaliza',
-        username: 'Siti Nurhaliza',
-        cabang: 'Ahmad Yani',
-        instansi: 'Politeknik Negeri Lampung',
-        jurusan: 'D3 Teknik Otomotif',
-        phone: '0857-1122-3344',
-        status: 'Aktif',
-        statusRole: 'Anak Magang',
-        todayStatus: 'Sakit (SKD)',
-        todayIn: '-',
-        todayOut: '-',
-        todayJarak: null,
-        avatar: ''
-      },
-      {
-        nim: '210103061',
-        nama: 'Dimas Setiawan',
-        username: 'Dimas Setiawan',
-        cabang: 'Ahmad Yani',
-        instansi: 'SMK PGRI 2 Bandar Lampung',
-        jurusan: 'Teknik Kendaraan Ringan (TKR)',
-        phone: '0821-4455-6677',
-        status: 'Aktif',
-        statusRole: 'Anak Magang',
-        todayStatus: 'Izin Dispensasi',
-        todayIn: '-',
-        todayOut: '-',
-        todayJarak: null,
-        avatar: ''
       }
     ];
 
@@ -2950,159 +2889,94 @@
         return DEFAULT_STUDENTS;
       }
       try {
-        return JSON.parse(stored);
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        return DEFAULT_STUDENTS;
       } catch {
         return DEFAULT_STUDENTS;
       }
     }
 
-    // --- DATA INBOX PERSETUJUAN IZIN / SAKIT (UNTUK HRD) ---
-    const DEFAULT_APPROVALS = [
-      {
-        izinId: 'IZN-20261113-220401012',
-        nim: '220401012',
-        nama: 'Siti Nurhaliza',
-        instansi: 'Politeknik Negeri Lampung',
-        tanggal: '2026-11-13',
-        jenis: 'Sakit',
-        alasan: 'Demam tinggi dan radang tenggorokan (Surat Keterangan Dokter Terlampir)',
-        status: 'Pending',
-        docUrl: 'Image/Logo-Daihatsu.png',
-        createdAt: '2026-11-13T07:15:00Z'
-      },
-      {
-        izinId: 'IZN-20261113-210103061',
-        nim: '210103061',
-        nama: 'Dimas Setiawan',
-        instansi: 'SMK PGRI 2 Bandar Lampung',
-        tanggal: '2026-11-13',
-        jenis: 'Izin',
-        alasan: 'Mengikuti Ujian Tengah Semester di sekolah induk (Dispensasi)',
-        status: 'Disetujui',
-        docUrl: '',
-        createdAt: '2026-11-12T16:00:00Z'
-      },
-      {
-        izinId: 'IZN-20261110-210103050',
-        nim: '210103050',
-        nama: 'Rizky Pratama',
-        instansi: 'SMKN 2 Bandar Lampung',
-        tanggal: '2026-11-10',
-        jenis: 'Izin',
-        alasan: 'Keperluan keluarga mendesak ke luar daerah',
-        status: 'Disetujui',
-        docUrl: '',
-        createdAt: '2026-11-10T06:30:00Z'
-      }
-    ];
-
+    // --- DATA INBOX PERSETUJUAN IZIN / SAKIT (MURNI DARI DATABASE) ---
     function getInboxApprovals() {
       const stored = localStorage.getItem('pkl_inbox_approvals');
       if (!stored) {
-        localStorage.setItem('pkl_inbox_approvals', JSON.stringify(DEFAULT_APPROVALS));
-        return DEFAULT_APPROVALS;
+        return [];
       }
       try {
-        return JSON.parse(stored);
+        const parsed = JSON.parse(stored);
+        return Array.isArray(parsed) ? parsed : [];
       } catch {
-        return DEFAULT_APPROVALS;
+        return [];
       }
     }
 
-    // --- SEED PRESENSI LOGS MULTI-SISWA UNTUK REKAP HRD ---
-    const SEED_STUDENT_LOGS = [
-      {
-        logId: 'ABS-20261113-210103045-IN',
-        tanggal: '2026-11-13',
-        waktu: '07:48',
-        tipe: 'IN',
-        jarak: 65,
-        statusRadius: 'Dalam Radius Bengkel',
-        nim: '210103045',
-        nama: 'Budi Santoso',
-        instansi: 'SMKN 2 Bandar Lampung',
-        address: 'Workshop Astra Daihatsu A. Yani',
-        photoUrl: '-'
-      },
-      {
-        logId: 'ABS-20261113-210103045-OUT',
-        tanggal: '2026-11-13',
-        waktu: '16:30',
-        tipe: 'OUT',
-        jarak: 72,
-        statusRadius: 'Dalam Radius Bengkel',
-        nim: '210103045',
-        nama: 'Budi Santoso',
-        instansi: 'SMKN 2 Bandar Lampung',
-        address: 'Workshop Astra Daihatsu A. Yani',
-        photoUrl: '-'
-      },
-      {
-        logId: 'ABS-20261113-210103050-IN',
-        tanggal: '2026-11-13',
-        waktu: '07:55',
-        tipe: 'IN',
-        jarak: 80,
-        statusRadius: 'Dalam Radius Bengkel',
-        nim: '210103050',
-        nama: 'Rizky Pratama',
-        instansi: 'SMKN 2 Bandar Lampung',
-        address: 'Workshop Astra Daihatsu A. Yani',
-        photoUrl: '-'
-      },
-      {
-        logId: 'ABS-20261112-210103050-IN',
-        tanggal: '2026-11-12',
-        waktu: '07:50',
-        tipe: 'IN',
-        jarak: 55,
-        statusRadius: 'Dalam Radius Bengkel',
-        nim: '210103050',
-        nama: 'Rizky Pratama',
-        instansi: 'SMKN 2 Bandar Lampung',
-        address: 'Workshop Astra Daihatsu A. Yani',
-        photoUrl: '-'
-      },
-      {
-        logId: 'ABS-20261112-210103050-OUT',
-        tanggal: '2026-11-12',
-        waktu: '16:35',
-        tipe: 'OUT',
-        jarak: 60,
-        statusRadius: 'Dalam Radius Bengkel',
-        nim: '210103050',
-        nama: 'Rizky Pratama',
-        instansi: 'SMKN 2 Bandar Lampung',
-        address: 'Workshop Astra Daihatsu A. Yani',
-        photoUrl: '-'
-      },
-      {
-        logId: 'ABS-20261112-220401012-IN',
-        tanggal: '2026-11-12',
-        waktu: '07:45',
-        tipe: 'IN',
-        jarak: 70,
-        statusRadius: 'Dalam Radius Bengkel',
-        nim: '220401012',
-        nama: 'Siti Nurhaliza',
-        instansi: 'Politeknik Negeri Lampung',
-        address: 'Workshop Astra Daihatsu A. Yani',
-        photoUrl: '-'
-      },
-      {
-        logId: 'ABS-20261112-220401012-OUT',
-        tanggal: '2026-11-12',
-        waktu: '16:30',
-        tipe: 'OUT',
-        jarak: 68,
-        statusRadius: 'Dalam Radius Bengkel',
-        nim: '220401012',
-        nama: 'Siti Nurhaliza',
-        instansi: 'Politeknik Negeri Lampung',
-        address: 'Workshop Astra Daihatsu A. Yani',
-        photoUrl: '-'
+    // --- SINKRONISASI DATA DATABASE LIVE (GOOGLE APPS SCRIPT / VERCEL PROXY) ---
+    let isSyncingBackend = false;
+
+    async function syncDataFromDatabase(showToastNotice = false) {
+      if (isSyncingBackend) return;
+      const targetApi = currentUser.apiUrl || '/api/presensi';
+      if (!targetApi) return;
+
+      isSyncingBackend = true;
+      const syncIcons = document.querySelectorAll('.sync-spin-icon');
+      syncIcons.forEach(el => el.classList.add('animate-spin'));
+
+      try {
+        const isProxy = targetApi.startsWith('/');
+        const res = await fetch(targetApi, {
+          method: 'POST',
+          mode: isProxy ? 'same-origin' : 'no-cors',
+          headers: { 'Content-Type': isProxy ? 'application/json' : 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'get_admin_data',
+            secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026"
+          })
+        });
+
+        if (isProxy) {
+          const json = await res.json();
+          if (json && json.status === 'success') {
+            // 1. Simpan Real Students dari Master_PKL
+            if (Array.isArray(json.students) && json.students.length > 0) {
+              localStorage.setItem('pkl_students_list', JSON.stringify(json.students));
+            }
+
+            // 2. Simpan Real Attendance Logs dari Log_Presensi
+            if (Array.isArray(json.attendances)) {
+              localStorage.setItem('pkl_logs_presensi', JSON.stringify(json.attendances));
+            }
+
+            // 3. Simpan Real Approvals dari Log_Perizinan
+            if (Array.isArray(json.approvals)) {
+              localStorage.setItem('pkl_inbox_approvals', JSON.stringify(json.approvals));
+            }
+
+            // Refresh UI Views dengan data riil database
+            renderDashboardStats();
+            renderRekapTable();
+            if (currentUserRole === 'admin') {
+              renderAdminRecentAttendance();
+              renderAdminStudentsTable();
+              renderInboxApprovals();
+            }
+
+            if (showToastNotice) {
+              showAppToast("Database Tersinkron", `Data berhasil diperbarui langsung dari Google Sheets.`, "success");
+            }
+          }
+        }
+      } catch (err) {
+        console.warn("Gagal sinkron data backend:", err);
+        if (showToastNotice) {
+          showAppToast("Koneksi Database", "Tidak dapat menghubungi server. Menggunakan data lokal.", "warning");
+        }
+      } finally {
+        isSyncingBackend = false;
+        syncIcons.forEach(el => el.classList.remove('animate-spin'));
       }
-    ];
+    }
 
     // State Geolocation
     let userLocation = {
@@ -3254,7 +3128,7 @@
     let currentFacingMode = 'environment'; // PRD 4.2: default environment
     let capturedImageBase64 = null;
 
-    // --- 2. PENYIMPANAN LOG PRESENSI & PERIZINAN MURNI (OFFLINE-FIRST) ---
+    // --- 2. PENYIMPANAN LOG PRESENSI & PERIZINAN MURNI REAL (DATABASE-CONNECTED) ---
     function getAttendanceLogs() {
       let result = [];
       const saved = localStorage.getItem('pkl_logs_presensi');
@@ -3262,16 +3136,9 @@
         try {
           const parsed = JSON.parse(saved);
           if (Array.isArray(parsed)) {
-            // Filter out any legacy sample records
-            result = parsed.filter(p => p.logId && !p.logId.includes('20251028') && !p.logId.includes('20251027') && !p.logId.includes('20251025'));
+            result = parsed;
           }
         } catch(e) {}
-      }
-      if (currentUserRole === 'admin') {
-        const existingIds = new Set(result.map(r => r.logId));
-        SEED_STUDENT_LOGS.forEach(s => {
-          if (!existingIds.has(s.logId)) result.push(s);
-        });
       }
       return result;
     }
@@ -3283,23 +3150,24 @@
         try {
           const parsed = JSON.parse(saved);
           if (Array.isArray(parsed)) {
-            result = parsed.filter(i => i.izinId && !i.izinId.includes('20251026') && !i.izinId.includes('20251024'));
+            result = parsed;
           }
         } catch(e) {}
       }
-      if (currentUserRole === 'admin') {
-        const approvals = getInboxApprovals();
-        const existingIds = new Set(result.map(r => r.izinId));
+      const approvals = getInboxApprovals();
+      if (Array.isArray(approvals) && approvals.length > 0) {
+        const existingIds = new Set(result.map(r => r.izinId || r.id));
         approvals.forEach(a => {
-          if (!existingIds.has(a.izinId)) {
+          const aId = a.izinId || a.id;
+          if (aId && !existingIds.has(aId)) {
             result.push({
-              izinId: a.izinId,
+              izinId: aId,
               tanggal: a.tanggal,
               nim: a.nim,
               nama: a.nama,
-              jenis: a.jenis,
+              jenis: a.kategori || a.jenis,
               alasan: a.alasan,
-              docUrl: a.docUrl,
+              docUrl: a.dokumenUrl || a.docUrl,
               status: a.status
             });
           }
@@ -3312,21 +3180,57 @@
     document.addEventListener('DOMContentLoaded', () => {
       // Pembersihan otomatis data dummy/palsu lama dari localStorage browser
       try {
+        const dummyNims = ['210103045', '210103050', '220401012', '210103061', '12345678'];
+        const dummyNames = ['Budi Santoso', 'Rizky Pratama', 'Siti Nurhaliza', 'Dimas Setiawan', 'Andi Pratama'];
+
+        // Bersihkan logs presensi dummy
         const pLogs = localStorage.getItem('pkl_logs_presensi');
         if (pLogs) {
-          const p = JSON.parse(pLogs).filter(l => l.logId && !l.logId.includes('20251028') && !l.logId.includes('20251027') && !l.logId.includes('20251025'));
-          localStorage.setItem('pkl_logs_presensi', JSON.stringify(p));
+          const parsed = JSON.parse(pLogs);
+          if (Array.isArray(parsed)) {
+            const filtered = parsed.filter(l => !dummyNims.includes(l.nim) && !dummyNames.includes(l.nama) && !(l.logId && l.logId.includes('202510')) && !(l.logId && l.logId.includes('210103045')));
+            localStorage.setItem('pkl_logs_presensi', JSON.stringify(filtered));
+          }
         }
+
+        // Bersihkan logs izin dummy
         const iLogs = localStorage.getItem('pkl_logs_izin');
         if (iLogs) {
-          const i = JSON.parse(iLogs).filter(l => l.izinId && !l.izinId.includes('20251026') && !l.izinId.includes('20251024'));
-          localStorage.setItem('pkl_logs_izin', JSON.stringify(i));
+          const parsedI = JSON.parse(iLogs);
+          if (Array.isArray(parsedI)) {
+            const filteredI = parsedI.filter(i => !dummyNims.includes(i.nim) && !dummyNames.includes(i.nama));
+            localStorage.setItem('pkl_logs_izin', JSON.stringify(filteredI));
+          }
         }
-        if (localStorage.getItem('pkl_nama') === 'Andi Pratama') {
-          localStorage.removeItem('pkl_nama');
+
+        // Bersihkan inbox approvals dummy
+        const inb = localStorage.getItem('pkl_inbox_approvals');
+        if (inb) {
+          const parsedInb = JSON.parse(inb);
+          if (Array.isArray(parsedInb)) {
+            const filteredInb = parsedInb.filter(a => !dummyNims.includes(a.nim) && !dummyNames.includes(a.nama));
+            localStorage.setItem('pkl_inbox_approvals', JSON.stringify(filteredInb));
+          }
         }
-        if (localStorage.getItem('pkl_nim') === '12345678') {
-          localStorage.removeItem('pkl_nim');
+
+        // Bersihkan students list dummy
+        const sList = localStorage.getItem('pkl_students_list');
+        if (sList) {
+          const parsedS = JSON.parse(sList);
+          if (Array.isArray(parsedS)) {
+            const filteredS = parsedS.filter(s => !dummyNims.includes(s.nim) && !dummyNames.includes(s.nama));
+            if (filteredS.length > 0) {
+              localStorage.setItem('pkl_students_list', JSON.stringify(filteredS));
+            } else {
+              localStorage.setItem('pkl_students_list', JSON.stringify(DEFAULT_STUDENTS));
+            }
+          }
+        }
+
+        if (localStorage.getItem('pkl_nama') === 'Budi Santoso' || localStorage.getItem('pkl_nama') === 'Andi Pratama') {
+          localStorage.setItem('pkl_nama', 'Sunoo');
+          localStorage.setItem('pkl_nim', '654553');
+          localStorage.setItem('pkl_username', 'Sunoo');
         }
       } catch(e) {}
 
@@ -3343,6 +3247,9 @@
       updateOnlineAttendanceUI();
       renderDashboardStats();
       renderRekapTable();
+
+      // Sinkronkan data real langsung dari Google Sheets / Database backend
+      syncDataFromDatabase(false);
     });
 
     // --- 3.1 REAL INTERACTIVE MAP (LEAFLET + OPENSTREETMAP) ---
@@ -3928,6 +3835,11 @@
         }
       }
 
+      // Selalu sinkronkan data terbaru dari database backend saat beralih tab
+      if (tabId !== 'pengaturan') {
+        syncDataFromDatabase(false);
+      }
+
       const isAdm = currentUserRole === 'admin';
       const titles = {
         dashboard: { title: 'Dashboard', sub: 'Sistem Presensi Geofencing PKL Astra Daihatsu Ahmad Yani' },
@@ -4440,8 +4352,16 @@
 
     // --- 10. REKAP BULANAN & DASHBOARD STATS CALCULATION ---
     function renderDashboardStats() {
-      const presensiLogs = getAttendanceLogs();
-      const izinLogs = getIzinLogs();
+      let presensiLogs = getAttendanceLogs();
+      let izinLogs = getIzinLogs();
+
+      // Jika role adalah Siswa Magang, tampilkan statistik pribadi siswa tersebut
+      if (currentUserRole !== 'admin') {
+        if (currentUser.nim && currentUser.nim !== '-') {
+          presensiLogs = presensiLogs.filter(l => l.nim === currentUser.nim);
+          izinLogs = izinLogs.filter(l => l.nim === currentUser.nim);
+        }
+      }
 
       // Hitung Hari Hadir Unik
       const uniqueHadirDates = new Set();
@@ -4454,8 +4374,9 @@
       let totalSakit = 0;
       let totalIzin = 0;
       izinLogs.forEach(l => {
-        if (l.jenis === 'Sakit') totalSakit++;
-        if (l.jenis === 'Izin') totalIzin++;
+        const j = l.jenis || l.kategori;
+        if (j === 'Sakit') totalSakit++;
+        if (j === 'Izin') totalIzin++;
       });
 
       // Total Jam Kerja (Estimasi 8 jam per hari hadir)
@@ -4661,6 +4582,9 @@
       const dailyMap = {};
 
       presensiLogs.forEach(p => {
+        if (currentUserRole !== 'admin' && p.nim && currentUser.nim && currentUser.nim !== '-' && p.nim !== currentUser.nim) {
+          return;
+        }
         const groupKey = (currentUserRole === 'admin' ? (p.nim || 'self') : 'self') + '_' + p.tanggal;
         if (!dailyMap[groupKey]) {
           dailyMap[groupKey] = {
@@ -4728,13 +4652,16 @@
 
       // 3. Tambahkan log pengajuan izin dan sakit
       izinLogs.forEach(i => {
+        if (currentUserRole !== 'admin' && i.nim && currentUser.nim && currentUser.nim !== '-' && i.nim !== currentUser.nim) {
+          return;
+        }
         combined.push({
           tanggal: i.tanggal,
           nim: i.nim || currentUser.nim,
           nama: i.nama || currentUser.nama,
-          kategori: i.jenis || 'Izin',
-          statusTipe: i.jenis === 'Sakit' ? 'SAKIT' : 'IZIN',
-          statusText: i.jenis === 'Sakit' ? 'Sakit (SKD)' : 'Izin Dispensasi',
+          kategori: i.jenis || i.kategori || 'Izin',
+          statusTipe: (i.jenis === 'Sakit' || i.kategori === 'Sakit') ? 'SAKIT' : 'IZIN',
+          statusText: (i.jenis === 'Sakit' || i.kategori === 'Sakit') ? 'Sakit (SKD)' : 'Izin Dispensasi',
           inLog: null,
           outLog: null,
           inTime: '-',
@@ -4744,7 +4671,7 @@
           outJarak: null,
           keterangan: i.alasan || '-',
           address: 'Surat Keterangan Magang',
-          buktiUrl: i.docUrl || i.buktiUrl || '-'
+          buktiUrl: i.docUrl || i.dokumenUrl || i.buktiUrl || '-'
         });
       });
 
@@ -6286,28 +6213,7 @@
         return;
       }
 
-      // 3. Akun Budi Santoso (Demo Siswa)
-      if (inputNim === '210103045' && (inputPwd === '1234' || inputPwd === 'daihatsu123')) {
-        currentUser.nim = '210103045';
-        currentUser.nama = 'Budi Santoso';
-        currentUser.username = 'Budi Santoso';
-        currentUser.cabang = localStorage.getItem('pkl_user_cabang') || 'Ahmad Yani';
-        currentUserRole = 'student';
-
-        localStorage.setItem('pkl_user_role', 'student');
-        localStorage.setItem('pkl_nim', '210103045');
-        localStorage.setItem('pkl_nama', 'Budi Santoso');
-        localStorage.setItem('pkl_is_logged_in', 'true');
-        localStorage.setItem('pkl_profile_completed', 'true');
-
-        setAppBranch(currentUser.cabang);
-        closeLoginModal();
-        applyUserRoleUI('student');
-        showAppToast("Login Berhasil", `Selamat datang kembali, ${currentUser.nama}!`, "success");
-        return;
-      }
-
-      // 4. Akun lokal yang pernah registrasi
+      // 3. Akun lokal yang pernah registrasi
       const localNim = localStorage.getItem('pkl_nim');
       const localPwd = localStorage.getItem('pkl_user_password');
       const localUser = localStorage.getItem('pkl_username');
@@ -6552,20 +6458,6 @@
         closeLoginModal();
         applyUserRoleUI('admin');
         showAppToast("Login Berhasil", "Masuk sebagai Indah Pratiwi (HRD Astra Daihatsu Ahmad Yani)", "success");
-      } else if (role === 'student') {
-        localStorage.setItem('pkl_user_role', 'student');
-        localStorage.setItem('pkl_nim', '210103045');
-        localStorage.setItem('pkl_nama', 'Budi Santoso');
-        localStorage.setItem('pkl_username', 'Budi Santoso');
-        localStorage.setItem('pkl_instansi', 'SMKN 2 Bandar Lampung');
-        localStorage.setItem('pkl_jurusan', 'Teknik Kendaraan Ringan (TKR)');
-        localStorage.setItem('pkl_user_cabang', 'Ahmad Yani');
-        localStorage.setItem('pkl_is_logged_in', 'true');
-        localStorage.setItem('pkl_profile_completed', 'true');
-        setAppBranch('Ahmad Yani');
-        closeLoginModal();
-        applyUserRoleUI('student');
-        showAppToast("Login Berhasil", "Masuk sebagai Budi Santoso (Siswa Magang Astra Daihatsu)", "success");
       } else {
         localStorage.setItem('pkl_user_role', 'admin');
         localStorage.setItem('pkl_nim', '14325');
