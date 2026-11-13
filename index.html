@@ -1319,13 +1319,14 @@
           <div class="space-y-3">
             <!-- Pilihan Cabang Workshop Multi-Cabang -->
             <div>
-              <label class="block text-[11px] font-bold text-slate-700 mb-1">Pilih Cabang Penempatan Workshop *</label>
+              <label class="block text-[11px] font-bold text-slate-700 mb-1">Pilih Tempat / Cabang Magang Workshop *</label>
               <div class="relative">
                 <select id="cfg-branch-select" onchange="handleBranchChange(this.value)" class="w-full px-3 py-2 pl-9 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 bg-white focus:ring-2 focus:ring-blue-500 cursor-pointer">
-                  <option value="Ahmad Yani">Astra Daihatsu Ahmad Yani (Bandar Lampung Pusat)</option>
-                  <option value="Natar">Astra Daihatsu Natar (Lampung Selatan)</option>
-                  <option value="Soekarno Hatta">Astra Daihatsu Soekarno Hatta (Bypass)</option>
-                  <option value="Bandar Jaya">Astra Daihatsu Bandar Jaya (Lampung Tengah)</option>
+                  <option value="Ahmad Yani">Ahmad Yani (Bandar Lampung Pusat)</option>
+                  <option value="Soekarno Hatta">Soekarno Hatta (Bypass Bandar Lampung)</option>
+                  <option value="Lampung Timur">Lampung Timur (Bandar Sribhawono)</option>
+                  <option value="Lampung Utara">Lampung Utara (Kotabumi)</option>
+                  <option value="Bandar Jaya">Bandar Jaya (Lampung Tengah)</option>
                 </select>
                 <i data-lucide="building-2" class="w-4 h-4 text-blue-600 absolute left-3 top-2.5"></i>
               </div>
@@ -1943,19 +1944,20 @@
           </div>
         </div>
 
-        <!-- Cabang Penempatan Workshop Daihatsu -->
+        <!-- Tempat / Cabang Magang Daihatsu -->
         <div>
-          <label class="block text-[11px] font-bold text-slate-700 mb-1">Cabang Penempatan Workshop *</label>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">Tempat / Cabang Magang *</label>
           <div class="relative">
             <select id="reg-cabang" required class="w-full px-3 py-2 pl-9 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-bold bg-white text-slate-800 cursor-pointer">
-              <option value="Ahmad Yani">Astra Daihatsu Ahmad Yani (Bandar Lampung Pusat)</option>
-              <option value="Natar">Astra Daihatsu Natar (Lampung Selatan)</option>
-              <option value="Soekarno Hatta">Astra Daihatsu Soekarno Hatta (Bypass)</option>
-              <option value="Bandar Jaya">Astra Daihatsu Bandar Jaya (Lampung Tengah)</option>
+              <option value="Ahmad Yani">Ahmad Yani (Bandar Lampung Pusat)</option>
+              <option value="Soekarno Hatta">Soekarno Hatta (Bypass Bandar Lampung)</option>
+              <option value="Lampung Timur">Lampung Timur (Bandar Sribhawono)</option>
+              <option value="Lampung Utara">Lampung Utara (Kotabumi)</option>
+              <option value="Bandar Jaya">Bandar Jaya (Lampung Tengah)</option>
             </select>
             <i data-lucide="building-2" class="w-4 h-4 text-blue-600 absolute left-3 top-2.5"></i>
           </div>
-          <p class="text-[10px] text-slate-400 mt-0.5">Titik koordinat dan radius geofence presensi otomatis mengikuti cabang ini.</p>
+          <p class="text-[10px] text-slate-400 mt-0.5">Titik koordinat dan radius geofence presensi otomatis mengikuti tempat magang ini.</p>
         </div>
 
         <!-- NIM / NISN & Username -->
@@ -2123,6 +2125,16 @@
         <div>
           <label class="block font-bold text-slate-700 mb-1">Jurusan / Program Keahlian *</label>
           <input type="text" id="add-student-jurusan" required placeholder="Contoh: Teknik Kendaraan Ringan (TKR)" class="w-full px-3 py-2 rounded-xl border border-slate-200">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Tempat / Cabang Magang *</label>
+          <select id="add-student-cabang" class="w-full px-3 py-2 rounded-xl border border-slate-200 font-bold bg-white text-slate-800 cursor-pointer">
+            <option value="Ahmad Yani">Ahmad Yani (Bandar Lampung Pusat)</option>
+            <option value="Soekarno Hatta">Soekarno Hatta (Bypass Bandar Lampung)</option>
+            <option value="Lampung Timur">Lampung Timur (Bandar Sribhawono)</option>
+            <option value="Lampung Utara">Lampung Utara (Kotabumi)</option>
+            <option value="Bandar Jaya">Bandar Jaya (Lampung Tengah)</option>
+          </select>
         </div>
         <div>
           <label class="block font-bold text-slate-700 mb-1">Nomor WhatsApp / HP</label>
@@ -2653,15 +2665,6 @@
         lng: 105.2528,
         radiusMeters: 150
       },
-      'Natar': {
-        key: 'Natar',
-        name: 'Astra Daihatsu Natar',
-        city: 'Lampung Selatan',
-        address: 'Jl. Raya Natar KM 14, Candimas, Natar, Lampung Selatan',
-        lat: -5.3215,
-        lng: 105.2012,
-        radiusMeters: 150
-      },
       'Soekarno Hatta': {
         key: 'Soekarno Hatta',
         name: 'Astra Daihatsu Soekarno Hatta',
@@ -2669,6 +2672,24 @@
         address: 'Jl. Soekarno Hatta No. 88, Bypass, Bandar Lampung',
         lat: -5.3970,
         lng: 105.2850,
+        radiusMeters: 150
+      },
+      'Lampung Timur': {
+        key: 'Lampung Timur',
+        name: 'Astra Daihatsu Lampung Timur',
+        city: 'Bandar Sribhawono',
+        address: 'Jl. Ir. Sutami, Sri Menanti, Bandar Sribhawono, Kab. Lampung Timur',
+        lat: -5.3119,
+        lng: 105.7502,
+        radiusMeters: 150
+      },
+      'Lampung Utara': {
+        key: 'Lampung Utara',
+        name: 'Astra Daihatsu Lampung Utara',
+        city: 'Kotabumi',
+        address: 'Jl. Alamsyah RPN, Kelapa Tujuh, Kec. Kotabumi Selatan, Kab. Lampung Utara',
+        lat: -4.8444,
+        lng: 104.9099,
         radiusMeters: 150
       },
       'Bandar Jaya': {
@@ -6604,6 +6625,7 @@
       const nama = document.getElementById('add-student-nama').value.trim();
       const instansi = document.getElementById('add-student-instansi').value.trim();
       const jurusan = document.getElementById('add-student-jurusan').value.trim();
+      const cabang = (document.getElementById('add-student-cabang') ? document.getElementById('add-student-cabang').value : 'Ahmad Yani') || 'Ahmad Yani';
       const phone = document.getElementById('add-student-phone').value.trim();
 
       if (!nim || !nama) {
@@ -6622,6 +6644,7 @@
         nama: nama,
         instansi: instansi || 'SMK Mitra Astra',
         jurusan: jurusan || 'Teknik Kendaraan Ringan (TKR)',
+        cabang: cabang,
         phone: phone || '-',
         status: 'Aktif Magang'
       });
