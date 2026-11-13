@@ -1006,24 +1006,39 @@
               <input type="hidden" id="cfg-gps-mode" value="real">
             </div>
 
-            <!-- Google Apps Script Web App Integration -->
-            <div class="pt-2 border-t border-slate-100">
-              <div class="flex items-center justify-between mb-1">
-                <label class="text-xs font-semibold text-slate-700">Google Apps Script Web App URL</label>
-                <span class="text-[10px] text-emerald-600 font-bold">Zero-Cost Backend</span>
+            <!-- Google Apps Script & Vercel Backend Integration -->
+            <div class="pt-2 border-t border-slate-100 space-y-3">
+              <div class="flex items-center justify-between">
+                <div>
+                  <label class="text-xs font-bold text-slate-800">Integrasi Server & Database</label>
+                  <p class="text-[10.5px] text-slate-400">Hubungkan ke Google Sheets & Google Drive</p>
+                </div>
+                <span class="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">Vercel & GAS</span>
               </div>
-              <input type="url" id="cfg-script-url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-mono">
-              <p class="text-[11px] text-slate-400 mt-1">
-                Data presensi dan izin akan dikirim langsung ke Google Sheets & Google Drive.
-              </p>
-              <div class="mt-2 flex gap-2">
-                <button type="button" onclick="testGasConnection()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-[11px] font-bold transition flex items-center gap-1.5">
+
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Backend URL (Vercel Proxy / Google Apps Script)</label>
+                <input type="text" id="cfg-script-url" placeholder="/api/presensi atau https://script.google.com/macros/s/.../exec" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-mono">
+                <p class="text-[10px] text-slate-400 mt-0.5">Default: <code class="font-bold text-blue-600">/api/presensi</code> (terhubung otomatis lewat Environment Variable di Vercel).</p>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-semibold text-slate-600 mb-1">Secret Code Keamanan (GAS_SECRET_CODE)</label>
+                <div class="relative">
+                  <input type="text" id="cfg-script-secret" placeholder="DAIHATSU_PKL_SEC_2026" class="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs font-mono">
+                  <span class="absolute right-3 top-2 text-[10px] text-slate-400 font-mono">Token</span>
+                </div>
+                <p class="text-[10px] text-slate-400 mt-0.5">Wajib sama persis dengan variabel <code class="font-bold">API_SECRET_TOKEN</code> di Code.gs dan Vercel.</p>
+              </div>
+
+              <div class="flex gap-2 pt-1">
+                <button type="button" onclick="testGasConnection()" class="flex-1 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5">
                   <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-500"></i>
                   <span>Test Endpoint</span>
                 </button>
-                <button type="button" onclick="showGasGuideModal()" class="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-[11px] font-bold transition flex items-center gap-1.5">
-                  <i data-lucide="code" class="w-3.5 h-3.5 text-blue-600"></i>
-                  <span>Panduan Backend Code.gs</span>
+                <button type="button" onclick="showGasGuideModal()" class="flex-1 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5">
+                  <i data-lucide="key" class="w-3.5 h-3.5 text-blue-600"></i>
+                  <span>Panduan Vercel & Secret</span>
                 </button>
               </div>
             </div>
@@ -1170,7 +1185,26 @@
             <li>Isi <code class="bg-white px-1 rounded">SPREADSHEET_ID</code>, <code class="bg-white px-1 rounded">FOLDER_PRESENSI_ID</code>, <code class="bg-white px-1 rounded">FOLDER_PROFIL_ID</code>, dan <code class="bg-white px-1 rounded">FOLDER_SKD_ID</code> di baris 28-31 file Code.gs.</li>
             <li><strong>Auto-Generate Database:</strong> Pilih fungsi <code class="bg-white px-1.5 py-0.5 rounded font-bold text-emerald-800">setupDatabaseSheets</code> di toolbar atas lalu klik <strong>Run (Jalankan)</strong>. Seluruh sheet & kolom akan dibuat otomatis!</li>
             <li>Klik menu <strong>Deploy &gt; New deployment</strong>, pilih tipe <strong>Web app</strong>. Atur <em>Execute as: Me</em> dan <em>Who has access: Anyone</em>.</li>
-            <li>Salin URL Web App yang dihasilkan ke input URL di tab Pengaturan aplikasi!</li>
+            <li>Salin URL Web App yang dihasilkan ke input URL di tab Pengaturan aplikasi atau ke Vercel!</li>
+          </ol>
+        </div>
+
+        <!-- Panduan Environment Variables Vercel & Secret Token -->
+        <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-3.5 space-y-2 text-indigo-950">
+          <p class="font-bold flex items-center gap-1.5 text-indigo-900">
+            <i data-lucide="shield-check" class="w-4 h-4 text-indigo-600"></i> Cara Pasang Environment Variables di Vercel Dashboard:
+          </p>
+          <ol class="list-decimal pl-4 space-y-1.5 text-[11px] text-indigo-900/90 leading-relaxed">
+            <li>Buka dashboard project Vercel Anda di <a href="https://vercel.com" target="_blank" class="underline font-bold text-blue-600">vercel.com</a>.</li>
+            <li>Pilih tab <strong>Settings</strong> &gt; pilih menu <strong>Environment Variables</strong> di sisi kiri.</li>
+            <li>Tambahkan 2 variabel rahasia berikut:
+              <ul class="list-disc pl-4 mt-1 space-y-1 font-mono text-[10.5px]">
+                <li><strong>Key:</strong> <code class="bg-white px-1.5 py-0.5 rounded font-bold text-indigo-700">GAS_URL</code><br><strong>Value:</strong> <span class="text-slate-600">URL Web App Google Apps Script Anda (akhiran /exec)</span></li>
+                <li><strong>Key:</strong> <code class="bg-white px-1.5 py-0.5 rounded font-bold text-indigo-700">GAS_SECRET_CODE</code><br><strong>Value:</strong> <code class="bg-white px-1.5 py-0.5 rounded font-bold text-emerald-700">DAIHATSU_PKL_SEC_2026</code> (wajib sama dengan di Code.gs)</li>
+              </ul>
+            </li>
+            <li>Pastikan variabel <code class="bg-white px-1 py-0.5 rounded font-bold">API_SECRET_TOKEN</code> di baris 35 file <code class="bg-white px-1 py-0.5 rounded font-bold">Code.gs</code> nilainya sama persis!</li>
+            <li>Klik <strong>Save</strong> lalu Redeploy project di Vercel. Selesai! Sistem akan otomatis terlindungi Secret Code tanpa kendala CORS.</li>
           </ol>
         </div>
       </div>
@@ -1666,6 +1700,10 @@
       }, 3200);
     }
 
+    // Alias showAppToast ke showToast agar kompatibel di semua pemanggilan
+    const showAppToast = showToast;
+    window.showAppToast = showToast;
+
     // Register PWA Service Worker for homescreen install
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
@@ -1821,50 +1859,56 @@
       if (successState) successState.classList.add('hidden');
       if (manualState) manualState.classList.add('hidden');
 
-      updatePwaStep(1, 'active');
-      updatePwaStep(2, 'pending');
-      updatePwaStep(3, 'pending');
-      setPwaInstallProgress(20, 'Menyiapkan berkas Web APK...', 'Mengunduh paket manifest dan icon resolusi tinggi...');
-      showAppToast('Menyiapkan berkas unduhan Web APK...', 'info');
+      try {
+        updatePwaStep(1, 'active');
+        updatePwaStep(2, 'pending');
+        updatePwaStep(3, 'pending');
+        setPwaInstallProgress(25, 'Menyiapkan berkas Web APK...', 'Mengunduh paket manifest dan icon resolusi tinggi...');
+        if (typeof showToast === 'function') showToast('Menyiapkan berkas Web APK...', 'info');
 
-      // Step 1: Simulated download asset verification
-      await new Promise(r => setTimeout(r, 450));
-      updatePwaStep(1, 'done');
-      updatePwaStep(2, 'active');
-      setPwaInstallProgress(55, 'Sinkronisasi Layanan Google Play...', 'Memverifikasi paket WebAPK murni bebas dari badge Chrome...');
+        // Step 1: Simulated download asset verification
+        await new Promise(r => setTimeout(r, 600));
+        updatePwaStep(1, 'done');
+        updatePwaStep(2, 'active');
+        setPwaInstallProgress(60, 'Sinkronisasi Layanan Google Play...', 'Memverifikasi paket WebAPK murni bebas dari badge Chrome...');
 
-      await new Promise(r => setTimeout(r, 500));
+        await new Promise(r => setTimeout(r, 600));
 
-      if (deferredPwaPrompt) {
-        updatePwaStep(2, 'done');
-        updatePwaStep(3, 'active');
-        setPwaInstallProgress(80, 'Membuka pop-up sistem...', 'Silakan tekan tombol "Instal" pada dialog Google Play...');
+        if (deferredPwaPrompt) {
+          updatePwaStep(2, 'done');
+          updatePwaStep(3, 'active');
+          setPwaInstallProgress(85, 'Membuka pop-up sistem...', 'Silakan tekan tombol "Instal" pada dialog Google Play...');
 
-        try {
-          deferredPwaPrompt.prompt();
-          const { outcome } = await deferredPwaPrompt.userChoice;
-          if (outcome === 'accepted') {
-            setPwaInstallProgress(92, 'Sedang memasang ke Layar Utama HP...', 'Sistem Android sedang mengintegrasikan aplikasi ke launcher...');
-            showAppToast('Sedang memasang ke Layar Utama HP...', 'info');
+          try {
+            deferredPwaPrompt.prompt();
+            const { outcome } = await deferredPwaPrompt.userChoice;
+            if (outcome === 'accepted') {
+              setPwaInstallProgress(95, 'Sedang memasang ke Layar Utama HP...', 'Sistem Android sedang mengintegrasikan aplikasi ke launcher...');
+              if (typeof showToast === 'function') showToast('Sedang memasang ke Layar Utama HP...', 'info');
 
-            // Wait for installation confirmation
-            pwaInstallTimer = setTimeout(() => {
-              updatePwaStep(3, 'done');
-              setPwaInstallProgress(100, 'Selesai!', 'Aplikasi berhasil dipasang.');
-              setPwaInstallSuccessState();
-            }, 1800);
-          } else {
-            showAppToast('Instalasi dibatalkan', 'warning');
-            closePwaInstallModal();
+              // Wait for installation confirmation
+              pwaInstallTimer = setTimeout(() => {
+                updatePwaStep(3, 'done');
+                setPwaInstallProgress(100, 'Selesai!', 'Aplikasi berhasil dipasang.');
+                setPwaInstallSuccessState();
+              }, 2000);
+            } else {
+              if (typeof showToast === 'function') showToast('Instalasi dibatalkan', 'warning');
+              closePwaInstallModal();
+            }
+          } catch (err) {
+            console.warn('PWA prompt failed:', err);
+            setPwaInstallManualState();
           }
-        } catch (err) {
-          console.warn('PWA prompt failed:', err);
+        } else {
+          // deferredPwaPrompt not available (e.g. Chrome on Android without prompt, or already dismissed)
+          updatePwaStep(2, 'done');
+          setPwaInstallProgress(90, 'Petunjuk Pemasangan Cepat', 'Ikuti langkah pemasangan manual di bawah ini');
+          await new Promise(r => setTimeout(r, 400));
           setPwaInstallManualState();
         }
-      } else {
-        // deferredPwaPrompt not available (e.g. Chrome on Android without prompt, or already dismissed)
-        updatePwaStep(2, 'done');
-        setPwaInstallProgress(90, 'Petunjuk Pemasangan Cepat', 'Ikuti langkah pemasangan manual di bawah ini');
+      } catch (err) {
+        console.error('PWA install error:', err);
         setPwaInstallManualState();
       }
     }
@@ -1932,7 +1976,8 @@
       nim: (localStorage.getItem('pkl_nim') && localStorage.getItem('pkl_nim') !== '12345678') ? localStorage.getItem('pkl_nim') : '-',
       instansi: localStorage.getItem('pkl_instansi') || 'SMKN 2 Bandar Lampung',
       jurusan: localStorage.getItem('pkl_jurusan') || 'Teknik Kendaraan Ringan (TKR) / Otomotif',
-      apiUrl: localStorage.getItem('pkl_script_url') || '',
+      apiUrl: localStorage.getItem('pkl_script_url') || '/api/presensi',
+      apiSecret: localStorage.getItem('pkl_script_secret') || 'DAIHATSU_PKL_SEC_2026',
       foto: localStorage.getItem('pkl_foto_profil') || '',
       gpsMode: 'real'
     };
@@ -2224,6 +2269,8 @@
       if (cfgJurusan) cfgJurusan.value = currentUser.jurusan;
       const cfgScript = document.getElementById('cfg-script-url');
       if (cfgScript) cfgScript.value = currentUser.apiUrl;
+      const cfgSecret = document.getElementById('cfg-script-secret');
+      if (cfgSecret) cfgSecret.value = currentUser.apiSecret;
       const cfgGps = document.getElementById('cfg-gps-mode');
       if (cfgGps) cfgGps.value = currentUser.gpsMode;
 
@@ -2673,22 +2720,39 @@
         jarak: userLocation.distance,
         statusRadius: statusRadiusValue,
         deviceTimestamp: now.toISOString(),
-        fotoBase64: capturedImageBase64
+        fotoBase64: capturedImageBase64,
+        secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026"
       };
 
-      // 1. Transmisi ke Google Apps Script Web App (jika URL dikonfigurasi)
+      // 1. Transmisi ke Backend (Vercel Proxy / Google Apps Script)
       let backendSuccess = false;
-      if (currentUser.apiUrl && currentUser.apiUrl.startsWith('http')) {
+      const targetApi = currentUser.apiUrl || '/api/presensi';
+      if (targetApi && (targetApi.startsWith('http') || targetApi.startsWith('/'))) {
         try {
-          await fetch(currentUser.apiUrl, {
+          const isProxy = targetApi.startsWith('/');
+          const res = await fetch(targetApi, {
             method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            mode: isProxy ? 'same-origin' : 'no-cors',
+            headers: { 'Content-Type': isProxy ? 'application/json' : 'text/plain;charset=utf-8' },
             body: JSON.stringify(payload)
           });
-          backendSuccess = true;
+          if (isProxy && res.ok) {
+            try {
+              const json = await res.json();
+              if (json.status === 'success') {
+                backendSuccess = true;
+                if (json.fileUrl && json.fileUrl.startsWith('http')) {
+                  newLog.photoUrl = json.fileUrl;
+                }
+              }
+            } catch (je) {
+              backendSuccess = true;
+            }
+          } else {
+            backendSuccess = true;
+          }
         } catch (err) {
-          console.warn("GAS Connection Error:", err);
+          console.warn("GAS / Proxy Connection Error:", err);
         }
       }
 
@@ -2796,20 +2860,23 @@
         tanggal: tanggal,
         alasan: alasan,
         fileBase64: fileBase64Data,
-        fileName: fileNameData
+        fileName: fileNameData,
+        secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026"
       };
 
-      // Transmisi ke GAS
-      if (currentUser.apiUrl && currentUser.apiUrl.startsWith('http')) {
+      // Transmisi ke GAS / Vercel Proxy
+      const targetApi = currentUser.apiUrl || '/api/presensi';
+      if (targetApi && (targetApi.startsWith('http') || targetApi.startsWith('/'))) {
         try {
-          await fetch(currentUser.apiUrl, {
+          const isProxy = targetApi.startsWith('/');
+          await fetch(targetApi, {
             method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            mode: isProxy ? 'same-origin' : 'no-cors',
+            headers: { 'Content-Type': isProxy ? 'application/json' : 'text/plain;charset=utf-8' },
             body: JSON.stringify(payload)
           });
         } catch (err) {
-          console.warn("GAS Izin Sync Error:", err);
+          console.warn("GAS / Proxy Izin Sync Error:", err);
         }
       }
 
@@ -3174,23 +3241,26 @@
           updateProfileDisplay();
           
           // Sinkronisasi otomatis foto profil ke Google Drive (jika URL Apps Script terpasang)
-          if (currentUser.apiUrl && currentUser.apiUrl.startsWith('http')) {
-            fetch(currentUser.apiUrl, {
+          const targetApi = currentUser.apiUrl || '/api/presensi';
+          if (targetApi && (targetApi.startsWith('http') || targetApi.startsWith('/'))) {
+            const isProxy = targetApi.startsWith('/');
+            fetch(targetApi, {
               method: 'POST',
-              mode: 'no-cors',
-              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              mode: isProxy ? 'same-origin' : 'no-cors',
+              headers: { 'Content-Type': isProxy ? 'application/json' : 'text/plain;charset=utf-8' },
               body: JSON.stringify({
                 action: 'update_profil',
                 nim: currentUser.nim,
                 nama: currentUser.nama,
                 instansi: currentUser.instansi,
                 jurusan: currentUser.jurusan,
-                fotoBase64: dataUrl
+                fotoBase64: dataUrl,
+                secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026"
               })
             }).catch(e => console.warn('GAS avatar sync:', e));
           }
 
-          alert("Foto profil peserta magang berhasil diperbarui!");
+          showAppAlert("Foto profil peserta magang berhasil diperbarui!", "Profil Diperbarui", "success");
         };
         img.src = e.target.result;
       };
@@ -3235,24 +3305,27 @@
       localStorage.setItem('pkl_jurusan', currentUser.jurusan);
 
       // Sinkronisasi data profil ke Google Spreadsheet Master_PKL (jika URL terpasang)
-      if (currentUser.apiUrl && currentUser.apiUrl.startsWith('http')) {
-        fetch(currentUser.apiUrl, {
+      const targetApi = currentUser.apiUrl || '/api/presensi';
+      if (targetApi && (targetApi.startsWith('http') || targetApi.startsWith('/'))) {
+        const isProxy = targetApi.startsWith('/');
+        fetch(targetApi, {
           method: 'POST',
-          mode: 'no-cors',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          mode: isProxy ? 'same-origin' : 'no-cors',
+          headers: { 'Content-Type': isProxy ? 'application/json' : 'text/plain;charset=utf-8' },
           body: JSON.stringify({
             action: 'update_profil',
             nim: currentUser.nim,
             nama: currentUser.nama,
             instansi: currentUser.instansi,
             jurusan: currentUser.jurusan,
-            fotoBase64: currentUser.foto || ''
+            fotoBase64: currentUser.foto || '',
+            secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026"
           })
         }).catch(err => console.warn('GAS profile sync error:', err));
       }
 
       updateProfileDisplay();
-      alert("Profil peserta magang berhasil diperbarui!");
+      showAppAlert("Profil peserta magang berhasil diperbarui!", "Profil Tersimpan", "success");
     }
 
     function saveGeofenceSettings() {
@@ -3260,6 +3333,7 @@
       const wLng = parseFloat(document.getElementById('cfg-workshop-lng').value);
       const wRad = parseInt(document.getElementById('cfg-workshop-radius').value);
       const scriptUrl = document.getElementById('cfg-script-url').value.trim();
+      const scriptSecret = document.getElementById('cfg-script-secret').value.trim();
 
       if (!isNaN(wLat) && !isNaN(wLng)) {
         workshopConfig.lat = wLat;
@@ -3271,12 +3345,14 @@
         workshopConfig.radiusMeters = wRad;
         localStorage.setItem('pkl_workshop_radius', wRad);
       }
-      currentUser.apiUrl = scriptUrl;
-      localStorage.setItem('pkl_script_url', scriptUrl);
+      currentUser.apiUrl = scriptUrl || '/api/presensi';
+      currentUser.apiSecret = scriptSecret || 'DAIHATSU_PKL_SEC_2026';
+      localStorage.setItem('pkl_script_url', currentUser.apiUrl);
+      localStorage.setItem('pkl_script_secret', currentUser.apiSecret);
 
       updateProfileDisplay();
       checkGPS(false);
-      alert("Parameter geofencing & server berhasil disimpan!");
+      showAppAlert("Parameter geofencing dan integrasi server berhasil disimpan!", "Pengaturan Tersimpan", "success");
     }
 
     function saveSettings() {
@@ -3401,17 +3477,33 @@
     }
 
     async function testGasConnection() {
-      const url = document.getElementById('cfg-script-url').value.trim();
-      if (!url || !url.startsWith('http')) {
-        alert("Masukkan URL Web App Google Apps Script terlebih dahulu!");
-        return;
-      }
+      const url = document.getElementById('cfg-script-url').value.trim() || '/api/presensi';
+      const secret = document.getElementById('cfg-script-secret').value.trim() || 'DAIHATSU_PKL_SEC_2026';
+      
+      showToast("Mengirim ping tes koneksi backend...", "info");
+      
       try {
-        alert("Mengirim ping ke Google Apps Script Web App...");
-        await fetch(url, { method: 'GET', mode: 'no-cors' });
-        alert("Koneksi ke Web App berhasil dijangkau (HTTP Request terkirim tanpa error jaringan)!");
+        if (url.startsWith('/')) {
+          // Vercel Serverless Function Proxy
+          const res = await fetch(url, { method: 'GET' });
+          const data = await res.json();
+          if (data.status === 'online') {
+            if (data.gasConfigured) {
+              showAppAlert(`Koneksi Vercel Proxy Berhasil!\n\nStatus: Online\nGAS Configured: Terhubung\nPesan: ${data.message}`, "Koneksi Berhasil", "success");
+            } else {
+              showAppAlert(`Vercel Proxy Aktif, namun variabel GAS_URL belum diatur di Dashboard Vercel.\n\nSilakan tambahkan GAS_URL dan GAS_SECRET_CODE di Vercel Dashboard > Settings > Environment Variables.`, "Perlu Konfigurasi Vercel", "warning");
+            }
+          } else {
+            showAppAlert(`Respon Proxy: ${JSON.stringify(data)}`, "Hasil Tes", "info");
+          }
+        } else {
+          // Direct Google Apps Script
+          const testUrl = url.includes('?') ? `${url}&secretToken=${encodeURIComponent(secret)}` : `${url}?secretToken=${encodeURIComponent(secret)}`;
+          await fetch(testUrl, { method: 'GET', mode: 'no-cors' });
+          showAppAlert("Koneksi ke Google Apps Script berhasil dijangkau (HTTP Request terkirim tanpa error jaringan)!", "Koneksi Berhasil", "success");
+        }
       } catch (err) {
-        alert("Gagal menghubungi URL Web App: " + err.toString());
+        showAppAlert("Gagal menghubungi endpoint: " + err.toString(), "Error Koneksi", "error");
       }
     }
 

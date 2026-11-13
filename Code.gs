@@ -23,7 +23,7 @@
  */
 
 // =======================================================================
-// KONFIGURASI ID GOOGLE DRIVE & SPREADSHEET (SESUAIKAN DENGAN MILIK ANDA)
+// KONFIGURASI ID GOOGLE DRIVE, SPREADSHEET & SECRET CODE KEAMANAN
 // =======================================================================
 const SPREADSHEET_ID     = "MASUKKAN_SPREADSHEET_ID_DISINI";
 const FOLDER_PRESENSI_ID = "MASUKKAN_ID_FOLDER_FOTO_ABSENSI_DISINI";
@@ -31,14 +31,26 @@ const FOLDER_PROFIL_ID   = "MASUKKAN_ID_FOLDER_FOTO_PROFIL_DISINI";
 const FOLDER_SKD_ID      = "MASUKKAN_ID_FOLDER_SURAT_DOKTER_SKD_DISINI";
 
 /**
+ * SECRET CODE KEAMANAN (SESUAIKAN DENGAN ENVIRONMENT VARIABLE DI VERCEL)
+ * Masukkan kode rahasia yang sama pada Environment Variable Vercel (GAS_SECRET_CODE)
+ * Default: "DAIHATSU_PKL_SEC_2026"
+ */
+const API_SECRET_TOKEN   = "DAIHATSU_PKL_SEC_2026";
+
+/**
  * Endpoint HTTP GET (Untuk Test Ping & Pengecekan Status Koneksi)
  */
 function doGet(e) {
+  const incomingToken = e && e.parameter ? (e.parameter.secretToken || e.parameter.secret) : null;
+  const isAuthorized = !API_SECRET_TOKEN || API_SECRET_TOKEN === "MASUKKAN_SECRET_CODE_DISINI" || incomingToken === API_SECRET_TOKEN;
+
   return ContentService.createTextOutput(JSON.stringify({
     status: "online",
     message: "Google Apps Script Backend Presensi PKL Astra Daihatsu Ahmad Yani Siap Menerima Data.",
     timestamp: new Date().toISOString(),
-    spreadsheetIdConfigured: SPREADSHEET_ID !== "MASUKKAN_SPREADSHEET_ID_DISINI"
+    spreadsheetIdConfigured: SPREADSHEET_ID !== "MASUKKAN_SPREADSHEET_ID_DISINI",
+    secretProtectionActive: Boolean(API_SECRET_TOKEN && API_SECRET_TOKEN !== "MASUKKAN_SECRET_CODE_DISINI"),
+    authorized: isAuthorized
   })).setMimeType(ContentService.MimeType.JSON);
 }
 
@@ -55,6 +67,20 @@ function doPost(e) {
     }
 
     const data = JSON.parse(e.postData.contents);
+
+    // ===================================================================
+    // 0. VALIDASI SECRET CODE (KEAMANAN DARI AKSES TIDAK RESMI)
+    // ===================================================================
+    if (API_SECRET_TOKEN && API_SECRET_TOKEN !== "MASUKKAN_SECRET_CODE_DISINI") {
+      const incomingToken = data.secretToken || data.secretKey || data.secret || (e.parameter && e.parameter.secret);
+      if (incomingToken !== API_SECRET_TOKEN) {
+        return ContentService.createTextOutput(JSON.stringify({ 
+          status: "error", 
+          message: "Akses Ditolak (Unauthorized): Secret Code tidak valid! Pastikan variabel GAS_SECRET_CODE di Vercel sesuai dengan Code.gs." 
+        })).setMimeType(ContentService.MimeType.JSON);
+      }
+    }
+
     const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
     
     // ===================================================================
