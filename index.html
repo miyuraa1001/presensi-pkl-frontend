@@ -853,7 +853,7 @@
 
           <!-- Table View Container -->
           <div id="rekap-table-container" class="hidden overflow-x-auto desktop-rekap-table">
-            <table class="w-full text-left text-xs border-collapse min-w-[620px]">
+            <table class="w-full text-left text-xs border-collapse min-w-[720px]">
               <thead>
                 <tr class="bg-slate-50/90 border-b border-slate-200 text-slate-600 font-bold text-[11px] uppercase tracking-wider">
                   <th class="py-3.5 px-4">Tanggal & Hari</th>
@@ -861,6 +861,7 @@
                   <th class="py-3.5 px-4">Clock IN (Masuk)</th>
                   <th class="py-3.5 px-4">Clock OUT (Pulang)</th>
                   <th class="py-3.5 px-4">Durasi Kerja</th>
+                  <th class="py-3.5 px-4">Radius Presensi</th>
                   <th class="py-3.5 px-4 text-center">Verifikasi</th>
                 </tr>
               </thead>
@@ -3804,7 +3805,7 @@
 
       if (combined.length === 0) {
         if (tbody) {
-          tbody.innerHTML = `<tr><td colspan="6">${emptyHtml}</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="7">${emptyHtml}</td></tr>`;
         }
         if (mobileCards) {
           mobileCards.innerHTML = emptyHtml;
@@ -3929,7 +3930,66 @@
           durationDesktop = `<span class="text-xs font-semibold text-slate-400">1 Hari Penuh</span>`;
         }
 
-        // 5. Verifikasi & Berkas
+        // 5. Radius Presensi Display (Dedicated Column)
+        let radiusDesktop = '';
+        const maxRad = (typeof workshopConfig !== 'undefined' && workshopConfig.radiusMeters) ? workshopConfig.radiusMeters : 100;
+
+        if (item.kategori === 'Hadir') {
+          let inRadiusBadge = '';
+          if (item.inJarak !== null) {
+            const inValid = item.inJarak <= maxRad;
+            inRadiusBadge = `
+              <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg text-[11px] font-mono font-bold ${inValid ? 'bg-emerald-50 text-emerald-800 border border-emerald-200/80' : 'bg-red-50 text-red-800 border border-red-200/80'} shadow-2xs">
+                <span class="w-1.5 h-1.5 rounded-full ${inValid ? 'bg-emerald-500' : 'bg-red-500'}"></span>
+                <span class="text-[9px] font-sans font-bold text-slate-500 uppercase">IN:</span>
+                <span>${item.inJarak} m</span>
+              </div>
+            `;
+          } else if (item.inTime !== '-') {
+            inRadiusBadge = `
+              <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[11px] font-mono text-slate-600 bg-slate-50 border border-slate-200">
+                <span class="text-[9px] font-sans font-bold text-slate-400 uppercase">IN:</span>
+                <span>~0 m</span>
+              </div>
+            `;
+          } else {
+            inRadiusBadge = `<span class="text-xs text-slate-400 font-mono">IN: --</span>`;
+          }
+
+          let outRadiusBadge = '';
+          if (item.outJarak !== null) {
+            const outValid = item.outJarak <= maxRad;
+            outRadiusBadge = `
+              <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-lg text-[11px] font-mono font-bold ${outValid ? 'bg-blue-50 text-blue-800 border border-blue-200/80' : 'bg-red-50 text-red-800 border border-red-200/80'} shadow-2xs">
+                <span class="w-1.5 h-1.5 rounded-full ${outValid ? 'bg-blue-500' : 'bg-red-500'}"></span>
+                <span class="text-[9px] font-sans font-bold text-slate-500 uppercase">OUT:</span>
+                <span>${item.outJarak} m</span>
+              </div>
+            `;
+          } else if (item.outTime !== '-' && item.outTime !== '--:--') {
+            outRadiusBadge = `
+              <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[11px] font-mono text-slate-600 bg-slate-50 border border-slate-200">
+                <span class="text-[9px] font-sans font-bold text-slate-400 uppercase">OUT:</span>
+                <span>~0 m</span>
+              </div>
+            `;
+          } else if (item.inTime !== '-') {
+            outRadiusBadge = `<span class="text-[10px] text-slate-400 font-medium italic pl-1">OUT: Belum Pulang</span>`;
+          } else {
+            outRadiusBadge = `<span class="text-xs text-slate-400 font-mono">OUT: --</span>`;
+          }
+
+          radiusDesktop = `
+            <div class="flex flex-col gap-1 items-start">
+              ${inRadiusBadge}
+              ${outRadiusBadge}
+            </div>
+          `;
+        } else {
+          radiusDesktop = `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold text-slate-400 bg-slate-50 border border-slate-200">Dispensasi</span>`;
+        }
+
+        // 6. Verifikasi & Berkas
         let verificationBadge = '';
         if (item.kategori === 'Hadir') {
           verificationBadge = `
@@ -3979,6 +4039,9 @@
             </td>
             <td class="py-3.5 px-4 whitespace-nowrap">
               ${durationDesktop}
+            </td>
+            <td class="py-3.5 px-4 whitespace-nowrap">
+              ${radiusDesktop}
             </td>
             <td class="py-3.5 px-4 text-center whitespace-nowrap">
               ${verificationBadge}
