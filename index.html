@@ -278,84 +278,84 @@
           </div>
         </div>
 
-        <!-- 4 Metric Cards (Dynamically computed from real logs) -->
+        <!-- 4 Metric Cards (Dynamically computed from real logs: Student Stats vs HRD Admin Overview) -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <!-- Total Hadir -->
+          <!-- Card 1: Total Hadir (Student) vs Total Siswa Magang (Admin) -->
           <div class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-sm transition">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0">
+              <div id="stat-icon-wrap-1" class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0">
                 <i data-lucide="calendar-check-2" class="w-5 h-5"></i>
               </div>
               <div>
-                <p class="text-xs font-bold text-slate-600 leading-tight">Total Hadir</p>
-                <p class="text-[10px] text-slate-400 font-medium">(Bulan Ini)</p>
+                <p id="stat-title-1" class="text-xs font-bold text-slate-600 leading-tight">Total Hadir</p>
+                <p id="stat-sub-1" class="text-[10px] text-slate-400 font-medium">(Bulan Ini)</p>
               </div>
             </div>
             <div class="flex items-baseline gap-1 mt-3">
               <span class="text-2xl md:text-3xl font-black text-slate-900" id="stat-hadir">0</span>
-              <span class="text-xs font-semibold text-slate-400">Hari</span>
+              <span id="stat-unit-1" class="text-xs font-semibold text-slate-400">Hari</span>
             </div>
-            <div class="flex items-center gap-1 mt-1.5 text-xs font-bold text-emerald-600" id="stat-hadir-percent">
+            <div id="stat-footer-1" class="flex items-center gap-1 mt-1.5 text-xs font-bold text-emerald-600">
               <span>Presensi Valid Masuk</span>
             </div>
           </div>
 
-          <!-- Total Sakit -->
+          <!-- Card 2: Total Sakit (Student) vs Hadir Hari Ini (Admin) -->
           <div class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-sm transition">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl bg-red-50 text-red-500 flex items-center justify-center flex-shrink-0">
+              <div id="stat-icon-wrap-2" class="w-10 h-10 rounded-xl bg-red-50 text-red-500 flex items-center justify-center flex-shrink-0">
                 <i data-lucide="activity" class="w-5 h-5"></i>
               </div>
               <div>
-                <p class="text-xs font-bold text-slate-600">Total Sakit</p>
-                <p class="text-[10px] text-slate-400 font-medium">(SKD Dokter)</p>
+                <p id="stat-title-2" class="text-xs font-bold text-slate-600">Total Sakit</p>
+                <p id="stat-sub-2" class="text-[10px] text-slate-400 font-medium">(SKD Dokter)</p>
               </div>
             </div>
             <div class="flex items-baseline gap-1 mt-3">
               <span class="text-2xl md:text-3xl font-black text-slate-900" id="stat-sakit">0</span>
-              <span class="text-xs font-semibold text-slate-400">Hari</span>
+              <span id="stat-unit-2" class="text-xs font-semibold text-slate-400">Hari</span>
             </div>
-            <div class="flex items-center gap-1 mt-1.5 text-xs font-semibold text-slate-400">
+            <div id="stat-footer-2" class="flex items-center gap-1 mt-1.5 text-xs font-semibold text-slate-400">
               Surat Dokter Terverifikasi
             </div>
           </div>
 
-          <!-- Total Izin -->
+          <!-- Card 3: Total Izin (Student) vs Inbox Persetujuan (Admin) -->
           <div class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-sm transition">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-500 flex items-center justify-center flex-shrink-0">
+              <div id="stat-icon-wrap-3" class="w-10 h-10 rounded-xl bg-orange-50 text-orange-500 flex items-center justify-center flex-shrink-0">
                 <i data-lucide="file-text" class="w-5 h-5"></i>
               </div>
               <div>
-                <p class="text-xs font-bold text-slate-600">Total Izin</p>
-                <p class="text-[10px] text-slate-400 font-medium">(Dispensasi)</p>
+                <p id="stat-title-3" class="text-xs font-bold text-slate-600">Total Izin</p>
+                <p id="stat-sub-3" class="text-[10px] text-slate-400 font-medium">(Dispensasi)</p>
               </div>
             </div>
             <div class="flex items-baseline gap-1 mt-3">
               <span class="text-2xl md:text-3xl font-black text-slate-900" id="stat-izin">0</span>
-              <span class="text-xs font-semibold text-slate-400">Hari</span>
+              <span id="stat-unit-3" class="text-xs font-semibold text-slate-400">Hari</span>
             </div>
-            <div class="flex items-center gap-1 mt-1.5 text-xs font-semibold text-slate-400">
+            <div id="stat-footer-3" class="flex items-center gap-1 mt-1.5 text-xs font-semibold text-slate-400">
               Dispensasi Disetujui
             </div>
           </div>
 
-          <!-- Total Jam Kerja -->
+          <!-- Card 4: Total Jam Kerja (Student) vs Cabang Magang (Admin) -->
           <div class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-sm transition">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
+              <div id="stat-icon-wrap-4" class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
                 <i data-lucide="clock" class="w-5 h-5"></i>
               </div>
               <div>
-                <p class="text-xs font-bold text-slate-600">Total Jam Kerja</p>
-                <p class="text-[10px] text-slate-400 font-medium">(Akumulasi)</p>
+                <p id="stat-title-4" class="text-xs font-bold text-slate-600">Total Jam Kerja</p>
+                <p id="stat-sub-4" class="text-[10px] text-slate-400 font-medium">(Akumulasi)</p>
               </div>
             </div>
             <div class="flex items-baseline gap-1 mt-3">
               <span class="text-2xl md:text-3xl font-black text-slate-900" id="stat-jam">0</span>
-              <span class="text-xs font-semibold text-slate-400">Jam</span>
+              <span id="stat-unit-4" class="text-xs font-semibold text-slate-400">Jam</span>
             </div>
-            <div class="flex items-center gap-1 mt-1.5 text-xs font-semibold text-slate-400" id="stat-jam-status">
+            <div id="stat-footer-4" class="flex items-center gap-1 mt-1.5 text-xs font-semibold text-slate-400">
               Akumulasi 8 Jam/Shift
             </div>
           </div>
@@ -369,12 +369,12 @@
             <div>
               <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center gap-2">
-                  <div class="w-8 h-8 rounded-lg bg-red-100 text-red-600 flex items-center justify-center">
+                  <div id="geofence-card-icon" class="w-8 h-8 rounded-lg bg-red-100 text-red-600 flex items-center justify-center">
                     <i data-lucide="map-pin" class="w-4 h-4"></i>
                   </div>
                   <div>
-                    <h4 class="font-bold text-slate-900 text-sm">Status Geofencing Workshop</h4>
-                    <p class="text-[11px] text-slate-500">Astra Daihatsu Ahmad Yani</p>
+                    <h4 id="geofence-card-title" class="font-bold text-slate-900 text-sm">Status Geofencing Workshop</h4>
+                    <p id="geofence-card-sub" class="text-[11px] text-slate-500 app-branch-name">Astra Daihatsu Ahmad Yani</p>
                   </div>
                 </div>
                 <span id="radius-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700 flex items-center gap-1.5">
@@ -1105,20 +1105,20 @@
             </span>
           </div>
 
-          <!-- ==================== 1. KARTU INFORMASI PROFIL PESERTA PKL (DISPLAY ONLY) ==================== -->
+          <!-- ==================== 1. KARTU INFORMASI PROFIL PESERTA / PEMBIMBING (DISPLAY ONLY) ==================== -->
           <div class="bg-white rounded-2xl md:rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden">
             <!-- Card Header Strip -->
             <div class="bg-gradient-to-r from-[#0d1a3a] via-[#162a54] to-[#1e3a8a] p-4 md:p-5 text-white flex items-center justify-between">
               <div class="flex items-center gap-3">
                 <div class="w-9 h-9 rounded-xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20">
-                  <i data-lucide="user-check" class="w-5 h-5 text-cyan-300"></i>
+                  <i id="info-card-icon" data-lucide="user-check" class="w-5 h-5 text-cyan-300"></i>
                 </div>
                 <div>
-                  <h4 class="font-extrabold text-sm md:text-base text-white leading-tight">Informasi Peserta PKL</h4>
-                  <p class="text-[10px] md:text-xs text-slate-300">Data identitas resmi teknisi magang Astra Daihatsu</p>
+                  <h4 id="info-card-title" class="font-extrabold text-sm md:text-base text-white leading-tight">Informasi Peserta PKL</h4>
+                  <p id="info-card-subtitle" class="text-[10px] md:text-xs text-slate-300">Data identitas resmi teknisi magang Astra Daihatsu</p>
                 </div>
               </div>
-              <span class="text-[10px] md:text-xs font-bold text-cyan-300 bg-white/10 px-3 py-1 rounded-full border border-white/15">
+              <span id="info-card-verified-badge" class="text-[10px] md:text-xs font-bold text-cyan-300 bg-white/10 px-3 py-1 rounded-full border border-white/15">
                 Terverifikasi
               </span>
             </div>
@@ -1132,13 +1132,13 @@
                 </div>
                 <div class="flex-1 min-w-0">
                   <div class="flex items-center justify-center sm:justify-start gap-2">
-                    <span class="px-2.5 py-0.5 rounded-full text-[10px] md:text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200/60">
+                    <span id="info-profile-role-badge" class="px-2.5 py-0.5 rounded-full text-[10px] md:text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200/60">
                       Siswa PKL Teknisi
                     </span>
-                    <span class="text-[11px] text-slate-400 font-medium">Workshop Astra Daihatsu</span>
+                    <span id="info-profile-sub-badge" class="text-[11px] text-slate-400 font-medium">Workshop Astra Daihatsu</span>
                   </div>
                   <h3 id="info-profile-nama" class="font-black text-slate-900 text-lg md:text-2xl tracking-tight mt-1 truncate">Mekanik Magang</h3>
-                  <p class="text-xs md:text-sm font-mono font-semibold text-slate-500 mt-0.5">NISN / NIM: <span id="info-profile-nim" class="font-bold text-slate-700">-</span></p>
+                  <p class="text-xs md:text-sm font-mono font-semibold text-slate-500 mt-0.5"><span id="info-profile-nim-label">NISN / NIM:</span> <span id="info-profile-nim" class="font-bold text-slate-700">-</span></p>
                 </div>
 
                 <!-- Desktop Action Button (Top Right) -->
@@ -1153,19 +1153,19 @@
               <!-- Data Grid Info (1 col on mobile, 3 cols on tablet/desktop) -->
               <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3 border-t border-slate-100">
                 <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-100">
-                  <p class="text-[10px] md:text-[11px] font-bold text-slate-400 uppercase tracking-wider">Asal Sekolah / Kampus</p>
+                  <p id="info-profile-lbl-col1" class="text-[10px] md:text-[11px] font-bold text-slate-400 uppercase tracking-wider">Asal Sekolah / Kampus</p>
                   <p id="info-profile-instansi" class="font-bold text-slate-800 text-xs md:text-sm mt-0.5 truncate">-</p>
                 </div>
                 <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-100">
-                  <p class="text-[10px] md:text-[11px] font-bold text-slate-400 uppercase tracking-wider">Program Keahlian</p>
+                  <p id="info-profile-lbl-col2" class="text-[10px] md:text-[11px] font-bold text-slate-400 uppercase tracking-wider">Program Keahlian</p>
                   <p id="info-profile-jurusan" class="font-bold text-slate-800 text-xs md:text-sm mt-0.5 truncate">Teknik Kendaraan Ringan (TKR)</p>
                 </div>
                 <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between sm:flex-col sm:items-start sm:justify-center">
                   <div>
-                    <p class="text-[10px] md:text-[11px] font-bold text-slate-400 uppercase tracking-wider">Penempatan Praktik (PKL)</p>
+                    <p id="info-profile-lbl-col3" class="text-[10px] md:text-[11px] font-bold text-slate-400 uppercase tracking-wider">Penempatan Praktik (PKL)</p>
                     <p id="info-profile-cabang" class="font-bold text-slate-800 text-xs md:text-sm mt-0.5 truncate">Astra Daihatsu Ahmad Yani</p>
                   </div>
-                  <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 mt-1">
+                  <span id="info-profile-tag-col3" class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 mt-1">
                     Cabang Resmi
                   </span>
                 </div>
@@ -1413,8 +1413,8 @@
                 <i data-lucide="arrow-left" class="w-5 h-5"></i>
               </button>
               <div>
-                <h3 class="font-extrabold text-slate-900 text-lg md:text-xl leading-tight">Edit Profil Peserta Magang</h3>
-                <p class="text-xs text-slate-500">Ubah identitas dan foto profil siswa PKL</p>
+                <h3 id="edit-profile-header-title" class="font-extrabold text-slate-900 text-lg md:text-xl leading-tight">Edit Profil Peserta Magang</h3>
+                <p id="edit-profile-header-sub" class="text-xs text-slate-500">Ubah identitas dan foto profil siswa PKL</p>
               </div>
             </div>
             <span class="text-[10px] md:text-xs font-bold text-blue-700 bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
@@ -1437,7 +1437,7 @@
                 </button>
               </div>
               <div class="text-center sm:text-left flex-1 space-y-1">
-                <h5 class="text-xs md:text-sm font-bold text-slate-800">Foto Profil Peserta Magang</h5>
+                <h5 id="edit-profile-avatar-title" class="text-xs md:text-sm font-bold text-slate-800">Foto Profil Peserta Magang</h5>
                 <p class="text-[11px] text-slate-500">Format JPG, PNG atau WebP (otomatis dioptimalkan)</p>
                 <div class="flex items-center justify-center sm:justify-start gap-2 pt-1.5">
                   <button type="button" onclick="document.getElementById('avatar-file-input').click()" class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-xl text-[11px] md:text-xs font-bold flex items-center gap-1.5 shadow-xs transition">
@@ -1454,19 +1454,19 @@
             <!-- Responsive 2-Column Input Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div class="sm:col-span-2">
-                <label class="block text-xs font-bold text-slate-700 mb-1">Nama Lengkap Siswa <span class="text-red-500">*</span></label>
+                <label id="edit-profile-lbl-nama" class="block text-xs font-bold text-slate-700 mb-1">Nama Lengkap Siswa <span class="text-red-500">*</span></label>
                 <input type="text" id="cfg-nama" placeholder="Contoh: Muhammad Rizky" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs md:text-sm focus:ring-2 focus:ring-blue-500 font-semibold text-slate-800">
               </div>
               <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">NISN / NIM / ID Magang</label>
+                <label id="edit-profile-lbl-nim" class="block text-xs font-bold text-slate-700 mb-1">NISN / NIM / ID Magang</label>
                 <input type="text" id="cfg-nim" placeholder="Contoh: 20241001" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs md:text-sm focus:ring-2 focus:ring-blue-500 font-mono text-slate-800">
               </div>
               <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Asal Sekolah / Kampus (Instansi)</label>
+                <label id="edit-profile-lbl-instansi" class="block text-xs font-bold text-slate-700 mb-1">Asal Sekolah / Kampus (Instansi)</label>
                 <input type="text" id="cfg-instansi" placeholder="SMKN 2 Bandar Lampung" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs md:text-sm focus:ring-2 focus:ring-blue-500 text-slate-800 font-medium">
               </div>
               <div class="sm:col-span-2">
-                <label class="block text-xs font-bold text-slate-700 mb-1">Jurusan / Program Keahlian</label>
+                <label id="edit-profile-lbl-jurusan" class="block text-xs font-bold text-slate-700 mb-1">Jurusan / Program Keahlian</label>
                 <input type="text" id="cfg-jurusan" placeholder="Teknik Kendaraan Ringan (TKR) / Otomotif" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs md:text-sm focus:ring-2 focus:ring-blue-500 text-slate-800 font-medium">
               </div>
             </div>
@@ -3414,11 +3414,16 @@
     }
 
     function updateProfileDisplay() {
+      const isAdm = currentUserRole === 'admin';
       document.getElementById('user-display-name').innerText = currentUser.nama;
-      document.getElementById('user-display-nim').innerText = 'NIM: ' + currentUser.nim;
+      document.getElementById('user-display-nim').innerText = (isAdm ? 'NIP: ' : 'NIM: ') + (currentUser.nim || '-');
       
       const printMeta = document.getElementById('print-user-meta');
-      if (printMeta) printMeta.innerText = `Nama: ${currentUser.nama} | NIM: ${currentUser.nim} | Jurusan: ${currentUser.jurusan}`;
+      if (printMeta) {
+        printMeta.innerText = isAdm
+          ? `Pembimbing: ${currentUser.nama} | NIP: ${currentUser.nim} | Divisi: ${currentUser.jurusan}`
+          : `Nama: ${currentUser.nama} | NIM: ${currentUser.nim} | Jurusan: ${currentUser.jurusan}`;
+      }
 
       const printNama = document.getElementById('print-nama');
       if (printNama) printNama.innerText = currentUser.nama;
@@ -3434,7 +3439,7 @@
       if (printSignNim) printSignNim.innerText = currentUser.nim;
 
       // Avatar & Inisial Handling (Topbar + Settings Overview + Settings Edit)
-      const initials = currentUser.nama ? currentUser.nama.split(' ').filter(Boolean).map(w => w[0]).slice(0, 2).join('').toUpperCase() : 'M';
+      const initials = currentUser.nama ? currentUser.nama.split(' ').filter(Boolean).map(w => w[0]).slice(0, 2).join('').toUpperCase() : (isAdm ? 'HR' : 'M');
       const topbarInitials = document.getElementById('topbar-avatar-initials');
       const topbarImg = document.getElementById('topbar-avatar-img');
       const settingsInitials = document.getElementById('settings-avatar-initials');
@@ -3492,6 +3497,72 @@
       const currentBranch = getBranchConfig(currentUser.cabang);
       const infoCabang = document.getElementById('info-profile-cabang');
       if (infoCabang) infoCabang.innerText = currentBranch.name;
+
+      // Adaptasi Informasi Profil Khusus Admin vs Anak Magang
+      const infoTitle = document.getElementById('info-card-title');
+      const infoSub = document.getElementById('info-card-subtitle');
+      const infoIcon = document.getElementById('info-card-icon');
+      const infoRolePill = document.getElementById('info-profile-role-badge');
+      const infoSubrolePill = document.getElementById('info-profile-sub-badge');
+      const infoNimLabel = document.getElementById('info-profile-nim-label');
+      const infoLblCol1 = document.getElementById('info-profile-lbl-col1');
+      const infoLblCol2 = document.getElementById('info-profile-lbl-col2');
+      const infoLblCol3 = document.getElementById('info-profile-lbl-col3');
+      const infoTagCol3 = document.getElementById('info-profile-tag-col3');
+
+      const editTitle = document.getElementById('edit-profile-header-title');
+      const editSub = document.getElementById('edit-profile-header-sub');
+      const editAvatarTitle = document.getElementById('edit-profile-avatar-title');
+      const editLblNama = document.getElementById('edit-profile-lbl-nama');
+      const editLblNim = document.getElementById('edit-profile-lbl-nim');
+      const editLblInstansi = document.getElementById('edit-profile-lbl-instansi');
+      const editLblJurusan = document.getElementById('edit-profile-lbl-jurusan');
+
+      if (isAdm) {
+        if (infoTitle) infoTitle.innerText = "Informasi Profil Pembimbing & HRD";
+        if (infoSub) infoSub.innerText = "Data identitas resmi Administrator & HRD PT Astra International Tbk - Daihatsu";
+        if (infoIcon) infoIcon.setAttribute('data-lucide', 'briefcase');
+        if (infoRolePill) {
+          infoRolePill.innerText = "HRD & Pembimbing Magang";
+          infoRolePill.className = "px-2.5 py-0.5 rounded-full text-[10px] md:text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200/80";
+        }
+        if (infoSubrolePill) infoSubrolePill.innerText = "PT Astra International Tbk - Daihatsu";
+        if (infoNimLabel) infoNimLabel.innerText = "NIP / ID Karyawan:";
+        if (infoLblCol1) infoLblCol1.innerText = "Instansi / Perusahaan";
+        if (infoLblCol2) infoLblCol2.innerText = "Divisi / Jabatan";
+        if (infoLblCol3) infoLblCol3.innerText = "Wilayah Penugasan";
+        if (infoTagCol3) infoTagCol3.innerText = "Astra Daihatsu";
+
+        if (editTitle) editTitle.innerText = "Edit Profil Administrator & HRD";
+        if (editSub) editSub.innerText = "Ubah identitas resmi pembimbing dan pengelola magang PKL";
+        if (editAvatarTitle) editAvatarTitle.innerText = "Foto Profil Pembimbing / HRD";
+        if (editLblNama) editLblNama.innerHTML = `Nama Lengkap HRD / Pembimbing <span class="text-red-500">*</span>`;
+        if (editLblNim) editLblNim.innerText = "NIP / ID Karyawan";
+        if (editLblInstansi) editLblInstansi.innerText = "Perusahaan / Instansi";
+        if (editLblJurusan) editLblJurusan.innerText = "Divisi / Jabatan";
+      } else {
+        if (infoTitle) infoTitle.innerText = "Informasi Peserta PKL";
+        if (infoSub) infoSub.innerText = "Data identitas resmi teknisi magang Astra Daihatsu";
+        if (infoIcon) infoIcon.setAttribute('data-lucide', 'user-check');
+        if (infoRolePill) {
+          infoRolePill.innerText = "Siswa PKL Teknisi";
+          infoRolePill.className = "px-2.5 py-0.5 rounded-full text-[10px] md:text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200/60";
+        }
+        if (infoSubrolePill) infoSubrolePill.innerText = "Workshop Astra Daihatsu";
+        if (infoNimLabel) infoNimLabel.innerText = "NISN / NIM:";
+        if (infoLblCol1) infoLblCol1.innerText = "Asal Sekolah / Kampus";
+        if (infoLblCol2) infoLblCol2.innerText = "Program Keahlian";
+        if (infoLblCol3) infoLblCol3.innerText = "Penempatan Praktik (PKL)";
+        if (infoTagCol3) infoTagCol3.innerText = "Cabang Resmi";
+
+        if (editTitle) editTitle.innerText = "Edit Profil Peserta Magang";
+        if (editSub) editSub.innerText = "Ubah identitas dan foto profil siswa PKL";
+        if (editAvatarTitle) editAvatarTitle.innerText = "Foto Profil Peserta Magang";
+        if (editLblNama) editLblNama.innerHTML = `Nama Lengkap Siswa <span class="text-red-500">*</span>`;
+        if (editLblNim) editLblNim.innerText = "NISN / NIM / ID Magang";
+        if (editLblInstansi) editLblInstansi.innerText = "Asal Sekolah / Kampus (Instansi)";
+        if (editLblJurusan) editLblJurusan.innerText = "Jurusan / Program Keahlian";
+      }
 
       const branchSel = document.getElementById('cfg-branch-select');
       if (branchSel && currentUser.cabang) branchSel.value = currentUser.cabang;
@@ -4352,55 +4423,215 @@
 
     // --- 10. REKAP BULANAN & DASHBOARD STATS CALCULATION ---
     function renderDashboardStats() {
+      const isAdm = currentUserRole === 'admin';
       let presensiLogs = getAttendanceLogs();
       let izinLogs = getIzinLogs();
+      const studentsList = getStudentsList();
+      const inboxList = getInboxApprovals();
 
-      // Jika role adalah Siswa Magang, tampilkan statistik pribadi siswa tersebut
-      if (currentUserRole !== 'admin') {
+      const now = new Date();
+      const todayISO = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+
+      if (isAdm) {
+        // --- A. METRIK DASHBOARD KHUSUS HRD / ADMIN ---
+        // 1. Total Siswa Magang Terdaftar (Tanpa Akun Admin)
+        const internStudents = studentsList.filter(s => s.statusRole !== 'Admin' && s.nim !== '14325');
+        const totalInterns = internStudents.length > 0 ? internStudents.length : studentsList.length;
+
+        // 2. Jumlah Siswa Hadir Hari Ini (Clock IN pada hari ini)
+        const todayPresentNims = new Set();
+        presensiLogs.forEach(l => {
+          if (l.tanggal === todayISO && l.tipe === 'IN') {
+            todayPresentNims.add(l.nim);
+          }
+        });
+        const todayHadir = todayPresentNims.size;
+
+        // 3. Inbox Menunggu Persetujuan HRD
+        const pendingApprovals = inboxList.filter(a => a.status === 'Menunggu Persetujuan' || a.status === 'Pending').length;
+
+        // 4. Jumlah Cabang PKL Aktif
+        const totalBranches = typeof DAIHATSU_BRANCHES !== 'undefined' ? Object.keys(DAIHATSU_BRANCHES).length : 5;
+
+        // Update Card 1: Total Siswa Magang
+        const title1 = document.getElementById('stat-title-1');
+        const sub1 = document.getElementById('stat-sub-1');
+        const val1 = document.getElementById('stat-hadir');
+        const unit1 = document.getElementById('stat-unit-1');
+        const foot1 = document.getElementById('stat-footer-1');
+        const iconWrap1 = document.getElementById('stat-icon-wrap-1');
+        if (title1) title1.innerText = "Total Siswa Magang";
+        if (sub1) sub1.innerText = "(Database Master)";
+        if (val1) val1.innerText = totalInterns;
+        if (unit1) unit1.innerText = "Peserta";
+        if (foot1) foot1.innerHTML = `<span class="text-blue-600 font-bold">Terdaftar di Master PKL</span>`;
+        if (iconWrap1) {
+          iconWrap1.className = "w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0";
+          iconWrap1.innerHTML = `<i data-lucide="users" class="w-5 h-5"></i>`;
+        }
+
+        // Update Card 2: Hadir Hari Ini
+        const title2 = document.getElementById('stat-title-2');
+        const sub2 = document.getElementById('stat-sub-2');
+        const val2 = document.getElementById('stat-sakit');
+        const unit2 = document.getElementById('stat-unit-2');
+        const foot2 = document.getElementById('stat-footer-2');
+        const iconWrap2 = document.getElementById('stat-icon-wrap-2');
+        if (title2) title2.innerText = "Hadir Hari Ini";
+        if (sub2) sub2.innerText = "(Presensi Masuk)";
+        if (val2) val2.innerText = todayHadir;
+        if (unit2) unit2.innerText = "Siswa";
+        if (foot2) foot2.innerHTML = `<span class="text-emerald-600 font-bold">Clock IN Terverifikasi</span>`;
+        if (iconWrap2) {
+          iconWrap2.className = "w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0";
+          iconWrap2.innerHTML = `<i data-lucide="user-check" class="w-5 h-5"></i>`;
+        }
+
+        // Update Card 3: Inbox Persetujuan
+        const title3 = document.getElementById('stat-title-3');
+        const sub3 = document.getElementById('stat-sub-3');
+        const val3 = document.getElementById('stat-izin');
+        const unit3 = document.getElementById('stat-unit-3');
+        const foot3 = document.getElementById('stat-footer-3');
+        const iconWrap3 = document.getElementById('stat-icon-wrap-3');
+        if (title3) title3.innerText = "Inbox Persetujuan";
+        if (sub3) sub3.innerText = "(Izin & Sakit)";
+        if (val3) val3.innerText = pendingApprovals;
+        if (unit3) unit3.innerText = "Pengajuan";
+        if (foot3) foot3.innerHTML = pendingApprovals > 0 
+          ? `<span class="text-amber-600 font-bold">Perlu Review HRD</span>` 
+          : `<span class="text-slate-400 font-semibold">Semua Telah Diproses</span>`;
+        if (iconWrap3) {
+          iconWrap3.className = "w-10 h-10 rounded-xl bg-orange-50 text-orange-500 flex items-center justify-center flex-shrink-0";
+          iconWrap3.innerHTML = `<i data-lucide="inbox" class="w-5 h-5"></i>`;
+        }
+
+        // Update Card 4: Cabang Operasional
+        const title4 = document.getElementById('stat-title-4');
+        const sub4 = document.getElementById('stat-sub-4');
+        const val4 = document.getElementById('stat-jam');
+        const unit4 = document.getElementById('stat-unit-4');
+        const foot4 = document.getElementById('stat-footer-4');
+        const iconWrap4 = document.getElementById('stat-icon-wrap-4');
+        if (title4) title4.innerText = "Cabang Magang";
+        if (sub4) sub4.innerText = "(Multi-Cabang PKL)";
+        if (val4) val4.innerText = totalBranches;
+        if (unit4) unit4.innerText = "Cabang";
+        if (foot4) foot4.innerHTML = `<span class="text-indigo-600 font-semibold">Astra Daihatsu Lampung</span>`;
+        if (iconWrap4) {
+          iconWrap4.className = "w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center flex-shrink-0";
+          iconWrap4.innerHTML = `<i data-lucide="building-2" class="w-5 h-5"></i>`;
+        }
+
+      } else {
+        // --- B. METRIK DASHBOARD KHUSUS SISWA MAGANG ---
         if (currentUser.nim && currentUser.nim !== '-') {
           presensiLogs = presensiLogs.filter(l => l.nim === currentUser.nim);
           izinLogs = izinLogs.filter(l => l.nim === currentUser.nim);
         }
+
+        const uniqueHadirDates = new Set();
+        presensiLogs.forEach(l => {
+          if (l.tipe === 'IN') uniqueHadirDates.add(l.tanggal);
+        });
+        const totalHadir = uniqueHadirDates.size;
+
+        let totalSakit = 0;
+        let totalIzin = 0;
+        izinLogs.forEach(l => {
+          const j = l.jenis || l.kategori;
+          if (j === 'Sakit') totalSakit++;
+          if (j === 'Izin') totalIzin++;
+        });
+
+        const totalJam = totalHadir * 8;
+
+        const title1 = document.getElementById('stat-title-1');
+        const sub1 = document.getElementById('stat-sub-1');
+        const val1 = document.getElementById('stat-hadir');
+        const unit1 = document.getElementById('stat-unit-1');
+        const foot1 = document.getElementById('stat-footer-1');
+        const iconWrap1 = document.getElementById('stat-icon-wrap-1');
+        if (title1) title1.innerText = "Total Hadir";
+        if (sub1) sub1.innerText = "(Bulan Ini)";
+        if (val1) val1.innerText = totalHadir;
+        if (unit1) unit1.innerText = "Hari";
+        if (foot1) foot1.innerHTML = `<span class="text-emerald-600 font-bold">Presensi Valid Masuk</span>`;
+        if (iconWrap1) {
+          iconWrap1.className = "w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0";
+          iconWrap1.innerHTML = `<i data-lucide="calendar-check-2" class="w-5 h-5"></i>`;
+        }
+
+        const title2 = document.getElementById('stat-title-2');
+        const sub2 = document.getElementById('stat-sub-2');
+        const val2 = document.getElementById('stat-sakit');
+        const unit2 = document.getElementById('stat-unit-2');
+        const foot2 = document.getElementById('stat-footer-2');
+        const iconWrap2 = document.getElementById('stat-icon-wrap-2');
+        if (title2) title2.innerText = "Total Sakit";
+        if (sub2) sub2.innerText = "(SKD Dokter)";
+        if (val2) val2.innerText = totalSakit;
+        if (unit2) unit2.innerText = "Hari";
+        if (foot2) foot2.innerHTML = `<span class="text-slate-400 font-semibold">Surat Dokter Terverifikasi</span>`;
+        if (iconWrap2) {
+          iconWrap2.className = "w-10 h-10 rounded-xl bg-red-50 text-red-500 flex items-center justify-center flex-shrink-0";
+          iconWrap2.innerHTML = `<i data-lucide="activity" class="w-5 h-5"></i>`;
+        }
+
+        const title3 = document.getElementById('stat-title-3');
+        const sub3 = document.getElementById('stat-sub-3');
+        const val3 = document.getElementById('stat-izin');
+        const unit3 = document.getElementById('stat-unit-3');
+        const foot3 = document.getElementById('stat-footer-3');
+        const iconWrap3 = document.getElementById('stat-icon-wrap-3');
+        if (title3) title3.innerText = "Total Izin";
+        if (sub3) sub3.innerText = "(Dispensasi)";
+        if (val3) val3.innerText = totalIzin;
+        if (unit3) unit3.innerText = "Hari";
+        if (foot3) foot3.innerHTML = `<span class="text-slate-400 font-semibold">Dispensasi Disetujui</span>`;
+        if (iconWrap3) {
+          iconWrap3.className = "w-10 h-10 rounded-xl bg-orange-50 text-orange-500 flex items-center justify-center flex-shrink-0";
+          iconWrap3.innerHTML = `<i data-lucide="file-text" class="w-5 h-5"></i>`;
+        }
+
+        const title4 = document.getElementById('stat-title-4');
+        const sub4 = document.getElementById('stat-sub-4');
+        const val4 = document.getElementById('stat-jam');
+        const unit4 = document.getElementById('stat-unit-4');
+        const foot4 = document.getElementById('stat-footer-4');
+        const iconWrap4 = document.getElementById('stat-icon-wrap-4');
+        if (title4) title4.innerText = "Total Jam Kerja";
+        if (sub4) sub4.innerText = "(Akumulasi)";
+        if (val4) val4.innerText = totalJam;
+        if (unit4) unit4.innerText = "Jam";
+        if (foot4) foot4.innerHTML = `<span class="text-slate-400 font-semibold">Akumulasi 8 Jam/Shift</span>`;
+        if (iconWrap4) {
+          iconWrap4.className = "w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0";
+          iconWrap4.innerHTML = `<i data-lucide="clock" class="w-5 h-5"></i>`;
+        }
       }
 
-      // Hitung Hari Hadir Unik
-      const uniqueHadirDates = new Set();
+      // Hitung metrik tabel Rekap
+      const uniqueDatesRekap = new Set();
       presensiLogs.forEach(l => {
-        if (l.tipe === 'IN') uniqueHadirDates.add(l.tanggal);
+        if (l.tipe === 'IN') uniqueDatesRekap.add(l.tanggal);
       });
-      const totalHadir = uniqueHadirDates.size;
-
-      // Hitung Sakit & Izin
-      let totalSakit = 0;
-      let totalIzin = 0;
-      izinLogs.forEach(l => {
-        const j = l.jenis || l.kategori;
-        if (j === 'Sakit') totalSakit++;
-        if (j === 'Izin') totalIzin++;
-      });
-
-      // Total Jam Kerja (Estimasi 8 jam per hari hadir)
-      const totalJam = totalHadir * 8;
-
-      document.getElementById('stat-hadir').innerText = totalHadir;
-      document.getElementById('stat-sakit').innerText = totalSakit;
-      document.getElementById('stat-izin').innerText = totalIzin;
-      document.getElementById('stat-jam').innerText = totalJam;
-
-      // Update di Rekap
       const rHadir = document.getElementById('rekap-metric-hadir');
       const rSakit = document.getElementById('rekap-metric-sakit');
       const rIzin = document.getElementById('rekap-metric-izin');
       const rJam = document.getElementById('rekap-metric-jam');
-      if (rHadir) rHadir.innerText = `${totalHadir} Hari`;
-      if (rSakit) rSakit.innerText = `${totalSakit} Hari`;
-      if (rIzin) rIzin.innerText = `${totalIzin} Hari`;
-      if (rJam) rJam.innerText = `${totalJam} Jam`;
+      let rekapSakit = 0, rekapIzin = 0;
+      izinLogs.forEach(l => {
+        const j = l.jenis || l.kategori;
+        if (j === 'Sakit') rekapSakit++;
+        if (j === 'Izin') rekapIzin++;
+      });
+      if (rHadir) rHadir.innerText = `${uniqueDatesRekap.size} Hari`;
+      if (rSakit) rSakit.innerText = `${rekapSakit} Hari`;
+      if (rIzin) rIzin.innerText = `${rekapIzin} Hari`;
+      if (rJam) rJam.innerText = `${uniqueDatesRekap.size * 8} Jam`;
 
       // Update Status Presensi Hari Ini (Clock IN & Clock OUT) Murni Berdasarkan Data Nyata
-      const now = new Date();
-      const todayISO = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
-
       const todayIn = presensiLogs.find(l => l.tanggal === todayISO && l.tipe === 'IN');
       const todayOut = presensiLogs.find(l => l.tanggal === todayISO && l.tipe === 'OUT');
 
@@ -5617,6 +5848,30 @@
         } else {
           rekapSiswaFilter.classList.add('hidden');
         }
+      }
+
+      // 8. Update Tampilan Status Geofencing Dashboard (Monitoring Cabang vs Siswa Radius)
+      const geoCardTitle = document.getElementById('geofence-card-title');
+      const geoCardSub = document.getElementById('geofence-card-sub');
+      const radiusDesc = document.getElementById('radius-desc-txt');
+      const radiusBadge = document.getElementById('radius-badge');
+      const geoIcon = document.getElementById('geofence-card-icon');
+
+      if (isAdm) {
+        if (geoCardTitle) geoCardTitle.innerText = "Monitoring Geofence Cabang";
+        if (geoCardSub) geoCardSub.innerText = `${currentBranch.name} (Cabang Monitoring Aktif)`;
+        if (geoIcon) geoIcon.className = "w-8 h-8 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center";
+        if (radiusBadge) {
+          radiusBadge.className = "px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200 flex items-center gap-1.5 shadow-2xs";
+          radiusBadge.innerHTML = `<i data-lucide="shield-check" class="w-3.5 h-3.5 text-indigo-600"></i> Monitoring Online`;
+        }
+        if (radiusDesc) {
+          radiusDesc.innerHTML = `Pusat Geofence Workshop <strong>${currentBranch.name}</strong> aktif dengan radius <strong>${workshopConfig.radiusMeters} meter</strong>. Titik ini menjadi acuan validasi absensi anak magang.`;
+        }
+      } else {
+        if (geoCardTitle) geoCardTitle.innerText = "Status Geofencing Workshop";
+        if (geoCardSub) geoCardSub.innerText = currentBranch.name;
+        if (geoIcon) geoIcon.className = "w-8 h-8 rounded-lg bg-red-100 text-red-600 flex items-center justify-center";
       }
 
       updateProfileDisplay();
