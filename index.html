@@ -150,8 +150,8 @@
           <span>Dashboard</span>
         </button>
         <button onclick="switchTab('presensi')" id="nav-presensi" class="nav-item w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800/80 hover:text-white transition-all">
-          <i data-lucide="camera" class="w-4 h-4"></i>
-          <span>Presensi Kamera</span>
+          <i data-lucide="clock" class="w-4 h-4"></i>
+          <span>Online Attendance</span>
         </button>
         <button onclick="switchTab('izin')" id="nav-izin" class="nav-item w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800/80 hover:text-white transition-all">
           <i data-lucide="file-plus-2" class="w-4 h-4"></i>
@@ -426,13 +426,13 @@
                     <div>
                       <p class="text-xs font-bold text-slate-800">Masuk (Clock IN)</p>
                       <p class="text-xs font-semibold text-slate-500" id="today-in-time">Belum presensi masuk</p>
-                      <p class="text-[10px] text-slate-400 font-medium" id="today-in-status">Klik untuk ambil foto presensi masuk</p>
+                      <p class="text-[10px] text-slate-400 font-medium" id="today-in-status">Klik untuk Clock In</p>
                     </div>
                   </div>
-                  <!-- Thumb Foto IN -->
-                  <div id="today-in-thumb-wrap" class="w-16 h-12 rounded-lg border border-dashed border-slate-300 bg-slate-100 flex items-center justify-center text-slate-400 text-xs flex-shrink-0 group-hover:scale-105 transition overflow-hidden">
+                  <!-- Thumb / Status IN -->
+                  <div id="today-in-thumb-wrap" class="w-12 h-12 rounded-xl border border-dashed border-slate-300 bg-slate-100 flex items-center justify-center text-slate-400 text-xs flex-shrink-0 group-hover:scale-105 transition overflow-hidden">
                     <img id="today-in-thumb" src="" alt="Bukti Masuk" class="w-full h-full object-cover hidden">
-                    <i data-lucide="camera" class="w-4 h-4 text-slate-400" id="today-in-cam-icon"></i>
+                    <i data-lucide="clock" class="w-5 h-5 text-slate-400" id="today-in-cam-icon"></i>
                   </div>
                 </div>
 
@@ -445,13 +445,13 @@
                     <div>
                       <p class="text-xs font-bold text-slate-800">Pulang (Clock OUT)</p>
                       <p class="text-xs font-semibold text-slate-500" id="today-out-time">Belum presensi pulang</p>
-                      <p class="text-[10px] text-slate-400 font-medium" id="today-out-status">Klik untuk presensi selesai shift</p>
+                      <p class="text-[10px] text-slate-400 font-medium" id="today-out-status">Klik untuk Clock Out</p>
                     </div>
                   </div>
-                  <!-- Thumb Foto OUT -->
-                  <div id="today-out-thumb-wrap" class="w-16 h-12 rounded-lg border border-dashed border-slate-300 bg-slate-100 flex items-center justify-center text-slate-400 text-xs flex-shrink-0 group-hover:scale-105 transition overflow-hidden">
+                  <!-- Thumb / Status OUT -->
+                  <div id="today-out-thumb-wrap" class="w-12 h-12 rounded-xl border border-dashed border-slate-300 bg-slate-100 flex items-center justify-center text-slate-400 text-xs flex-shrink-0 group-hover:scale-105 transition overflow-hidden">
                     <img id="today-out-thumb" src="" alt="Bukti Pulang" class="w-full h-full object-cover hidden">
-                    <i data-lucide="camera" class="w-4 h-4 text-slate-400" id="today-out-cam-icon"></i>
+                    <i data-lucide="clock" class="w-5 h-5 text-slate-400" id="today-out-cam-icon"></i>
                   </div>
                 </div>
               </div>
@@ -459,9 +459,9 @@
 
             <!-- Sleek Action Shortcut -->
             <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center">
-              <span class="text-[11px] text-slate-400">Wajib gunakan live kamera</span>
+              <span class="text-[11px] text-slate-400">Verifikasi lokasi geofencing</span>
               <button onclick="switchTab('presensi')" class="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1.5">
-                <i data-lucide="camera" class="w-3.5 h-3.5"></i> Buka Kamera Presensi
+                <i data-lucide="clock" class="w-3.5 h-3.5"></i> Buka Online Attendance
               </button>
             </div>
           </div>
@@ -483,174 +483,155 @@
         </div>
       </section>
 
-      <!-- ==================== TAB 2: PRESENSI KAMERA & GEOTAG WATERMARK ==================== -->
-      <section id="view-presensi" class="hidden space-y-4 max-w-xl mx-auto">
-        <!-- Header View -->
-        <div class="flex items-center justify-between pb-2 border-b border-slate-200">
-          <div class="flex items-center gap-3">
-            <button onclick="switchTab('dashboard')" class="p-2 rounded-lg hover:bg-slate-200 text-slate-700 transition" aria-label="Kembali ke Dashboard">
-              <i data-lucide="arrow-left" class="w-5 h-5"></i>
+      <!-- ==================== TAB 2: ONLINE ATTENDANCE (NO-PHOTO ENTERPRISE HR FLOW) ==================== -->
+      <section id="view-presensi" class="hidden max-w-md mx-auto pb-6">
+
+        <!-- ==================== SUB-SCREEN 1: ONLINE ATTENDANCE OVERVIEW (IMAGE 2) ==================== -->
+        <div id="presensi-screen-overview" class="space-y-4">
+          <!-- Top App Bar -->
+          <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+            <button onclick="switchTab('dashboard')" class="p-2 -ml-2 rounded-xl hover:bg-slate-100 text-slate-700 transition" aria-label="Kembali ke Dashboard">
+              <i data-lucide="chevron-left" class="w-6 h-6"></i>
             </button>
-            <div>
-              <h3 class="font-extrabold text-slate-900 text-lg">Presensi Kamera</h3>
-              <p class="text-xs text-slate-500">Live Camera Stream + Automated Geotag Watermark</p>
+            <h3 class="font-extrabold text-slate-900 text-lg">Online Attendance</h3>
+            <div class="w-8"></div>
+          </div>
+
+          <!-- Card 1: Big Live Digital Clock & Date (Image 2) -->
+          <div class="bg-white rounded-3xl p-6 shadow-xs border border-slate-100 text-center space-y-1.5">
+            <h2 id="online-att-time" class="text-4xl sm:text-5xl font-extrabold text-[#1d4ed8] tracking-tight font-mono">
+              09:06
+            </h2>
+            <p id="online-att-date" class="text-xs sm:text-sm font-semibold text-slate-500">
+              Friday, November 13th 2026
+            </p>
+          </div>
+
+          <!-- Card 2 & 3: Clock In & Clock Out Status Boxes (Image 2) -->
+          <div class="grid grid-cols-2 gap-3.5">
+            <!-- Clock In Card -->
+            <div class="bg-white rounded-3xl p-4 shadow-xs border border-slate-100 flex flex-col justify-between h-28 sm:h-32">
+              <span class="text-xs font-bold text-[#1d4ed8]">Clock In</span>
+              <span id="online-att-in-val" class="text-2xl sm:text-3xl font-extrabold text-[#1d4ed8] tracking-tight">
+                --:--
+              </span>
+              <div></div>
+            </div>
+
+            <!-- Clock Out Card -->
+            <div class="bg-white rounded-3xl p-4 shadow-xs border border-slate-100 flex flex-col justify-between h-28 sm:h-32">
+              <span class="text-xs font-bold text-[#1d4ed8]">Clock Out</span>
+              <span id="online-att-out-val" class="text-2xl sm:text-3xl font-extrabold text-[#1d4ed8] tracking-tight">
+                :
+              </span>
+              <div></div>
             </div>
           </div>
-        </div>
 
-        <!-- Clock Type Switcher (IN vs OUT) -->
-        <div class="bg-slate-200/80 p-1.5 rounded-2xl flex gap-1.5 shadow-inner">
-          <button id="type-btn-in" onclick="setActiveAttendanceType('IN')" class="flex-1 py-2.5 rounded-xl text-xs font-extrabold transition-all bg-blue-600 text-white shadow-sm flex items-center justify-center gap-2">
-            <i data-lucide="log-in" class="w-4 h-4"></i>
-            <span>Absen Masuk (Clock IN)</span>
-          </button>
-          <button id="type-btn-out" onclick="setActiveAttendanceType('OUT')" class="flex-1 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 transition-all flex items-center justify-center gap-2">
-            <i data-lucide="log-out" class="w-4 h-4"></i>
-            <span>Absen Pulang (Clock OUT)</span>
-          </button>
-        </div>
-
-        <!-- Radius Status Strip (PRD Compliant: Green <= Radius, Red > Radius) -->
-        <div id="camera-radius-status" class="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center justify-between text-xs font-bold transition">
-          <div class="flex items-center gap-2">
-            <i data-lucide="map-pin" class="w-4 h-4 text-emerald-600"></i>
-            <span id="camera-radius-msg">Anda berada dalam radius workshop (<span id="cam-distance-text">12 m</span>)</span>
+          <!-- Geofence & Location Info Pill -->
+          <div class="p-3.5 rounded-2xl bg-blue-50/70 border border-blue-100 flex items-center justify-between text-xs">
+            <div class="flex items-center gap-2.5">
+              <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
+              <div>
+                <p class="font-bold text-slate-800">Workshop Astra Daihatsu A. Yani</p>
+                <p class="text-[11px] text-slate-500" id="online-att-gps-status">Jarak: 0 m • Dalam Radius Bengkel</p>
+              </div>
+            </div>
+            <button onclick="checkGPS(true)" class="text-[11px] font-bold text-blue-600 hover:text-blue-700 underline">
+              Cek GPS
+            </button>
           </div>
-          <span id="camera-radius-icon" class="px-2 py-0.5 rounded-md bg-emerald-200/60 text-emerald-800 text-[10px] uppercase font-bold">Valid IN</span>
+
+          <!-- Bottom Action Button (Image 2) -->
+          <div class="pt-2">
+            <button id="btn-online-att-action" onclick="handlePrimaryAttendanceAction()" class="w-full py-4 bg-[#0d59a8] hover:bg-[#0b4a8c] active:scale-[0.98] text-white rounded-2xl font-bold text-base shadow-lg shadow-blue-700/25 transition flex items-center justify-center gap-2">
+              <span id="btn-online-att-label">Clock In</span>
+            </button>
+          </div>
         </div>
 
-        <!-- Geofence Block Callout for Clock IN (With Direct Calibration Action) -->
-        <div id="clock-in-blocker-callout" class="hidden p-3.5 rounded-xl bg-red-100 border border-red-300 text-red-900 text-xs">
-          <div class="flex items-start gap-2.5">
-            <i data-lucide="alert-octagon" class="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5"></i>
-            <div class="space-y-1.5 flex-1">
-              <p class="font-extrabold">Clock IN Terkunci (Di Luar Radius)!</p>
-              <p class="text-[11px] text-red-700">
-                Posisi Anda terdeteksi berjarak <span id="blocker-dist-val" class="font-bold">...</span> meter dari titik pusat workshop.
+        <!-- ==================== SUB-SCREEN 2: CLOCK IN / OUT DETAILS & LOCATION (IMAGE 1) ==================== -->
+        <div id="presensi-screen-detail" class="hidden space-y-4">
+          <!-- Top App Bar -->
+          <div class="flex items-center justify-between pb-2 border-b border-slate-200">
+            <button onclick="backToAttendanceOverview()" class="p-2 -ml-2 rounded-xl hover:bg-slate-100 text-slate-700 transition" aria-label="Kembali">
+              <i data-lucide="chevron-left" class="w-6 h-6"></i>
+            </button>
+            <h3 id="clock-flow-title" class="font-extrabold text-slate-900 text-lg">Clock In</h3>
+            <div class="w-8"></div>
+          </div>
+
+          <!-- Card 1: Time & Working Date (Image 1) -->
+          <div class="bg-white rounded-3xl p-5 shadow-xs border border-slate-100 space-y-3.5">
+            <h4 id="clock-flow-type-lbl" class="font-bold text-sm text-[#1d4ed8]">Clock In</h4>
+            
+            <div>
+              <p id="clock-flow-time-lbl" class="text-xs font-semibold text-slate-400">Time In</p>
+              <p id="clock-flow-datetime" class="text-sm font-bold text-slate-800 mt-1">
+                November 13, 2026   07:48
               </p>
-              <div class="pt-1 flex flex-wrap gap-2">
-                <button onclick="calibrateCurrentLocation()" class="px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold text-[11px] flex items-center gap-1 shadow-xs transition">
-                  <i data-lucide="crosshair" class="w-3.5 h-3.5"></i>
-                  <span>Kalibrasi: Saya Sedang di Bengkel</span>
-                </button>
-                <button onclick="switchTab('pengaturan')" class="px-2.5 py-1.5 bg-white hover:bg-slate-100 text-slate-700 rounded-lg font-bold text-[11px] border border-slate-300 transition">
-                  Atur Radius di Pengaturan
-                </button>
+            </div>
+
+            <div class="pt-1">
+              <p class="text-xs font-semibold text-slate-400">Working Date</p>
+              <div class="flex justify-between items-center pb-2 border-b border-slate-200 mt-1">
+                <span id="clock-flow-working-date" class="text-sm font-semibold text-slate-800">
+                  November 13, 2026
+                </span>
+                <i data-lucide="calendar" class="w-4 h-4 text-slate-400"></i>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- CAMERA VIEWFINDER & WATERMARK CONTAINER -->
-        <div class="relative w-full aspect-[4/3] bg-black rounded-2xl overflow-hidden shadow-xl border border-slate-200 flex items-center justify-center">
-          
-          <!-- Live Video Stream -->
-          <video id="webcam" autoplay playsinline class="w-full h-full object-cover"></video>
-          
-          <!-- Fallback Dealership Image when webcam is idle or blocked -->
-          <img id="webcam-fallback" src="Image/Picture-Hero.png" alt="Simulasi Workshop" class="hidden absolute inset-0 w-full h-full object-cover object-right">
+          <!-- Card 2: Location Map (Image 1) -->
+          <div class="bg-white rounded-3xl p-5 shadow-xs border border-slate-100 space-y-3">
+            <h4 class="font-bold text-sm text-[#1d4ed8]">Location</h4>
 
-          <!-- Frozen Canvas Preview (Hidden until captured) -->
-          <canvas id="photo-canvas" class="hidden w-full h-full object-cover"></canvas>
+            <!-- Map View Container with Roadmaps & Google Pin -->
+            <div class="relative w-full h-52 sm:h-56 rounded-2xl overflow-hidden border border-slate-200 shadow-inner bg-slate-100 isolate">
+              <div id="clock-flow-leaflet-map" class="absolute inset-0 w-full h-full z-0"></div>
 
-          <!-- Framing Viewfinder Corner Brackets -->
-          <div id="camera-guide" class="absolute inset-0 pointer-events-none">
-            <div class="corner-bracket bracket-tl"></div>
-            <div class="corner-bracket bracket-tr"></div>
-            <div class="corner-bracket bracket-bl"></div>
-            <div class="corner-bracket bracket-br"></div>
-          </div>
-
-          <!-- Live Watermark Overlay (Authentic GPS Map Camera Style) -->
-          <div id="watermark-overlay" class="absolute bottom-2 inset-x-2 bg-[#12161f]/92 backdrop-blur-md text-white p-3 rounded-2xl border border-white/15 shadow-2xl select-none flex items-center gap-3">
-            
-            <!-- Badge GPS Map Camera di pojok kanan atas card -->
-            <div class="absolute top-2 right-2.5 flex items-center gap-1 bg-black/60 border border-white/10 px-2 py-0.5 rounded-full text-[8.5px] font-bold text-slate-300 pointer-events-none">
-              <i data-lucide="camera" class="w-2.5 h-2.5 text-cyan-400"></i>
-              <span>GPS Map Camera</span>
-            </div>
-
-            <!-- Arrow 1: Real Satellite Map Snippet with 3D Google Red Pin -->
-            <div class="relative w-22 h-22 sm:w-24 sm:h-24 rounded-xl overflow-hidden border border-white/20 bg-slate-900 shadow-md flex-shrink-0 flex items-center justify-center">
-              <img id="wm-live-sat-img" src="" alt="Satellite View" class="w-full h-full object-cover">
-              <!-- Google Red Drop Pin Centered -->
-              <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <!-- Google Red Drop Pin Centered on Map -->
+              <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
                 <div class="relative flex flex-col items-center">
-                  <svg class="w-6 h-6 text-[#ea4335] drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] -translate-y-1" viewBox="0 0 24 24" fill="currentColor">
+                  <svg class="w-8 h-8 text-[#ea4335] drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)] -translate-y-2" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                   </svg>
-                  <div class="w-3 h-1 bg-black/70 rounded-full blur-[1px] -mt-1"></div>
+                  <div class="w-3.5 h-1.5 bg-black/50 rounded-full blur-[1px] -mt-2"></div>
                 </div>
               </div>
-              <!-- Google text watermark at bottom-left -->
-              <span class="absolute bottom-1 left-1.5 text-[8.5px] font-bold tracking-tight text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">Google</span>
+
+              <!-- Watermark Google di pojok kiri bawah peta -->
+              <span class="absolute bottom-1.5 left-2 z-10 text-[9px] font-bold text-slate-700 bg-white/80 px-1.5 py-0.5 rounded shadow-xs">
+                Google
+              </span>
             </div>
 
-            <!-- Arrow 2: Real Reverse Geocoded Info & Coordinates -->
-            <div class="flex-1 min-w-0 space-y-0.5 text-left pr-16 sm:pr-20">
-              <!-- Baris 1: Judul Kecamatan, Daerah, Indonesia -->
-              <p class="text-[12px] sm:text-[13px] font-bold text-white truncate leading-tight" id="wm-geo-title">
-                Kecamatan Tanjung Karang Pusat, Lampung, Indonesia
-              </p>
+            <!-- Address & Coordinates text -->
+            <p id="clock-flow-address-text" class="text-[11px] leading-relaxed text-slate-600 font-medium">
+              H7J3+4GQ, Jl. S. Parman, Palapa, Kec. Tj. Karang Pusat, Kota Bandar Lampung, Lampung 35213, Indonesia (-5.419734, 105.2539566)
+            </p>
 
-              <!-- Baris 2: Plus Code & Alamat Lengkap Riil -->
-              <p class="text-[9.5px] sm:text-[10px] text-slate-200 line-clamp-2 leading-tight" id="wm-geo-address">
-                H7H3+84, Jl. Ahmad Yani No. 1, Palapa, Kec. Tanjung Karang Pusat, Kota Bandar Lampung, Lampung 35119, Indonesia
-              </p>
-
-              <!-- Baris 3: Koordinat Presisi dengan Simbol Derajat -->
-              <p class="text-[9.5px] sm:text-[10px] text-slate-300 font-mono tracking-wide truncate" id="wm-geo-coords">
-                Lat -5.421700° Long 105.252800°
-              </p>
-
-              <!-- Baris 4: Waktu Format GPS Map Camera (GMT+07:00) -->
-              <p class="text-[9.5px] sm:text-[10px] text-slate-300 font-mono truncate" id="wm-geo-time">
-                13/11/2026 08:15:30 AM GMT+07:00
-              </p>
-
-              <!-- Baris 5: Status Presensi & Profil PKL -->
-              <div class="flex items-center gap-1.5 pt-0.5 flex-wrap">
-                <span id="wm-badge" class="px-2 py-0.5 rounded text-[8.5px] font-black bg-emerald-500 text-white tracking-wider">
-                  CLOCK IN
-                </span>
-                <span class="text-[9.5px] font-semibold text-blue-300 truncate" id="wm-user-tag">
-                  Mekanik Magang PKL • Astra Daihatsu
-                </span>
-              </div>
+            <!-- Geofencing Radius Callout -->
+            <div id="clock-flow-geofence-alert" class="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center justify-between">
+              <span id="clock-flow-geofence-msg">✅ Lokasi Valid: Terverifikasi di area workshop Astra Daihatsu (0 m)</span>
+              <button onclick="calibrateCurrentLocation()" class="text-[10px] underline font-bold text-emerald-700 hover:text-emerald-900">
+                Kalibrasi
+              </button>
             </div>
+          </div>
 
+          <!-- Bottom Action Buttons (Image 1 Back & Confirm) -->
+          <div class="space-y-2.5 pt-2">
+            <button id="btn-submit-attendance" onclick="submitAttendance()" class="w-full py-4 bg-[#0d59a8] hover:bg-[#0b4a8c] active:scale-[0.98] text-white rounded-2xl font-bold text-base shadow-lg shadow-blue-700/25 transition flex items-center justify-center gap-2">
+              <span id="btn-submit-attendance-label">Confirm Clock In</span>
+            </button>
+            <button onclick="backToAttendanceOverview()" class="w-full py-3.5 bg-white hover:bg-slate-100 text-slate-700 rounded-2xl font-bold text-sm border border-slate-200 transition">
+              Back
+            </button>
           </div>
         </div>
 
-        <!-- Camera Control & Action Buttons -->
-        <div class="space-y-2.5">
-          <!-- Button Group: When Camera is Active -->
-          <div id="btn-group-capture" class="flex gap-2.5">
-            <button onclick="captureSnapshot()" id="btn-capture-action" class="flex-1 py-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-md shadow-blue-600/30 transition">
-              <i data-lucide="camera" class="w-4 h-4"></i>
-              <span>Ambil Foto Presensi</span>
-            </button>
-            <button onclick="toggleCameraFacing()" class="p-3.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl transition" title="Ganti Kamera Depan/Belakang">
-              <i data-lucide="switch-camera" class="w-5 h-5"></i>
-            </button>
-          </div>
-
-          <!-- Button Group: When Photo is Captured -->
-          <div id="btn-group-confirm" class="hidden flex gap-2.5">
-            <button onclick="retakePhoto()" class="flex-1 py-3.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl font-bold text-xs transition flex items-center justify-center gap-1.5">
-              <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
-              <span>Ulangi Foto</span>
-            </button>
-            <button onclick="submitAttendance()" id="btn-submit-absen" class="flex-2 py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-emerald-600/30 transition">
-              <i data-lucide="send" class="w-4 h-4"></i>
-              <span>Kirim Presensi Sekarang</span>
-            </button>
-          </div>
-
-          <p class="text-[11px] text-center text-slate-400">
-            Watermark dicetak langsung ke canvas foto secara permanen sebelum pengiriman data.
-          </p>
-        </div>
       </section>
 
       <!-- ==================== TAB 3: PENGAJUAN IZIN / SAKIT ==================== -->
@@ -1156,10 +1137,10 @@
         <span class="text-[10px] mt-0.5 tracking-tight">Izin/Sakit</span>
       </button>
 
-      <!-- 3. Presensi Kamera (Prominent Floating iOS Center Trigger) -->
+      <!-- 3. Online Attendance (Prominent Floating iOS Center Trigger) -->
       <button onclick="switchTab('presensi')" id="bnav-presensi" class="bnav-item flex-1 flex flex-col items-center justify-center -translate-y-3.5 transition-all duration-200 active:scale-90 group">
         <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-500 text-white flex items-center justify-center shadow-lg shadow-blue-600/45 border-2 border-white ring-2 ring-blue-500/20 transition transform group-hover:scale-105">
-          <i data-lucide="camera" class="w-5 h-5 drop-shadow-xs"></i>
+          <i data-lucide="clock" class="w-5 h-5 drop-shadow-xs"></i>
         </div>
         <span class="text-[10px] font-black text-blue-600 mt-0.5 tracking-tight">Presensi</span>
       </button>
@@ -2243,6 +2224,8 @@
       checkGPS(false);
       setInterval(updateLiveClock, 1000);
       updateLiveClock();
+      setInterval(updateOnlineAttendanceUI, 1000);
+      updateOnlineAttendanceUI();
       renderDashboardStats();
       renderRekapTable();
     });
@@ -2522,6 +2505,12 @@
       if (geoTime) {
         geoTime.innerText = formatGpsTimestamp(new Date());
       }
+
+      const clockAddrEl = document.getElementById('clock-flow-address-text');
+      if (clockAddrEl && realLocationData.address) {
+        const pc = realLocationData.plusCode ? `${realLocationData.plusCode.toUpperCase()}, ` : '';
+        clockAddrEl.innerText = `${pc}${realLocationData.address} (${userLocation.lat.toFixed(6)}, ${userLocation.lng.toFixed(7)})`;
+      }
     }
 
     // --- 4. FORMULA HAVERSINE SESUAI PRD SEKSI 2 & 4.1 ---
@@ -2662,6 +2651,31 @@
         }
       }
 
+      // Update Online Attendance Overview Pill (Screen 1)
+      const onlineGpsPill = document.getElementById('online-att-gps-status');
+      if (onlineGpsPill) {
+        onlineGpsPill.innerText = isInside 
+          ? `Jarak: ${distance} m • Dalam Radius Bengkel` 
+          : `Jarak: ${distance} m • Di Luar Radius Bengkel`;
+      }
+
+      // Update Geofence Alert in Screen 2
+      const geofenceAlert = document.getElementById('clock-flow-geofence-alert');
+      const geofenceMsg = document.getElementById('clock-flow-geofence-msg');
+      if (geofenceAlert && geofenceMsg) {
+        if (activeAttendanceType === 'IN' && !isInside) {
+          geofenceAlert.className = "p-3 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs font-semibold flex items-center justify-between";
+          geofenceMsg.innerText = `⚠️ Di luar radius bengkel (${distance} m > ${workshopConfig.radiusMeters} m).`;
+        } else {
+          geofenceAlert.className = "p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center justify-between";
+          geofenceMsg.innerText = `✅ Lokasi Valid: Terverifikasi di area workshop Astra Daihatsu (${distance} m)`;
+        }
+      }
+
+      if (clockFlowMap) {
+        clockFlowMap.setView([userLocation.lat, userLocation.lng], 17);
+      }
+
       updateWatermarkLabels();
       updateMapPositions();
       lucide.createIcons();
@@ -2705,12 +2719,9 @@
         if (indicator) indicator.classList.remove('hidden');
       }
 
-      if (tabId !== 'presensi' && mediaStream) {
-        stopCamera();
-      }
-
       if (tabId === 'presensi') {
-        startCamera();
+        backToAttendanceOverview();
+        updateOnlineAttendanceUI();
         checkGPS(false);
       }
 
@@ -2730,7 +2741,7 @@
 
       const titles = {
         dashboard: { title: 'Dashboard', sub: 'Sistem Presensi Geofencing PKL Astra Daihatsu Ahmad Yani' },
-        presensi: { title: 'Presensi Kamera', sub: 'Live Camera Stream + Automated Geotag Watermark' },
+        presensi: { title: 'Online Attendance', sub: 'Presensi Kehadiran Geofencing Mobile' },
         izin: { title: 'Pengajuan Izin / Sakit', sub: 'Formulir ketidakhadiran mekanik magang PKL' },
         rekap: { title: 'Rekapitulasi Kehadiran', sub: 'Laporan kehadiran & perizinan magang teknisi bengkel' },
         pengaturan: { title: 'Pengaturan & Geofencing', sub: 'Profil siswa magang, kalibrasi titik bengkel, dan server' }
@@ -2768,362 +2779,237 @@
       lucide.createIcons();
     }
 
-    function openPresensiDirect(type) {
-      setActiveAttendanceType(type);
-      switchTab('presensi');
+    // =======================================================================
+    // ONLINE ATTENDANCE (NO-PHOTO ENTERPRISE HR MODULE)
+    // Sesuai Spesifikasi Desain Klien (Image 1 & Image 2)
+    // =======================================================================
+    let clockFlowMap = null;
+
+    // Helper tanggal Bahasa Inggris dengan akhiran 'th', 'st', 'nd', 'rd' (Image 2)
+    function formatEnglishDateWithSuffix(date) {
+      const d = date || new Date();
+      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      const dayName = days[d.getDay()];
+      const monthName = months[d.getMonth()];
+      const dayNum = d.getDate();
+      let suffix = 'th';
+      if (dayNum % 10 === 1 && dayNum !== 11) suffix = 'st';
+      else if (dayNum % 10 === 2 && dayNum !== 12) suffix = 'nd';
+      else if (dayNum % 10 === 3 && dayNum !== 13) suffix = 'rd';
+      return `${dayName}, ${monthName} ${dayNum}${suffix} ${d.getFullYear()}`;
     }
 
-    // --- 7. MODUL KAMERA & CANVAS WATERMARKING (PRD SEKSI 4.2) ---
-    async function startCamera() {
-      // Pastikan satellite tile & alamat riil langsung termuat untuk viewfinder
-      loadSatelliteTile(userLocation.lat, userLocation.lng);
-      fetchRealAddress(userLocation.lat, userLocation.lng);
-      updateWatermarkLabels();
+    // Helper tanggal ringkas: 'November 13, 2026' (Image 1)
+    function formatEnglishDateShort(date) {
+      const d = date || new Date();
+      const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+    }
 
-      try {
-        if (mediaStream) stopCamera();
+    // Ambil log kehadiran hari ini
+    function getTodayAttendanceRecord() {
+      const now = new Date();
+      const dateStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+      const logs = getAttendanceLogs();
+      const inLog = logs.find(l => l.tanggal === dateStr && l.tipe === 'IN');
+      const outLog = logs.find(l => l.tanggal === dateStr && l.tipe === 'OUT');
+      return { inLog, outLog, dateStr };
+    }
 
-        const constraints = {
-          video: {
-            facingMode: currentFacingMode,
-            width: { ideal: 1280 },
-            height: { ideal: 720 }
-          },
-          audio: false
-        };
-
-        mediaStream = await navigator.mediaDevices.getUserMedia(constraints);
-        const video = document.getElementById('webcam');
-        video.srcObject = mediaStream;
-        video.classList.remove('hidden');
-        document.getElementById('webcam-fallback').classList.add('hidden');
-        document.getElementById('photo-canvas').classList.add('hidden');
-        document.getElementById('camera-guide').classList.remove('hidden');
-        document.getElementById('watermark-overlay').classList.remove('hidden');
-        document.getElementById('btn-group-capture').classList.remove('hidden');
-        document.getElementById('btn-group-confirm').classList.add('hidden');
-      } catch (err) {
-        console.warn("Kamera device fisik tidak dapat diakses, beralih ke simulasi visual:", err);
-        const video = document.getElementById('webcam');
-        video.classList.add('hidden');
-        document.getElementById('webcam-fallback').classList.remove('hidden');
-        document.getElementById('photo-canvas').classList.add('hidden');
-        document.getElementById('camera-guide').classList.remove('hidden');
-        document.getElementById('watermark-overlay').classList.remove('hidden');
-        document.getElementById('btn-group-capture').classList.remove('hidden');
-        document.getElementById('btn-group-confirm').classList.add('hidden');
+    // Update Tampilan Screen 1: Online Attendance Overview (Image 2)
+    function updateOnlineAttendanceUI() {
+      const now = new Date();
+      
+      // 1. Digital Clock & Date
+      const timeEl = document.getElementById('online-att-time');
+      if (timeEl) {
+        timeEl.innerText = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace(/\./g, ':');
       }
-    }
-
-    function stopCamera() {
-      if (mediaStream) {
-        mediaStream.getTracks().forEach(track => track.stop());
-        mediaStream = null;
-      }
-    }
-
-    function toggleCameraFacing() {
-      currentFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
-      startCamera();
-    }
-
-    // Helper menggambar rounded rect dengan fallback browser lama
-    function drawCanvasRoundRect(c, x, y, width, height, radius) {
-      if (c.roundRect) {
-        c.beginPath();
-        c.roundRect(x, y, width, height, radius);
-        return;
-      }
-      const r = Math.min(radius, width / 2, height / 2);
-      c.beginPath();
-      c.moveTo(x + r, y);
-      c.arcTo(x + width, y, x + width, y + height, r);
-      c.arcTo(x + width, y + height, x, y + height, r);
-      c.arcTo(x, y + height, x, y, r);
-      c.arcTo(x, y, x + width, y, r);
-      c.closePath();
-    }
-
-    // Helper menggambar pin Google 3D Merah
-    function drawGooglePin(c, x, y, size = 26) {
-      const pinH = size;
-      const pinW = size * 0.72;
-      const r = pinW / 2;
-      const headY = y - pinH + r;
-
-      c.save();
-      // 1. Ground shadow beneath tip
-      c.fillStyle = 'rgba(0, 0, 0, 0.45)';
-      c.beginPath();
-      if (c.ellipse) {
-        c.ellipse(x, y + 2, r * 0.75, 2.5, 0, 0, Math.PI * 2);
-      } else {
-        c.arc(x, y + 2, 3, 0, Math.PI * 2);
-      }
-      c.fill();
-
-      // 2. Red Teardrop Body
-      c.fillStyle = '#ea4335';
-      c.beginPath();
-      c.moveTo(x, y);
-      c.bezierCurveTo(x - r * 0.85, y - pinH * 0.45, x - r, headY + r * 0.5, x - r, headY);
-      c.arc(x, headY, r, Math.PI, 0, false);
-      c.bezierCurveTo(x + r, headY + r * 0.5, x + r * 0.85, y - pinH * 0.45, x, y);
-      c.closePath();
-      c.fill();
-
-      c.strokeStyle = '#c5221f';
-      c.lineWidth = 1;
-      c.stroke();
-
-      // 3. White center dot inside head
-      c.fillStyle = '#ffffff';
-      c.beginPath();
-      c.arc(x, headY, r * 0.42, 0, Math.PI * 2);
-      c.fill();
-
-      c.restore();
-    }
-
-    // Render Enterprise Geotag Watermark (Otentik GPS Map Camera)
-    function renderWatermarkOnCanvas(ctx, w, h) {
-      ctx.save();
-
-      // Skala dinamis mengikuti resolusi gambar asli
-      const scale = Math.max(0.65, Math.min(1.5, Math.min(w, h) / 720));
-      const bannerH = Math.max(165, Math.round(h * 0.25));
-      const bannerY = h - bannerH;
-
-      // 1. Floating Card Translucent Charcoal (Sesuai Desain GPS Map Camera)
-      const cardMargin = Math.round(10 * scale);
-      const cardW = w - (cardMargin * 2);
-      const cardH = bannerH - (cardMargin * 2);
-      const cardX = cardMargin;
-      const cardY = bannerY + cardMargin;
-      const cardRadius = Math.round(14 * scale);
-
-      ctx.fillStyle = 'rgba(18, 22, 31, 0.92)';
-      drawCanvasRoundRect(ctx, cardX, cardY, cardW, cardH, cardRadius);
-      ctx.fill();
-
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
-      ctx.lineWidth = 1.2;
-      drawCanvasRoundRect(ctx, cardX, cardY, cardW, cardH, cardRadius);
-      ctx.stroke();
-
-      // Badge 'GPS Map Camera' di pojok kanan atas card
-      const camBadgeW = Math.round(105 * scale);
-      const camBadgeH = Math.round(18 * scale);
-      const camBadgeX = cardX + cardW - camBadgeW - Math.round(10 * scale);
-      const camBadgeY = cardY + Math.round(8 * scale);
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
-      drawCanvasRoundRect(ctx, camBadgeX, camBadgeY, camBadgeW, camBadgeH, Math.round(9 * scale));
-      ctx.fill();
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
-      ctx.lineWidth = 1;
-      drawCanvasRoundRect(ctx, camBadgeX, camBadgeY, camBadgeW, camBadgeH, Math.round(9 * scale));
-      ctx.stroke();
-
-      ctx.fillStyle = '#cbd5e1';
-      ctx.font = `bold ${Math.round(8.5 * scale)}px 'Plus Jakarta Sans', sans-serif`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText('📷 GPS Map Camera', camBadgeX + camBadgeW / 2, camBadgeY + camBadgeH / 2 + 0.5);
-
-      // 2. Kotak Satellite Map Riil (Arrow 1: Satelit + Pin Google + Watermark Google)
-      const mapMargin = Math.round(10 * scale);
-      const mapH = cardH - (mapMargin * 2);
-      const mapW = mapH; // Kotak presisi
-      const mapX = cardX + mapMargin;
-      const mapY = cardY + mapMargin;
-      const mapRadius = Math.round(10 * scale);
-
-      ctx.save();
-      drawCanvasRoundRect(ctx, mapX, mapY, mapW, mapH, mapRadius);
-      ctx.clip();
-
-      const tile = getTileCoordinates(userLocation.lat, userLocation.lng, 17);
-
-      if (cachedSatImage && cachedSatImage.complete && cachedSatImage.naturalWidth > 0) {
-        const drawX = (mapX + mapW / 2) - tile.px;
-        const drawY = (mapY + mapH / 2) - tile.py;
-        ctx.drawImage(cachedSatImage, drawX, drawY, 256, 256);
-      } else {
-        // Fallback tekstur satelit pemandangan bumi beresolusi tinggi
-        ctx.fillStyle = '#1e2920';
-        ctx.fillRect(mapX, mapY, mapW, mapH);
-        ctx.fillStyle = '#39463a';
-        ctx.fillRect(mapX, mapY + mapH * 0.44, mapW, Math.round(20 * scale));
-        ctx.fillStyle = '#cbd5e1';
-        ctx.fillRect(mapX, mapY + mapH * 0.44, mapW, 1);
-        ctx.fillRect(mapX, mapY + mapH * 0.44 + Math.round(20 * scale), mapW, 1);
-        ctx.fillStyle = '#475569';
-        ctx.fillRect(mapX + mapW * 0.15, mapY + mapH * 0.15, Math.round(25 * scale), Math.round(20 * scale));
-        ctx.fillRect(mapX + mapW * 0.55, mapY + mapH * 0.65, Math.round(30 * scale), Math.round(25 * scale));
+      const dateEl = document.getElementById('online-att-date');
+      if (dateEl) {
+        dateEl.innerText = formatEnglishDateWithSuffix(now);
       }
 
-      // Watermark 'Google' di pojok kiri bawah peta
-      ctx.save();
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
-      ctx.shadowBlur = 4;
-      ctx.fillStyle = '#ffffff';
-      ctx.font = `bold ${Math.round(8.5 * scale)}px sans-serif`;
-      ctx.textAlign = 'left';
-      ctx.textBaseline = 'bottom';
-      ctx.fillText('Google', mapX + Math.round(5 * scale), mapY + mapH - Math.round(4 * scale));
-      ctx.restore();
+      // 2. Status Clock In & Clock Out Hari Ini
+      const { inLog, outLog } = getTodayAttendanceRecord();
+      
+      const inValEl = document.getElementById('online-att-in-val');
+      if (inValEl) {
+        inValEl.innerText = inLog ? inLog.waktu.slice(0, 5) : '--:--';
+      }
 
-      // Pin Merah 3D Google di tengah lokasi
-      drawGooglePin(ctx, mapX + mapW / 2, mapY + mapH / 2, Math.round(24 * scale));
+      const outValEl = document.getElementById('online-att-out-val');
+      if (outValEl) {
+        outValEl.innerText = outLog ? outLog.waktu.slice(0, 5) : ':';
+      }
 
-      ctx.restore();
+      // 3. Status Geofence Pill
+      const gpsPill = document.getElementById('online-att-gps-status');
+      if (gpsPill) {
+        const radStatus = userLocation.isInside 
+          ? `Jarak: ${userLocation.distance} m • Dalam Radius Bengkel` 
+          : `Jarak: ${userLocation.distance} m • Di Luar Radius`;
+        gpsPill.innerText = radStatus;
+      }
 
-      // Border frame kotak satelit
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
-      ctx.lineWidth = 1.2;
-      drawCanvasRoundRect(ctx, mapX, mapY, mapW, mapH, mapRadius);
-      ctx.stroke();
-
-      // 3. Information Typography & Details (Arrow 2)
-      const infoX = mapX + mapW + Math.round(12 * scale);
-      const infoW = cardX + cardW - infoX - Math.round(12 * scale);
-      const infoY = cardY + Math.round(10 * scale);
-      const lineGap = (cardH - Math.round(20 * scale)) / 4.4;
-
-      function fitText(txt, maxW) {
-        if (!txt) return '';
-        if (ctx.measureText(txt).width <= maxW) return txt;
-        let t = txt;
-        while (t.length > 0 && ctx.measureText(t + '...').width > maxW) {
-          t = t.slice(0, -1);
+      // 4. Tombol Aksi Utama (Image 2)
+      const btnAction = document.getElementById('btn-online-att-action');
+      const btnLabel = document.getElementById('btn-online-att-label');
+      if (btnAction && btnLabel) {
+        if (!inLog) {
+          btnLabel.innerText = "Clock In";
+          btnAction.className = "w-full py-4 bg-[#0d59a8] hover:bg-[#0b4a8c] active:scale-[0.98] text-white rounded-2xl font-bold text-base shadow-lg shadow-blue-700/25 transition flex items-center justify-center gap-2 cursor-pointer";
+        } else if (!outLog) {
+          btnLabel.innerText = "Clock Out";
+          btnAction.className = "w-full py-4 bg-[#0d59a8] hover:bg-[#0b4a8c] active:scale-[0.98] text-white rounded-2xl font-bold text-base shadow-lg shadow-blue-700/25 transition flex items-center justify-center gap-2 cursor-pointer";
+        } else {
+          btnLabel.innerText = "Attendance Completed ✓";
+          btnAction.className = "w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl font-bold text-base shadow-lg shadow-emerald-700/25 transition flex items-center justify-center gap-2 cursor-pointer";
         }
-        return t + '...';
       }
-
-      const isClockIn = activeAttendanceType === 'IN';
-
-      // Baris 1: Judul Kecamatan, Daerah, Indonesia (Arrow 2 Judul Tebal)
-      ctx.font = `bold ${Math.round(13 * scale)}px 'Plus Jakarta Sans', sans-serif`;
-      ctx.fillStyle = '#ffffff';
-      ctx.textAlign = 'left';
-      ctx.textBaseline = 'middle';
-      const titleText = realLocationData.title || 'Kecamatan Tanjung Karang Pusat, Lampung, Indonesia';
-      ctx.fillText(fitText(titleText, infoW - camBadgeW), infoX, infoY + Math.round(5 * scale));
-
-      // Baris 2: Plus Code & Alamat Lengkap Riil
-      const fullAddr = (realLocationData.plusCode ? realLocationData.plusCode.toUpperCase() + ', ' : '') + (realLocationData.address || '');
-      ctx.font = `500 ${Math.round(9.5 * scale)}px 'Plus Jakarta Sans', sans-serif`;
-      ctx.fillStyle = '#e2e8f0';
-      ctx.textAlign = 'left';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(fitText(fullAddr, infoW), infoX, infoY + lineGap);
-
-      // Baris 3: Koordinat Presisi dengan Simbol Derajat (Lat ...° Long ...°)
-      const coordsStr = `Lat ${userLocation.lat.toFixed(6)}° Long ${userLocation.lng.toFixed(6)}°`;
-      ctx.font = `500 ${Math.round(10 * scale)}px 'Plus Jakarta Sans', monospace`;
-      ctx.fillStyle = '#f1f5f9';
-      ctx.textAlign = 'left';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(fitText(coordsStr, infoW), infoX, infoY + (lineGap * 2));
-
-      // Baris 4: Waktu Format GPS Map Camera (DD/MM/YYYY hh:mm:ss AM/PM GMT+07:00)
-      const timeStr = formatGpsTimestamp(new Date());
-      ctx.font = `500 ${Math.round(10 * scale)}px 'Plus Jakarta Sans', monospace`;
-      ctx.fillStyle = '#f1f5f9';
-      ctx.textAlign = 'left';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(fitText(timeStr, infoW), infoX, infoY + (lineGap * 3));
-
-      // Baris 5: Status Presensi & Info Magang Daihatsu
-      const badgeText = isClockIn ? 'CLOCK IN' : 'CLOCK OUT';
-      ctx.font = `bold ${Math.round(9.5 * scale)}px 'Plus Jakarta Sans', sans-serif`;
-      const badgeTextW = ctx.measureText(badgeText).width;
-      const badgePadX = Math.round(7 * scale);
-      const badgeH = Math.round(17 * scale);
-      const badgeW = badgeTextW + (badgePadX * 2);
-      const badgeY = infoY + (lineGap * 4) - (badgeH / 2);
-
-      ctx.fillStyle = isClockIn ? '#10b981' : '#dc2626';
-      drawCanvasRoundRect(ctx, infoX, badgeY, badgeW, badgeH, Math.round(4 * scale));
-      ctx.fill();
-
-      ctx.fillStyle = '#ffffff';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(badgeText, infoX + badgeW / 2, badgeY + badgeH / 2 + 0.5);
-
-      const metaX = infoX + badgeW + Math.round(8 * scale);
-      const metaW = infoW - badgeW - Math.round(8 * scale);
-      const nimStr = (currentUser.nim && currentUser.nim !== '-') ? ` (${currentUser.nim})` : '';
-      const radStatus = userLocation.isInside ? `Radius: ${Math.round(userLocation.distance)}m Valid` : `Luar Radius: ${Math.round(userLocation.distance)}m`;
-      const metaText = `${currentUser.nama}${nimStr} • Astra Daihatsu (${radStatus})`;
-
-      ctx.font = `600 ${Math.round(10 * scale)}px 'Plus Jakarta Sans', sans-serif`;
-      ctx.fillStyle = '#93c5fd';
-      ctx.textAlign = 'left';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(fitText(metaText, metaW), metaX, badgeY + badgeH / 2);
-
-      ctx.restore();
     }
 
-    function captureSnapshot() {
-      // Validasi Pemblokir Geofencing untuk Clock IN
-      if (activeAttendanceType === 'IN' && !userLocation.isInside) {
-        showAppToast('Aksi Ditolak!', `Jarak Anda: ${userLocation.distance} meter dari bengkel.\nSesuai SOP, Clock IN wajib berada di dalam radius workshop (≤ ${workshopConfig.radiusMeters} m).\n\nJika Anda sudah berada di lokasi bengkel, silakan klik tombol 'Kalibrasi Titik Saya'.`, 'warning');
-        return;
-      }
-
-      const video = document.getElementById('webcam');
-      const canvas = document.getElementById('photo-canvas');
-      const ctx = canvas.getContext('2d');
-      const fallbackImg = document.getElementById('webcam-fallback');
-
-      const isVideoActive = !video.classList.contains('hidden') && video.videoWidth > 0;
-      const w = isVideoActive ? video.videoWidth : 1280;
-      const h = isVideoActive ? video.videoHeight : 960;
-      canvas.width = w;
-      canvas.height = h;
-
-      if (isVideoActive) {
-        ctx.drawImage(video, 0, 0, w, h);
+    // Handler klik tombol utama di Screen 1
+    function handlePrimaryAttendanceAction() {
+      const { inLog, outLog } = getTodayAttendanceRecord();
+      if (!inLog) {
+        openClockFlow('IN');
+      } else if (!outLog) {
+        openClockFlow('OUT');
       } else {
-        ctx.drawImage(fallbackImg, 0, 0, w, h);
+        showAppAlert("Anda sudah melakukan Clock IN dan Clock OUT untuk hari ini. Sampai jumpa di shift kerja berikutnya!", "Presensi Lengkap", "info");
+      }
+    }
+
+    // Membuka Screen 2: Detail Clock In / Out (Image 1)
+    function openClockFlow(type) {
+      activeAttendanceType = type;
+      
+      const screenOverview = document.getElementById('presensi-screen-overview');
+      const screenDetail = document.getElementById('presensi-screen-detail');
+      if (screenOverview) screenOverview.classList.add('hidden');
+      if (screenDetail) screenDetail.classList.remove('hidden');
+
+      const isClockIn = type === 'IN';
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace(/\./g, ':');
+
+      // Update Text Header & Labels
+      const titleEl = document.getElementById('clock-flow-title');
+      if (titleEl) titleEl.innerText = isClockIn ? "Clock In" : "Clock Out";
+
+      const typeLbl = document.getElementById('clock-flow-type-lbl');
+      if (typeLbl) typeLbl.innerText = isClockIn ? "Clock In" : "Clock Out";
+
+      const timeLbl = document.getElementById('clock-flow-time-lbl');
+      if (timeLbl) timeLbl.innerText = isClockIn ? "Time In" : "Time Out";
+
+      const datetimeEl = document.getElementById('clock-flow-datetime');
+      if (datetimeEl) {
+        datetimeEl.innerText = `${formatEnglishDateShort(now)}   ${timeStr}`;
       }
 
-      // Render Geotag Watermark Profesional dengan Vector Mini-Map Terintegrasi
-      renderWatermarkOnCanvas(ctx, w, h);
+      const workingDateEl = document.getElementById('clock-flow-working-date');
+      if (workingDateEl) {
+        workingDateEl.innerText = formatEnglishDateShort(now);
+      }
 
-      // Konversi canvas menjadi Base64 JPEG kualitas 0.70 (target payload <= 200 KB)
-      capturedImageBase64 = canvas.toDataURL('image/jpeg', 0.70);
+      const btnSubmitLbl = document.getElementById('btn-submit-attendance-label');
+      if (btnSubmitLbl) {
+        btnSubmitLbl.innerText = isClockIn ? "Confirm Clock In" : "Confirm Clock Out";
+      }
 
-      video.classList.add('hidden');
-      fallbackImg.classList.add('hidden');
-      canvas.classList.remove('hidden');
-      document.getElementById('camera-guide').classList.add('hidden');
-      document.getElementById('watermark-overlay').classList.add('hidden');
-      document.getElementById('btn-group-capture').classList.add('hidden');
-      document.getElementById('btn-group-confirm').classList.remove('hidden');
+      // Update Alamat & Koordinat Riil Sesuai Referensi Gambar
+      const addrEl = document.getElementById('clock-flow-address-text');
+      if (addrEl) {
+        const pc = realLocationData.plusCode ? `${realLocationData.plusCode.toUpperCase()}, ` : '';
+        addrEl.innerText = `${pc}${realLocationData.address} (${userLocation.lat.toFixed(6)}, ${userLocation.lng.toFixed(7)})`;
+      }
+
+      // Update Geofence Alert
+      const geofenceAlert = document.getElementById('clock-flow-geofence-alert');
+      const geofenceMsg = document.getElementById('clock-flow-geofence-msg');
+      if (geofenceAlert && geofenceMsg) {
+        if (isClockIn && !userLocation.isInside) {
+          geofenceAlert.className = "p-3 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs font-semibold flex items-center justify-between";
+          geofenceMsg.innerText = `⚠️ Di luar radius bengkel (${userLocation.distance} m > ${workshopConfig.radiusMeters} m).`;
+        } else {
+          geofenceAlert.className = "p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center justify-between";
+          geofenceMsg.innerText = `✅ Lokasi Valid: Terverifikasi di area workshop Astra Daihatsu (${userLocation.distance} m)`;
+        }
+      }
+
+      // Inisialisasi Peta Roadmap dengan Pin Google
+      setTimeout(() => {
+        initOrUpdateClockFlowMap();
+      }, 100);
+
+      lucide.createIcons();
     }
 
-    function retakePhoto() {
-      capturedImageBase64 = null;
-      startCamera();
+    // Kembali ke Screen 1: Online Attendance Overview
+    function backToAttendanceOverview() {
+      const screenOverview = document.getElementById('presensi-screen-overview');
+      const screenDetail = document.getElementById('presensi-screen-detail');
+      if (screenDetail) screenDetail.classList.add('hidden');
+      if (screenOverview) screenOverview.classList.remove('hidden');
+
+      updateOnlineAttendanceUI();
+      lucide.createIcons();
     }
 
-    // --- 8. SUBMIT PRESENSI KE GOOGLE APPS SCRIPT (PRD SEKSI 5.A) ---
+    // Inisialisasi Peta Roadmap Leaflet di Screen 2 (Image 1)
+    function initOrUpdateClockFlowMap() {
+      const mapContainer = document.getElementById('clock-flow-leaflet-map');
+      if (!mapContainer) return;
+
+      const lat = userLocation.lat;
+      const lng = userLocation.lng;
+
+      if (!clockFlowMap) {
+        clockFlowMap = L.map('clock-flow-leaflet-map', {
+          zoomControl: false,
+          attributionControl: false
+        }).setView([lat, lng], 17);
+
+        // Gunakan Tile CartoDB Voyager (Sangat Mirip Google Maps Roadmap)
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+          maxZoom: 19,
+          subdomains: 'abcd'
+        }).addTo(clockFlowMap);
+      } else {
+        clockFlowMap.setView([lat, lng], 17);
+        setTimeout(() => {
+          clockFlowMap.invalidateSize();
+        }, 150);
+      }
+    }
+
+    // Buka langsung dari tombol Dashboard
+    function openPresensiDirect(type) {
+      switchTab('presensi');
+      openClockFlow(type);
+    }
+
+    // --- SUBMIT PRESENSI ONLINE TANPA FOTO (SESUAI REQUEST KLIEN) ---
     async function submitAttendance() {
-      // Verifikasi Geofencing Sekali Lagi Sebelum Transmisi
       if (activeAttendanceType === 'IN' && !userLocation.isInside) {
-        alert(`Gagal Absen Masuk! Anda berada di jarak ${userLocation.distance} m (maksimal radius ${workshopConfig.radiusMeters} m).`);
+        showAppToast('Aksi Ditolak!', `Jarak Anda: ${userLocation.distance} meter dari bengkel. Clock IN wajib berada di dalam radius workshop (≤ ${workshopConfig.radiusMeters} m).\n\nJika Anda sudah berada di lokasi bengkel, silakan klik tombol 'Kalibrasi'.`, 'warning');
         return;
       }
 
-      const submitBtn = document.getElementById('btn-submit-absen');
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = `<span class="animate-spin inline-block mr-2">⏳</span> Mengunggah ke Server...`;
+      const submitBtn = document.getElementById('btn-submit-attendance');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<span class="animate-spin inline-block mr-2">⏳</span> Mengunggah ke Server...`;
+      }
 
-      // Status Radius berdasarkan PRD Sheet 2
+      const now = new Date();
+      const dateStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+      const timeShort = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace(/\./g, ':');
+      const timeFormatted = now.toLocaleTimeString('id-ID');
+
       let statusRadiusValue = 'VALID_IN';
       if (activeAttendanceType === 'IN') {
         statusRadiusValue = userLocation.isInside ? 'VALID_IN' : 'INVALID_IN';
@@ -3131,7 +3017,8 @@
         statusRadiusValue = userLocation.isInside ? 'VALID_OUT' : 'FLAG_OUT_RADIUS';
       }
 
-      const now = new Date();
+      const fullAddr = (realLocationData.plusCode ? realLocationData.plusCode.toUpperCase() + ', ' : '') + (realLocationData.address || '');
+
       const payload = {
         action: 'presensi',
         tipe: activeAttendanceType,
@@ -3143,11 +3030,12 @@
         jarak: userLocation.distance,
         statusRadius: statusRadiusValue,
         deviceTimestamp: now.toISOString(),
-        fotoBase64: capturedImageBase64,
+        fotoBase64: "-",
+        address: fullAddr,
         secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026"
       };
 
-      // 1. Transmisi ke Backend (Vercel Proxy / Google Apps Script)
+      // 1. Transmisi ke Backend Vercel / Google Apps Script
       let backendSuccess = false;
       const targetApi = currentUser.apiUrl || '/api/presensi';
       if (targetApi && (targetApi.startsWith('http') || targetApi.startsWith('/'))) {
@@ -3159,19 +3047,7 @@
             headers: { 'Content-Type': isProxy ? 'application/json' : 'text/plain;charset=utf-8' },
             body: JSON.stringify(payload)
           });
-          if (isProxy && res.ok) {
-            try {
-              const json = await res.json();
-              if (json.status === 'success') {
-                backendSuccess = true;
-                if (json.fileUrl && json.fileUrl.startsWith('http')) {
-                  newLog.photoUrl = json.fileUrl;
-                }
-              }
-            } catch (je) {
-              backendSuccess = true;
-            }
-          } else {
+          if (res.ok) {
             backendSuccess = true;
           }
         } catch (err) {
@@ -3180,45 +3056,50 @@
       }
 
       // 2. Simpan Transaksi ke Local Storage Offline-First
-      const dateStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
-      const timeFormatted = now.toLocaleTimeString('id-ID');
-      
       const newLog = {
         logId: `ABS-${dateStr.replace(/-/g,'')}-${currentUser.nim}-${activeAttendanceType}`,
         tanggal: dateStr,
-        waktu: timeFormatted,
+        waktu: timeShort,
+        waktuFull: timeFormatted,
         tipe: activeAttendanceType,
         jarak: userLocation.distance,
         statusRadius: statusRadiusValue,
-        photoUrl: capturedImageBase64
+        address: fullAddr,
+        coords: `${userLocation.lat.toFixed(6)}, ${userLocation.lng.toFixed(6)}`,
+        photoUrl: "-"
       };
 
       const logs = getAttendanceLogs();
       logs.unshift(newLog);
       localStorage.setItem('pkl_logs_presensi', JSON.stringify(logs));
 
-      // 3. Update Status Dashboard
+      // 3. Update Dashboard Stats
       if (activeAttendanceType === 'IN') {
-        document.getElementById('today-in-time').innerText = timeFormatted + ' WIB';
-        document.getElementById('today-in-status').innerText = `${statusRadiusValue} (${userLocation.distance}m)`;
-        if (capturedImageBase64) {
-          document.getElementById('today-in-thumb').src = capturedImageBase64;
-        }
+        const inTimeEl = document.getElementById('today-in-time');
+        const inStatusEl = document.getElementById('today-in-status');
+        if (inTimeEl) inTimeEl.innerText = timeShort + ' WIB';
+        if (inStatusEl) inStatusEl.innerText = `${statusRadiusValue} (${userLocation.distance}m)`;
       } else {
-        document.getElementById('today-out-time').innerText = timeFormatted + ' WIB';
-        document.getElementById('today-out-status').innerText = `${statusRadiusValue} (${userLocation.distance}m)`;
+        const outTimeEl = document.getElementById('today-out-time');
+        const outStatusEl = document.getElementById('today-out-status');
+        if (outTimeEl) outTimeEl.innerText = timeShort + ' WIB';
+        if (outStatusEl) outStatusEl.innerText = `${statusRadiusValue} (${userLocation.distance}m)`;
       }
 
-      submitBtn.disabled = false;
-      submitBtn.innerHTML = `<span>Kirim Presensi Sekarang</span>`;
-      
-      const serverMsg = currentUser.apiUrl ? (backendSuccess ? " & tersinkronisasi ke Google Spreadsheet & Google Drive!" : " (Disimpan secara lokal; periksa kembali URL Apps Script Anda)") : " (Tersimpan di perangkat lokal).";
-      showAppAlert(`Presensi [${activeAttendanceType}] Berhasil Tercatat!${serverMsg}`, "Presensi Berhasil", "success");
-      showAppToast(`Presensi ${activeAttendanceType} Berhasil!`, "success");
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = `<span>Confirm ${activeAttendanceType === 'IN' ? 'Clock In' : 'Clock Out'}</span>`;
+      }
+
+      const serverMsg = currentUser.apiUrl ? (backendSuccess ? " & tersinkronisasi ke Google Spreadsheet!" : " (Disimpan secara lokal; periksa kembali URL Apps Script Anda)") : " (Tersimpan di perangkat lokal).";
+      showAppAlert(`Berhasil ${activeAttendanceType === 'IN' ? 'Clock In' : 'Clock Out'} pukul ${timeShort}!${serverMsg}`, "Presensi Sukses", "success");
+      showAppToast(`Berhasil ${activeAttendanceType === 'IN' ? 'Clock In' : 'Clock Out'} pukul ${timeShort}!`, "success");
 
       renderDashboardStats();
       renderRekapTable();
-      switchTab('dashboard');
+
+      // Kembali ke layar Online Attendance
+      backToAttendanceOverview();
     }
 
     // --- 9. MODUL PENGAJUAN IZIN / SAKIT (PRD SEKSI 4.3 & 5.B) ---
@@ -3392,10 +3273,17 @@
           inStatus.className = "text-[10px] text-emerald-700 font-semibold";
           inStatus.innerText = `${todayIn.statusRadius} (${todayIn.jarak}m)`;
         }
-        if (todayIn.photoUrl && inThumb) {
+        if (todayIn.photoUrl && todayIn.photoUrl !== '-' && todayIn.photoUrl.length > 5 && inThumb) {
           inThumb.src = todayIn.photoUrl;
           inThumb.classList.remove('hidden');
           if (inCamIcon) inCamIcon.classList.add('hidden');
+        } else {
+          if (inThumb) inThumb.classList.add('hidden');
+          if (inCamIcon) {
+            inCamIcon.classList.remove('hidden');
+            inCamIcon.setAttribute('data-lucide', 'check-circle-2');
+            inCamIcon.className = "w-5 h-5 text-emerald-600";
+          }
         }
       } else {
         if (inBox) inBox.className = "cursor-pointer p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between transition hover:border-emerald-300 group";
@@ -3406,10 +3294,14 @@
         }
         if (inStatus) {
           inStatus.className = "text-[10px] text-slate-400 font-medium";
-          inStatus.innerText = "Klik untuk ambil foto presensi masuk";
+          inStatus.innerText = "Klik untuk Clock In";
         }
         if (inThumb) inThumb.classList.add('hidden');
-        if (inCamIcon) inCamIcon.classList.remove('hidden');
+        if (inCamIcon) {
+          inCamIcon.classList.remove('hidden');
+          inCamIcon.setAttribute('data-lucide', 'clock');
+          inCamIcon.className = "w-5 h-5 text-slate-400";
+        }
       }
 
       // Update Clock OUT UI
@@ -3431,10 +3323,17 @@
           outStatus.className = "text-[10px] text-blue-700 font-semibold";
           outStatus.innerText = `${todayOut.statusRadius} (${todayOut.jarak}m)`;
         }
-        if (todayOut.photoUrl && outThumb) {
+        if (todayOut.photoUrl && todayOut.photoUrl !== '-' && todayOut.photoUrl.length > 5 && outThumb) {
           outThumb.src = todayOut.photoUrl;
           outThumb.classList.remove('hidden');
           if (outCamIcon) outCamIcon.classList.add('hidden');
+        } else {
+          if (outThumb) outThumb.classList.add('hidden');
+          if (outCamIcon) {
+            outCamIcon.classList.remove('hidden');
+            outCamIcon.setAttribute('data-lucide', 'check-circle-2');
+            outCamIcon.className = "w-5 h-5 text-blue-600";
+          }
         }
       } else {
         if (outBox) outBox.className = "cursor-pointer p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between transition hover:border-blue-300 group";
@@ -3445,10 +3344,14 @@
         }
         if (outStatus) {
           outStatus.className = "text-[10px] text-slate-400 font-medium";
-          outStatus.innerText = "Klik untuk presensi selesai shift";
+          outStatus.innerText = "Klik untuk Clock Out";
         }
         if (outThumb) outThumb.classList.add('hidden');
-        if (outCamIcon) outCamIcon.classList.remove('hidden');
+        if (outCamIcon) {
+          outCamIcon.classList.remove('hidden');
+          outCamIcon.setAttribute('data-lucide', 'clock');
+          outCamIcon.className = "w-5 h-5 text-slate-400";
+        }
       }
 
       lucide.createIcons();
@@ -3524,8 +3427,8 @@
           formattedDate = d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
         } catch(e) {}
 
-        let buktiBtn = `<span class="text-slate-400">-</span>`;
-        if (item.buktiUrl && item.buktiUrl.length > 5) {
+        let buktiBtn = `<span class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">GPS Valid</span>`;
+        if (item.buktiUrl && item.buktiUrl.length > 5 && item.buktiUrl !== '-') {
           buktiBtn = `
             <button onclick="previewPhotoModal('${item.buktiUrl.replace(/'/g, "\\'")}', '${item.label}', '${item.tanggal}')" class="w-10 h-7 rounded-md overflow-hidden border border-slate-200 inline-block align-middle shadow-2xs hover:scale-105 transition" title="Lihat Bukti Foto">
               <img src="${item.buktiUrl}" alt="Bukti" class="w-full h-full object-cover">
