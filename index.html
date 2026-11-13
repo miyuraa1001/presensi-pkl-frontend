@@ -2907,7 +2907,7 @@
 
       const datetimeEl = document.getElementById('clock-flow-datetime');
       if (datetimeEl) {
-        datetimeEl.innerText = `${formatEnglishDateShort(now)}   ${timeStr}`;
+        datetimeEl.innerHTML = `${formatEnglishDateShort(now)}&nbsp;&nbsp;&nbsp;&nbsp;${timeStr}`;
       }
 
       const workingDateEl = document.getElementById('clock-flow-working-date');
@@ -2973,17 +2973,36 @@
           attributionControl: false
         }).setView([lat, lng], 17);
 
-        // Gunakan Tile CartoDB Voyager (Sangat Mirip Google Maps Roadmap)
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-          maxZoom: 19,
-          subdomains: 'abcd'
+        // Gunakan Tile Roadmap Google Maps Resmi (Bebas API Key & Sesuai Desain Klien)
+        L.tileLayer('https://mt{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+          maxZoom: 20,
+          subdomains: ['0', '1', '2', '3']
         }).addTo(clockFlowMap);
       } else {
+        // Hapus layer lama jika sebelumnya masih ter-cache CartoDB
+        clockFlowMap.eachLayer((layer) => {
+          if (layer._url && layer._url.includes('cartocdn')) {
+            clockFlowMap.removeLayer(layer);
+          }
+        });
+        let hasGoogle = false;
+        clockFlowMap.eachLayer((layer) => {
+          if (layer._url && layer._url.includes('google.com')) hasGoogle = true;
+        });
+        if (!hasGoogle) {
+          L.tileLayer('https://mt{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            subdomains: ['0', '1', '2', '3']
+          }).addTo(clockFlowMap);
+        }
         clockFlowMap.setView([lat, lng], 17);
-        setTimeout(() => {
-          clockFlowMap.invalidateSize();
-        }, 150);
       }
+
+      setTimeout(() => {
+        if (clockFlowMap) {
+          clockFlowMap.invalidateSize();
+        }
+      }, 150);
     }
 
     // Buka langsung dari tombol Dashboard
