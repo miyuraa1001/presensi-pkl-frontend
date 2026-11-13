@@ -360,14 +360,16 @@ function doPost(e) {
         const mRows = sheetMaster.getDataRange().getValues();
         for (let i = 1; i < mRows.length; i++) {
           if (mRows[i][0]) {
+            const is9Col = mRows[i].length >= 9;
             result.students.push({
               nim: mRows[i][0],
               nama: mRows[i][1] || "-",
               instansi: mRows[i][2] || "-",
               jurusan: mRows[i][3] || "-",
-              avatar: mRows[i][4] || "",
-              status: mRows[i][5] || "Aktif",
-              updatedAt: mRows[i][6] || ""
+              phone: is9Col ? (mRows[i][4] || "-") : "-",
+              avatar: is9Col ? (mRows[i][5] || "") : (mRows[i][4] || ""),
+              status: is9Col ? (mRows[i][7] || "Aktif Magang") : (mRows[i][5] || "Aktif Magang"),
+              updatedAt: is9Col ? (mRows[i][8] || "") : (mRows[i][6] || "")
             });
           }
         }
@@ -478,6 +480,93 @@ function doPost(e) {
         status: "success",
         message: `Presensi manual ${data.tipe} untuk ${data.nama} berhasil dicatat.`,
         logId: logId
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // ===================================================================
+    // 7. ACTION: REGISTRASI & LENGKAPI PROFIL PESERTA MAGANG BARU
+    // ===================================================================
+    if (data.action === "register_siswa") {
+      let avatarUrl = "-";
+
+      // Upload Foto Profil jika dikirim via base64
+      if (data.fotoBase64 && data.fotoBase64.startsWith("data:image")) {
+        try {
+          const folderProfil = DriveApp.getFolderById(FOLDER_PROFIL_ID);
+          const cleanBase64 = data.fotoBase64.replace(/^data:image\/(png|jpeg|jpg);base64,/, "");
+          const fileName = `REG_PROFIL_${data.nim}_${Date.now()}.jpg`;
+
+          const decodedBlob = Utilities.newBlob(
+            Utilities.base64Decode(cleanBase64),
+            "image/jpeg",
+            fileName
+          );
+          const file = folderProfil.createFile(decodedBlob);
+          file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+          avatarUrl = file.getUrl();
+        } catch (avatarErr) {
+          avatarUrl = "Error upload avatar: " + avatarErr.toString();
+        }
+      }
+
+      let sheetMaster = ss.getSheetByName("Master_PKL");
+      if (!sheetMaster) {
+        sheetMaster = createMasterPKLSheet(ss);
+      }
+
+      // Pastikan struktur header Master_PKL lengkap
+      // [NIM / NISN, Nama Lengkap Siswa, Asal Sekolah / Kampus, Jurusan / Keahlian, No. WhatsApp / HP, URL Foto Profil (Drive), Kata Sandi (Akun), Status Magang, Waktu Registrasi / Update]
+      const dataRows = sheetMaster.getDataRange().getValues();
+      let rowIndex = -1;
+      const targetNim = (data.nim || "").toString().trim();
+
+      for (let i = 1; i < dataRows.length; i++) {
+        if (dataRows[i][0] && dataRows[i][0].toString().trim() === targetNim) {
+          rowIndex = i + 1; // 1-based index
+          break;
+        }
+      }
+
+      const now = new Date();
+      const phone = data.phone || "-";
+      const pwd = data.password || "daihatsu123";
+
+      if (rowIndex > 1) {
+        // Siswa sudah ada -> Update profil lengkap
+        sheetMaster.getRange(rowIndex, 2).setValue(data.nama || "-");
+        sheetMaster.getRange(rowIndex, 3).setValue(data.instansi || "-");
+        sheetMaster.getRange(rowIndex, 4).setValue(data.jurusan || "-");
+        sheetMaster.getRange(rowIndex, 5).setValue(phone);
+        if (avatarUrl !== "-") {
+          sheetMaster.getRange(rowIndex, 6).setValue(avatarUrl);
+        }
+        sheetMaster.getRange(rowIndex, 7).setValue(pwd);
+        sheetMaster.getRange(rowIndex, 8).setValue("Aktif");
+        sheetMaster.getRange(rowIndex, 9).setValue(now);
+      } else {
+        // Pendaftaran Siswa Magang Baru
+        sheetMaster.appendRow([
+          data.nim || "-",
+          data.nama || "-",
+          data.instansi || "-",
+          data.jurusan || "-",
+          phone,
+          avatarUrl,
+          pwd,
+          "Aktif",
+          now
+        ]);
+      }
+
+      return ContentService.createTextOutput(JSON.stringify({
+        status: "success",
+        message: `Registrasi peserta magang ${data.nama} (NIM: ${data.nim}) berhasil disimpan ke database Astra Daihatsu.`,
+        nim: data.nim,
+        nama: data.nama,
+        instansi: data.instansi,
+        jurusan: data.jurusan,
+        phone: phone,
+        avatarUrl: avatarUrl
       })).setMimeType(ContentService.MimeType.JSON);
     }
 
@@ -606,9 +695,11 @@ function createMasterPKLSheet(ss) {
     "Nama Lengkap Siswa", 
     "Asal Sekolah / Kampus", 
     "Jurusan / Keahlian", 
+    "No. WhatsApp / HP",
     "URL Foto Profil (Drive)", 
+    "Kata Sandi (Akun)",
     "Status Magang", 
-    "Waktu Update Terakhir"
+    "Waktu Registrasi / Update"
   ];
   sheet.appendRow(headers);
   formatHeaderRow(sheet, headers.length, "#0d1a3a"); // Navy Daihatsu

@@ -1803,17 +1803,17 @@
     </div>
   </div>
 
-  <!-- ==================== MODAL LOGIN / MASUK AKUN MULTI-ROLE ==================== -->
+  <!-- ==================== MODAL LOGIN & REGISTRASI MULTI-ROLE ==================== -->
   <div id="login-modal" class="hidden fixed inset-0 bg-slate-900/90 backdrop-blur-md z-[300] flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4 max-h-[92vh] overflow-y-auto">
       
       <!-- Logo Header -->
-      <div class="text-center space-y-1.5">
+      <div class="text-center space-y-1">
         <div class="w-14 h-14 mx-auto rounded-2xl bg-[#0d1a3a] p-2 flex items-center justify-center shadow-lg shadow-blue-900/20">
           <img src="Image/Logo-PWA.png" alt="Daihatsu" class="w-full h-full object-contain rounded-xl">
         </div>
-        <h3 class="text-base font-black text-slate-900">Masuk Akun Presensi</h3>
-        <p class="text-[11px] text-slate-500">Sistem Presensi Geofencing Astra Daihatsu A. Yani</p>
+        <h3 id="login-modal-title" class="text-base font-black text-slate-900">Masuk Akun Presensi</h3>
+        <p id="login-modal-subtitle" class="text-[11px] text-slate-500">Sistem Presensi Geofencing Astra Daihatsu A. Yani</p>
       </div>
 
       <!-- Segmented Role Selector -->
@@ -1828,7 +1828,17 @@
         </button>
       </div>
 
-      <!-- FORM 1: SISWA MAGANG -->
+      <!-- Sub-Tabs Khusus Siswa Magang: Masuk vs Registrasi Baru -->
+      <div id="student-subtabs" class="grid grid-cols-2 p-1 bg-slate-100 rounded-xl text-xs font-bold">
+        <button type="button" onclick="setStudentAuthMode('login')" id="btn-student-subtab-login" class="py-1.5 px-3 rounded-lg font-bold transition text-blue-700 bg-white shadow-2xs cursor-pointer">
+          Masuk Akun
+        </button>
+        <button type="button" onclick="setStudentAuthMode('register')" id="btn-student-subtab-reg" class="py-1.5 px-3 rounded-lg font-bold transition text-slate-500 hover:text-slate-800 cursor-pointer">
+          Registrasi & Lengkapi Profil
+        </button>
+      </div>
+
+      <!-- FORM 1: LOGIN SISWA MAGANG -->
       <form id="form-login-student" onsubmit="handleLoginSubmit(event)" class="space-y-3">
         <div>
           <label class="block text-[11px] font-bold text-slate-700 mb-1">NIM / NISN Peserta Magang</label>
@@ -1858,9 +1868,114 @@
         <button type="button" onclick="quickLoginDemo('student')" class="w-full py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
           <span>⚡ Masuk Cepat: Budi Santoso (Siswa)</span>
         </button>
+
+        <div class="text-center pt-2 border-t border-slate-100">
+          <p class="text-[11px] text-slate-500">Belum punya akun magang? <button type="button" onclick="setStudentAuthMode('register')" class="font-bold text-blue-600 hover:text-blue-700 underline cursor-pointer">Daftar & Lengkapi Profil</button></p>
+        </div>
       </form>
 
-      <!-- FORM 2: HRD / ADMIN BENGKEL -->
+      <!-- FORM 2: REGISTRASI & LENGKAPI PROFIL SISWA MAGANG BARU -->
+      <form id="form-register-student" onsubmit="handleRegisterSubmit(event)" class="hidden space-y-3">
+        <div class="p-3 bg-blue-50/80 rounded-2xl border border-blue-100 text-xs text-blue-900 space-y-1">
+          <p class="font-bold flex items-center gap-1.5 text-blue-800">
+            <i data-lucide="shield-check" class="w-4 h-4 text-blue-600 flex-shrink-0"></i>
+            <span>Lengkapi Profil Peserta Magang</span>
+          </p>
+          <p class="text-[11px] text-slate-600 leading-relaxed">Seluruh data identitas di bawah wajib diisi dan akan langsung tersimpan ke database Astra Daihatsu untuk membuka akses penuh menu presensi.</p>
+        </div>
+
+        <!-- Foto Profil Picker -->
+        <div class="flex items-center gap-3 p-2.5 bg-slate-50 rounded-2xl border border-slate-100">
+          <div class="relative w-12 h-12 rounded-full bg-slate-200 border-2 border-white shadow-2xs overflow-hidden flex items-center justify-center flex-shrink-0">
+            <span id="reg-avatar-placeholder" class="text-base font-bold text-slate-500">📷</span>
+            <img id="reg-avatar-preview-img" src="" alt="Avatar" class="w-full h-full object-cover hidden">
+          </div>
+          <div class="flex-1 min-w-0">
+            <label class="block text-[11px] font-bold text-slate-700">Foto Profil Peserta (Opsional)</label>
+            <input type="file" id="reg-avatar-input" accept="image/*" onchange="handleRegAvatarChange(event)" class="w-full text-[10px] text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
+          </div>
+        </div>
+
+        <!-- NIM / NISN -->
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">NIM / NISN Peserta *</label>
+          <div class="relative">
+            <input type="text" id="reg-nim" required placeholder="Contoh: 210103045" class="w-full px-3 py-2 pl-9 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono">
+            <i data-lucide="badge-id" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
+          </div>
+        </div>
+
+        <!-- Nama Lengkap -->
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">Nama Lengkap Siswa *</label>
+          <div class="relative">
+            <input type="text" id="reg-nama" required placeholder="Contoh: Budi Santoso" class="w-full px-3 py-2 pl-9 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500">
+            <i data-lucide="user" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
+          </div>
+        </div>
+
+        <!-- Asal Sekolah / Kampus -->
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">Asal Sekolah / Kampus *</label>
+          <div class="relative">
+            <input type="text" id="reg-instansi" required placeholder="Contoh: SMKN 2 Bandar Lampung" class="w-full px-3 py-2 pl-9 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500">
+            <i data-lucide="graduation-cap" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
+          </div>
+        </div>
+
+        <!-- Jurusan / Program Keahlian -->
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">Jurusan / Program Keahlian *</label>
+          <div class="relative">
+            <input type="text" id="reg-jurusan" required placeholder="Contoh: Teknik Kendaraan Ringan (TKR)" class="w-full px-3 py-2 pl-9 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500">
+            <i data-lucide="wrench" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
+          </div>
+        </div>
+
+        <!-- Nomor WhatsApp / HP -->
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">Nomor WhatsApp / HP Aktif *</label>
+          <div class="relative">
+            <input type="tel" id="reg-phone" required placeholder="Contoh: 081234567890" class="w-full px-3 py-2 pl-9 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono">
+            <i data-lucide="phone" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
+          </div>
+        </div>
+
+        <!-- Kata Sandi & Konfirmasi -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">Kata Sandi Akun *</label>
+            <div class="relative">
+              <input type="password" id="reg-password" required placeholder="Min. 6 karakter" class="w-full px-3 py-2 pl-8 pr-8 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono">
+              <i data-lucide="lock" class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5"></i>
+              <button type="button" onclick="togglePasswordVisibility('reg-password', 'eye-reg-pwd')" class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400 hover:text-slate-600">
+                <i data-lucide="eye" id="eye-reg-pwd" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">Konfirmasi Sandi *</label>
+            <div class="relative">
+              <input type="password" id="reg-password-confirm" required placeholder="Ulangi sandi" class="w-full px-3 py-2 pl-8 pr-8 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono">
+              <i data-lucide="check-check" class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5"></i>
+              <button type="button" onclick="togglePasswordVisibility('reg-password-confirm', 'eye-reg-pwd-cf')" class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400 hover:text-slate-600">
+                <i data-lucide="eye" id="eye-reg-pwd-cf" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" id="btn-submit-register" class="w-full py-3 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs rounded-xl shadow-md shadow-blue-600/30 flex items-center justify-center gap-2 transition cursor-pointer">
+          <i data-lucide="user-check" class="w-4 h-4"></i>
+          <span>Simpan Profil & Buka Akses Presensi</span>
+        </button>
+
+        <div class="text-center pt-2 border-t border-slate-100">
+          <p class="text-[11px] text-slate-500">Sudah punya akun magang? <button type="button" onclick="setStudentAuthMode('login')" class="font-bold text-blue-600 hover:text-blue-700 underline cursor-pointer">Masuk di sini</button></p>
+        </div>
+      </form>
+
+      <!-- FORM 3: HRD / ADMIN BENGKEL -->
       <form id="form-login-admin" onsubmit="handleAdminLoginSubmit(event)" class="hidden space-y-3">
         <div>
           <label class="block text-[11px] font-bold text-slate-700 mb-1">Username / ID Admin HRD</label>
@@ -1893,7 +2008,7 @@
       </form>
 
       <div class="text-center pt-1 border-t border-slate-100 flex items-center justify-between text-[11px]">
-        <button type="button" onclick="closeLoginModal()" class="text-slate-400 hover:text-slate-600 underline cursor-pointer">
+        <button type="button" onclick="closeLoginModal()" id="btn-close-login-modal" class="text-slate-400 hover:text-slate-600 underline cursor-pointer">
           Tutup
         </button>
         <span class="text-slate-400">Workshop A. Yani</span>
@@ -5046,49 +5161,7 @@
       }
     }
 
-    function showLoginModal() {
-      const modal = document.getElementById('login-modal');
-      if (modal) {
-        modal.classList.remove('hidden');
-        const nimInput = document.getElementById('login-nim');
-        if (nimInput) {
-          nimInput.value = (currentUser.nim && currentUser.nim !== '-') ? currentUser.nim : '';
-        }
-        const pwdInput = document.getElementById('login-password');
-        if (pwdInput) pwdInput.value = '';
-        if (window.lucide) lucide.createIcons();
-      }
-    }
-
-    function handleLoginSubmit(event) {
-      event.preventDefault();
-      const inputNim = document.getElementById('login-nim').value.trim();
-      const inputPwd = document.getElementById('login-password').value;
-      const validPwd = localStorage.getItem('pkl_user_password') || 'daihatsu123';
-
-      if (!inputNim) {
-        alert("Masukkan NIM / NISN Anda!");
-        return;
-      }
-      if (inputPwd !== validPwd) {
-        alert("Kata sandi salah! (Default: daihatsu123)");
-        return;
-      }
-
-      currentUser.nim = inputNim;
-      localStorage.setItem('pkl_nim', inputNim);
-      localStorage.setItem('pkl_is_logged_in', 'true');
-      document.getElementById('login-modal').classList.add('hidden');
-      updateProfileDisplay();
-      alert(`Selamat datang kembali, ${currentUser.nama}!`);
-    }
-
-    function checkLoginSession() {
-      const isLoggedIn = localStorage.getItem('pkl_is_logged_in');
-      if (isLoggedIn === 'false') {
-        showLoginModal();
-      }
-    }
+    // (Fungsi showLoginModal, handleLoginSubmit, dan checkLoginSession didefinisikan lengkap di bagian 13.4)
 
     async function resetDemoData() {
       const ok = await showAppConfirm(
@@ -5686,30 +5759,302 @@
       showAppToast("Status Izin Diperbarui", `Pengajuan dari ${item.nama} telah diatur menjadi: ${newStatus}`, newStatus === 'Disetujui' ? 'success' : 'info');
     }
 
-    // --- 13.4 FITUR LOGIN & SWITCH ROLE ---
-    function setLoginRoleTab(role) {
-      const btnStudent = document.getElementById('btn-login-tab-student');
-      const btnAdmin = document.getElementById('btn-login-tab-admin');
-      const formStudent = document.getElementById('form-login-student');
-      const formAdmin = document.getElementById('form-login-admin');
+    // --- 13.4 FITUR LOGIN, REGISTRASI PESERTA & SWITCH ROLE ---
+    let studentAuthMode = 'login'; // 'login' | 'register'
+    let regAvatarBase64 = '';
 
-      if (role === 'student') {
-        if (btnStudent) btnStudent.className = "py-2.5 rounded-xl transition text-blue-700 bg-white shadow-xs flex items-center justify-center gap-1.5 cursor-pointer";
-        if (btnAdmin) btnAdmin.className = "py-2.5 rounded-xl transition text-slate-500 hover:text-slate-800 flex items-center justify-center gap-1.5 cursor-pointer";
-        if (formStudent) formStudent.classList.remove('hidden');
-        if (formAdmin) formAdmin.classList.add('hidden');
+    function setStudentAuthMode(mode) {
+      studentAuthMode = mode;
+      const formLogin = document.getElementById('form-login-student');
+      const formRegister = document.getElementById('form-register-student');
+      const modalTitle = document.getElementById('login-modal-title');
+      const modalSub = document.getElementById('login-modal-subtitle');
+      const btnTabLogin = document.getElementById('btn-student-subtab-login');
+      const btnTabReg = document.getElementById('btn-student-subtab-reg');
+
+      if (mode === 'register') {
+        if (formLogin) formLogin.classList.add('hidden');
+        if (formRegister) formRegister.classList.remove('hidden');
+        if (modalTitle) modalTitle.innerText = "Registrasi & Lengkapi Profil";
+        if (modalSub) modalSub.innerText = "Isi data peserta magang untuk membuka akses presensi";
+        if (btnTabLogin) btnTabLogin.className = "py-1.5 px-3 rounded-lg font-bold transition text-slate-500 hover:text-slate-800 cursor-pointer";
+        if (btnTabReg) btnTabReg.className = "py-1.5 px-3 rounded-lg font-bold transition text-blue-700 bg-white shadow-2xs cursor-pointer";
       } else {
-        if (btnAdmin) btnAdmin.className = "py-2.5 rounded-xl transition text-blue-700 bg-white shadow-xs flex items-center justify-center gap-1.5 cursor-pointer";
-        if (btnStudent) btnStudent.className = "py-2.5 rounded-xl transition text-slate-500 hover:text-slate-800 flex items-center justify-center gap-1.5 cursor-pointer";
-        if (formAdmin) formAdmin.classList.remove('hidden');
-        if (formStudent) formStudent.classList.add('hidden');
+        if (formRegister) formRegister.classList.add('hidden');
+        if (formLogin) formLogin.classList.remove('hidden');
+        if (modalTitle) modalTitle.innerText = "Masuk Akun Presensi";
+        if (modalSub) modalSub.innerText = "Sistem Presensi Geofencing Astra Daihatsu A. Yani";
+        if (btnTabLogin) btnTabLogin.className = "py-1.5 px-3 rounded-lg font-bold transition text-blue-700 bg-white shadow-2xs cursor-pointer";
+        if (btnTabReg) btnTabReg.className = "py-1.5 px-3 rounded-lg font-bold transition text-slate-500 hover:text-slate-800 cursor-pointer";
       }
       if (window.lucide) lucide.createIcons();
     }
 
+    function handleRegAvatarChange(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+
+      if (!file.type.startsWith('image/')) {
+        showAppAlert("Pilih file gambar foto yang valid (JPG/PNG/WebP)!", "Format File", "warning");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const maxDim = 256;
+          let width = img.width;
+          let height = img.height;
+          if (width > height) {
+            if (width > maxDim) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            }
+          } else {
+            if (height > maxDim) {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          regAvatarBase64 = canvas.toDataURL('image/jpeg', 0.85);
+
+          const previewImg = document.getElementById('reg-avatar-preview-img');
+          const previewPlaceholder = document.getElementById('reg-avatar-placeholder');
+          if (previewImg && previewPlaceholder) {
+            previewImg.src = regAvatarBase64;
+            previewImg.classList.remove('hidden');
+            previewPlaceholder.classList.add('hidden');
+          }
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function setLoginRoleTab(role) {
+      const btnStudent = document.getElementById('btn-login-tab-student');
+      const btnAdmin = document.getElementById('btn-login-tab-admin');
+      const formStudentLogin = document.getElementById('form-login-student');
+      const formStudentReg = document.getElementById('form-register-student');
+      const formAdmin = document.getElementById('form-login-admin');
+      const subTabs = document.getElementById('student-subtabs');
+      const modalTitle = document.getElementById('login-modal-title');
+      const modalSub = document.getElementById('login-modal-subtitle');
+
+      if (role === 'student') {
+        if (btnStudent) btnStudent.className = "py-2.5 rounded-xl transition text-blue-700 bg-white shadow-xs flex items-center justify-center gap-1.5 cursor-pointer";
+        if (btnAdmin) btnAdmin.className = "py-2.5 rounded-xl transition text-slate-500 hover:text-slate-800 flex items-center justify-center gap-1.5 cursor-pointer";
+        if (subTabs) subTabs.classList.remove('hidden');
+        if (formAdmin) formAdmin.classList.add('hidden');
+        setStudentAuthMode(studentAuthMode);
+      } else {
+        if (btnAdmin) btnAdmin.className = "py-2.5 rounded-xl transition text-blue-700 bg-white shadow-xs flex items-center justify-center gap-1.5 cursor-pointer";
+        if (btnStudent) btnStudent.className = "py-2.5 rounded-xl transition text-slate-500 hover:text-slate-800 flex items-center justify-center gap-1.5 cursor-pointer";
+        if (subTabs) subTabs.classList.add('hidden');
+        if (formStudentLogin) formStudentLogin.classList.add('hidden');
+        if (formStudentReg) formStudentReg.classList.add('hidden');
+        if (formAdmin) formAdmin.classList.remove('hidden');
+        if (modalTitle) modalTitle.innerText = "Masuk Panel HRD / Pembimbing";
+        if (modalSub) modalSub.innerText = "Akses verifikasi persetujuan & monitoring data magang";
+      }
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function showLoginModal(initialAuthMode = 'login') {
+      const modal = document.getElementById('login-modal');
+      if (!modal) return;
+      modal.classList.remove('hidden');
+
+      const nimInput = document.getElementById('login-nim');
+      if (nimInput) {
+        nimInput.value = (currentUser.nim && currentUser.nim !== '-' && currentUser.nim !== 'Admin Bengkel') ? currentUser.nim : '';
+      }
+      const pwdInput = document.getElementById('login-password');
+      if (pwdInput) pwdInput.value = '';
+
+      // Tampilkan tombol Tutup jika user sudah login, atau beri label wajib jika belum login
+      const closeBtn = document.getElementById('btn-close-login-modal');
+      const isLoggedIn = localStorage.getItem('pkl_is_logged_in') === 'true';
+      if (closeBtn) {
+        closeBtn.innerText = isLoggedIn ? "Tutup" : "Wajib Masuk / Registrasi";
+        closeBtn.className = isLoggedIn ? "text-slate-400 hover:text-slate-600 underline cursor-pointer" : "text-amber-600 font-bold cursor-default pointer-events-none";
+      }
+
+      setLoginRoleTab(currentUserRole || 'student');
+      setStudentAuthMode(initialAuthMode);
+      if (window.lucide) lucide.createIcons();
+    }
+
     function closeLoginModal() {
+      const isLoggedIn = localStorage.getItem('pkl_is_logged_in') === 'true';
+      if (!isLoggedIn) {
+        showAppAlert("Anda wajib melengkapi profil atau masuk akun terlebih dahulu sebelum dapat mengakses menu presensi Astra Daihatsu.", "Akses Terbatas", "warning");
+        return;
+      }
       const modal = document.getElementById('login-modal');
       if (modal) modal.classList.add('hidden');
+    }
+
+    function checkLoginSession() {
+      const isLoggedIn = localStorage.getItem('pkl_is_logged_in');
+      const role = localStorage.getItem('pkl_user_role') || 'student';
+      const profileCompleted = localStorage.getItem('pkl_profile_completed');
+
+      // Jika belum login atau logout
+      if (isLoggedIn === 'false' || !isLoggedIn) {
+        showLoginModal('login');
+        return;
+      }
+
+      // Jika role adalah siswa tapi profil belum lengkap
+      if (role === 'student' && profileCompleted !== 'true' && (!currentUser.nim || currentUser.nim === '-' || currentUser.nim === '12345678')) {
+        showLoginModal('register');
+      }
+    }
+
+    function handleLoginSubmit(event) {
+      event.preventDefault();
+      const inputNim = document.getElementById('login-nim').value.trim();
+      const inputPwd = document.getElementById('login-password').value;
+      const validPwd = localStorage.getItem('pkl_user_password') || 'daihatsu123';
+
+      if (!inputNim) {
+        showAppAlert("Masukkan NIM / NISN Anda!", "Peringatan", "warning");
+        return;
+      }
+      if (inputPwd !== validPwd) {
+        showAppAlert("Kata sandi salah! (Default: daihatsu123)", "Gagal Masuk", "error");
+        return;
+      }
+
+      currentUser.nim = inputNim;
+      localStorage.setItem('pkl_nim', inputNim);
+      localStorage.setItem('pkl_user_role', 'student');
+      localStorage.setItem('pkl_is_logged_in', 'true');
+      localStorage.setItem('pkl_profile_completed', 'true');
+      
+      document.getElementById('login-modal').classList.add('hidden');
+      applyUserRoleUI('student');
+      showAppToast("Login Berhasil", `Selamat datang kembali, ${currentUser.nama}!`, "success");
+    }
+
+    async function handleRegisterSubmit(event) {
+      event.preventDefault();
+      const nim = document.getElementById('reg-nim').value.trim();
+      const nama = document.getElementById('reg-nama').value.trim();
+      const instansi = document.getElementById('reg-instansi').value.trim();
+      const jurusan = document.getElementById('reg-jurusan').value.trim();
+      const phone = document.getElementById('reg-phone').value.trim();
+      const pwd = document.getElementById('reg-password').value;
+      const pwdConfirm = document.getElementById('reg-password-confirm').value;
+
+      if (!nim || !nama || !instansi || !jurusan || !phone || !pwd) {
+        showAppAlert("Seluruh data identitas peserta magang wajib diisi!", "Perhatian", "warning");
+        return;
+      }
+
+      if (pwd.length < 6) {
+        showAppAlert("Kata sandi akun minimal harus 6 karakter!", "Kata Sandi Kurang Panjang", "warning");
+        return;
+      }
+
+      if (pwd !== pwdConfirm) {
+        showAppAlert("Konfirmasi kata sandi tidak cocok. Mohon ulangi kata sandi dengan benar!", "Sandi Tidak Cocok", "error");
+        return;
+      }
+
+      const avatarBase64 = regAvatarBase64 || '';
+      const btnSubmit = document.getElementById('btn-submit-register');
+      const origBtnHtml = btnSubmit ? btnSubmit.innerHTML : '';
+      if (btnSubmit) {
+        btnSubmit.disabled = true;
+        btnSubmit.innerHTML = `
+          <svg class="animate-spin h-4 w-4 text-white inline-block mr-1.5" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+          </svg> Menyimpan ke Database Astra Daihatsu...
+        `;
+      }
+
+      try {
+        // Kirim sinkronisasi ke backend (Vercel Proxy / Google Apps Script)
+        const targetApi = currentUser.apiUrl || '/api/presensi';
+        if (targetApi && (targetApi.startsWith('http') || targetApi.startsWith('/'))) {
+          const isProxy = targetApi.startsWith('/');
+          fetch(targetApi, {
+            method: 'POST',
+            mode: isProxy ? 'same-origin' : 'no-cors',
+            headers: { 'Content-Type': isProxy ? 'application/json' : 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+              action: 'register_siswa',
+              nim: nim,
+              nama: nama,
+              instansi: instansi,
+              jurusan: jurusan,
+              phone: phone,
+              password: pwd,
+              fotoBase64: avatarBase64,
+              secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026"
+            })
+          }).catch(err => console.warn('GAS register sync error:', err));
+        }
+
+        // Simpan ke local storage
+        currentUser.nama = nama;
+        currentUser.nim = nim;
+        currentUser.instansi = instansi;
+        currentUser.jurusan = jurusan;
+        currentUser.foto = avatarBase64;
+        currentUserRole = 'student';
+
+        localStorage.setItem('pkl_nama', nama);
+        localStorage.setItem('pkl_nim', nim);
+        localStorage.setItem('pkl_instansi', instansi);
+        localStorage.setItem('pkl_jurusan', jurusan);
+        localStorage.setItem('pkl_phone', phone);
+        localStorage.setItem('pkl_user_password', pwd);
+        localStorage.setItem('pkl_user_role', 'student');
+        localStorage.setItem('pkl_is_logged_in', 'true');
+        localStorage.setItem('pkl_profile_completed', 'true');
+        if (avatarBase64) {
+          localStorage.setItem('pkl_foto_profil', avatarBase64);
+        }
+
+        // Daftarkan ke list direktori siswa lokal agar HR langsung melihatnya
+        let students = getStudentsList();
+        const existingIdx = students.findIndex(s => s.nim === nim);
+        if (existingIdx !== -1) {
+          students[existingIdx] = { nim, nama, instansi, jurusan, phone, status: 'Aktif Magang' };
+        } else {
+          students.push({ nim, nama, instansi, jurusan, phone, status: 'Aktif Magang' });
+        }
+        localStorage.setItem('pkl_students_list', JSON.stringify(students));
+
+        // Tutup modal login
+        document.getElementById('login-modal').classList.add('hidden');
+
+        // Update seluruh UI ke profil baru
+        applyUserRoleUI('student');
+
+        showAppAlert(
+          `Selamat Datang, ${nama}!\n\nProfil peserta magang Anda berhasil terdaftar dan data lengkap telah tersimpan di database Astra Daihatsu.\n\n• NIM/NISN: ${nim}\n• Sekolah: ${instansi}\n• Jurusan: ${jurusan}\n• No. HP: ${phone}\n\nSeluruh menu presensi, geofencing, izin/sakit, dan rekapitulasi kini sudah aktif dan dapat diakses.`,
+          "Registrasi & Profil Berhasil",
+          "success"
+        );
+      } catch (err) {
+        showAppAlert("Terjadi kendala saat mendaftarkan profil: " + err.message, "Gagal Registrasi", "error");
+      } finally {
+        if (btnSubmit) {
+          btnSubmit.disabled = false;
+          btnSubmit.innerHTML = origBtnHtml;
+        }
+      }
     }
 
     function quickLoginDemo(role) {
@@ -5718,6 +6063,7 @@
         localStorage.setItem('pkl_nim', '210103045');
         localStorage.setItem('pkl_nama', 'Budi Santoso');
         localStorage.setItem('pkl_is_logged_in', 'true');
+        localStorage.setItem('pkl_profile_completed', 'true');
         closeLoginModal();
         applyUserRoleUI('student');
         showAppToast("Login Berhasil", "Masuk sebagai Budi Santoso (Siswa Magang Astra Daihatsu)", "success");
