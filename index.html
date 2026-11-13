@@ -101,8 +101,14 @@
 
     /* Print styling for Rekap Bulanan Export */
     @media print {
-      aside, header, nav, #btn-export-pdf, .no-print {
+      aside, header, nav, #btn-export-pdf, .no-print, #rekap-mobile-cards {
         display: none !important;
+      }
+      .desktop-rekap-table {
+        display: block !important;
+      }
+      .desktop-rekap-table table {
+        width: 100% !important;
       }
       body {
         background: white !important;
@@ -754,7 +760,7 @@
           <!-- Sakit -->
           <div class="bg-red-50/80 border border-red-100 p-3 rounded-xl flex items-center gap-2.5">
             <span class="w-7 h-7 rounded-full bg-red-500 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">
-              <i data-lucide="cross" class="w-3.5 h-3.5"></i>
+              <i data-lucide="activity" class="w-3.5 h-3.5"></i>
             </span>
             <div>
               <p class="text-[10px] text-red-800 font-bold">Sakit</p>
@@ -785,21 +791,43 @@
 
         <!-- Table Data Log Presensi (Dynamic rendering) -->
         <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
-          <div class="overflow-x-auto">
+          <!-- Card Header Info Bar -->
+          <div class="p-3.5 md:p-4 bg-slate-50/80 border-b border-slate-200/80 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <div class="w-7 h-7 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center">
+                <i data-lucide="clipboard-list" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <h4 class="font-extrabold text-xs md:text-sm text-slate-900">Riwayat Presensi & Kehadiran</h4>
+                <p class="text-[10px] text-slate-400 hidden sm:block">Sinkronisasi data otomatis dengan Geofencing Astra Daihatsu</p>
+              </div>
+            </div>
+            <span id="rekap-total-rows-badge" class="px-2.5 py-0.5 rounded-full text-[10px] md:text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200">
+              0 Catatan
+            </span>
+          </div>
+
+          <!-- Desktop View: Elegant Full Table (md:block) -->
+          <div class="hidden md:block overflow-x-auto desktop-rekap-table">
             <table class="w-full text-left text-xs border-collapse">
               <thead>
-                <tr class="bg-slate-50/80 border-b border-slate-200 text-slate-700 font-bold text-[11px]">
-                  <th class="py-3 px-4">Tanggal</th>
-                  <th class="py-3 px-4">Keterangan</th>
-                  <th class="py-3 px-4">Jam Presensi</th>
-                  <th class="py-3 px-4">Radius / Lokasi</th>
-                  <th class="py-3 px-4 text-center">Bukti / Foto</th>
+                <tr class="bg-slate-50/90 border-b border-slate-200 text-slate-600 font-bold text-[11px] uppercase tracking-wider">
+                  <th class="py-3.5 px-4">Tanggal & Hari</th>
+                  <th class="py-3.5 px-4">Aktivitas Presensi</th>
+                  <th class="py-3.5 px-4">Waktu</th>
+                  <th class="py-3.5 px-4">Lokasi / Geofence</th>
+                  <th class="py-3.5 px-4 text-center">Status Verifikasi</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-100 text-slate-700" id="rekap-table-body">
                 <!-- Dynamically rendered rows -->
               </tbody>
             </table>
+          </div>
+
+          <!-- Mobile View: Modern Card List (md:hidden) -->
+          <div class="md:hidden divide-y divide-slate-100" id="rekap-mobile-cards">
+            <!-- Dynamically rendered mobile cards -->
           </div>
         </div>
       </section>
@@ -3377,9 +3405,14 @@
     }
 
     function renderRekapTable() {
-      const filter = document.getElementById('rekap-filter-kategori').value;
+      const filterEl = document.getElementById('rekap-filter-kategori');
+      const filter = filterEl ? filterEl.value : 'ALL';
       const tbody = document.getElementById('rekap-table-body');
-      tbody.innerHTML = '';
+      const mobileCards = document.getElementById('rekap-mobile-cards');
+      const badgeCount = document.getElementById('rekap-total-rows-badge');
+
+      if (tbody) tbody.innerHTML = '';
+      if (mobileCards) mobileCards.innerHTML = '';
 
       const presensiLogs = getAttendanceLogs();
       const izinLogs = getIzinLogs();
@@ -3391,9 +3424,12 @@
         combined.push({
           tanggal: p.tanggal,
           kategori: 'Hadir',
-          label: `Hadir (${p.tipe})`,
-          jam: p.waktu,
-          radius: `${p.jarak} m (${p.statusRadius || 'VALID'})`,
+          tipe: p.tipe || 'IN',
+          label: p.tipe === 'OUT' ? 'Clock Out' : 'Clock In',
+          jam: p.waktu || '--:--',
+          radius: p.jarak !== undefined ? `${p.jarak} m` : '0 m',
+          statusRadius: p.statusRadius || 'VALID',
+          address: p.address || 'Workshop Astra Daihatsu A. Yani',
           buktiUrl: p.photoUrl,
           raw: p
         });
@@ -3402,10 +3438,13 @@
       izinLogs.forEach(i => {
         combined.push({
           tanggal: i.tanggal,
-          kategori: i.jenis,
-          label: i.jenis,
+          kategori: i.jenis || 'Izin',
+          tipe: i.jenis || 'Izin',
+          label: i.jenis === 'Sakit' ? 'Sakit (SKD)' : 'Izin Dispensasi',
           jam: '-',
           radius: i.alasan || '-',
+          statusRadius: 'DISPENSASI',
+          address: 'Izin Terverifikasi',
           buktiUrl: i.docUrl,
           raw: i
         });
@@ -3417,57 +3456,223 @@
         combined = combined.filter(c => c.kategori === filter);
       }
 
+      if (badgeCount) {
+        badgeCount.innerText = `${combined.length} Catatan`;
+      }
+
+      const emptyHtml = `
+        <div class="py-12 px-4 text-center">
+          <div class="flex flex-col items-center justify-center text-slate-400 space-y-2.5">
+            <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center shadow-xs">
+              <i data-lucide="clipboard-list" class="w-6 h-6"></i>
+            </div>
+            <p class="text-sm font-bold text-slate-800">Belum Ada Riwayat Presensi</p>
+            <p class="text-xs text-slate-400 max-w-sm">Data presensi Clock In, Clock Out, dan pengajuan izin/sakit Anda akan otomatis tersimpan dan tertata rapi di sini.</p>
+            <button onclick="switchTab('presensi')" class="mt-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
+              <i data-lucide="clock" class="w-3.5 h-3.5"></i> Lakukan Presensi Sekarang
+            </button>
+          </div>
+        </div>
+      `;
+
       if (combined.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="5" class="py-12 text-center">
-              <div class="flex flex-col items-center justify-center text-slate-400 space-y-2">
-                <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
-                  <i data-lucide="clipboard-list" class="w-5 h-5"></i>
-                </div>
-                <p class="text-xs font-bold text-slate-700">Belum Ada Riwayat Presensi</p>
-                <p class="text-[11px] text-slate-400 max-w-xs">Data presensi masuk, pulang, dan perizinan Anda akan otomatis tersimpan dan tampil di sini.</p>
-              </div>
-            </td>
-          </tr>
-        `;
+        if (tbody) {
+          tbody.innerHTML = `<tr><td colspan="5">${emptyHtml}</td></tr>`;
+        }
+        if (mobileCards) {
+          mobileCards.innerHTML = emptyHtml;
+        }
         lucide.createIcons();
         return;
       }
 
+      const daysIndo = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+      const monthsIndo = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+      const fullMonthsIndo = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+
       combined.forEach(item => {
-        let badgeClass = "bg-emerald-100 text-emerald-800";
-        if (item.kategori === 'Sakit') badgeClass = "bg-red-100 text-red-800";
-        if (item.kategori === 'Izin') badgeClass = "bg-amber-100 text-amber-800";
+        let d = new Date(item.tanggal);
+        if (isNaN(d.getTime())) d = new Date();
 
-        let formattedDate = item.tanggal;
-        try {
-          const d = new Date(item.tanggal);
-          formattedDate = d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' });
-        } catch(e) {}
+        const dayName = daysIndo[d.getDay()];
+        const shortMonth = monthsIndo[d.getMonth()];
+        const fullMonth = fullMonthsIndo[d.getMonth()];
+        const dayNum = d.getDate();
+        const year = d.getFullYear();
 
-        let buktiBtn = `<span class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">GPS Valid</span>`;
-        if (item.buktiUrl && item.buktiUrl.length > 5 && item.buktiUrl !== '-') {
-          buktiBtn = `
-            <button onclick="previewPhotoModal('${item.buktiUrl.replace(/'/g, "\\'")}', '${item.label}', '${item.tanggal}')" class="w-10 h-7 rounded-md overflow-hidden border border-slate-200 inline-block align-middle shadow-2xs hover:scale-105 transition" title="Lihat Bukti Foto">
-              <img src="${item.buktiUrl}" alt="Bukti" class="w-full h-full object-cover">
+        // Aktivitas Badge & Warna Accent
+        let activityBadge = '';
+        let accentBorder = 'border-l-blue-600';
+        let dateBoxBg = 'bg-blue-50';
+        let dateBoxBorder = 'border-blue-200';
+        let dateColor = 'text-blue-700';
+
+        if (item.kategori === 'Hadir') {
+          if (item.tipe === 'IN') {
+            activityBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-2xs"><i data-lucide="log-in" class="w-3.5 h-3.5 text-emerald-600"></i> Clock In</span>`;
+            accentBorder = 'border-l-emerald-500';
+            dateBoxBg = 'bg-emerald-50';
+            dateBoxBorder = 'border-emerald-200';
+            dateColor = 'text-emerald-700';
+          } else {
+            activityBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200 shadow-2xs"><i data-lucide="log-out" class="w-3.5 h-3.5 text-blue-600"></i> Clock Out</span>`;
+            accentBorder = 'border-l-blue-600';
+            dateBoxBg = 'bg-blue-50';
+            dateBoxBorder = 'border-blue-200';
+            dateColor = 'text-blue-700';
+          }
+        } else if (item.kategori === 'Sakit') {
+          activityBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-red-50 text-red-700 border border-red-200 shadow-2xs"><i data-lucide="activity" class="w-3.5 h-3.5 text-red-600"></i> Sakit (SKD)</span>`;
+          accentBorder = 'border-l-red-500';
+          dateBoxBg = 'bg-red-50';
+          dateBoxBorder = 'border-red-200';
+          dateColor = 'text-red-700';
+        } else {
+          activityBadge = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200 shadow-2xs"><i data-lucide="file-text" class="w-3.5 h-3.5 text-amber-600"></i> Izin Dispensasi</span>`;
+          accentBorder = 'border-l-amber-500';
+          dateBoxBg = 'bg-amber-50';
+          dateBoxBorder = 'border-amber-200';
+          dateColor = 'text-amber-700';
+        }
+
+        // Waktu Presensi
+        let timeDisplay = '';
+        if (item.jam && item.jam !== '-') {
+          timeDisplay = `<div class="inline-flex items-center gap-1.5 font-bold font-mono text-slate-800 text-xs bg-slate-100/90 px-2.5 py-1 rounded-lg border border-slate-200/60"><i data-lucide="clock" class="w-3.5 h-3.5 text-slate-400"></i> ${item.jam} WIB</div>`;
+        } else {
+          timeDisplay = `<span class="text-xs font-semibold text-slate-400">1 Hari Penuh</span>`;
+        }
+
+        // Lokasi / Alasan
+        let locationDisplayDesktop = '';
+        let locationDisplayMobile = '';
+        if (item.kategori === 'Hadir') {
+          const dist = item.raw && item.raw.jarak !== undefined ? item.raw.jarak : 0;
+          const isNear = dist <= 100;
+          const addrClean = item.address ? item.address.split(',').slice(0, 2).join(',') : 'Astra Daihatsu Ahmad Yani';
+          locationDisplayDesktop = `
+            <div class="space-y-0.5">
+              <div class="flex items-center gap-1.5 font-bold text-xs ${isNear ? 'text-emerald-700' : 'text-slate-800'}">
+                <i data-lucide="map-pin" class="w-3.5 h-3.5 text-blue-600 flex-shrink-0"></i>
+                <span>${dist} m</span>
+                <span class="text-[10px] font-semibold text-slate-400">• Dalam Bengkel</span>
+              </div>
+              <p class="text-[11px] text-slate-500 truncate max-w-[220px]" title="${item.address || ''}">
+                ${addrClean}
+              </p>
+            </div>
+          `;
+          locationDisplayMobile = `${dist} m • Bengkel Daihatsu`;
+        } else {
+          locationDisplayDesktop = `
+            <div class="space-y-0.5">
+              <p class="font-bold text-xs text-slate-800 truncate max-w-[220px]" title="${item.radius}">
+                ${item.radius}
+              </p>
+              <p class="text-[10px] text-slate-400">Surat Pengajuan Magang</p>
+            </div>
+          `;
+          locationDisplayMobile = item.radius.length > 22 ? item.radius.slice(0, 22) + '...' : item.radius;
+        }
+
+        // Verifikasi & Berkas
+        let verificationBadge = '';
+        if (item.kategori === 'Hadir') {
+          verificationBadge = `
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-2xs">
+              <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-600"></i> GPS Terverifikasi
+            </span>
+          `;
+        } else if (item.buktiUrl && item.buktiUrl.length > 5 && item.buktiUrl !== '-') {
+          verificationBadge = `
+            <button onclick="previewPhotoModal('${item.buktiUrl.replace(/'/g, "\\'")}', '${item.label}', '${item.tanggal}')" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 transition shadow-2xs active:scale-95" title="Buka Dokumen SKD">
+              <i data-lucide="file-check" class="w-3.5 h-3.5 text-blue-600"></i> Dokumen SKD
             </button>
+          `;
+        } else {
+          verificationBadge = `
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-semibold text-slate-500 bg-slate-100 border border-slate-200">
+              Dispensasi
+            </span>
           `;
         }
 
-        const tr = document.createElement('tr');
-        tr.className = "hover:bg-slate-50/50 transition border-b border-slate-100";
-        tr.innerHTML = `
-          <td class="py-3 px-4 font-semibold text-slate-800">${formattedDate}</td>
-          <td class="py-3 px-4">
-            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold ${badgeClass}">${item.label}</span>
-          </td>
-          <td class="py-3 px-4 font-medium text-slate-600">${item.jam}</td>
-          <td class="py-3 px-4 text-slate-500 text-[11px] max-w-xs truncate">${item.radius}</td>
-          <td class="py-3 px-4 text-center">${buktiBtn}</td>
-        `;
-        tbody.appendChild(tr);
+        // 1. Render Desktop Table Row
+        if (tbody) {
+          const tr = document.createElement('tr');
+          tr.className = "hover:bg-slate-50/80 transition-colors border-b border-slate-100";
+          tr.innerHTML = `
+            <td class="py-3.5 px-4 whitespace-nowrap">
+              <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-xl ${dateBoxBg} flex flex-col items-center justify-center flex-shrink-0 font-bold leading-none border ${dateBoxBorder}">
+                  <span class="text-[9px] uppercase ${dateColor}">${shortMonth}</span>
+                  <span class="text-xs ${dateColor} font-black mt-0.5">${dayNum}</span>
+                </div>
+                <div>
+                  <p class="font-bold text-slate-800 text-xs">${dayName}, ${dayNum} ${fullMonth} ${year}</p>
+                  <p class="text-[10px] text-slate-400 font-medium">Astra Daihatsu A. Yani</p>
+                </div>
+              </div>
+            </td>
+            <td class="py-3.5 px-4 whitespace-nowrap">
+              ${activityBadge}
+            </td>
+            <td class="py-3.5 px-4 whitespace-nowrap">
+              ${timeDisplay}
+            </td>
+            <td class="py-3.5 px-4">
+              ${locationDisplayDesktop}
+            </td>
+            <td class="py-3.5 px-4 text-center whitespace-nowrap">
+              ${verificationBadge}
+            </td>
+          `;
+          tbody.appendChild(tr);
+        }
+
+        // 2. Render Mobile Card
+        if (mobileCards) {
+          const card = document.createElement('div');
+          card.className = `p-4 hover:bg-slate-50/60 transition bg-white border-l-4 ${accentBorder} space-y-2.5`;
+          card.innerHTML = `
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-xl ${dateBoxBg} flex flex-col items-center justify-center font-bold text-xs border ${dateBoxBorder} ${dateColor} leading-none flex-shrink-0">
+                  <span class="text-[8px] uppercase font-bold">${shortMonth}</span>
+                  <span class="text-xs font-black">${dayNum}</span>
+                </div>
+                <div>
+                  <span class="text-xs font-bold text-slate-900 block leading-tight">${dayName}, ${dayNum} ${shortMonth} ${year}</span>
+                  <span class="text-[10px] text-slate-400">Shift Magang</span>
+                </div>
+              </div>
+              <div>${activityBadge}</div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 text-xs bg-slate-50/90 p-2.5 rounded-xl border border-slate-100">
+              <div>
+                <span class="text-[10px] font-semibold text-slate-400 block">Jam Presensi</span>
+                <span class="font-bold text-slate-800 text-xs flex items-center gap-1 mt-0.5">
+                  <i data-lucide="clock" class="w-3 h-3 text-slate-400"></i> ${item.jam !== '-' ? item.jam + ' WIB' : '1 Hari Penuh'}
+                </span>
+              </div>
+              <div>
+                <span class="text-[10px] font-semibold text-slate-400 block">Lokasi / Jarak</span>
+                <span class="font-bold text-slate-800 text-xs flex items-center gap-1 mt-0.5 truncate" title="${item.address || ''}">
+                  <i data-lucide="map-pin" class="w-3 h-3 text-blue-500"></i> ${locationDisplayMobile}
+                </span>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between pt-0.5">
+              <span class="text-[11px] text-slate-400 font-medium">Status Verifikasi</span>
+              <div>${verificationBadge}</div>
+            </div>
+          `;
+          mobileCards.appendChild(card);
+        }
       });
+
       lucide.createIcons();
     }
 
