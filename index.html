@@ -561,12 +561,69 @@
             <div class="corner-bracket bracket-br"></div>
           </div>
 
-          <!-- Live Watermark Banner Overlay (Matching PRD Section 4.2 Exact Visual Layout) -->
-          <div id="watermark-overlay" class="absolute bottom-0 inset-x-0 bg-black/80 backdrop-blur-xs text-white p-3 text-[11px] font-mono leading-tight border-t border-white/10 select-none">
-            <p class="font-bold text-cyan-400" id="wm-line1">[CLOCK IN] 12345678 - Andi Pratama</p>
-            <p class="text-white" id="wm-line2">WAKTU : 28-10-2025, 08:15:32 WIB</p>
-            <p class="text-slate-200" id="wm-line3">LOKASI: Workshop Astra Daihatsu Ahmad Yani (Jarak: 12 m)</p>
-            <p class="text-slate-400 text-[10px]" id="wm-line4">GPS   : Lat -5.4217, Long 105.2528 | Akurasi: ±5m</p>
+          <!-- Live Watermark Banner Overlay (Enterprise Geotag with Mini-Map) -->
+          <div id="watermark-overlay" class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-[#040a18]/95 via-[#08132b]/90 to-[#08132b]/80 backdrop-blur-md text-white p-3 border-t-2 border-red-600 select-none flex items-center gap-3">
+            
+            <!-- Mini-Map Radar Snippet (Live) -->
+            <div class="relative w-20 h-20 rounded-xl overflow-hidden border border-white/20 bg-slate-800 shadow-md flex-shrink-0 flex items-center justify-center">
+              <!-- Stylized map background -->
+              <div class="absolute inset-0 bg-[#e8edf5]">
+                <div class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-3 bg-white"></div>
+                <div class="absolute inset-y-0 left-1/2 -translate-x-1/2 w-4 bg-white border-x border-slate-200">
+                  <div class="w-0.5 h-full bg-amber-400 mx-auto"></div>
+                </div>
+              </div>
+              <!-- Geofence circle -->
+              <div class="absolute w-14 h-14 rounded-full border-2 border-dashed border-emerald-500 bg-emerald-500/20"></div>
+              <!-- Workshop marker pin -->
+              <div class="absolute w-3.5 h-3.5 rounded-full bg-red-600 border border-white flex items-center justify-center text-[7px] font-bold text-white shadow-xs">
+                D
+              </div>
+              <!-- User GPS pulse dot -->
+              <div class="absolute w-2 h-2 rounded-full bg-blue-600 border border-white shadow-sm animate-ping"></div>
+              <div class="absolute w-2 h-2 rounded-full bg-blue-600 border border-white shadow-sm"></div>
+              <!-- Compass -->
+              <span class="absolute top-1 right-1 text-[8px] font-black text-red-600 bg-black/60 px-1 rounded">N↑</span>
+              <!-- GPS status pill -->
+              <div class="absolute bottom-1 inset-x-1 py-0.5 bg-slate-900/85 rounded text-[7px] font-bold text-emerald-400 text-center tracking-wider">
+                GPS LOCK
+              </div>
+            </div>
+
+            <!-- Typography & Info Details -->
+            <div class="flex-1 min-w-0 space-y-0.5 text-left">
+              <!-- Row 1: Badge & Brand -->
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span id="wm-badge" class="px-2 py-0.5 rounded-md text-[9px] font-black bg-emerald-500 text-white tracking-wider">
+                  CLOCK IN
+                </span>
+                <span class="text-[9.5px] font-extrabold text-blue-300 truncate">
+                  ASTRA DAIHATSU AHMAD YANI
+                </span>
+              </div>
+
+              <!-- Row 2: User Name & NIM -->
+              <p class="text-[11.5px] font-bold text-white truncate leading-tight" id="wm-line1">
+                Mekanik Magang PKL
+              </p>
+
+              <!-- Row 3: Time -->
+              <p class="text-[10px] text-slate-200 truncate flex items-center gap-1" id="wm-line2">
+                <i data-lucide="clock" class="w-2.5 h-2.5 text-cyan-400 inline"></i>
+                <span id="wm-time-txt">-</span>
+              </p>
+
+              <!-- Row 4: Location -->
+              <p class="text-[9.5px] text-slate-300 truncate" id="wm-line3">
+                Workshop Bengkel Astra Daihatsu A. Yani
+              </p>
+
+              <!-- Row 5: GPS -->
+              <p class="text-[9px] text-sky-300 font-mono truncate" id="wm-line4">
+                Lat: -5.42170, Lng: 105.25280 (Radius: 0m)
+              </p>
+            </div>
+
           </div>
         </div>
 
@@ -2294,27 +2351,44 @@
     }
 
     function updateLiveClock() {
-      const now = new Date();
-      const wm2 = document.getElementById('wm-line2');
-      if (wm2) {
-        const timeStr = now.toLocaleTimeString('id-ID') + ' WIB';
-        const dateFormatted = `${String(now.getDate()).padStart(2,'0')}-${String(now.getMonth()+1).padStart(2,'0')}-${now.getFullYear()}, ${timeStr}`;
-        wm2.innerText = `WAKTU : ${dateFormatted}`;
-      }
+      updateWatermarkLabels();
     }
 
     function updateWatermarkLabels() {
+      const now = new Date();
+      const isClockIn = activeAttendanceType === 'IN';
+      
+      const badge = document.getElementById('wm-badge');
+      if (badge) {
+        badge.innerText = isClockIn ? 'CLOCK IN' : 'CLOCK OUT';
+        badge.className = isClockIn 
+          ? 'px-2 py-0.5 rounded-md text-[9px] font-black bg-emerald-500 text-white tracking-wider'
+          : 'px-2 py-0.5 rounded-md text-[9px] font-black bg-red-600 text-white tracking-wider';
+      }
+
       const wm1 = document.getElementById('wm-line1');
       if (wm1) {
-        wm1.innerText = `[CLOCK ${activeAttendanceType}] ${currentUser.nim} - ${currentUser.nama}`;
+        wm1.innerText = `${currentUser.nama} (NIM: ${currentUser.nim})`;
       }
+
+      const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+      const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+      const dateFormatted = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()} • ${now.toLocaleTimeString('id-ID')} WIB`;
+      
+      const wmTime = document.getElementById('wm-time-txt');
+      if (wmTime) {
+        wmTime.innerText = dateFormatted;
+      }
+
       const wm3 = document.getElementById('wm-line3');
       if (wm3) {
-        wm3.innerText = `LOKASI: Workshop Astra Daihatsu Ahmad Yani (Jarak: ${userLocation.distance} m)`;
+        wm3.innerText = `Workshop Astra Daihatsu A. Yani (Palapa)`;
       }
+
       const wm4 = document.getElementById('wm-line4');
       if (wm4) {
-        wm4.innerText = `GPS   : Lat ${userLocation.lat.toFixed(4)}, Long ${userLocation.lng.toFixed(4)} | Akurasi: ±${userLocation.accuracy}m`;
+        const radStatus = userLocation.isInside ? `Radius: ${userLocation.distance}m (Valid)` : `Luar Radius: ${userLocation.distance}m`;
+        wm4.innerText = `GPS: ${userLocation.lat.toFixed(5)}, ${userLocation.lng.toFixed(5)} (${radStatus})`;
       }
     }
 
@@ -2612,10 +2686,301 @@
       startCamera();
     }
 
+    // Helper menggambar rounded rect dengan fallback browser lama
+    function drawCanvasRoundRect(c, x, y, width, height, radius) {
+      if (c.roundRect) {
+        c.beginPath();
+        c.roundRect(x, y, width, height, radius);
+        return;
+      }
+      const r = Math.min(radius, width / 2, height / 2);
+      c.beginPath();
+      c.moveTo(x + r, y);
+      c.arcTo(x + width, y, x + width, y + height, r);
+      c.arcTo(x + width, y + height, x, y + height, r);
+      c.arcTo(x, y + height, x, y, r);
+      c.arcTo(x, y, x + width, y, r);
+      c.closePath();
+    }
+
+    // Render Enterprise Geotag Watermark dengan Embedded Mini-Map pada Foto
+    function renderWatermarkOnCanvas(ctx, w, h) {
+      ctx.save();
+
+      // Skala dinamis mengikuti resolusi gambar
+      const scale = Math.max(0.65, Math.min(1.5, Math.min(w, h) / 720));
+      const bannerH = Math.max(160, Math.round(h * 0.23));
+      const bannerY = h - bannerH;
+
+      // 1. Background Card Geotag (Deep Executive Navy Gradient)
+      const bgGrad = ctx.createLinearGradient(0, bannerY, 0, h);
+      bgGrad.addColorStop(0, 'rgba(8, 19, 43, 0.94)');
+      bgGrad.addColorStop(0.35, 'rgba(5, 12, 28, 0.96)');
+      bgGrad.addColorStop(1, 'rgba(2, 6, 16, 0.98)');
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, bannerY, w, bannerH);
+
+      // Garis Aksen Atas (Daihatsu Crimson Red ke Blue ke Cyan)
+      const topStripeGrad = ctx.createLinearGradient(0, bannerY, w, bannerY);
+      topStripeGrad.addColorStop(0, '#dc2626');
+      topStripeGrad.addColorStop(0.4, '#2563eb');
+      topStripeGrad.addColorStop(1, '#06b6d4');
+      ctx.fillStyle = topStripeGrad;
+      ctx.fillRect(0, bannerY, w, Math.max(3, Math.round(3.5 * scale)));
+
+      // 2. Embedded Vector Mini-Map (Sisi Kiri)
+      const mapMargin = Math.round(12 * scale);
+      const mapH = bannerH - (mapMargin * 2);
+      const mapW = mapH; // Kotak presisi
+      const mapX = mapMargin;
+      const mapY = bannerY + mapMargin;
+      const mapRadius = Math.round(12 * scale);
+
+      ctx.save();
+      drawCanvasRoundRect(ctx, mapX, mapY, mapW, mapH, mapRadius);
+      ctx.clip();
+
+      // Map Land Background
+      ctx.fillStyle = '#e8edf5';
+      ctx.fillRect(mapX, mapY, mapW, mapH);
+
+      // Area Hijau Kompleks Workshop Astra Daihatsu
+      ctx.fillStyle = '#d1fae5';
+      ctx.fillRect(mapX + mapW * 0.12, mapY + mapH * 0.12, mapW * 0.76, mapH * 0.76);
+
+      // Jalan Utama: Jl. Ahmad Yani (Horizontal agak ke tengah)
+      const roadY = mapY + mapH * 0.52;
+      const roadH = Math.max(13, Math.round(16 * scale));
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(mapX, roadY - roadH / 2, mapW, roadH);
+      ctx.fillStyle = '#cbd5e1';
+      ctx.fillRect(mapX, roadY - roadH / 2, mapW, 1);
+      ctx.fillRect(mapX, roadY + roadH / 2, mapW, 1);
+
+      // Garis Marka Jalan Kuning Putus-putus
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = Math.max(1.2, 1.8 * scale);
+      ctx.setLineDash([Math.round(4 * scale), Math.round(3 * scale)]);
+      ctx.beginPath();
+      ctx.moveTo(mapX, roadY);
+      ctx.lineTo(mapX + mapW, roadY);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Label Jalan A. Yani
+      ctx.fillStyle = '#64748b';
+      ctx.font = `bold ${Math.round(7.5 * scale)}px 'Plus Jakarta Sans', sans-serif`;
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'top';
+      ctx.fillText('Jl. A. Yani', mapX + 4, roadY + roadH / 2 + 2);
+
+      // Jalan Simpang: Jl. Palapa (Vertikal)
+      const roadX = mapX + mapW * 0.48;
+      const roadW = Math.max(10, Math.round(13 * scale));
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(roadX - roadW / 2, mapY, roadW, mapH);
+      ctx.fillStyle = '#cbd5e1';
+      ctx.fillRect(roadX - roadW / 2, mapY, 1, mapH);
+      ctx.fillRect(roadX + roadW / 2, mapY, 1, mapH);
+
+      // Label Palapa
+      ctx.save();
+      ctx.translate(roadX - roadW / 2 - 3, mapY + 6);
+      ctx.rotate(-Math.PI / 2);
+      ctx.fillStyle = '#64748b';
+      ctx.font = `bold ${Math.round(7 * scale)}px 'Plus Jakarta Sans', sans-serif`;
+      ctx.fillText('Palapa', 0, 0);
+      ctx.restore();
+
+      // Geofence Circle (Lingkaran Radius Workshop)
+      const centerX = mapX + mapW * 0.5;
+      const centerY = mapY + mapH * 0.5;
+      const geofenceR = mapW * 0.35;
+
+      ctx.fillStyle = 'rgba(16, 185, 129, 0.22)';
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, geofenceR, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = '#10b981';
+      ctx.lineWidth = Math.max(1.5, 2 * scale);
+      ctx.setLineDash([Math.round(4 * scale), Math.round(3 * scale)]);
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, geofenceR, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Workshop Pin (Pusat Bengkel Daihatsu)
+      const pinR = Math.max(7, Math.round(9 * scale));
+      ctx.fillStyle = '#dc2626';
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, pinR, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = Math.max(1.5, 2 * scale);
+      ctx.stroke();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = `bold ${Math.round(pinR * 1.15)}px 'Plus Jakarta Sans', sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('D', centerX, centerY + 0.5);
+
+      // Posisi User Terhadap Bengkel (Kalkulasi Jarak Real)
+      const metersPerPixel = (workshopConfig.radiusMeters || 100) / geofenceR;
+      const latDiff = userLocation.lat - workshopConfig.lat;
+      const lngDiff = userLocation.lng - workshopConfig.lng;
+      const dNorthMeters = latDiff * 111320;
+      const dEastMeters = lngDiff * 111320 * Math.cos(workshopConfig.lat * Math.PI / 180);
+
+      let userX = centerX + (dEastMeters / metersPerPixel);
+      let userY = centerY - (dNorthMeters / metersPerPixel); // minus karena Utara ke atas
+
+      // Clamp user dot agar tidak keluar dari area kotak mini-map
+      userX = Math.max(mapX + 8, Math.min(mapX + mapW - 8, userX));
+      userY = Math.max(mapY + 8, Math.min(mapY + mapH - 8, userY));
+
+      // User Radar Pulse Wave
+      ctx.fillStyle = 'rgba(37, 99, 235, 0.35)';
+      ctx.beginPath();
+      ctx.arc(userX, userY, Math.max(7, Math.round(9 * scale)), 0, Math.PI * 2);
+      ctx.fill();
+
+      // User Solid Dot
+      ctx.fillStyle = '#2563eb';
+      ctx.beginPath();
+      ctx.arc(userX, userY, Math.max(3.5, Math.round(4.5 * scale)), 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = Math.max(1.2, 1.6 * scale);
+      ctx.stroke();
+
+      // Overlay Kompas (N↑) di pojok kanan atas mini-map
+      const compW = Math.round(20 * scale);
+      const compH = Math.round(13 * scale);
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.75)';
+      drawCanvasRoundRect(ctx, mapX + mapW - compW - 3, mapY + 3, compW, compH, 3);
+      ctx.fill();
+      ctx.fillStyle = '#ef4444';
+      ctx.font = `bold ${Math.round(8.5 * scale)}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('N↑', mapX + mapW - compW / 2 - 3, mapY + 3 + compH / 2);
+
+      // Overlay Status GPS LOCK di bagian bawah mini-map
+      const lockH = Math.round(14 * scale);
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.88)';
+      drawCanvasRoundRect(ctx, mapX + 3, mapY + mapH - lockH - 3, mapW - 6, lockH, 3);
+      ctx.fill();
+      ctx.fillStyle = '#34d399';
+      ctx.font = `bold ${Math.round(7.5 * scale)}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('● GPS LOCK', mapX + mapW / 2, mapY + mapH - 3 - lockH / 2);
+
+      ctx.restore();
+
+      // Border halus pada frame mini-map
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+      ctx.lineWidth = 1.5;
+      drawCanvasRoundRect(ctx, mapX, mapY, mapW, mapH, mapRadius);
+      ctx.stroke();
+
+      // 3. Information Typography & Details (Sisi Kanan)
+      const infoX = mapX + mapW + Math.round(14 * scale);
+      const infoW = w - infoX - Math.round(14 * scale);
+      const infoY = bannerY + Math.round(14 * scale);
+      const lineGap = (bannerH - Math.round(28 * scale)) / 4.2;
+
+      // Helper Text Truncation agar tidak pernah terpotong / overflow
+      function fitText(txt, maxW) {
+        if (!txt) return '';
+        if (ctx.measureText(txt).width <= maxW) return txt;
+        let t = txt;
+        while (t.length > 0 && ctx.measureText(t + '...').width > maxW) {
+          t = t.slice(0, -1);
+        }
+        return t + '...';
+      }
+
+      const isClockIn = activeAttendanceType === 'IN';
+
+      // Baris 1: Badges & Brand
+      const badgeText = isClockIn ? 'CLOCK IN' : 'CLOCK OUT';
+      ctx.font = `bold ${Math.round(10.5 * scale)}px 'Plus Jakarta Sans', sans-serif`;
+      const badgeTextW = ctx.measureText(badgeText).width;
+      const badgePadX = Math.round(8 * scale);
+      const badgeH = Math.round(18 * scale);
+      const badgeW = badgeTextW + (badgePadX * 2);
+      const badgeY = infoY - (badgeH * 0.1);
+
+      // Pill Badge
+      ctx.fillStyle = isClockIn ? '#10b981' : '#dc2626';
+      drawCanvasRoundRect(ctx, infoX, badgeY, badgeW, badgeH, Math.round(4 * scale));
+      ctx.fill();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(badgeText, infoX + badgeW / 2, badgeY + badgeH / 2 + 0.5);
+
+      // Brand Title
+      const brandX = infoX + badgeW + Math.round(8 * scale);
+      const brandMaxW = infoW - badgeW - Math.round(8 * scale);
+      ctx.font = `800 ${Math.round(11 * scale)}px 'Plus Jakarta Sans', sans-serif`;
+      ctx.fillStyle = '#93c5fd';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(fitText('ASTRA DAIHATSU AHMAD YANI', brandMaxW), brandX, badgeY + badgeH / 2);
+
+      // Baris 2: Nama Siswa & NIM
+      const line2Y = infoY + lineGap;
+      ctx.font = `bold ${Math.round(13.5 * scale)}px 'Plus Jakarta Sans', sans-serif`;
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      const nimStr = (currentUser.nim && currentUser.nim !== '-') ? ` • NIM: ${currentUser.nim}` : '';
+      const userFullStr = `${currentUser.nama}${nimStr}`;
+      ctx.fillText(fitText(userFullStr, infoW), infoX, line2Y);
+
+      // Baris 3: Waktu Lengkap (Hari, Tanggal Bulan Tahun • Jam WIB)
+      const line3Y = infoY + (lineGap * 2);
+      ctx.font = `500 ${Math.round(11 * scale)}px 'Plus Jakarta Sans', sans-serif`;
+      ctx.fillStyle = '#e2e8f0';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+      const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+      const now = new Date();
+      const timeFormatted = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()} • ${now.toLocaleTimeString('id-ID')} WIB`;
+      ctx.fillText(fitText(`⏰ ${timeFormatted}`, infoW), infoX, line3Y);
+
+      // Baris 4: Nama Lokasi
+      const line4Y = infoY + (lineGap * 3);
+      ctx.font = `500 ${Math.round(10.5 * scale)}px 'Plus Jakarta Sans', sans-serif`;
+      ctx.fillStyle = '#cbd5e1';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      const locStr = `📍 Workshop Astra Daihatsu A. Yani (Palapa)`;
+      ctx.fillText(fitText(locStr, infoW), infoX, line4Y);
+
+      // Baris 5: Koordinat GPS & Validasi Radius
+      const line5Y = infoY + (lineGap * 4);
+      ctx.font = `bold ${Math.round(10 * scale)}px monospace, 'Plus Jakarta Sans', sans-serif`;
+      ctx.fillStyle = '#38bdf8';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      const radStatus = userLocation.isInside ? `Radius: ${Math.round(userLocation.distance)}m (Valid)` : `Luar Radius: ${Math.round(userLocation.distance)}m`;
+      const gpsStr = `🌐 GPS: ${userLocation.lat.toFixed(5)}, ${userLocation.lng.toFixed(5)} (${radStatus})`;
+      ctx.fillText(fitText(gpsStr, infoW), infoX, line5Y);
+
+      ctx.restore();
+    }
+
     function captureSnapshot() {
       // Validasi Pemblokir Geofencing untuk Clock IN
       if (activeAttendanceType === 'IN' && !userLocation.isInside) {
-        alert(`Aksi Ditolak!\nJarak Anda: ${userLocation.distance} meter dari bengkel.\nSesuai PRD, Clock IN wajib berada di dalam radius workshop (≤ ${workshopConfig.radiusMeters} m).\n\nJika Anda sudah berada di lokasi bengkel, silakan klik tombol 'Kalibrasi Titik Saya'.`);
+        showAppToast('Aksi Ditolak!', `Jarak Anda: ${userLocation.distance} meter dari bengkel.\nSesuai SOP, Clock IN wajib berada di dalam radius workshop (≤ ${workshopConfig.radiusMeters} m).\n\nJika Anda sudah berada di lokasi bengkel, silakan klik tombol 'Kalibrasi Titik Saya'.`, 'warning');
         return;
       }
 
@@ -2636,42 +3001,10 @@
         ctx.drawImage(fallbackImg, 0, 0, w, h);
       }
 
-      // 1. Gambar background transparan hitam pada area bawah foto (20% tinggi canvas, PRD Seksi 4.2)
-      const bannerHeight = Math.round(h * 0.20);
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.80)';
-      ctx.fillRect(0, h - bannerHeight, w, bannerHeight);
+      // Render Geotag Watermark Profesional dengan Vector Mini-Map Terintegrasi
+      renderWatermarkOnCanvas(ctx, w, h);
 
-      // 2. Tulis teks watermark sesuai spesifikasi PRD Seksi 4.2
-      const now = new Date();
-      const timeStr = now.toLocaleTimeString('id-ID') + ' WIB';
-      const dateFormatted = `${String(now.getDate()).padStart(2,'0')}-${String(now.getMonth()+1).padStart(2,'0')}-${now.getFullYear()}, ${timeStr}`;
-
-      const fontSize = Math.max(14, Math.round(h * 0.032));
-      const lineHeight = fontSize * 1.35;
-      const startY = h - bannerHeight + (fontSize * 1.25);
-      const paddingX = Math.round(w * 0.03);
-
-      // Baris 1 (Cyan): [CLOCK IN/OUT] {NIM} - {NAMA}
-      ctx.fillStyle = '#06b6d4';
-      ctx.font = `bold ${fontSize + 2}px monospace`;
-      ctx.fillText(`[CLOCK ${activeAttendanceType}] ${currentUser.nim} - ${currentUser.nama}`, paddingX, startY);
-
-      // Baris 2 (Putih): WAKTU : {DD-MM-YYYY, HH:mm:ss WIB}
-      ctx.fillStyle = '#ffffff';
-      ctx.font = `${fontSize}px monospace`;
-      ctx.fillText(`WAKTU : ${dateFormatted}`, paddingX, startY + lineHeight);
-
-      // Baris 3 (Abu-abu terang): LOKASI: Workshop Astra Daihatsu Ahmad Yani (Jarak: {X} m)
-      ctx.fillStyle = '#e2e8f0';
-      ctx.font = `${fontSize}px monospace`;
-      ctx.fillText(`LOKASI: Workshop Astra Daihatsu Ahmad Yani (Jarak: ${userLocation.distance} m)`, paddingX, startY + (lineHeight * 2));
-
-      // Baris 4 (Abu-abu): GPS : Lat {lat}, Long {lng} | Akurasi: ±{acc}m
-      ctx.fillStyle = '#94a3b8';
-      ctx.font = `${Math.round(fontSize * 0.9)}px monospace`;
-      ctx.fillText(`GPS   : Lat ${userLocation.lat.toFixed(4)}, Long ${userLocation.lng.toFixed(4)} | Akurasi: ±${userLocation.accuracy}m`, paddingX, startY + (lineHeight * 3));
-
-      // 3. Konversi canvas menjadi Base64 JPEG kualitas 0.70 (target payload <= 200 KB, PRD Seksi 4.2)
+      // Konversi canvas menjadi Base64 JPEG kualitas 0.70 (target payload <= 200 KB)
       capturedImageBase64 = canvas.toDataURL('image/jpeg', 0.70);
 
       video.classList.add('hidden');
