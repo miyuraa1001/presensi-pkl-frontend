@@ -718,11 +718,39 @@
       <section id="view-rekap" class="hidden space-y-5">
         
         <!-- Print-only Title Header -->
-        <div class="print-only-header mb-4">
-          <h1 class="text-xl font-bold text-slate-900">LAPORAN REKAPITULASI PRESENSI PKL MEKANIK</h1>
-          <p class="text-sm text-slate-600">Astra Daihatsu Ahmad Yani, Bandar Lampung</p>
-          <p class="text-xs text-slate-500" id="print-user-meta">Nama: Mekanik Magang | NIM: -</p>
-          <hr class="my-2 border-slate-300">
+        <div class="print-only-header mb-6">
+          <div class="flex items-center justify-between border-b-2 border-slate-900 pb-3 mb-3">
+            <div class="flex items-center gap-3">
+              <img src="Image/Logo-Daihatsu.png" alt="Daihatsu" class="h-10 w-auto">
+              <div>
+                <h1 class="text-base font-black text-slate-900 tracking-tight leading-tight">PT. ASTRA INTERNATIONAL TBK - DAIHATSU</h1>
+                <p class="text-xs font-semibold text-slate-700">Workshop Astra Daihatsu Ahmad Yani, Bandar Lampung</p>
+                <p class="text-[10px] text-slate-500">Jl. Ahmad Yani No. 1, Palapa, Tanjung Karang Pusat, Kota Bandar Lampung 35119</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <span class="inline-block px-3 py-1 bg-slate-100 border border-slate-300 rounded font-bold text-xs text-slate-800">
+                LAPORAN RESMI PKL
+              </span>
+            </div>
+          </div>
+
+          <div class="text-center my-3">
+            <h2 class="text-sm font-extrabold uppercase text-slate-900 tracking-wider">REKAPITULASI KEHADIRAN & JAM KERJA PRAKTIK KERJA LAPANGAN (PKL)</h2>
+            <p class="text-[11px] text-slate-600 font-medium">Bulan Berjalan • Periode Magang Teknisi Bengkel</p>
+          </div>
+
+          <!-- Student Meta Grid -->
+          <div class="grid grid-cols-2 gap-2 text-xs p-3 bg-slate-50 border border-slate-300 rounded-lg mb-4" id="print-user-meta-grid">
+            <div>
+              <p><span class="font-bold text-slate-600">Nama Siswa:</span> <span id="print-nama" class="font-black text-slate-900">Mekanik Magang</span></p>
+              <p class="mt-1"><span class="font-bold text-slate-600">NISN / NIM:</span> <span id="print-nim" class="font-mono font-bold text-slate-900">-</span></p>
+            </div>
+            <div>
+              <p><span class="font-bold text-slate-600">Asal Sekolah:</span> <span id="print-instansi" class="font-bold text-slate-900">-</span></p>
+              <p class="mt-1"><span class="font-bold text-slate-600">Program Keahlian:</span> <span id="print-jurusan" class="font-bold text-slate-900">Teknik Kendaraan Ringan (TKR)</span></p>
+            </div>
+          </div>
         </div>
 
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200">
@@ -829,6 +857,30 @@
           <!-- Mobile View: Modern Card List (md:hidden) -->
           <div class="md:hidden divide-y divide-slate-100" id="rekap-mobile-cards">
             <!-- Dynamically rendered mobile cards -->
+          </div>
+        </div>
+
+        <!-- Print-only Signature Block (Formal Report) -->
+        <div class="print-only-header mt-8 pt-4">
+          <div class="grid grid-cols-3 gap-4 text-center text-xs">
+            <div>
+              <p class="text-slate-600 font-medium">Siswa Praktik (PKL),</p>
+              <div class="h-20"></div>
+              <p class="font-bold text-slate-900 underline" id="print-sign-student">Mekanik Magang</p>
+              <p class="text-[10px] text-slate-500">NISN / NIM: <span id="print-sign-nim">-</span></p>
+            </div>
+            <div>
+              <p class="text-slate-600 font-medium">Pembimbing Bengkel,</p>
+              <div class="h-20"></div>
+              <p class="font-bold text-slate-900 underline">Foreman / Service Advisor</p>
+              <p class="text-[10px] text-slate-500">Workshop Astra Daihatsu A. Yani</p>
+            </div>
+            <div>
+              <p class="text-slate-600 font-medium">Mengetahui (Pimpinan Bengkel),</p>
+              <div class="h-20"></div>
+              <p class="font-bold text-slate-900 underline">Kepala Bengkel / Workshop Head</p>
+              <p class="text-[10px] text-slate-500">PT. Astra International Tbk</p>
+            </div>
           </div>
         </div>
       </section>
@@ -1359,7 +1411,7 @@
           <ul class="list-disc pl-4 text-[11px] text-blue-900/90 space-y-0.5">
             <li>Membuka presensi 1-tap langsung tanpa perlu repot mengetik link web lagi.</li>
             <li>Layar penuh (full-screen) tanpa address bar browser yang mengganggu.</li>
-            <li>Akses lokasi GPS bengkel & kamera presensi berjalan lebih cepat dan presisi.</li>
+            <li>Akses lokasi GPS bengkel & verifikasi presensi geofencing berjalan lebih cepat, instan, dan presisi.</li>
           </ul>
         </div>
       </div>
@@ -2423,7 +2475,22 @@
     function updateProfileDisplay() {
       document.getElementById('user-display-name').innerText = currentUser.nama;
       document.getElementById('user-display-nim').innerText = 'NIM: ' + currentUser.nim;
-      document.getElementById('print-user-meta').innerText = `Nama: ${currentUser.nama} | NIM: ${currentUser.nim} | Jurusan: ${currentUser.jurusan}`;
+      
+      const printMeta = document.getElementById('print-user-meta');
+      if (printMeta) printMeta.innerText = `Nama: ${currentUser.nama} | NIM: ${currentUser.nim} | Jurusan: ${currentUser.jurusan}`;
+
+      const printNama = document.getElementById('print-nama');
+      if (printNama) printNama.innerText = currentUser.nama;
+      const printNim = document.getElementById('print-nim');
+      if (printNim) printNim.innerText = currentUser.nim;
+      const printInstansi = document.getElementById('print-instansi');
+      if (printInstansi) printInstansi.innerText = currentUser.instansi;
+      const printJurusan = document.getElementById('print-jurusan');
+      if (printJurusan) printJurusan.innerText = currentUser.jurusan;
+      const printSignStudent = document.getElementById('print-sign-student');
+      if (printSignStudent) printSignStudent.innerText = currentUser.nama;
+      const printSignNim = document.getElementById('print-sign-nim');
+      if (printSignNim) printSignNim.innerText = currentUser.nim;
 
       // Avatar & Inisial Handling (Topbar + Settings)
       const initials = currentUser.nama ? currentUser.nama.split(' ').filter(Boolean).map(w => w[0]).slice(0, 2).join('').toUpperCase() : 'M';
@@ -2701,6 +2768,19 @@
         }
       }
 
+      // Dynamic Submit Button Appearance based on radius
+      const btnSubmit = document.getElementById('btn-submit-attendance');
+      const btnSubmitLbl = document.getElementById('btn-submit-attendance-label');
+      if (btnSubmit && btnSubmitLbl) {
+        if (activeAttendanceType === 'IN' && !isInside) {
+          btnSubmit.className = "w-full py-4 bg-amber-600 hover:bg-amber-700 active:scale-[0.98] text-white rounded-2xl font-bold text-base shadow-lg shadow-amber-600/25 transition flex items-center justify-center gap-2 cursor-pointer";
+          btnSubmitLbl.innerText = `Di Luar Radius (${distance} m) - Klik Kalibrasi`;
+        } else {
+          btnSubmit.className = "w-full py-4 bg-[#0d59a8] hover:bg-[#0b4a8c] active:scale-[0.98] text-white rounded-2xl font-bold text-base shadow-lg shadow-blue-700/25 transition flex items-center justify-center gap-2 cursor-pointer";
+          btnSubmitLbl.innerText = `Confirm ${activeAttendanceType === 'IN' ? 'Clock In' : 'Clock Out'}`;
+        }
+      }
+
       if (clockFlowMap) {
         clockFlowMap.setView([userLocation.lat, userLocation.lng], 17);
       }
@@ -2944,9 +3024,16 @@
         workingDateEl.innerText = formatEnglishDateShort(now);
       }
 
+      const btnSubmit = document.getElementById('btn-submit-attendance');
       const btnSubmitLbl = document.getElementById('btn-submit-attendance-label');
-      if (btnSubmitLbl) {
-        btnSubmitLbl.innerText = isClockIn ? "Confirm Clock In" : "Confirm Clock Out";
+      if (btnSubmit && btnSubmitLbl) {
+        if (isClockIn && !userLocation.isInside) {
+          btnSubmit.className = "w-full py-4 bg-amber-600 hover:bg-amber-700 active:scale-[0.98] text-white rounded-2xl font-bold text-base shadow-lg shadow-amber-600/25 transition flex items-center justify-center gap-2 cursor-pointer";
+          btnSubmitLbl.innerText = `Di Luar Radius (${userLocation.distance} m) - Klik Kalibrasi`;
+        } else {
+          btnSubmit.className = "w-full py-4 bg-[#0d59a8] hover:bg-[#0b4a8c] active:scale-[0.98] text-white rounded-2xl font-bold text-base shadow-lg shadow-blue-700/25 transition flex items-center justify-center gap-2 cursor-pointer";
+          btnSubmitLbl.innerText = isClockIn ? "Confirm Clock In" : "Confirm Clock Out";
+        }
       }
 
       // Update Alamat & Koordinat Riil Sesuai Referensi Gambar
@@ -3043,7 +3130,14 @@
     // --- SUBMIT PRESENSI ONLINE TANPA FOTO (SESUAI REQUEST KLIEN) ---
     async function submitAttendance() {
       if (activeAttendanceType === 'IN' && !userLocation.isInside) {
-        showAppToast('Aksi Ditolak!', `Jarak Anda: ${userLocation.distance} meter dari bengkel. Clock IN wajib berada di dalam radius workshop (≤ ${workshopConfig.radiusMeters} m).\n\nJika Anda sudah berada di lokasi bengkel, silakan klik tombol 'Kalibrasi'.`, 'warning');
+        const doCalibrate = await showAppConfirm(
+          `Posisi Anda terdeteksi berjarak ${userLocation.distance} meter dari bengkel (Maksimal radius toleransi: ${workshopConfig.radiusMeters} meter).\n\nJika Anda saat ini sudah berada di area Workshop Astra Daihatsu Ahmad Yani, apakah Anda ingin mengkalibrasikan titik acuan bengkel ke posisi GPS Anda sekarang?`,
+          "Di Luar Radius Bengkel",
+          { okText: "Kalibrasi Titik Bengkel", cancelText: "Batal", isDanger: false }
+        );
+        if (doCalibrate) {
+          calibrateCurrentLocation();
+        }
         return;
       }
 
