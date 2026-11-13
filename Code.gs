@@ -25,7 +25,7 @@
 // =======================================================================
 // KONFIGURASI ID GOOGLE DRIVE, SPREADSHEET & SECRET CODE KEAMANAN
 // =======================================================================
-const SPREADSHEET_ID     = "MASUKKAN_SPREADSHEET_ID_DISINI";
+const SPREADSHEET_ID     = "1TDPyxWgCkxzxYXYVV6YFSWEd5zk70M2evcad_fMviB0w";
 const FOLDER_PRESENSI_ID = "MASUKKAN_ID_FOLDER_FOTO_ABSENSI_DISINI";
 const FOLDER_PROFIL_ID   = "MASUKKAN_ID_FOLDER_FOTO_PROFIL_DISINI";
 const FOLDER_SKD_ID      = "MASUKKAN_ID_FOLDER_SURAT_DOKTER_SKD_DISINI";
@@ -81,7 +81,12 @@ function doPost(e) {
       }
     }
 
-    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    let ss;
+    try {
+      ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    } catch (errOpen) {
+      ss = SpreadsheetApp.getActiveSpreadsheet();
+    }
     
     // ===================================================================
     // 1. ACTION: PRESENSI (Clock IN & Clock OUT)
@@ -192,23 +197,32 @@ function doPost(e) {
 
       const now = new Date();
       if (rowIndex > 1) {
-        // Update baris yang sudah ada
-        sheetMaster.getRange(rowIndex, 2).setValue(data.nama || "-");
-        sheetMaster.getRange(rowIndex, 3).setValue(data.instansi || "-");
-        sheetMaster.getRange(rowIndex, 4).setValue(data.jurusan || "-");
+        // Update baris yang sudah ada (11 Kolom Sesuai Spreadsheet)
+        if (data.nama) sheetMaster.getRange(rowIndex, 2).setValue(data.nama);
+        if (data.instansi) sheetMaster.getRange(rowIndex, 3).setValue(data.instansi);
+        if (data.jurusan) sheetMaster.getRange(rowIndex, 4).setValue(data.jurusan);
         if (avatarUrl !== "-") {
           sheetMaster.getRange(rowIndex, 5).setValue(avatarUrl);
         }
-        sheetMaster.getRange(rowIndex, 7).setValue(now);
+        if (data.statusMagang) sheetMaster.getRange(rowIndex, 6).setValue(data.statusMagang);
+        if (data.statusRole) sheetMaster.getRange(rowIndex, 7).setValue(data.statusRole);
+        if (data.username) sheetMaster.getRange(rowIndex, 8).setValue(data.username);
+        if (data.password) sheetMaster.getRange(rowIndex, 9).setValue(data.password);
+        if (data.cabang) sheetMaster.getRange(rowIndex, 10).setValue(data.cabang);
+        sheetMaster.getRange(rowIndex, 11).setValue(now);
       } else {
-        // Siswa baru -> Tambah baris baru
+        // Baris baru (11 Kolom)
         sheetMaster.appendRow([
           data.nim || "-",
           data.nama || "-",
           data.instansi || "-",
           data.jurusan || "-",
           avatarUrl,
-          "Aktif",
+          data.statusMagang || "Aktif",
+          data.statusRole || "Anak Magang",
+          data.username || data.nama || "-",
+          data.password || "1234",
+          data.cabang || "Ahmad Yani",
           now
         ]);
       }
@@ -354,22 +368,25 @@ function doPost(e) {
         rekap: []
       };
 
-      // 1. Ambil Master Siswa Magang
+      // 1. Ambil Master Siswa & Admin dari Master_PKL (11 Kolom)
       const sheetMaster = ss.getSheetByName("Master_PKL");
       if (sheetMaster) {
         const mRows = sheetMaster.getDataRange().getValues();
         for (let i = 1; i < mRows.length; i++) {
           if (mRows[i][0]) {
-            const is9Col = mRows[i].length >= 9;
             result.students.push({
-              nim: mRows[i][0],
+              nim: mRows[i][0].toString(),
               nama: mRows[i][1] || "-",
               instansi: mRows[i][2] || "-",
               jurusan: mRows[i][3] || "-",
-              phone: is9Col ? (mRows[i][4] || "-") : "-",
-              avatar: is9Col ? (mRows[i][5] || "") : (mRows[i][4] || ""),
-              status: is9Col ? (mRows[i][7] || "Aktif Magang") : (mRows[i][5] || "Aktif Magang"),
-              updatedAt: is9Col ? (mRows[i][8] || "") : (mRows[i][6] || "")
+              avatar: mRows[i][4] || "",
+              statusMagang: mRows[i][5] || "Aktif",
+              status: mRows[i][6] || "Anak Magang", // "Admin" atau "Anak Magang"
+              role: (mRows[i][6] && mRows[i][6].toString().toLowerCase() === "admin") ? "admin" : "student",
+              username: mRows[i][7] || mRows[i][1] || "-",
+              password: mRows[i][8] || "1234",
+              cabang: mRows[i][9] || "Ahmad Yani",
+              updatedAt: mRows[i][10] || ""
             });
           }
         }
@@ -514,60 +531,127 @@ function doPost(e) {
         sheetMaster = createMasterPKLSheet(ss);
       }
 
-      // Pastikan struktur header Master_PKL lengkap
-      // [NIM / NISN, Nama Lengkap Siswa, Asal Sekolah / Kampus, Jurusan / Keahlian, No. WhatsApp / HP, URL Foto Profil (Drive), Kata Sandi (Akun), Status Magang, Waktu Registrasi / Update]
+      // Pastikan struktur header Master_PKL lengkap (11 Kolom):
+      // A: NIM_NIS, B: Nama Lengkap, C: Asal Sekolah, D: Jurusan/Keahlian, E: URL Foto Profil, F: Status Magang, G: Status, H: UserName, I: Password, J: Cabang, K: Waktu Update
       const dataRows = sheetMaster.getDataRange().getValues();
       let rowIndex = -1;
       const targetNim = (data.nim || "").toString().trim();
+      const targetUser = (data.username || data.nama || "").toString().trim().toLowerCase();
 
       for (let i = 1; i < dataRows.length; i++) {
-        if (dataRows[i][0] && dataRows[i][0].toString().trim() === targetNim) {
+        const rowNim = (dataRows[i][0] || "").toString().trim();
+        const rowUser = (dataRows[i][7] || "").toString().trim().toLowerCase();
+        if ((targetNim && rowNim === targetNim) || (targetUser && rowUser === targetUser)) {
           rowIndex = i + 1; // 1-based index
           break;
         }
       }
 
       const now = new Date();
-      const phone = data.phone || "-";
-      const pwd = data.password || "daihatsu123";
+      const roleStatus = data.statusRole || "Anak Magang"; // "Admin" atau "Anak Magang"
+      const username = data.username || data.nama || "-";
+      const pwd = data.password || "1234";
+      const cabang = data.cabang || "Ahmad Yani";
+      const statusMagang = data.statusMagang || "Aktif";
 
       if (rowIndex > 1) {
-        // Siswa sudah ada -> Update profil lengkap
+        // Akun sudah ada -> Update profil lengkap
         sheetMaster.getRange(rowIndex, 2).setValue(data.nama || "-");
         sheetMaster.getRange(rowIndex, 3).setValue(data.instansi || "-");
         sheetMaster.getRange(rowIndex, 4).setValue(data.jurusan || "-");
-        sheetMaster.getRange(rowIndex, 5).setValue(phone);
         if (avatarUrl !== "-") {
-          sheetMaster.getRange(rowIndex, 6).setValue(avatarUrl);
+          sheetMaster.getRange(rowIndex, 5).setValue(avatarUrl);
         }
-        sheetMaster.getRange(rowIndex, 7).setValue(pwd);
-        sheetMaster.getRange(rowIndex, 8).setValue("Aktif");
-        sheetMaster.getRange(rowIndex, 9).setValue(now);
+        sheetMaster.getRange(rowIndex, 6).setValue(statusMagang);
+        sheetMaster.getRange(rowIndex, 7).setValue(roleStatus);
+        sheetMaster.getRange(rowIndex, 8).setValue(username);
+        sheetMaster.getRange(rowIndex, 9).setValue(pwd);
+        sheetMaster.getRange(rowIndex, 10).setValue(cabang);
+        sheetMaster.getRange(rowIndex, 11).setValue(now);
       } else {
-        // Pendaftaran Siswa Magang Baru
+        // Pendaftaran Baru (11 Kolom Sesuai Format Spreadsheet)
         sheetMaster.appendRow([
           data.nim || "-",
           data.nama || "-",
           data.instansi || "-",
           data.jurusan || "-",
-          phone,
           avatarUrl,
+          statusMagang,
+          roleStatus,
+          username,
           pwd,
-          "Aktif",
+          cabang,
           now
         ]);
       }
 
       return ContentService.createTextOutput(JSON.stringify({
         status: "success",
-        message: `Registrasi peserta magang ${data.nama} (NIM: ${data.nim}) berhasil disimpan ke database Astra Daihatsu.`,
+        message: `Registrasi ${roleStatus} ${data.nama} (Cabang: ${cabang}) berhasil disimpan ke database Astra Daihatsu.`,
         nim: data.nim,
         nama: data.nama,
         instansi: data.instansi,
         jurusan: data.jurusan,
-        phone: phone,
+        username: username,
+        cabang: cabang,
+        statusRole: roleStatus,
         avatarUrl: avatarUrl
       })).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // ===================================================================
+    // 8. ACTION: VERIFIKASI LOGIN PENGGUNA LANGSUNG DARI GOOGLE SHEETS
+    // ===================================================================
+    if (data.action === "login_user") {
+      let sheetMaster = ss.getSheetByName("Master_PKL");
+      if (!sheetMaster) {
+        return ContentService.createTextOutput(JSON.stringify({ 
+          status: "error", 
+          message: "Sheet Master_PKL belum ditemukan." 
+        })).setMimeType(ContentService.MimeType.JSON);
+      }
+
+      const rows = sheetMaster.getDataRange().getValues();
+      const loginInput = (data.loginInput || "").toString().trim().toLowerCase();
+      const password = (data.password || "").toString().trim();
+
+      let matchedUser = null;
+      for (let i = 1; i < rows.length; i++) {
+        const rowNim = (rows[i][0] || "").toString().trim().toLowerCase();
+        const rowNama = (rows[i][1] || "").toString().trim().toLowerCase();
+        const rowUser = (rows[i][7] || "").toString().trim().toLowerCase();
+        const rowPwd = (rows[i][8] || "").toString().trim();
+
+        if ((rowNim === loginInput || rowUser === loginInput || rowNama === loginInput) && rowPwd === password) {
+          const roleStr = (rows[i][6] || "").toString().trim();
+          matchedUser = {
+            nim: rows[i][0].toString(),
+            nama: rows[i][1] || "-",
+            instansi: rows[i][2] || "-",
+            jurusan: rows[i][3] || "-",
+            avatar: rows[i][4] || "",
+            statusMagang: rows[i][5] || "Aktif",
+            statusRole: roleStr || "Anak Magang",
+            role: (roleStr.toLowerCase() === "admin") ? "admin" : "student",
+            username: rows[i][7] || rows[i][1] || "-",
+            cabang: rows[i][9] || "Ahmad Yani"
+          };
+          break;
+        }
+      }
+
+      if (matchedUser) {
+        return ContentService.createTextOutput(JSON.stringify({
+          status: "success",
+          message: "Login berhasil terverifikasi.",
+          user: matchedUser
+        })).setMimeType(ContentService.MimeType.JSON);
+      } else {
+        return ContentService.createTextOutput(JSON.stringify({
+          status: "error",
+          message: "NIM / Username atau Kata Sandi salah."
+        })).setMimeType(ContentService.MimeType.JSON);
+      }
     }
 
     return ContentService.createTextOutput(JSON.stringify({
@@ -691,15 +775,17 @@ function createMasterPKLSheet(ss) {
   
   sheet.clear();
   const headers = [
-    "NIM / NISN", 
-    "Nama Lengkap Siswa", 
-    "Asal Sekolah / Kampus", 
-    "Jurusan / Keahlian", 
-    "No. WhatsApp / HP",
-    "URL Foto Profil (Drive)", 
-    "Kata Sandi (Akun)",
+    "NIM_NIS", 
+    "Nama Lengkap", 
+    "Asal Sekolah", 
+    "Jurusan/Keahlian", 
+    "URL Foto Profil", 
     "Status Magang", 
-    "Waktu Registrasi / Update"
+    "Status", 
+    "UserName", 
+    "Password", 
+    "Cabang", 
+    "Waktu Update"
   ];
   sheet.appendRow(headers);
   formatHeaderRow(sheet, headers.length, "#0d1a3a"); // Navy Daihatsu

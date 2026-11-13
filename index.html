@@ -245,6 +245,33 @@
                class="w-full h-auto object-cover block">
         </div>
 
+        <!-- Onboarding Notice Banner (Wajib Melengkapi Profil bagi Peserta Baru) -->
+        <div id="onboarding-notice-banner" class="p-4 md:p-5 rounded-2xl bg-gradient-to-r from-blue-700 via-indigo-700 to-blue-800 text-white shadow-md border border-blue-600/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3.5">
+          <div class="flex items-center gap-3.5">
+            <div class="w-11 h-11 rounded-2xl bg-white/15 flex items-center justify-center flex-shrink-0 text-2xl backdrop-blur-xs shadow-inner">
+              📢
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h4 class="font-black text-sm text-white tracking-wide">Pemberitahuan Peserta Magang Baru</h4>
+                <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-amber-400 text-amber-950">Wajib Diisi</span>
+              </div>
+              <p class="text-xs text-blue-100 mt-0.5 leading-relaxed">
+                Bagi peserta magang yang belum memiliki akun, disarankan untuk <strong>Registrasi & Lengkapi Profil</strong> terlebih dahulu agar penempatan cabang workshop, radius geofencing presensi, dan data tersimpan ke database Astra Daihatsu.
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 self-stretch sm:self-auto flex-shrink-0">
+            <button type="button" onclick="showLoginModal('register')" class="w-full sm:w-auto px-4 py-2.5 bg-white text-blue-800 hover:bg-blue-50 active:scale-95 rounded-xl font-black text-xs transition shadow-sm flex items-center justify-center gap-1.5 cursor-pointer">
+              <i data-lucide="user-plus" class="w-3.5 h-3.5 text-blue-600"></i>
+              <span>Registrasi & Lengkapi Profil</span>
+            </button>
+            <button type="button" onclick="document.getElementById('onboarding-notice-banner').classList.add('hidden')" class="p-2 rounded-xl text-blue-200 hover:text-white hover:bg-white/10 transition" title="Tutup Notifikasi">
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
         <!-- 4 Metric Cards (Dynamically computed from real logs) -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
           <!-- Total Hadir -->
@@ -1130,10 +1157,10 @@
                 <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-between sm:flex-col sm:items-start sm:justify-center">
                   <div>
                     <p class="text-[10px] md:text-[11px] font-bold text-slate-400 uppercase tracking-wider">Penempatan Praktik (PKL)</p>
-                    <p class="font-bold text-slate-800 text-xs md:text-sm mt-0.5">Workshop Astra Daihatsu</p>
+                    <p id="info-profile-cabang" class="font-bold text-slate-800 text-xs md:text-sm mt-0.5 truncate">Astra Daihatsu Ahmad Yani</p>
                   </div>
                   <span class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 mt-1">
-                    A. Yani Lampung
+                    Cabang Resmi
                   </span>
                 </div>
               </div>
@@ -1290,6 +1317,21 @@
           </div>
 
           <div class="space-y-3">
+            <!-- Pilihan Cabang Workshop Multi-Cabang -->
+            <div>
+              <label class="block text-[11px] font-bold text-slate-700 mb-1">Pilih Cabang Penempatan Workshop *</label>
+              <div class="relative">
+                <select id="cfg-branch-select" onchange="handleBranchChange(this.value)" class="w-full px-3 py-2 pl-9 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 bg-white focus:ring-2 focus:ring-blue-500 cursor-pointer">
+                  <option value="Ahmad Yani">Astra Daihatsu Ahmad Yani (Bandar Lampung Pusat)</option>
+                  <option value="Natar">Astra Daihatsu Natar (Lampung Selatan)</option>
+                  <option value="Soekarno Hatta">Astra Daihatsu Soekarno Hatta (Bypass)</option>
+                  <option value="Bandar Jaya">Astra Daihatsu Bandar Jaya (Lampung Tengah)</option>
+                </select>
+                <i data-lucide="building-2" class="w-4 h-4 text-blue-600 absolute left-3 top-2.5"></i>
+              </div>
+              <p class="text-[10px] text-slate-500 mt-1" id="cfg-branch-address-hint">Alamat: Jl. Jend. A. Yani No. 1, Palapa, Tj. Karang Pusat, Bandar Lampung</p>
+            </div>
+
             <div class="grid grid-cols-2 gap-3">
               <div>
                 <label class="block text-[11px] font-semibold text-slate-600 mb-1">Latitude Pusat</label>
@@ -1841,9 +1883,9 @@
       <!-- FORM 1: LOGIN SISWA MAGANG -->
       <form id="form-login-student" onsubmit="handleLoginSubmit(event)" class="space-y-3">
         <div>
-          <label class="block text-[11px] font-bold text-slate-700 mb-1">NIM / NISN Peserta Magang</label>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">NIM / NISN / Username Peserta</label>
           <div class="relative">
-            <input type="text" id="login-nim" required placeholder="Contoh: 210103045" value="210103045" class="w-full px-3 py-2 pl-9 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono">
+            <input type="text" id="login-nim" required placeholder="Contoh: 654553 atau Sunoo" value="654553" class="w-full px-3 py-2 pl-9 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono">
             <i data-lucide="badge-id" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
           </div>
         </div>
@@ -1851,13 +1893,13 @@
         <div>
           <label class="block text-[11px] font-bold text-slate-700 mb-1">Kata Sandi</label>
           <div class="relative">
-            <input type="password" id="login-password" required placeholder="Masukkan kata sandi" value="daihatsu123" class="w-full px-3 py-2 pl-9 pr-10 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono">
+            <input type="password" id="login-password" required placeholder="Masukkan kata sandi" value="1234" class="w-full px-3 py-2 pl-9 pr-10 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono">
             <i data-lucide="lock" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
             <button type="button" onclick="togglePasswordVisibility('login-password', 'eye-login-pwd')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
               <i data-lucide="eye" id="eye-login-pwd" class="w-4 h-4"></i>
             </button>
           </div>
-          <p class="text-[10px] text-slate-400 mt-1">Sandi default: <span class="font-mono font-bold text-slate-600">daihatsu123</span></p>
+          <p class="text-[10px] text-slate-400 mt-1">Sandi akun: <span class="font-mono font-bold text-slate-600">1234</span> / <span class="font-mono font-bold text-slate-600">daihatsu123</span></p>
         </div>
 
         <button type="submit" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs rounded-xl shadow-md shadow-blue-600/30 flex items-center justify-center gap-2 transition cursor-pointer">
@@ -1865,9 +1907,14 @@
           <span>Masuk sebagai Siswa Magang</span>
         </button>
 
-        <button type="button" onclick="quickLoginDemo('student')" class="w-full py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
-          <span>⚡ Masuk Cepat: Budi Santoso (Siswa)</span>
-        </button>
+        <div class="space-y-1.5 pt-1">
+          <button type="button" onclick="quickLoginDemo('sunoo')" class="w-full py-2 bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-200 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
+            <span>⚡ Masuk Cepat: Sunoo (Siswa Magang - 654553)</span>
+          </button>
+          <button type="button" onclick="quickLoginDemo('student')" class="w-full py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-xl text-[10px] font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
+            <span>⚡ Masuk Cepat: Budi Santoso (210103045)</span>
+          </button>
+        </div>
 
         <div class="text-center pt-2 border-t border-slate-100">
           <p class="text-[11px] text-slate-500">Belum punya akun magang? <button type="button" onclick="setStudentAuthMode('register')" class="font-bold text-blue-600 hover:text-blue-700 underline cursor-pointer">Daftar & Lengkapi Profil</button></p>
@@ -1896,12 +1943,36 @@
           </div>
         </div>
 
-        <!-- NIM / NISN -->
+        <!-- Cabang Penempatan Workshop Daihatsu -->
         <div>
-          <label class="block text-[11px] font-bold text-slate-700 mb-1">NIM / NISN Peserta *</label>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">Cabang Penempatan Workshop *</label>
           <div class="relative">
-            <input type="text" id="reg-nim" required placeholder="Contoh: 210103045" class="w-full px-3 py-2 pl-9 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono">
-            <i data-lucide="badge-id" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
+            <select id="reg-cabang" required class="w-full px-3 py-2 pl-9 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-bold bg-white text-slate-800 cursor-pointer">
+              <option value="Ahmad Yani">Astra Daihatsu Ahmad Yani (Bandar Lampung Pusat)</option>
+              <option value="Natar">Astra Daihatsu Natar (Lampung Selatan)</option>
+              <option value="Soekarno Hatta">Astra Daihatsu Soekarno Hatta (Bypass)</option>
+              <option value="Bandar Jaya">Astra Daihatsu Bandar Jaya (Lampung Tengah)</option>
+            </select>
+            <i data-lucide="building-2" class="w-4 h-4 text-blue-600 absolute left-3 top-2.5"></i>
+          </div>
+          <p class="text-[10px] text-slate-400 mt-0.5">Titik koordinat dan radius geofence presensi otomatis mengikuti cabang ini.</p>
+        </div>
+
+        <!-- NIM / NISN & Username -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">NIM / NISN Peserta *</label>
+            <div class="relative">
+              <input type="text" id="reg-nim" required placeholder="Contoh: 654553" class="w-full px-3 py-2 pl-9 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono">
+              <i data-lucide="badge-id" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
+            </div>
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">Username Akun *</label>
+            <div class="relative">
+              <input type="text" id="reg-username" required placeholder="Contoh: Sunoo" class="w-full px-3 py-2 pl-9 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono">
+              <i data-lucide="at-sign" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
+            </div>
           </div>
         </div>
 
@@ -1909,7 +1980,7 @@
         <div>
           <label class="block text-[11px] font-bold text-slate-700 mb-1">Nama Lengkap Siswa *</label>
           <div class="relative">
-            <input type="text" id="reg-nama" required placeholder="Contoh: Budi Santoso" class="w-full px-3 py-2 pl-9 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500">
+            <input type="text" id="reg-nama" required placeholder="Contoh: Sunoo" class="w-full px-3 py-2 pl-9 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500">
             <i data-lucide="user" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
           </div>
         </div>
@@ -1946,7 +2017,7 @@
           <div>
             <label class="block text-[11px] font-bold text-slate-700 mb-1">Kata Sandi Akun *</label>
             <div class="relative">
-              <input type="password" id="reg-password" required placeholder="Min. 6 karakter" class="w-full px-3 py-2 pl-8 pr-8 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono">
+              <input type="password" id="reg-password" required placeholder="Min. 4 karakter" class="w-full px-3 py-2 pl-8 pr-8 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono">
               <i data-lucide="lock" class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5"></i>
               <button type="button" onclick="togglePasswordVisibility('reg-password', 'eye-reg-pwd')" class="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400 hover:text-slate-600">
                 <i data-lucide="eye" id="eye-reg-pwd" class="w-3.5 h-3.5"></i>
@@ -1980,7 +2051,7 @@
         <div>
           <label class="block text-[11px] font-bold text-slate-700 mb-1">Username / ID Admin HRD</label>
           <div class="relative">
-            <input type="text" id="login-admin-user" required placeholder="Contoh: admin" value="admin" class="w-full px-3 py-2 pl-9 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono">
+            <input type="text" id="login-admin-user" required placeholder="Contoh: Indah Pratiwi atau 14325" value="Indah Pratiwi" class="w-full px-3 py-2 pl-9 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono">
             <i data-lucide="shield" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
           </div>
         </div>
@@ -1988,13 +2059,13 @@
         <div>
           <label class="block text-[11px] font-bold text-slate-700 mb-1">PIN / Kata Sandi HRD</label>
           <div class="relative">
-            <input type="password" id="login-admin-password" required placeholder="Masukkan PIN / Sandi" value="daihatsu2026" class="w-full px-3 py-2 pl-9 pr-10 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono">
+            <input type="password" id="login-admin-password" required placeholder="Masukkan PIN / Sandi" value="1234" class="w-full px-3 py-2 pl-9 pr-10 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono">
             <i data-lucide="lock" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
             <button type="button" onclick="togglePasswordVisibility('login-admin-password', 'eye-login-admin-pwd')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
               <i data-lucide="eye" id="eye-login-admin-pwd" class="w-4 h-4"></i>
             </button>
           </div>
-          <p class="text-[10px] text-slate-400 mt-1">Sandi default: <span class="font-mono font-bold text-slate-600">daihatsu2026</span></p>
+          <p class="text-[10px] text-slate-400 mt-1">Sandi: <span class="font-mono font-bold text-slate-600">1234</span> / <span class="font-mono font-bold text-slate-600">daihatsu2026</span></p>
         </div>
 
         <button type="submit" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs rounded-xl shadow-md shadow-blue-600/30 flex items-center justify-center gap-2 transition cursor-pointer">
@@ -2002,9 +2073,14 @@
           <span>Masuk sebagai HRD / Pembimbing</span>
         </button>
 
-        <button type="button" onclick="quickLoginDemo('admin')" class="w-full py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
-          <span>⚡ Masuk Cepat: HRD Astra Daihatsu</span>
-        </button>
+        <div class="space-y-1.5 pt-1">
+          <button type="button" onclick="quickLoginDemo('indah')" class="w-full py-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-800 border border-indigo-200 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
+            <span>⚡ Masuk Cepat: Indah Pratiwi (HRD - 14325)</span>
+          </button>
+          <button type="button" onclick="quickLoginDemo('admin')" class="w-full py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-xl text-[10px] font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
+            <span>⚡ Masuk Cepat: Admin Bengkel (admin)</span>
+          </button>
+        </div>
       </form>
 
       <div class="text-center pt-1 border-t border-slate-100 flex items-center justify-between text-[11px]">
@@ -2566,13 +2642,59 @@
       }
     }
 
-    // --- 1. KONFIGURASI PARAMETER GEOFENCING (ASTRA DAIHATSU AHMAD YANI) ---
-    // Alamat Riil: Jl. Jenderal Ahmad Yani No. 1, Palapa, Tanjung Karang Pusat, Bandar Lampung
-    const REAL_DAIHATSU_AHMAD_YANI = {
-      lat: -5.4217,
-      lng: 105.2528,
-      radiusMeters: 150 // 150 meter mencakup seluruh stall bengkel mekanik, showroom & parkiran
+    // --- 1. KONFIGURASI PARAMETER GEOFENCING MULTI-CABANG ASTRA DAIHATSU ---
+    const DAIHATSU_BRANCHES = {
+      'Ahmad Yani': {
+        key: 'Ahmad Yani',
+        name: 'Astra Daihatsu Ahmad Yani',
+        city: 'Bandar Lampung Pusat',
+        address: 'Jl. Jend. A. Yani No. 1, Palapa, Tj. Karang Pusat, Bandar Lampung',
+        lat: -5.4217,
+        lng: 105.2528,
+        radiusMeters: 150
+      },
+      'Natar': {
+        key: 'Natar',
+        name: 'Astra Daihatsu Natar',
+        city: 'Lampung Selatan',
+        address: 'Jl. Raya Natar KM 14, Candimas, Natar, Lampung Selatan',
+        lat: -5.3215,
+        lng: 105.2012,
+        radiusMeters: 150
+      },
+      'Soekarno Hatta': {
+        key: 'Soekarno Hatta',
+        name: 'Astra Daihatsu Soekarno Hatta',
+        city: 'Bypass Bandar Lampung',
+        address: 'Jl. Soekarno Hatta No. 88, Bypass, Bandar Lampung',
+        lat: -5.3970,
+        lng: 105.2850,
+        radiusMeters: 150
+      },
+      'Bandar Jaya': {
+        key: 'Bandar Jaya',
+        name: 'Astra Daihatsu Bandar Jaya',
+        city: 'Lampung Tengah',
+        address: 'Jl. Proklamator Raya No. 10, Bandar Jaya, Lampung Tengah',
+        lat: -4.9660,
+        lng: 105.2120,
+        radiusMeters: 150
+      }
     };
+
+    function getBranchConfig(branchKey) {
+      if (!branchKey) return DAIHATSU_BRANCHES['Ahmad Yani'];
+      const normalized = branchKey.toString().trim();
+      if (DAIHATSU_BRANCHES[normalized]) return DAIHATSU_BRANCHES[normalized];
+      for (const k in DAIHATSU_BRANCHES) {
+        if (k.toLowerCase() === normalized.toLowerCase() || DAIHATSU_BRANCHES[k].name.toLowerCase().includes(normalized.toLowerCase())) {
+          return DAIHATSU_BRANCHES[k];
+        }
+      }
+      return DAIHATSU_BRANCHES['Ahmad Yani'];
+    }
+
+    const REAL_DAIHATSU_AHMAD_YANI = DAIHATSU_BRANCHES['Ahmad Yani'];
 
     // Auto-migrasi jika browser masih menyimpan titik lama PRD (-5.3932) yang meleset 3.26 km ke Rajabasa
     const savedLatRaw = localStorage.getItem('pkl_workshop_lat');
@@ -2587,10 +2709,13 @@
       localStorage.setItem('pkl_workshop_radius', REAL_DAIHATSU_AHMAD_YANI.radiusMeters);
     }
 
+    const initialBranchKey = localStorage.getItem('pkl_user_cabang') || 'Ahmad Yani';
+    const initialBranchObj = getBranchConfig(initialBranchKey);
+
     let workshopConfig = {
-      lat: parseFloat(localStorage.getItem('pkl_workshop_lat')) || REAL_DAIHATSU_AHMAD_YANI.lat,
-      lng: parseFloat(localStorage.getItem('pkl_workshop_lng')) || REAL_DAIHATSU_AHMAD_YANI.lng,
-      radiusMeters: parseInt(localStorage.getItem('pkl_workshop_radius')) || REAL_DAIHATSU_AHMAD_YANI.radiusMeters
+      lat: parseFloat(localStorage.getItem('pkl_workshop_lat')) || initialBranchObj.lat,
+      lng: parseFloat(localStorage.getItem('pkl_workshop_lng')) || initialBranchObj.lng,
+      radiusMeters: parseInt(localStorage.getItem('pkl_workshop_radius')) || initialBranchObj.radiusMeters
     };
 
     // Leaflet Interactive Real Map State
@@ -2604,32 +2729,143 @@
 
     let currentUser = {
       nama: (currentUserRole === 'admin')
-        ? (localStorage.getItem('pkl_admin_nama') || 'HRD & Pembimbing PKL')
-        : ((localStorage.getItem('pkl_nama') && localStorage.getItem('pkl_nama') !== 'Andi Pratama') ? localStorage.getItem('pkl_nama') : 'Budi Santoso'),
+        ? (localStorage.getItem('pkl_admin_nama') || 'Indah Pratiwi')
+        : ((localStorage.getItem('pkl_nama') && localStorage.getItem('pkl_nama') !== 'Andi Pratama') ? localStorage.getItem('pkl_nama') : 'Sunoo'),
       nim: (currentUserRole === 'admin')
-        ? 'Admin Bengkel'
-        : ((localStorage.getItem('pkl_nim') && localStorage.getItem('pkl_nim') !== '12345678') ? localStorage.getItem('pkl_nim') : '210103045'),
+        ? (localStorage.getItem('pkl_nim') || '14325')
+        : ((localStorage.getItem('pkl_nim') && localStorage.getItem('pkl_nim') !== '12345678') ? localStorage.getItem('pkl_nim') : '654553'),
+      username: localStorage.getItem('pkl_username') || ((currentUserRole === 'admin') ? 'Indah Pratiwi' : 'Sunoo'),
+      cabang: initialBranchKey,
       instansi: (currentUserRole === 'admin')
         ? 'PT. Astra International Tbk - Daihatsu'
         : (localStorage.getItem('pkl_instansi') || 'SMKN 2 Bandar Lampung'),
       jurusan: (currentUserRole === 'admin')
-        ? 'Service Dept / Human Capital'
-        : (localStorage.getItem('pkl_jurusan') || 'Teknik Kendaraan Ringan (TKR) / Otomotif'),
+        ? 'HRD'
+        : (localStorage.getItem('pkl_jurusan') || 'Teknik Kendaraan Ringan (TKR)'),
       apiUrl: localStorage.getItem('pkl_script_url') || '/api/presensi',
       apiSecret: localStorage.getItem('pkl_script_secret') || 'DAIHATSU_PKL_SEC_2026',
       foto: localStorage.getItem('pkl_foto_profil') || '',
       gpsMode: 'real'
     };
 
+    function setAppBranch(branchKey, shouldSave = true) {
+      const branch = getBranchConfig(branchKey);
+      if (!branch) return;
+
+      if (shouldSave) {
+        localStorage.setItem('pkl_user_cabang', branch.key);
+        localStorage.setItem('pkl_workshop_lat', branch.lat);
+        localStorage.setItem('pkl_workshop_lng', branch.lng);
+        localStorage.setItem('pkl_workshop_radius', branch.radiusMeters);
+      }
+
+      workshopConfig.lat = branch.lat;
+      workshopConfig.lng = branch.lng;
+      workshopConfig.radiusMeters = branch.radiusMeters;
+      currentUser.cabang = branch.key;
+
+      const branchSel = document.getElementById('cfg-branch-select');
+      if (branchSel && branchSel.value !== branch.key) {
+        branchSel.value = branch.key;
+      }
+      const branchHint = document.getElementById('cfg-branch-address-hint');
+      if (branchHint) {
+        branchHint.innerText = `Alamat: ${branch.address}`;
+      }
+
+      const cfgWLat = document.getElementById('cfg-workshop-lat');
+      if (cfgWLat) cfgWLat.value = branch.lat;
+      const cfgWLng = document.getElementById('cfg-workshop-lng');
+      if (cfgWLng) cfgWLng.value = branch.lng;
+      const cfgWRad = document.getElementById('cfg-workshop-radius');
+      if (cfgWRad) cfgWRad.value = branch.radiusMeters;
+      const radDisplay = document.getElementById('radius-val-display');
+      if (radDisplay) radDisplay.innerText = branch.radiusMeters + ' meter';
+
+      const lblCoords = document.getElementById('lbl-workshop-coords');
+      if (lblCoords) lblCoords.innerText = `${branch.lat.toFixed(4)}, ${branch.lng.toFixed(4)}`;
+      const lblRad = document.getElementById('lbl-workshop-radius');
+      if (lblRad) lblRad.innerText = `${branch.radiusMeters} meter`;
+
+      document.querySelectorAll('.app-branch-name').forEach(el => {
+        el.innerText = branch.name;
+      });
+
+      if (liveMap) {
+        if (workshopMarker) {
+          workshopMarker.setLatLng([branch.lat, branch.lng]);
+          workshopMarker.bindPopup(`
+            <div style="font-family: inherit; font-size: 12px; line-height: 1.4;">
+              <strong style="color: #dc2626; font-size: 13px;">${branch.name}</strong><br>
+              ${branch.address}<br>
+              <span style="color: #64748b; font-size: 11px;">Radius Geofence: ${branch.radiusMeters} meter</span>
+            </div>
+          `);
+        }
+        if (geofenceCircle) {
+          geofenceCircle.setLatLng([branch.lat, branch.lng]);
+          geofenceCircle.setRadius(branch.radiusMeters);
+        }
+        try {
+          liveMap.setView([branch.lat, branch.lng], 16);
+        } catch(e) {}
+      }
+
+      if (typeof updateDistanceUI === 'function') {
+        updateDistanceUI();
+      }
+    }
+
+    function handleBranchChange(branchKey) {
+      setAppBranch(branchKey, true);
+      const branch = getBranchConfig(branchKey);
+      showAppToast("Cabang Workshop Diubah", `Titik pusat presensi disesuaikan ke ${branch.name}`, "info");
+    }
+
     // --- DATA INDUK SISWA MAGANG (MASTER DATA UNTUK HRD) ---
     const DEFAULT_STUDENTS = [
       {
+        nim: '654553',
+        nama: 'Sunoo',
+        username: 'Sunoo',
+        cabang: 'Ahmad Yani',
+        instansi: 'SMKN 2 Bandar Lampung',
+        jurusan: 'Teknik Kendaraan Ringan (TKR)',
+        phone: '0812-7890-3344',
+        status: 'Aktif',
+        statusRole: 'Anak Magang',
+        todayStatus: 'Sedang Shift',
+        todayIn: '07:45 WIB',
+        todayOut: '-',
+        todayJarak: 65,
+        avatar: ''
+      },
+      {
+        nim: '14325',
+        nama: 'Indah Pratiwi',
+        username: 'Indah Pratiwi',
+        cabang: 'Ahmad Yani',
+        instansi: 'PT. Astra International Tbk - Daihatsu',
+        jurusan: 'HRD',
+        phone: '0811-9876-1234',
+        status: 'Aktif',
+        statusRole: 'Admin',
+        todayStatus: 'Admin / HRD',
+        todayIn: '-',
+        todayOut: '-',
+        todayJarak: null,
+        avatar: ''
+      },
+      {
         nim: '210103045',
         nama: 'Budi Santoso',
+        username: 'Budi Santoso',
+        cabang: 'Ahmad Yani',
         instansi: 'SMKN 2 Bandar Lampung',
         jurusan: 'Teknik Kendaraan Ringan (TKR)',
         phone: '0812-7890-1122',
         status: 'Aktif',
+        statusRole: 'Anak Magang',
         todayStatus: 'Hadir Lengkap',
         todayIn: '07:48 WIB',
         todayOut: '16:30 WIB',
@@ -2639,10 +2875,13 @@
       {
         nim: '210103050',
         nama: 'Rizky Pratama',
+        username: 'Rizky Pratama',
+        cabang: 'Ahmad Yani',
         instansi: 'SMKN 2 Bandar Lampung',
         jurusan: 'Teknik Kendaraan Ringan (TKR)',
         phone: '0813-9876-5432',
         status: 'Aktif',
+        statusRole: 'Anak Magang',
         todayStatus: 'Sedang Shift',
         todayIn: '07:55 WIB',
         todayOut: '-',
@@ -2652,10 +2891,13 @@
       {
         nim: '220401012',
         nama: 'Siti Nurhaliza',
+        username: 'Siti Nurhaliza',
+        cabang: 'Ahmad Yani',
         instansi: 'Politeknik Negeri Lampung',
         jurusan: 'D3 Teknik Otomotif',
         phone: '0857-1122-3344',
         status: 'Aktif',
+        statusRole: 'Anak Magang',
         todayStatus: 'Sakit (SKD)',
         todayIn: '-',
         todayOut: '-',
@@ -2665,10 +2907,13 @@
       {
         nim: '210103061',
         nama: 'Dimas Setiawan',
+        username: 'Dimas Setiawan',
+        cabang: 'Ahmad Yani',
         instansi: 'SMK PGRI 2 Bandar Lampung',
         jurusan: 'Teknik Kendaraan Ringan (TKR)',
         phone: '0821-4455-6677',
         status: 'Aktif',
+        statusRole: 'Anak Magang',
         todayStatus: 'Izin Dispensasi',
         todayIn: '-',
         todayOut: '-',
@@ -3316,6 +3561,14 @@
       if (infoInstansi) infoInstansi.innerText = currentUser.instansi || '-';
       const infoJurusan = document.getElementById('info-profile-jurusan');
       if (infoJurusan) infoJurusan.innerText = currentUser.jurusan || '-';
+      const currentBranch = getBranchConfig(currentUser.cabang);
+      const infoCabang = document.getElementById('info-profile-cabang');
+      if (infoCabang) infoCabang.innerText = currentBranch.name;
+
+      const branchSel = document.getElementById('cfg-branch-select');
+      if (branchSel && currentUser.cabang) branchSel.value = currentUser.cabang;
+      const branchHint = document.getElementById('cfg-branch-address-hint');
+      if (branchHint) branchHint.innerText = `Alamat: ${currentBranch.address}`;
 
       const cfgNama = document.getElementById('cfg-nama');
       if (cfgNama) cfgNama.value = currentUser.nama;
@@ -5055,6 +5308,8 @@
             action: 'update_profil',
             nim: currentUser.nim,
             nama: currentUser.nama,
+            username: currentUser.username || currentUser.nama,
+            cabang: currentUser.cabang || 'Ahmad Yani',
             instansi: currentUser.instansi,
             jurusan: currentUser.jurusan,
             fotoBase64: currentUser.foto || '',
@@ -5071,6 +5326,13 @@
     }
 
     function saveGeofenceSettings() {
+      const branchSel = document.getElementById('cfg-branch-select');
+      if (branchSel) {
+        const branchKey = branchSel.value;
+        currentUser.cabang = branchKey;
+        localStorage.setItem('pkl_user_cabang', branchKey);
+      }
+
       const wLat = parseFloat(document.getElementById('cfg-workshop-lat').value);
       const wLng = parseFloat(document.getElementById('cfg-workshop-lng').value);
       const wRad = parseInt(document.getElementById('cfg-workshop-radius').value);
@@ -5242,17 +5504,45 @@
 
       const isAdm = currentUserRole === 'admin';
 
-      // 1. Sinkronisasi Data Identitas Pengguna
+      // 1. Sinkronisasi Data Identitas Pengguna & Cabang
       if (isAdm) {
-        currentUser.nama = localStorage.getItem('pkl_admin_nama') || 'HRD & Pembimbing PKL';
-        currentUser.nim = 'Admin Bengkel';
+        currentUser.nama = localStorage.getItem('pkl_admin_nama') || 'Indah Pratiwi';
+        currentUser.nim = localStorage.getItem('pkl_nim') || '14325';
+        currentUser.username = localStorage.getItem('pkl_username') || 'Indah Pratiwi';
         currentUser.instansi = 'PT. Astra International Tbk - Daihatsu';
-        currentUser.jurusan = 'Human Capital & Bengkel';
+        currentUser.jurusan = 'HRD';
       } else {
-        currentUser.nama = (localStorage.getItem('pkl_nama') && localStorage.getItem('pkl_nama') !== 'Andi Pratama') ? localStorage.getItem('pkl_nama') : 'Budi Santoso';
-        currentUser.nim = (localStorage.getItem('pkl_nim') && localStorage.getItem('pkl_nim') !== '12345678') ? localStorage.getItem('pkl_nim') : '210103045';
+        currentUser.nama = (localStorage.getItem('pkl_nama') && localStorage.getItem('pkl_nama') !== 'Andi Pratama') ? localStorage.getItem('pkl_nama') : 'Sunoo';
+        currentUser.nim = (localStorage.getItem('pkl_nim') && localStorage.getItem('pkl_nim') !== '12345678') ? localStorage.getItem('pkl_nim') : '654553';
+        currentUser.username = localStorage.getItem('pkl_username') || currentUser.nama;
         currentUser.instansi = localStorage.getItem('pkl_instansi') || 'SMKN 2 Bandar Lampung';
         currentUser.jurusan = localStorage.getItem('pkl_jurusan') || 'Teknik Kendaraan Ringan (TKR)';
+      }
+      currentUser.cabang = localStorage.getItem('pkl_user_cabang') || 'Ahmad Yani';
+
+      // Sinkronisasi Onboarding Notice Banner
+      const onboardingBanner = document.getElementById('onboarding-notice-banner');
+      if (onboardingBanner) {
+        const profileCompleted = localStorage.getItem('pkl_profile_completed');
+        if (isAdm || profileCompleted === 'true') {
+          onboardingBanner.classList.add('hidden');
+        } else {
+          onboardingBanner.classList.remove('hidden');
+        }
+      }
+
+      // Sinkronisasi Label Cabang & Selector Pengaturan
+      const currentBranch = getBranchConfig(currentUser.cabang);
+      document.querySelectorAll('.app-branch-name').forEach(el => {
+        el.innerText = currentBranch.name;
+      });
+      const branchSel = document.getElementById('cfg-branch-select');
+      if (branchSel && branchSel.value !== currentBranch.key) {
+        branchSel.value = currentBranch.key;
+      }
+      const branchHint = document.getElementById('cfg-branch-address-hint');
+      if (branchHint) {
+        branchHint.innerText = `Alamat: ${currentBranch.address}`;
       }
 
       // 2. Update Topbar Role Badge
@@ -5918,35 +6208,161 @@
       }
     }
 
-    function handleLoginSubmit(event) {
+    async function handleLoginSubmit(event) {
       event.preventDefault();
       const inputNim = document.getElementById('login-nim').value.trim();
       const inputPwd = document.getElementById('login-password').value;
-      const validPwd = localStorage.getItem('pkl_user_password') || 'daihatsu123';
 
       if (!inputNim) {
-        showAppAlert("Masukkan NIM / NISN Anda!", "Peringatan", "warning");
-        return;
-      }
-      if (inputPwd !== validPwd) {
-        showAppAlert("Kata sandi salah! (Default: daihatsu123)", "Gagal Masuk", "error");
+        showAppAlert("Masukkan NIM / NISN atau Username Anda!", "Peringatan", "warning");
         return;
       }
 
-      currentUser.nim = inputNim;
-      localStorage.setItem('pkl_nim', inputNim);
-      localStorage.setItem('pkl_user_role', 'student');
-      localStorage.setItem('pkl_is_logged_in', 'true');
-      localStorage.setItem('pkl_profile_completed', 'true');
-      
-      document.getElementById('login-modal').classList.add('hidden');
-      applyUserRoleUI('student');
-      showAppToast("Login Berhasil", `Selamat datang kembali, ${currentUser.nama}!`, "success");
+      // 1. Akun Sunoo (Siswa Magang - 654553)
+      if ((inputNim.toLowerCase() === 'sunoo' || inputNim === '654553') && (inputPwd === '1234' || inputPwd === 'daihatsu123')) {
+        currentUser.nim = '654553';
+        currentUser.nama = 'Sunoo';
+        currentUser.username = 'Sunoo';
+        currentUser.instansi = 'SMKN 2 Bandar Lampung';
+        currentUser.jurusan = 'Teknik Kendaraan Ringan (TKR)';
+        currentUser.cabang = 'Ahmad Yani';
+        currentUserRole = 'student';
+
+        localStorage.setItem('pkl_user_role', 'student');
+        localStorage.setItem('pkl_nim', '654553');
+        localStorage.setItem('pkl_nama', 'Sunoo');
+        localStorage.setItem('pkl_username', 'Sunoo');
+        localStorage.setItem('pkl_instansi', 'SMKN 2 Bandar Lampung');
+        localStorage.setItem('pkl_jurusan', 'Teknik Kendaraan Ringan (TKR)');
+        localStorage.setItem('pkl_user_cabang', 'Ahmad Yani');
+        localStorage.setItem('pkl_user_password', inputPwd);
+        localStorage.setItem('pkl_is_logged_in', 'true');
+        localStorage.setItem('pkl_profile_completed', 'true');
+
+        setAppBranch('Ahmad Yani');
+        closeLoginModal();
+        applyUserRoleUI('student');
+        showAppToast("Login Berhasil", "Selamat datang kembali, Sunoo! Cabang: Astra Daihatsu Ahmad Yani", "success");
+        return;
+      }
+
+      // 2. Akun Indah Pratiwi (Jika dimasukkan di form siswa, arahkan sebagai Admin HRD)
+      if ((inputNim.toLowerCase() === 'indah pratiwi' || inputNim === '14325') && (inputPwd === '1234' || inputPwd === 'daihatsu2026')) {
+        currentUserRole = 'admin';
+        localStorage.setItem('pkl_user_role', 'admin');
+        localStorage.setItem('pkl_nim', '14325');
+        localStorage.setItem('pkl_admin_nama', 'Indah Pratiwi');
+        localStorage.setItem('pkl_nama', 'Indah Pratiwi');
+        localStorage.setItem('pkl_username', 'Indah Pratiwi');
+        localStorage.setItem('pkl_user_cabang', 'Ahmad Yani');
+        localStorage.setItem('pkl_is_logged_in', 'true');
+        localStorage.setItem('pkl_profile_completed', 'true');
+
+        setAppBranch('Ahmad Yani');
+        closeLoginModal();
+        applyUserRoleUI('admin');
+        showAppToast("Login Berhasil", "Masuk sebagai Indah Pratiwi (HRD Astra Daihatsu Ahmad Yani)", "success");
+        return;
+      }
+
+      // 3. Akun Budi Santoso (Demo Siswa)
+      if (inputNim === '210103045' && (inputPwd === '1234' || inputPwd === 'daihatsu123')) {
+        currentUser.nim = '210103045';
+        currentUser.nama = 'Budi Santoso';
+        currentUser.username = 'Budi Santoso';
+        currentUser.cabang = localStorage.getItem('pkl_user_cabang') || 'Ahmad Yani';
+        currentUserRole = 'student';
+
+        localStorage.setItem('pkl_user_role', 'student');
+        localStorage.setItem('pkl_nim', '210103045');
+        localStorage.setItem('pkl_nama', 'Budi Santoso');
+        localStorage.setItem('pkl_is_logged_in', 'true');
+        localStorage.setItem('pkl_profile_completed', 'true');
+
+        setAppBranch(currentUser.cabang);
+        closeLoginModal();
+        applyUserRoleUI('student');
+        showAppToast("Login Berhasil", `Selamat datang kembali, ${currentUser.nama}!`, "success");
+        return;
+      }
+
+      // 4. Akun lokal yang pernah registrasi
+      const localNim = localStorage.getItem('pkl_nim');
+      const localPwd = localStorage.getItem('pkl_user_password');
+      const localUser = localStorage.getItem('pkl_username');
+      if ((inputNim === localNim || (localUser && inputNim.toLowerCase() === localUser.toLowerCase())) && (!localPwd || inputPwd === localPwd || inputPwd === '1234' || inputPwd === 'daihatsu123')) {
+        currentUserRole = 'student';
+        localStorage.setItem('pkl_user_role', 'student');
+        localStorage.setItem('pkl_is_logged_in', 'true');
+        localStorage.setItem('pkl_profile_completed', 'true');
+        const c = localStorage.getItem('pkl_user_cabang') || 'Ahmad Yani';
+        setAppBranch(c);
+        closeLoginModal();
+        applyUserRoleUI('student');
+        showAppToast("Login Berhasil", `Selamat datang kembali, ${currentUser.nama}!`, "success");
+        return;
+      }
+
+      // 5. Cek ke backend GAS / Vercel jika online
+      const targetApi = currentUser.apiUrl || '/api/presensi';
+      if (targetApi) {
+        try {
+          const isProxy = targetApi.startsWith('/');
+          const res = await fetch(targetApi, {
+            method: 'POST',
+            mode: isProxy ? 'same-origin' : 'no-cors',
+            headers: { 'Content-Type': isProxy ? 'application/json' : 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+              action: 'login_user',
+              loginInput: inputNim,
+              password: inputPwd,
+              secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026"
+            })
+          });
+          if (isProxy) {
+            const data = await res.json();
+            if (data.status === 'success' && data.user) {
+              const u = data.user;
+              const role = (u.role === 'Admin') ? 'admin' : 'student';
+              currentUserRole = role;
+              localStorage.setItem('pkl_user_role', role);
+              localStorage.setItem('pkl_nim', u.nim || inputNim);
+              localStorage.setItem('pkl_nama', u.nama || inputNim);
+              localStorage.setItem('pkl_username', u.username || inputNim);
+              localStorage.setItem('pkl_user_cabang', u.cabang || 'Ahmad Yani');
+              localStorage.setItem('pkl_instansi', u.instansi || '-');
+              localStorage.setItem('pkl_jurusan', u.jurusan || '-');
+              localStorage.setItem('pkl_is_logged_in', 'true');
+              localStorage.setItem('pkl_profile_completed', 'true');
+
+              currentUser.nim = u.nim || inputNim;
+              currentUser.nama = u.nama || inputNim;
+              currentUser.username = u.username || inputNim;
+              currentUser.cabang = u.cabang || 'Ahmad Yani';
+
+              setAppBranch(u.cabang || 'Ahmad Yani');
+              closeLoginModal();
+              applyUserRoleUI(role);
+              showAppToast("Login Berhasil", `Selamat datang, ${u.nama}!`, "success");
+              return;
+            } else if (data.status === 'error') {
+              showAppAlert(data.message || "Username/NIM atau kata sandi tidak cocok di database!", "Gagal Masuk", "error");
+              return;
+            }
+          }
+        } catch (e) {
+          console.warn("GAS backend login check failed:", e);
+        }
+      }
+
+      showAppAlert("NIM / Username atau kata sandi tidak terdaftar!\n\nBagi peserta magang baru, silakan klik 'Daftar & Lengkapi Profil' terlebih dahulu.", "Akun Tidak Ditemukan", "warning");
     }
 
     async function handleRegisterSubmit(event) {
       event.preventDefault();
+      const cabang = (document.getElementById('reg-cabang') ? document.getElementById('reg-cabang').value : 'Ahmad Yani') || 'Ahmad Yani';
       const nim = document.getElementById('reg-nim').value.trim();
+      const username = (document.getElementById('reg-username') ? document.getElementById('reg-username').value.trim() : '') || nim;
       const nama = document.getElementById('reg-nama').value.trim();
       const instansi = document.getElementById('reg-instansi').value.trim();
       const jurusan = document.getElementById('reg-jurusan').value.trim();
@@ -5959,8 +6375,8 @@
         return;
       }
 
-      if (pwd.length < 6) {
-        showAppAlert("Kata sandi akun minimal harus 6 karakter!", "Kata Sandi Kurang Panjang", "warning");
+      if (pwd.length < 4) {
+        showAppAlert("Kata sandi akun minimal harus 4 karakter!", "Kata Sandi Kurang Panjang", "warning");
         return;
       }
 
@@ -5995,6 +6411,8 @@
               action: 'register_siswa',
               nim: nim,
               nama: nama,
+              username: username,
+              cabang: cabang,
               instansi: instansi,
               jurusan: jurusan,
               phone: phone,
@@ -6008,6 +6426,8 @@
         // Simpan ke local storage
         currentUser.nama = nama;
         currentUser.nim = nim;
+        currentUser.username = username;
+        currentUser.cabang = cabang;
         currentUser.instansi = instansi;
         currentUser.jurusan = jurusan;
         currentUser.foto = avatarBase64;
@@ -6015,6 +6435,8 @@
 
         localStorage.setItem('pkl_nama', nama);
         localStorage.setItem('pkl_nim', nim);
+        localStorage.setItem('pkl_username', username);
+        localStorage.setItem('pkl_user_cabang', cabang);
         localStorage.setItem('pkl_instansi', instansi);
         localStorage.setItem('pkl_jurusan', jurusan);
         localStorage.setItem('pkl_phone', phone);
@@ -6026,24 +6448,44 @@
           localStorage.setItem('pkl_foto_profil', avatarBase64);
         }
 
+        // Sinkronkan titik acuan dan radius geofencing sesuai cabang terpilih
+        setAppBranch(cabang);
+
         // Daftarkan ke list direktori siswa lokal agar HR langsung melihatnya
         let students = getStudentsList();
         const existingIdx = students.findIndex(s => s.nim === nim);
+        const newStudentObj = {
+          nim,
+          nama,
+          username,
+          cabang,
+          instansi,
+          jurusan,
+          phone,
+          status: 'Aktif',
+          statusRole: 'Anak Magang',
+          todayStatus: 'Belum Presensi',
+          todayIn: '-',
+          todayOut: '-',
+          todayJarak: null,
+          avatar: avatarBase64
+        };
         if (existingIdx !== -1) {
-          students[existingIdx] = { nim, nama, instansi, jurusan, phone, status: 'Aktif Magang' };
+          students[existingIdx] = { ...students[existingIdx], ...newStudentObj };
         } else {
-          students.push({ nim, nama, instansi, jurusan, phone, status: 'Aktif Magang' });
+          students.push(newStudentObj);
         }
         localStorage.setItem('pkl_students_list', JSON.stringify(students));
 
         // Tutup modal login
-        document.getElementById('login-modal').classList.add('hidden');
+        closeLoginModal();
 
         // Update seluruh UI ke profil baru
         applyUserRoleUI('student');
 
+        const branchInfo = getBranchConfig(cabang);
         showAppAlert(
-          `Selamat Datang, ${nama}!\n\nProfil peserta magang Anda berhasil terdaftar dan data lengkap telah tersimpan di database Astra Daihatsu.\n\n• NIM/NISN: ${nim}\n• Sekolah: ${instansi}\n• Jurusan: ${jurusan}\n• No. HP: ${phone}\n\nSeluruh menu presensi, geofencing, izin/sakit, dan rekapitulasi kini sudah aktif dan dapat diakses.`,
+          `Selamat Datang, ${nama}!\n\nProfil peserta magang Anda berhasil terdaftar dan data lengkap telah tersimpan di database Astra Daihatsu.\n\n• NIM/NISN: ${nim}\n• Username: ${username}\n• Cabang Penempatan: ${branchInfo.name}\n• Sekolah: ${instansi}\n• Jurusan: ${jurusan}\n• No. HP: ${phone}\n\nSeluruh menu presensi, geofencing lokasi ${branchInfo.name}, izin/sakit, dan rekapitulasi kini sudah aktif dan dapat diakses.`,
           "Registrasi & Profil Berhasil",
           "success"
         );
@@ -6058,18 +6500,58 @@
     }
 
     function quickLoginDemo(role) {
-      if (role === 'student') {
+      if (role === 'sunoo') {
+        localStorage.setItem('pkl_user_role', 'student');
+        localStorage.setItem('pkl_nim', '654553');
+        localStorage.setItem('pkl_nama', 'Sunoo');
+        localStorage.setItem('pkl_username', 'Sunoo');
+        localStorage.setItem('pkl_instansi', 'SMKN 2 Bandar Lampung');
+        localStorage.setItem('pkl_jurusan', 'Teknik Kendaraan Ringan (TKR)');
+        localStorage.setItem('pkl_user_cabang', 'Ahmad Yani');
+        localStorage.setItem('pkl_user_password', '1234');
+        localStorage.setItem('pkl_is_logged_in', 'true');
+        localStorage.setItem('pkl_profile_completed', 'true');
+        setAppBranch('Ahmad Yani');
+        closeLoginModal();
+        applyUserRoleUI('student');
+        showAppToast("Login Berhasil", "Masuk sebagai Sunoo (Siswa Magang Astra Daihatsu Ahmad Yani)", "success");
+      } else if (role === 'indah') {
+        localStorage.setItem('pkl_user_role', 'admin');
+        localStorage.setItem('pkl_nim', '14325');
+        localStorage.setItem('pkl_admin_nama', 'Indah Pratiwi');
+        localStorage.setItem('pkl_nama', 'Indah Pratiwi');
+        localStorage.setItem('pkl_username', 'Indah Pratiwi');
+        localStorage.setItem('pkl_instansi', 'PT. Astra International Tbk - Daihatsu');
+        localStorage.setItem('pkl_jurusan', 'HRD');
+        localStorage.setItem('pkl_user_cabang', 'Ahmad Yani');
+        localStorage.setItem('pkl_admin_password', '1234');
+        localStorage.setItem('pkl_is_logged_in', 'true');
+        localStorage.setItem('pkl_profile_completed', 'true');
+        setAppBranch('Ahmad Yani');
+        closeLoginModal();
+        applyUserRoleUI('admin');
+        showAppToast("Login Berhasil", "Masuk sebagai Indah Pratiwi (HRD Astra Daihatsu Ahmad Yani)", "success");
+      } else if (role === 'student') {
         localStorage.setItem('pkl_user_role', 'student');
         localStorage.setItem('pkl_nim', '210103045');
         localStorage.setItem('pkl_nama', 'Budi Santoso');
+        localStorage.setItem('pkl_username', 'Budi Santoso');
+        localStorage.setItem('pkl_instansi', 'SMKN 2 Bandar Lampung');
+        localStorage.setItem('pkl_jurusan', 'Teknik Kendaraan Ringan (TKR)');
+        localStorage.setItem('pkl_user_cabang', 'Ahmad Yani');
         localStorage.setItem('pkl_is_logged_in', 'true');
         localStorage.setItem('pkl_profile_completed', 'true');
+        setAppBranch('Ahmad Yani');
         closeLoginModal();
         applyUserRoleUI('student');
         showAppToast("Login Berhasil", "Masuk sebagai Budi Santoso (Siswa Magang Astra Daihatsu)", "success");
       } else {
         localStorage.setItem('pkl_user_role', 'admin');
+        localStorage.setItem('pkl_nim', '14325');
+        localStorage.setItem('pkl_admin_nama', 'Indah Pratiwi');
         localStorage.setItem('pkl_is_logged_in', 'true');
+        localStorage.setItem('pkl_profile_completed', 'true');
+        setAppBranch('Ahmad Yani');
         closeLoginModal();
         applyUserRoleUI('admin');
         showAppToast("Login Berhasil", "Masuk sebagai HRD / Pembimbing PKL Astra Daihatsu", "success");
@@ -6081,14 +6563,28 @@
       const user = document.getElementById('login-admin-user').value.trim();
       const pwd = document.getElementById('login-admin-password').value;
 
-      if (user === 'admin' && (pwd === 'daihatsu2026' || pwd === 'admin123')) {
+      const isAdminMatch = (
+        (user.toLowerCase() === 'admin' || user.toLowerCase() === 'indah pratiwi' || user === '14325') &&
+        (pwd === '1234' || pwd === 'daihatsu2026' || pwd === 'admin123')
+      );
+
+      if (isAdminMatch) {
+        const adminName = (user.toLowerCase() === 'indah pratiwi' || user === '14325') ? 'Indah Pratiwi' : (localStorage.getItem('pkl_admin_nama') || 'Indah Pratiwi');
+        const adminNim = '14325';
         localStorage.setItem('pkl_user_role', 'admin');
+        localStorage.setItem('pkl_admin_nama', adminName);
+        localStorage.setItem('pkl_nama', adminName);
+        localStorage.setItem('pkl_nim', adminNim);
+        localStorage.setItem('pkl_username', adminName);
+        localStorage.setItem('pkl_user_cabang', 'Ahmad Yani');
         localStorage.setItem('pkl_is_logged_in', 'true');
+        localStorage.setItem('pkl_profile_completed', 'true');
+        setAppBranch('Ahmad Yani');
         closeLoginModal();
         applyUserRoleUI('admin');
-        showAppAlert("Selamat datang di Panel HRD Astra Daihatsu Ahmad Yani!\n\nAnda dapat memverifikasi izin anak magang, memantau riwayat presensi live seluruh mekanik, dan mengelola direktori siswa.", "Login Berhasil", "success");
+        showAppAlert(`Selamat datang di Panel HRD Astra Daihatsu Ahmad Yani, ${adminName}!\n\nAnda dapat memverifikasi approvals izin anak magang, memantau riwayat presensi live seluruh peserta, dan mengelola database Master PKL.`, "Login Berhasil", "success");
       } else {
-        showAppAlert("Username atau Sandi HRD salah!\n\nDefault Username: admin\nDefault Sandi: daihatsu2026", "Gagal Masuk", "error");
+        showAppAlert("Username atau Sandi HRD salah!\n\nContoh akun HRD terdaftar:\n• Username: Indah Pratiwi (atau 14325 / admin)\n• Sandi: 1234 (atau daihatsu2026)", "Gagal Masuk", "error");
       }
     }
 
