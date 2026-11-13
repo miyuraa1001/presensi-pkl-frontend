@@ -1307,19 +1307,19 @@
             </div>
           </div>
 
-              <!-- ==================== 4. KALIBRASI GEOFENCING & SERVER ==================== -->
-        <div class="bg-white p-5 md:p-6 rounded-2xl border border-slate-200/80 shadow-xs space-y-4">
+              <!-- ==================== 4. KALIBRASI GEOFENCING & SERVER (KHUSUS ADMIN / HRD) ==================== -->
+        <div id="card-workshop-geofence-admin-only" class="bg-white p-5 md:p-6 rounded-2xl border border-slate-200/80 shadow-xs space-y-4">
           <div class="flex items-center justify-between border-b border-slate-100 pb-3">
             <div class="flex items-center gap-2">
-              <div class="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center">
+              <div class="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center">
                 <i data-lucide="map-pin" class="w-4 h-4"></i>
               </div>
               <div>
                 <h4 class="font-extrabold text-sm text-slate-900">Titik Pusat & Radius Bengkel</h4>
-                <p class="text-[10px] text-slate-500">Koordinat geofence acuan Astra Daihatsu Ahmad Yani</p>
+                <p class="text-[10px] text-slate-500">Koordinat geofence acuan cabang Astra Daihatsu</p>
               </div>
             </div>
-            <span class="text-[10px] text-emerald-700 font-bold bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">Geofence Acuan</span>
+            <span class="text-[10px] text-indigo-700 font-bold bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-md">Khusus Admin</span>
           </div>
 
           <div class="space-y-3">
@@ -1394,8 +1394,38 @@
 
             <button type="button" onclick="saveGeofenceSettings()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-900 active:scale-95 text-white rounded-xl font-bold text-xs transition shadow-sm flex items-center justify-center gap-1.5">
               <i data-lucide="save" class="w-3.5 h-3.5"></i>
-              <span>Simpan Parameter Geofencing</span>
+              <span>Simpan Parameter Geofencing (Sinkronkan ke Siswa)</span>
             </button>
+          </div>
+        </div>
+
+        <!-- ==================== KARTU INFO CABANG PENEMPATAN (KHUSUS ANAK MAGANG - READ ONLY) ==================== -->
+        <div id="card-intern-branch-info" class="hidden bg-white p-5 md:p-6 rounded-2xl border border-slate-200/80 shadow-xs space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div class="flex items-center gap-2">
+              <div class="w-7 h-7 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center">
+                <i data-lucide="building-2" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <h4 class="font-extrabold text-sm text-slate-900">Cabang Penempatan Magang</h4>
+                <p class="text-[10px] text-slate-500">Lokasi workshop acuan kehadiran presensi Anda</p>
+              </div>
+            </div>
+            <span class="text-[10px] text-blue-700 font-bold bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-md">Penempatan Resmi</span>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-100 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-black text-slate-900 app-branch-name">Astra Daihatsu Ahmad Yani</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">Aktif</span>
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed" id="intern-branch-address-display">
+              Jl. Jend. A. Yani No. 1, Palapa, Tj. Karang Pusat, Bandar Lampung
+            </p>
+            <div class="flex items-center gap-2 pt-1 text-[11px] text-slate-500 font-medium border-t border-slate-200/60">
+              <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600 flex-shrink-0"></i>
+              <span>Radius geofencing diatur terpusat oleh Admin HRD (<span id="intern-view-radius-meters">150 meter</span>)</span>
+            </div>
           </div>
         </div>
             </div>
@@ -2718,6 +2748,38 @@
       return DAIHATSU_BRANCHES['Ahmad Yani'];
     }
 
+    // Fungsi menerapkan konfigurasi radius & titik pusat kustom dari cloud database
+    function applyCustomBranchConfigs(customConfigs) {
+      if (!customConfigs || typeof customConfigs !== 'object') return;
+      for (const branchKey in customConfigs) {
+        const cfg = customConfigs[branchKey];
+        if (DAIHATSU_BRANCHES[branchKey] && cfg) {
+          if (cfg.lat && !isNaN(Number(cfg.lat))) DAIHATSU_BRANCHES[branchKey].lat = Number(cfg.lat);
+          if (cfg.lng && !isNaN(Number(cfg.lng))) DAIHATSU_BRANCHES[branchKey].lng = Number(cfg.lng);
+          if (cfg.radiusMeters && !isNaN(Number(cfg.radiusMeters))) DAIHATSU_BRANCHES[branchKey].radiusMeters = Number(cfg.radiusMeters);
+        }
+      }
+      const curBranch = localStorage.getItem('pkl_user_cabang') || (typeof currentUser !== 'undefined' ? currentUser.cabang : 'Ahmad Yani') || 'Ahmad Yani';
+      const bObj = getBranchConfig(curBranch);
+      if (bObj && typeof workshopConfig !== 'undefined') {
+        workshopConfig.lat = bObj.lat;
+        workshopConfig.lng = bObj.lng;
+        workshopConfig.radiusMeters = bObj.radiusMeters;
+        if (typeof updateDistanceUI === 'function') updateDistanceUI();
+        if (typeof updateRadiusUI === 'function' && typeof userLocation !== 'undefined') {
+          updateRadiusUI(userLocation.distance, userLocation.isInside);
+        }
+      }
+    }
+
+    // Muat konfigurasi radius & cabang yang tersimpan di cache lokal
+    try {
+      const storedBranchConfigs = localStorage.getItem('pkl_custom_branch_configs');
+      if (storedBranchConfigs) {
+        applyCustomBranchConfigs(JSON.parse(storedBranchConfigs));
+      }
+    } catch(e) {}
+
     const REAL_DAIHATSU_AHMAD_YANI = DAIHATSU_BRANCHES['Ahmad Yani'];
 
     // Auto-migrasi jika browser masih menyimpan titik lama PRD (-5.3932) yang meleset 3.26 km ke Rajabasa
@@ -2951,6 +3013,12 @@
             // 3. Simpan Real Approvals dari Log_Perizinan
             if (Array.isArray(json.approvals)) {
               localStorage.setItem('pkl_inbox_approvals', JSON.stringify(json.approvals));
+            }
+
+            // 4. Simpan & Terapkan Real Branch Configs (Toleransi Radius & Koordinat Cabang dari Database)
+            if (json.branchConfigs && typeof json.branchConfigs === 'object') {
+              localStorage.setItem('pkl_custom_branch_configs', JSON.stringify(json.branchConfigs));
+              applyCustomBranchConfigs(json.branchConfigs);
             }
 
             // Refresh UI Views dengan data riil database
@@ -5504,13 +5572,9 @@
       return true;
     }
 
-    function saveGeofenceSettings() {
+    async function saveGeofenceSettings() {
       const branchSel = document.getElementById('cfg-branch-select');
-      if (branchSel) {
-        const branchKey = branchSel.value;
-        currentUser.cabang = branchKey;
-        localStorage.setItem('pkl_user_cabang', branchKey);
-      }
+      const branchKey = branchSel ? branchSel.value : (currentUser.cabang || 'Ahmad Yani');
 
       const wLat = parseFloat(document.getElementById('cfg-workshop-lat').value);
       const wLng = parseFloat(document.getElementById('cfg-workshop-lng').value);
@@ -5520,24 +5584,81 @@
       const scriptUrl = scriptUrlEl ? scriptUrlEl.value.trim() : (currentUser.apiUrl || '/api/presensi');
       const scriptSecret = scriptSecretEl ? scriptSecretEl.value.trim() : (currentUser.apiSecret || 'DAIHATSU_PKL_SEC_2026');
 
-      if (!isNaN(wLat) && !isNaN(wLng)) {
-        workshopConfig.lat = wLat;
-        workshopConfig.lng = wLng;
-        localStorage.setItem('pkl_workshop_lat', wLat);
-        localStorage.setItem('pkl_workshop_lng', wLng);
+      if (isNaN(wLat) || isNaN(wLng) || isNaN(wRad) || wRad <= 0) {
+        showAppAlert("Koordinat latitude, longitude, dan radius harus berupa angka valid!", "Peringatan", "warning");
+        return;
       }
-      if (!isNaN(wRad) && wRad > 0) {
-        workshopConfig.radiusMeters = wRad;
-        localStorage.setItem('pkl_workshop_radius', wRad);
+
+      // 1. Update DAIHATSU_BRANCHES memory
+      if (DAIHATSU_BRANCHES[branchKey]) {
+        DAIHATSU_BRANCHES[branchKey].lat = wLat;
+        DAIHATSU_BRANCHES[branchKey].lng = wLng;
+        DAIHATSU_BRANCHES[branchKey].radiusMeters = wRad;
       }
+
+      workshopConfig.lat = wLat;
+      workshopConfig.lng = wLng;
+      workshopConfig.radiusMeters = wRad;
+      currentUser.cabang = branchKey;
+
+      // 2. Simpan ke local storage
+      let customConfigs = {};
+      try {
+        const stored = localStorage.getItem('pkl_custom_branch_configs');
+        if (stored) customConfigs = JSON.parse(stored);
+      } catch(e) {}
+      customConfigs[branchKey] = {
+        lat: wLat,
+        lng: wLng,
+        radiusMeters: wRad,
+        updatedAt: new Date().toISOString(),
+        updatedBy: currentUser.nama || 'HRD'
+      };
+      localStorage.setItem('pkl_custom_branch_configs', JSON.stringify(customConfigs));
+      localStorage.setItem('pkl_workshop_lat', wLat);
+      localStorage.setItem('pkl_workshop_lng', wLng);
+      localStorage.setItem('pkl_workshop_radius', wRad);
+      localStorage.setItem('pkl_user_cabang', branchKey);
+
       currentUser.apiUrl = scriptUrl || '/api/presensi';
       currentUser.apiSecret = scriptSecret || 'DAIHATSU_PKL_SEC_2026';
       localStorage.setItem('pkl_script_url', currentUser.apiUrl);
       localStorage.setItem('pkl_script_secret', currentUser.apiSecret);
 
+      setAppBranch(branchKey, false);
       updateProfileDisplay();
       checkGPS(false);
-      showAppAlert("Parameter geofencing bengkel berhasil disimpan!", "Pengaturan Tersimpan", "success");
+
+      // 3. Sinkronkan ke cloud backend agar semua anak magang otomatis menerima radius terbaru
+      const targetApi = currentUser.apiUrl || '/api/presensi';
+      if (targetApi) {
+        try {
+          const isProxy = targetApi.startsWith('/');
+          fetch(targetApi, {
+            method: 'POST',
+            mode: isProxy ? 'same-origin' : 'no-cors',
+            headers: { 'Content-Type': isProxy ? 'application/json' : 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+              action: 'save_branch_config',
+              branchKey: branchKey,
+              lat: wLat,
+              lng: wLng,
+              radius: wRad,
+              updatedBy: currentUser.nama || 'HRD',
+              secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026"
+            })
+          }).then(async res => {
+            if (isProxy) {
+              const data = await res.json();
+              if (data && data.status === 'success') {
+                showAppToast("Cloud Database Tersinkron", `Toleransi radius ${wRad}m cabang ${branchKey} berhasil tersimpan ke database & tersinkron ke akun siswa.`, "success");
+              }
+            }
+          }).catch(err => console.warn('Sync geofence error:', err));
+        } catch(e) {}
+      }
+
+      showAppAlert(`Pengaturan Geofencing Berhasil Disimpan!\n\n• Cabang: ${branchKey}\n• Latitude: ${wLat}\n• Longitude: ${wLng}\n• Toleransi Radius: ${wRad} meter\n\nSettingan ini otomatis tersimpan di database Astra Daihatsu dan tersinkronisasi sebagai acuan validasi presensi bagi seluruh anak magang di cabang ini.`, "Pengaturan Tersimpan", "success");
     }
 
     function saveSettings() {
@@ -5872,6 +5993,24 @@
         if (geoCardTitle) geoCardTitle.innerText = "Status Geofencing Workshop";
         if (geoCardSub) geoCardSub.innerText = currentBranch.name;
         if (geoIcon) geoIcon.className = "w-8 h-8 rounded-lg bg-red-100 text-red-600 flex items-center justify-center";
+      }
+
+      // 9. Akses Pengaturan Geofencing Bengkel (Hanya Bisa Diakses Admin, Dihapus dari Akun Anak Magang)
+      const cardWorkshopAdmin = document.getElementById('card-workshop-geofence-admin-only');
+      const cardInternBranchInfo = document.getElementById('card-intern-branch-info');
+      const internRadiusTxt = document.getElementById('intern-view-radius-meters');
+      const internAddrTxt = document.getElementById('intern-branch-address-display');
+
+      if (cardWorkshopAdmin && cardInternBranchInfo) {
+        if (isAdm) {
+          cardWorkshopAdmin.classList.remove('hidden');
+          cardInternBranchInfo.classList.add('hidden');
+        } else {
+          cardWorkshopAdmin.classList.add('hidden');
+          cardInternBranchInfo.classList.remove('hidden');
+          if (internRadiusTxt) internRadiusTxt.innerText = `${workshopConfig.radiusMeters} meter`;
+          if (internAddrTxt) internAddrTxt.innerText = currentBranch.address;
+        }
       }
 
       updateProfileDisplay();
