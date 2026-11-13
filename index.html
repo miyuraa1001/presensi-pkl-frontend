@@ -205,7 +205,13 @@
       </div>
       
       <!-- Top Actions & Profile -->
-      <div class="flex items-center gap-3.5">
+      <div class="flex items-center gap-2 sm:gap-3.5">
+        <!-- Role Badge Button (Switch Role / Profile) -->
+        <button type="button" onclick="showLoginModal()" id="topbar-role-badge" class="px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-2xs border bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100" title="Klik untuk berganti akun / peran">
+          <span id="role-badge-icon">👨‍🎓</span>
+          <span id="role-badge-text">Siswa Magang</span>
+        </button>
+
         <!-- GPS Status Pill in Topbar (Visible on Mobile & Desktop) -->
         <div id="topbar-gps-pill" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-2xs">
           <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -411,8 +417,8 @@
             </div>
           </div>
 
-          <!-- Box Presensi Hari Ini -->
-          <div class="bg-white p-5 md:p-6 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col justify-between">
+          <!-- Box Presensi Hari Ini (Student View) -->
+          <div id="box-student-today-attendance" class="bg-white p-5 md:p-6 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col justify-between">
             <div>
               <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center gap-2">
@@ -471,26 +477,49 @@
               </button>
             </div>
           </div>
-        </div>
 
-        <!-- Info Card Footer Banner -->
-        <div class="p-4 rounded-xl bg-[#eef5fc] border border-blue-100/90 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-700">
-          <div class="flex items-center gap-3">
-            <span class="text-xl">⚠️</span>
+          <!-- Box Riwayat Terkini Presensi Magang (Admin / HR View) -->
+          <div id="box-admin-recent-attendance" class="hidden bg-white p-5 md:p-6 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col justify-between">
             <div>
-              <p class="font-bold text-slate-800">Aturan Geofencing Presensi PKL Astra Daihatsu</p>
-              <p class="text-slate-600 text-[11px]">Clock IN wajib di dalam radius workshop. Jika berada di lokasi namun terdeteksi di luar, gunakan tombol <strong>Kalibrasi Titik Saya</strong>.</p>
+              <div class="flex items-center justify-between mb-3.5">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-8 h-8 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0">
+                    <i data-lucide="activity" class="w-4 h-4"></i>
+                  </div>
+                  <div>
+                    <h4 class="font-extrabold text-slate-900 text-sm">Riwayat Terkini Presensi Magang</h4>
+                    <p class="text-[10px] text-slate-400">Aktivitas kehadiran siswa magang hari ini</p>
+                  </div>
+                </div>
+                <span id="admin-today-badge" class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 whitespace-nowrap">
+                  0 Hadir Hari Ini
+                </span>
+              </div>
+
+              <!-- List Feed Riwayat Terkini Siswa -->
+              <div class="space-y-2 max-h-[230px] overflow-y-auto pr-1" id="admin-recent-list">
+                <!-- Dynamically populated entries -->
+              </div>
+            </div>
+
+            <!-- Footer Shortcut -->
+            <div class="mt-4 pt-3 border-t border-slate-100 flex justify-between items-center text-xs">
+              <span class="text-[11px] text-slate-400">Sinkronisasi Geofencing Astra Daihatsu</span>
+              <button onclick="switchTab('rekap')" class="font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 cursor-pointer">
+                <span>Lihat Semua Rekap</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </button>
             </div>
           </div>
-          <div class="flex items-center gap-2 font-bold text-blue-700 bg-white px-3.5 py-1.5 rounded-xl border border-blue-200 shadow-xs self-start sm:self-center">
-            <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
-            <span id="banner-date">Selasa, 28 Oktober 2025</span>
-          </div>
         </div>
+
       </section>
 
-      <!-- ==================== TAB 2: ONLINE ATTENDANCE (NO-PHOTO ENTERPRISE HR FLOW) ==================== -->
-      <section id="view-presensi" class="hidden max-w-md mx-auto pb-6">
+      <!-- ==================== TAB 2: ONLINE ATTENDANCE (STUDENT) & DATA MAGANG (ADMIN) ==================== -->
+      <section id="view-presensi" class="hidden w-full pb-6">
+
+        <!-- STUDENT FLOW: ONLINE ATTENDANCE -->
+        <div id="student-attendance-flow" class="max-w-md mx-auto space-y-4">
 
         <!-- ==================== SUB-SCREEN 1: ONLINE ATTENDANCE OVERVIEW (IMAGE 2) ==================== -->
         <div id="presensi-screen-overview" class="space-y-4">
@@ -637,81 +666,191 @@
             </button>
           </div>
         </div>
+        </div>
+        <!-- END STUDENT FLOW -->
 
-      </section>
+        <!-- ==================== ADMIN VIEW: DATA & MANAJEMEN SISWA MAGANG ==================== -->
+        <div id="admin-data-magang-flow" class="hidden max-w-4xl mx-auto space-y-5">
+          <!-- Header Bar with Action Buttons -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200">
+            <div>
+              <h3 class="font-extrabold text-slate-900 text-lg">Direktori Siswa Magang PKL</h3>
+              <p class="text-xs text-slate-500">Manajemen peserta magang aktif Bengkel Astra Daihatsu Ahmad Yani</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="openAddStudentModal()" class="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm transition cursor-pointer">
+                <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
+                <span>Tambah Siswa</span>
+              </button>
+              <button onclick="openManualAttendanceModal()" class="px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-2xs transition cursor-pointer">
+                <i data-lucide="calendar-plus" class="w-3.5 h-3.5 text-blue-600"></i>
+                <span>Absensi Manual</span>
+              </button>
+            </div>
+          </div>
 
-      <!-- ==================== TAB 3: PENGAJUAN IZIN / SAKIT ==================== -->
-      <section id="view-izin" class="hidden space-y-5 max-w-xl mx-auto">
-        <div class="flex items-center gap-3 pb-3 border-b border-slate-200">
-          <button onclick="switchTab('dashboard')" class="p-2 rounded-lg hover:bg-slate-200 text-slate-700 transition" aria-label="Kembali ke Dashboard">
-            <i data-lucide="arrow-left" class="w-5 h-5"></i>
-          </button>
-          <div>
-            <h3 class="font-extrabold text-slate-900 text-lg">Pengajuan Izin / Sakit</h3>
-            <p class="text-xs text-slate-500">Formulir ketidakhadiran mekanik magang PKL</p>
+          <!-- 4 Summary Stat Cards -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-2xs">
+              <p class="text-[11px] font-bold text-slate-400">Total Magang</p>
+              <p class="text-xl font-black text-slate-900 mt-0.5" id="admin-stat-total-students">4</p>
+              <p class="text-[10px] text-blue-600 font-semibold mt-1">Siswa Terdaftar</p>
+            </div>
+            <div class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-2xs">
+              <p class="text-[11px] font-bold text-slate-400">Hadir Hari Ini</p>
+              <p class="text-xl font-black text-emerald-600 mt-0.5" id="admin-stat-today-in">3</p>
+              <p class="text-[10px] text-emerald-600 font-medium mt-1">Clock IN Valid</p>
+            </div>
+            <div class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-2xs">
+              <p class="text-[11px] font-bold text-slate-400">Izin / Sakit</p>
+              <p class="text-xl font-black text-amber-600 mt-0.5" id="admin-stat-today-permit">1</p>
+              <p class="text-[10px] text-amber-600 font-medium mt-1">Dispensasi</p>
+            </div>
+            <div class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-2xs">
+              <p class="text-[11px] font-bold text-slate-400">Sekolah Mitra</p>
+              <p class="text-xl font-black text-indigo-600 mt-0.5" id="admin-stat-total-schools">3</p>
+              <p class="text-[10px] text-indigo-600 font-medium mt-1">SMK & Politeknik</p>
+            </div>
+          </div>
+
+          <!-- Table Siswa Magang -->
+          <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
+            <div class="p-3.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <i data-lucide="users" class="w-4 h-4 text-blue-600"></i>
+                <h4 class="font-extrabold text-xs sm:text-sm text-slate-900">Daftar Siswa Magang Bengkel</h4>
+              </div>
+              <span class="text-xs text-slate-400 font-medium">Periode 2026/2027</span>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs border-collapse min-w-[620px]">
+                <thead>
+                  <tr class="bg-slate-50/80 border-b border-slate-200 text-slate-500 font-bold uppercase text-[10px] tracking-wider">
+                    <th class="py-3 px-4">Nama Siswa & NIM</th>
+                    <th class="py-3 px-4">Asal Sekolah & Jurusan</th>
+                    <th class="py-3 px-4">Status Kehadiran Hari Ini</th>
+                    <th class="py-3 px-4">Status Magang</th>
+                    <th class="py-3 px-4 text-center">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-students-table-body" class="divide-y divide-slate-100 font-medium text-slate-700">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
-        <form id="form-perizinan" onsubmit="submitPerizinan(event)" class="bg-white p-5 md:p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
-          <!-- Jenis Pengajuan (Sakit vs Izin) -->
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-2">Jenis Pengajuan</label>
-            <div class="grid grid-cols-2 gap-3">
-              <label class="cursor-pointer">
-                <input type="radio" name="jenis_izin" value="Sakit" checked class="peer sr-only" onchange="updateFormIzinType()">
-                <div class="p-3.5 rounded-xl border-2 border-slate-200 peer-checked:border-red-500 peer-checked:bg-red-50/50 flex items-center justify-center gap-2 font-bold text-xs text-slate-700 peer-checked:text-red-700 transition">
-                  <i data-lucide="activity" class="w-4 h-4 text-red-500"></i>
-                  <span>Sakit (Wajib SKD)</span>
-                </div>
-              </label>
+      </section>
 
-              <label class="cursor-pointer">
-                <input type="radio" name="jenis_izin" value="Izin" class="peer sr-only" onchange="updateFormIzinType()">
-                <div class="p-3.5 rounded-xl border-2 border-slate-200 peer-checked:border-blue-600 peer-checked:bg-blue-50/50 flex items-center justify-center gap-2 font-bold text-xs text-slate-700 peer-checked:text-blue-700 transition">
-                  <i data-lucide="file-text" class="w-4 h-4 text-slate-500 peer-checked:text-blue-600"></i>
-                  <span>Izin Keperluan</span>
-                </div>
-              </label>
+      <!-- ==================== TAB 3: PENGAJUAN IZIN / SAKIT (STUDENT) & INBOX APPROVALS (ADMIN) ==================== -->
+      <section id="view-izin" class="hidden space-y-5 w-full mx-auto">
+        
+        <!-- STUDENT VIEW: FORM PENGAJUAN IZIN / SAKIT -->
+        <div id="student-izin-form-container" class="max-w-xl mx-auto space-y-5">
+          <div class="flex items-center gap-3 pb-3 border-b border-slate-200">
+            <button onclick="switchTab('dashboard')" class="p-2 rounded-lg hover:bg-slate-200 text-slate-700 transition" aria-label="Kembali ke Dashboard">
+              <i data-lucide="arrow-left" class="w-5 h-5"></i>
+            </button>
+            <div>
+              <h3 class="font-extrabold text-slate-900 text-lg">Pengajuan Izin / Sakit</h3>
+              <p class="text-xs text-slate-500">Formulir ketidakhadiran mekanik magang PKL</p>
             </div>
           </div>
 
-          <!-- Date Picker Tanggal Izin (PRD Section 4.3 point 2) -->
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1.5">Tanggal Tidak Hadir</label>
-            <input type="date" id="izin-tanggal" required class="w-full p-3 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-semibold text-slate-800">
-          </div>
+          <form id="form-perizinan" onsubmit="submitPerizinan(event)" class="bg-white p-5 md:p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+            <!-- Jenis Pengajuan (Sakit vs Izin) -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-2">Jenis Pengajuan</label>
+              <div class="grid grid-cols-2 gap-3">
+                <label class="cursor-pointer">
+                  <input type="radio" name="jenis_izin" value="Sakit" checked class="peer sr-only" onchange="updateFormIzinType()">
+                  <div class="p-3.5 rounded-xl border-2 border-slate-200 peer-checked:border-red-500 peer-checked:bg-red-50/50 flex items-center justify-center gap-2 font-bold text-xs text-slate-700 peer-checked:text-red-700 transition">
+                    <i data-lucide="activity" class="w-4 h-4 text-red-500"></i>
+                    <span>Sakit (Wajib SKD)</span>
+                  </div>
+                </label>
 
-          <!-- Alasan / Catatan Keperluan -->
-          <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1.5">Alasan / Catatan Detail</label>
-            <textarea id="izin-alasan" rows="3" required placeholder="Contoh: Demam tinggi, perlu istirahat berdasarkan diagnosa dokter..." class="w-full p-3 rounded-xl border border-slate-200 text-xs focus:outline-hidden focus:ring-2 focus:ring-blue-500 placeholder:text-slate-400"></textarea>
-          </div>
+                <label class="cursor-pointer">
+                  <input type="radio" name="jenis_izin" value="Izin" class="peer sr-only" onchange="updateFormIzinType()">
+                  <div class="p-3.5 rounded-xl border-2 border-slate-200 peer-checked:border-blue-600 peer-checked:bg-blue-50/50 flex items-center justify-center gap-2 font-bold text-xs text-slate-700 peer-checked:text-blue-700 transition">
+                    <i data-lucide="file-text" class="w-4 h-4 text-slate-500 peer-checked:text-blue-600"></i>
+                    <span>Izin Keperluan</span>
+                  </div>
+                </label>
+              </div>
+            </div>
 
-          <!-- Unggah Dokumen Bukti (SKD / Surat Dispensasi) -->
-          <div>
-            <div class="flex items-center justify-between mb-1.5">
-              <label class="text-xs font-bold text-slate-700">Lampiran Dokumen Bukti</label>
-              <span id="doc-req-badge" class="text-[11px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded-md border border-red-200">
-                Wajib untuk Sakit (SKD)
-              </span>
+            <!-- Date Picker Tanggal Izin (PRD Section 4.3 point 2) -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Tanggal Tidak Hadir</label>
+              <input type="date" id="izin-tanggal" required class="w-full p-3 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-semibold text-slate-800">
+            </div>
+
+            <!-- Alasan / Catatan Keperluan -->
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Alasan / Catatan Detail</label>
+              <textarea id="izin-alasan" rows="3" required placeholder="Contoh: Demam tinggi, perlu istirahat berdasarkan diagnosa dokter..." class="w-full p-3 rounded-xl border border-slate-200 text-xs focus:outline-hidden focus:ring-2 focus:ring-blue-500 placeholder:text-slate-400"></textarea>
+            </div>
+
+            <!-- Unggah Dokumen Bukti (SKD / Surat Dispensasi) -->
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <label class="text-xs font-bold text-slate-700">Lampiran Dokumen Bukti</label>
+                <span id="doc-req-badge" class="text-[11px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded-md border border-red-200">
+                  Wajib untuk Sakit (SKD)
+                </span>
+              </div>
+              
+              <div onclick="document.getElementById('file-dokumen').click()" class="border-2 border-dashed border-slate-200 hover:border-blue-500 rounded-2xl p-5 text-center cursor-pointer bg-slate-50/50 hover:bg-blue-50/30 transition">
+                <input type="file" id="file-dokumen" accept="image/*,application/pdf" class="hidden" onchange="previewUploadDoc(this)">
+                <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-2">
+                  <i data-lucide="upload-cloud" class="w-5 h-5"></i>
+                </div>
+                <p class="text-xs font-bold text-slate-800" id="file-name-preview">Klik untuk mengunggah foto / file surat dokter</p>
+                <p class="text-[11px] text-slate-400 mt-0.5">Format: JPG, PNG, PDF (Maksimal 2 MB)</p>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" id="btn-submit-izin" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-blue-600/30 transition">
+              <i data-lucide="send" class="w-4 h-4"></i>
+              <span>Kirim Permohonan Izin / Sakit</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- ==================== ADMIN VIEW: INBOX PERSETUJUAN IZIN & SAKIT ==================== -->
+        <div id="admin-inbox-approvals-container" class="hidden max-w-4xl mx-auto space-y-5">
+          <!-- Top Header Bar & Filter Tabs -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200">
+            <div>
+              <h3 class="font-extrabold text-slate-900 text-lg">Inbox Persetujuan Izin & Sakit</h3>
+              <p class="text-xs text-slate-500">Verifikasi permohonan dispensasi dan berkas SKD dokter anak magang</p>
             </div>
             
-            <div onclick="document.getElementById('file-dokumen').click()" class="border-2 border-dashed border-slate-200 hover:border-blue-500 rounded-2xl p-5 text-center cursor-pointer bg-slate-50/50 hover:bg-blue-50/30 transition">
-              <input type="file" id="file-dokumen" accept="image/*,application/pdf" class="hidden" onchange="previewUploadDoc(this)">
-              <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-2">
-                <i data-lucide="upload-cloud" class="w-5 h-5"></i>
-              </div>
-              <p class="text-xs font-bold text-slate-800" id="file-name-preview">Klik untuk mengunggah foto / file surat dokter</p>
-              <p class="text-[11px] text-slate-400 mt-0.5">Format: JPG, PNG, PDF (Maksimal 2 MB)</p>
+            <!-- Segmented Filter Buttons -->
+            <div class="inline-flex p-1 rounded-xl bg-slate-200/70 border border-slate-300/60 text-xs self-start sm:self-auto">
+              <button type="button" onclick="setInboxApprovalFilter('ALL')" id="btn-inbox-filter-all" class="px-3 py-1.5 rounded-lg font-bold transition text-blue-700 bg-white shadow-xs cursor-pointer">
+                Semua (<span id="inbox-count-all">0</span>)
+              </button>
+              <button type="button" onclick="setInboxApprovalFilter('Pending')" id="btn-inbox-filter-pending" class="px-3 py-1.5 rounded-lg font-bold transition text-slate-600 hover:text-slate-900 cursor-pointer">
+                Menunggu (<span id="inbox-count-pending">0</span>)
+              </button>
+              <button type="button" onclick="setInboxApprovalFilter('Disetujui')" id="btn-inbox-filter-approved" class="px-3 py-1.5 rounded-lg font-bold transition text-slate-600 hover:text-slate-900 cursor-pointer">
+                Disetujui (<span id="inbox-count-approved">0</span>)
+              </button>
+              <button type="button" onclick="setInboxApprovalFilter('Ditolak')" id="btn-inbox-filter-rejected" class="px-3 py-1.5 rounded-lg font-bold transition text-slate-600 hover:text-slate-900 cursor-pointer">
+                Ditolak (<span id="inbox-count-rejected">0</span>)
+              </button>
             </div>
           </div>
 
-          <!-- Submit Button -->
-          <button type="submit" id="btn-submit-izin" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-blue-600/30 transition">
-            <i data-lucide="send" class="w-4 h-4"></i>
-            <span>Kirim Permohonan Izin / Sakit</span>
-          </button>
-        </form>
+          <!-- List Container for Permits -->
+          <div class="space-y-3.5" id="inbox-approvals-list">
+            <!-- Dynamically populated approvals -->
+          </div>
+        </div>
       </section>
 
       <!-- ==================== TAB 4: REKAP BULANAN ==================== -->
@@ -759,14 +898,19 @@
             <p class="text-xs text-slate-500">Daftar kehadiran & perizinan magang teknisi bengkel</p>
           </div>
           <!-- Filter & Export -->
-          <div class="flex items-center gap-2.5 no-print">
+          <div class="flex flex-wrap items-center gap-2.5 no-print">
+            <!-- Filter Siswa (Visible for Admin) -->
+            <select id="rekap-filter-siswa" onchange="renderRekapTable()" class="hidden px-3 py-2 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-700 shadow-xs focus:ring-2 focus:ring-blue-500 cursor-pointer">
+              <option value="ALL">Semua Siswa Magang</option>
+            </select>
+
             <select id="rekap-filter-kategori" onchange="renderRekapTable()" class="px-3 py-2 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-700 shadow-xs focus:ring-2 focus:ring-blue-500 cursor-pointer">
-              <option value="ALL">Semua Data</option>
+              <option value="ALL">Semua Kategori</option>
               <option value="Hadir">Hadir Saja</option>
               <option value="Sakit">Sakit Saja</option>
               <option value="Izin">Izin Saja</option>
             </select>
-            <button onclick="exportRekapPDF()" id="btn-export-pdf" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm transition">
+            <button onclick="exportRekapPDF()" id="btn-export-pdf" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm transition cursor-pointer">
               <i data-lucide="printer" class="w-3.5 h-3.5"></i>
               <span>Cetak / Export PDF</span>
             </button>
@@ -1659,50 +1803,206 @@
     </div>
   </div>
 
-  <!-- ==================== MODAL LOGIN / MASUK AKUN ==================== -->
+  <!-- ==================== MODAL LOGIN / MASUK AKUN MULTI-ROLE ==================== -->
   <div id="login-modal" class="hidden fixed inset-0 bg-slate-900/90 backdrop-blur-md z-[300] flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-200 space-y-5">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-200 space-y-4">
       
       <!-- Logo Header -->
-      <div class="text-center space-y-2">
-        <div class="w-16 h-16 mx-auto rounded-2xl bg-[#0d1a3a] p-2 flex items-center justify-center shadow-lg shadow-blue-900/20">
+      <div class="text-center space-y-1.5">
+        <div class="w-14 h-14 mx-auto rounded-2xl bg-[#0d1a3a] p-2 flex items-center justify-center shadow-lg shadow-blue-900/20">
           <img src="Image/Logo-PWA.png" alt="Daihatsu" class="w-full h-full object-contain rounded-xl">
         </div>
-        <h3 class="text-lg font-black text-slate-900">Masuk Akun Presensi</h3>
-        <p class="text-xs text-slate-500">Sistem Presensi PKL Astra Daihatsu Ahmad Yani</p>
+        <h3 class="text-base font-black text-slate-900">Masuk Akun Presensi</h3>
+        <p class="text-[11px] text-slate-500">Sistem Presensi Geofencing Astra Daihatsu A. Yani</p>
       </div>
 
-      <!-- Login Form -->
-      <form onsubmit="handleLoginSubmit(event)" class="space-y-3.5">
+      <!-- Segmented Role Selector -->
+      <div class="grid grid-cols-2 p-1 bg-slate-100 rounded-2xl border border-slate-200 text-xs font-bold">
+        <button type="button" onclick="setLoginRoleTab('student')" id="btn-login-tab-student" class="py-2.5 rounded-xl transition text-blue-700 bg-white shadow-xs flex items-center justify-center gap-1.5 cursor-pointer">
+          <span>👨‍🎓</span>
+          <span>Siswa Magang</span>
+        </button>
+        <button type="button" onclick="setLoginRoleTab('admin')" id="btn-login-tab-admin" class="py-2.5 rounded-xl transition text-slate-500 hover:text-slate-800 flex items-center justify-center gap-1.5 cursor-pointer">
+          <span>👔</span>
+          <span>HRD / Admin</span>
+        </button>
+      </div>
+
+      <!-- FORM 1: SISWA MAGANG -->
+      <form id="form-login-student" onsubmit="handleLoginSubmit(event)" class="space-y-3">
         <div>
-          <label class="block text-xs font-semibold text-slate-700 mb-1">NIM / NISN / ID Magang</label>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">NIM / NISN Peserta Magang</label>
           <div class="relative">
-            <input type="text" id="login-nim" required placeholder="Masukkan NIM / NISN" class="w-full px-3 py-2.5 pl-9 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono">
-            <i data-lucide="badge-id" class="w-4 h-4 text-slate-400 absolute left-3 top-3"></i>
+            <input type="text" id="login-nim" required placeholder="Contoh: 210103045" value="210103045" class="w-full px-3 py-2 pl-9 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono">
+            <i data-lucide="badge-id" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
           </div>
         </div>
 
         <div>
-          <label class="block text-xs font-semibold text-slate-700 mb-1">Kata Sandi</label>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">Kata Sandi</label>
           <div class="relative">
-            <input type="password" id="login-password" required placeholder="Masukkan kata sandi" class="w-full px-3 py-2.5 pl-9 pr-10 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono">
-            <i data-lucide="lock" class="w-4 h-4 text-slate-400 absolute left-3 top-3"></i>
+            <input type="password" id="login-password" required placeholder="Masukkan kata sandi" value="daihatsu123" class="w-full px-3 py-2 pl-9 pr-10 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono">
+            <i data-lucide="lock" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
             <button type="button" onclick="togglePasswordVisibility('login-password', 'eye-login-pwd')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
               <i data-lucide="eye" id="eye-login-pwd" class="w-4 h-4"></i>
             </button>
           </div>
-          <p class="text-[10px] text-slate-400 mt-1">Kata sandi default: <span class="font-mono font-bold text-slate-600">daihatsu123</span></p>
+          <p class="text-[10px] text-slate-400 mt-1">Sandi default: <span class="font-mono font-bold text-slate-600">daihatsu123</span></p>
         </div>
 
-        <button type="submit" class="w-full py-3 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs rounded-xl shadow-md shadow-blue-600/30 flex items-center justify-center gap-2 transition">
+        <button type="submit" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs rounded-xl shadow-md shadow-blue-600/30 flex items-center justify-center gap-2 transition cursor-pointer">
           <i data-lucide="log-in" class="w-4 h-4"></i>
-          <span>Masuk Sekarang</span>
+          <span>Masuk sebagai Siswa Magang</span>
+        </button>
+
+        <button type="button" onclick="quickLoginDemo('student')" class="w-full py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
+          <span>⚡ Masuk Cepat: Budi Santoso (Siswa)</span>
         </button>
       </form>
 
-      <div class="text-center pt-2 border-t border-slate-100">
-        <p class="text-[11px] text-slate-400">Workshop & Service Astra Daihatsu Ahmad Yani</p>
+      <!-- FORM 2: HRD / ADMIN BENGKEL -->
+      <form id="form-login-admin" onsubmit="handleAdminLoginSubmit(event)" class="hidden space-y-3">
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">Username / ID Admin HRD</label>
+          <div class="relative">
+            <input type="text" id="login-admin-user" required placeholder="Contoh: admin" value="admin" class="w-full px-3 py-2 pl-9 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono">
+            <i data-lucide="shield" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">PIN / Kata Sandi HRD</label>
+          <div class="relative">
+            <input type="password" id="login-admin-password" required placeholder="Masukkan PIN / Sandi" value="daihatsu2026" class="w-full px-3 py-2 pl-9 pr-10 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono">
+            <i data-lucide="lock" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
+            <button type="button" onclick="togglePasswordVisibility('login-admin-password', 'eye-login-admin-pwd')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
+              <i data-lucide="eye" id="eye-login-admin-pwd" class="w-4 h-4"></i>
+            </button>
+          </div>
+          <p class="text-[10px] text-slate-400 mt-1">Sandi default: <span class="font-mono font-bold text-slate-600">daihatsu2026</span></p>
+        </div>
+
+        <button type="submit" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs rounded-xl shadow-md shadow-blue-600/30 flex items-center justify-center gap-2 transition cursor-pointer">
+          <i data-lucide="shield-check" class="w-4 h-4"></i>
+          <span>Masuk sebagai HRD / Pembimbing</span>
+        </button>
+
+        <button type="button" onclick="quickLoginDemo('admin')" class="w-full py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
+          <span>⚡ Masuk Cepat: HRD Astra Daihatsu</span>
+        </button>
+      </form>
+
+      <div class="text-center pt-1 border-t border-slate-100 flex items-center justify-between text-[11px]">
+        <button type="button" onclick="closeLoginModal()" class="text-slate-400 hover:text-slate-600 underline cursor-pointer">
+          Tutup
+        </button>
+        <span class="text-slate-400">Workshop A. Yani</span>
       </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL TAMBAH SISWA MAGANG (ADMIN) ==================== -->
+  <div id="modal-add-student" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-xs z-[350] flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center">
+            <i data-lucide="user-plus" class="w-4 h-4"></i>
+          </div>
+          <h4 class="font-extrabold text-sm text-slate-900">Tambah Siswa Magang</h4>
+        </div>
+        <button type="button" onclick="closeAddStudentModal()" class="p-1 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <form onsubmit="handleSaveNewStudent(event)" class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">NIM / NISN Siswa *</label>
+          <input type="text" id="add-student-nim" required placeholder="Contoh: 210103099" class="w-full px-3 py-2 rounded-xl border border-slate-200 font-mono">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Nama Lengkap Siswa *</label>
+          <input type="text" id="add-student-nama" required placeholder="Contoh: Ahmad Fauzan" class="w-full px-3 py-2 rounded-xl border border-slate-200">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Asal Sekolah / Kampus *</label>
+          <input type="text" id="add-student-instansi" required placeholder="Contoh: SMKN 2 Bandar Lampung" class="w-full px-3 py-2 rounded-xl border border-slate-200">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Jurusan / Program Keahlian *</label>
+          <input type="text" id="add-student-jurusan" required placeholder="Contoh: Teknik Kendaraan Ringan (TKR)" class="w-full px-3 py-2 rounded-xl border border-slate-200">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Nomor WhatsApp / HP</label>
+          <input type="tel" id="add-student-phone" placeholder="Contoh: 081234567890" class="w-full px-3 py-2 rounded-xl border border-slate-200 font-mono">
+        </div>
+
+        <div class="flex gap-2 pt-2">
+          <button type="submit" class="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-sm transition">
+            Simpan Siswa Magang
+          </button>
+          <button type="button" onclick="closeAddStudentModal()" class="py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition">
+            Batal
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL ABSENSI MANUAL (ADMIN) ==================== -->
+  <div id="modal-manual-attendance" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-xs z-[350] flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center">
+            <i data-lucide="calendar-plus" class="w-4 h-4"></i>
+          </div>
+          <h4 class="font-extrabold text-sm text-slate-900">Input Presensi Manual HR</h4>
+        </div>
+        <button type="button" onclick="closeManualAttendanceModal()" class="p-1 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <form onsubmit="handleSaveManualAttendance(event)" class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Pilih Siswa Magang *</label>
+          <select id="manual-att-student" required class="w-full px-3 py-2 rounded-xl border border-slate-200 font-bold text-slate-800 bg-white">
+            <!-- Populated dynamically -->
+          </select>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Tipe Presensi *</label>
+            <select id="manual-att-type" required class="w-full px-3 py-2 rounded-xl border border-slate-200 font-bold text-slate-800 bg-white">
+              <option value="IN">Clock IN (Masuk)</option>
+              <option value="OUT">Clock OUT (Pulang)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Jam Presensi (WIB) *</label>
+            <input type="time" id="manual-att-time" required class="w-full px-3 py-2 rounded-xl border border-slate-200 font-mono font-bold">
+          </div>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Tanggal Presensi *</label>
+          <input type="date" id="manual-att-date" required class="w-full px-3 py-2 rounded-xl border border-slate-200 font-bold">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Catatan HR / Alasan Manual</label>
+          <input type="text" id="manual-att-notes" placeholder="Contoh: HP siswa baterai habis / verifikasi langsung" class="w-full px-3 py-2 rounded-xl border border-slate-200">
+        </div>
+
+        <div class="flex gap-2 pt-2">
+          <button type="submit" class="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-sm transition">
+            Catat Presensi
+          </button>
+          <button type="button" onclick="closeManualAttendanceModal()" class="py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition">
+            Batal
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -2184,17 +2484,244 @@
     let geofenceCircle = null;
     let userMarker = null;
 
-    // State Pengguna Murni (Tanpa Mock Data)
+    // --- MULTI-ROLE & USER STATE (SISWA MAGANG VS HRD / ADMIN BENGKEL) ---
+    let currentUserRole = localStorage.getItem('pkl_user_role') || 'student'; // 'student' | 'admin'
+
     let currentUser = {
-      nama: (localStorage.getItem('pkl_nama') && localStorage.getItem('pkl_nama') !== 'Andi Pratama') ? localStorage.getItem('pkl_nama') : 'Mekanik Magang PKL',
-      nim: (localStorage.getItem('pkl_nim') && localStorage.getItem('pkl_nim') !== '12345678') ? localStorage.getItem('pkl_nim') : '-',
-      instansi: localStorage.getItem('pkl_instansi') || 'SMKN 2 Bandar Lampung',
-      jurusan: localStorage.getItem('pkl_jurusan') || 'Teknik Kendaraan Ringan (TKR) / Otomotif',
+      nama: (currentUserRole === 'admin')
+        ? (localStorage.getItem('pkl_admin_nama') || 'HRD & Pembimbing PKL')
+        : ((localStorage.getItem('pkl_nama') && localStorage.getItem('pkl_nama') !== 'Andi Pratama') ? localStorage.getItem('pkl_nama') : 'Budi Santoso'),
+      nim: (currentUserRole === 'admin')
+        ? 'Admin Bengkel'
+        : ((localStorage.getItem('pkl_nim') && localStorage.getItem('pkl_nim') !== '12345678') ? localStorage.getItem('pkl_nim') : '210103045'),
+      instansi: (currentUserRole === 'admin')
+        ? 'PT. Astra International Tbk - Daihatsu'
+        : (localStorage.getItem('pkl_instansi') || 'SMKN 2 Bandar Lampung'),
+      jurusan: (currentUserRole === 'admin')
+        ? 'Service Dept / Human Capital'
+        : (localStorage.getItem('pkl_jurusan') || 'Teknik Kendaraan Ringan (TKR) / Otomotif'),
       apiUrl: localStorage.getItem('pkl_script_url') || '/api/presensi',
       apiSecret: localStorage.getItem('pkl_script_secret') || 'DAIHATSU_PKL_SEC_2026',
       foto: localStorage.getItem('pkl_foto_profil') || '',
       gpsMode: 'real'
     };
+
+    // --- DATA INDUK SISWA MAGANG (MASTER DATA UNTUK HRD) ---
+    const DEFAULT_STUDENTS = [
+      {
+        nim: '210103045',
+        nama: 'Budi Santoso',
+        instansi: 'SMKN 2 Bandar Lampung',
+        jurusan: 'Teknik Kendaraan Ringan (TKR)',
+        phone: '0812-7890-1122',
+        status: 'Aktif',
+        todayStatus: 'Hadir Lengkap',
+        todayIn: '07:48 WIB',
+        todayOut: '16:30 WIB',
+        todayJarak: 65,
+        avatar: ''
+      },
+      {
+        nim: '210103050',
+        nama: 'Rizky Pratama',
+        instansi: 'SMKN 2 Bandar Lampung',
+        jurusan: 'Teknik Kendaraan Ringan (TKR)',
+        phone: '0813-9876-5432',
+        status: 'Aktif',
+        todayStatus: 'Sedang Shift',
+        todayIn: '07:55 WIB',
+        todayOut: '-',
+        todayJarak: 80,
+        avatar: ''
+      },
+      {
+        nim: '220401012',
+        nama: 'Siti Nurhaliza',
+        instansi: 'Politeknik Negeri Lampung',
+        jurusan: 'D3 Teknik Otomotif',
+        phone: '0857-1122-3344',
+        status: 'Aktif',
+        todayStatus: 'Sakit (SKD)',
+        todayIn: '-',
+        todayOut: '-',
+        todayJarak: null,
+        avatar: ''
+      },
+      {
+        nim: '210103061',
+        nama: 'Dimas Setiawan',
+        instansi: 'SMK PGRI 2 Bandar Lampung',
+        jurusan: 'Teknik Kendaraan Ringan (TKR)',
+        phone: '0821-4455-6677',
+        status: 'Aktif',
+        todayStatus: 'Izin Dispensasi',
+        todayIn: '-',
+        todayOut: '-',
+        todayJarak: null,
+        avatar: ''
+      }
+    ];
+
+    function getStudentsList() {
+      const stored = localStorage.getItem('pkl_students_list');
+      if (!stored) {
+        localStorage.setItem('pkl_students_list', JSON.stringify(DEFAULT_STUDENTS));
+        return DEFAULT_STUDENTS;
+      }
+      try {
+        return JSON.parse(stored);
+      } catch {
+        return DEFAULT_STUDENTS;
+      }
+    }
+
+    // --- DATA INBOX PERSETUJUAN IZIN / SAKIT (UNTUK HRD) ---
+    const DEFAULT_APPROVALS = [
+      {
+        izinId: 'IZN-20261113-220401012',
+        nim: '220401012',
+        nama: 'Siti Nurhaliza',
+        instansi: 'Politeknik Negeri Lampung',
+        tanggal: '2026-11-13',
+        jenis: 'Sakit',
+        alasan: 'Demam tinggi dan radang tenggorokan (Surat Keterangan Dokter Terlampir)',
+        status: 'Pending',
+        docUrl: 'Image/Logo-Daihatsu.png',
+        createdAt: '2026-11-13T07:15:00Z'
+      },
+      {
+        izinId: 'IZN-20261113-210103061',
+        nim: '210103061',
+        nama: 'Dimas Setiawan',
+        instansi: 'SMK PGRI 2 Bandar Lampung',
+        tanggal: '2026-11-13',
+        jenis: 'Izin',
+        alasan: 'Mengikuti Ujian Tengah Semester di sekolah induk (Dispensasi)',
+        status: 'Disetujui',
+        docUrl: '',
+        createdAt: '2026-11-12T16:00:00Z'
+      },
+      {
+        izinId: 'IZN-20261110-210103050',
+        nim: '210103050',
+        nama: 'Rizky Pratama',
+        instansi: 'SMKN 2 Bandar Lampung',
+        tanggal: '2026-11-10',
+        jenis: 'Izin',
+        alasan: 'Keperluan keluarga mendesak ke luar daerah',
+        status: 'Disetujui',
+        docUrl: '',
+        createdAt: '2026-11-10T06:30:00Z'
+      }
+    ];
+
+    function getInboxApprovals() {
+      const stored = localStorage.getItem('pkl_inbox_approvals');
+      if (!stored) {
+        localStorage.setItem('pkl_inbox_approvals', JSON.stringify(DEFAULT_APPROVALS));
+        return DEFAULT_APPROVALS;
+      }
+      try {
+        return JSON.parse(stored);
+      } catch {
+        return DEFAULT_APPROVALS;
+      }
+    }
+
+    // --- SEED PRESENSI LOGS MULTI-SISWA UNTUK REKAP HRD ---
+    const SEED_STUDENT_LOGS = [
+      {
+        logId: 'ABS-20261113-210103045-IN',
+        tanggal: '2026-11-13',
+        waktu: '07:48',
+        tipe: 'IN',
+        jarak: 65,
+        statusRadius: 'Dalam Radius Bengkel',
+        nim: '210103045',
+        nama: 'Budi Santoso',
+        instansi: 'SMKN 2 Bandar Lampung',
+        address: 'Workshop Astra Daihatsu A. Yani',
+        photoUrl: '-'
+      },
+      {
+        logId: 'ABS-20261113-210103045-OUT',
+        tanggal: '2026-11-13',
+        waktu: '16:30',
+        tipe: 'OUT',
+        jarak: 72,
+        statusRadius: 'Dalam Radius Bengkel',
+        nim: '210103045',
+        nama: 'Budi Santoso',
+        instansi: 'SMKN 2 Bandar Lampung',
+        address: 'Workshop Astra Daihatsu A. Yani',
+        photoUrl: '-'
+      },
+      {
+        logId: 'ABS-20261113-210103050-IN',
+        tanggal: '2026-11-13',
+        waktu: '07:55',
+        tipe: 'IN',
+        jarak: 80,
+        statusRadius: 'Dalam Radius Bengkel',
+        nim: '210103050',
+        nama: 'Rizky Pratama',
+        instansi: 'SMKN 2 Bandar Lampung',
+        address: 'Workshop Astra Daihatsu A. Yani',
+        photoUrl: '-'
+      },
+      {
+        logId: 'ABS-20261112-210103050-IN',
+        tanggal: '2026-11-12',
+        waktu: '07:50',
+        tipe: 'IN',
+        jarak: 55,
+        statusRadius: 'Dalam Radius Bengkel',
+        nim: '210103050',
+        nama: 'Rizky Pratama',
+        instansi: 'SMKN 2 Bandar Lampung',
+        address: 'Workshop Astra Daihatsu A. Yani',
+        photoUrl: '-'
+      },
+      {
+        logId: 'ABS-20261112-210103050-OUT',
+        tanggal: '2026-11-12',
+        waktu: '16:35',
+        tipe: 'OUT',
+        jarak: 60,
+        statusRadius: 'Dalam Radius Bengkel',
+        nim: '210103050',
+        nama: 'Rizky Pratama',
+        instansi: 'SMKN 2 Bandar Lampung',
+        address: 'Workshop Astra Daihatsu A. Yani',
+        photoUrl: '-'
+      },
+      {
+        logId: 'ABS-20261112-220401012-IN',
+        tanggal: '2026-11-12',
+        waktu: '07:45',
+        tipe: 'IN',
+        jarak: 70,
+        statusRadius: 'Dalam Radius Bengkel',
+        nim: '220401012',
+        nama: 'Siti Nurhaliza',
+        instansi: 'Politeknik Negeri Lampung',
+        address: 'Workshop Astra Daihatsu A. Yani',
+        photoUrl: '-'
+      },
+      {
+        logId: 'ABS-20261112-220401012-OUT',
+        tanggal: '2026-11-12',
+        waktu: '16:30',
+        tipe: 'OUT',
+        jarak: 68,
+        statusRadius: 'Dalam Radius Bengkel',
+        nim: '220401012',
+        nama: 'Siti Nurhaliza',
+        instansi: 'Politeknik Negeri Lampung',
+        address: 'Workshop Astra Daihatsu A. Yani',
+        photoUrl: '-'
+      }
+    ];
 
     // State Geolocation
     let userLocation = {
@@ -2346,33 +2873,58 @@
     let currentFacingMode = 'environment'; // PRD 4.2: default environment
     let capturedImageBase64 = null;
 
-    // --- 2. PENYIMPANAN LOG PRESENSI & PERIZINAN MURNI (TANPA DATA SIMULASI) ---
+    // --- 2. PENYIMPANAN LOG PRESENSI & PERIZINAN MURNI (OFFLINE-FIRST) ---
     function getAttendanceLogs() {
+      let result = [];
       const saved = localStorage.getItem('pkl_logs_presensi');
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
           if (Array.isArray(parsed)) {
             // Filter out any legacy sample records
-            return parsed.filter(p => p.logId && !p.logId.includes('20251028') && !p.logId.includes('20251027') && !p.logId.includes('20251025'));
+            result = parsed.filter(p => p.logId && !p.logId.includes('20251028') && !p.logId.includes('20251027') && !p.logId.includes('20251025'));
           }
         } catch(e) {}
       }
-      return [];
+      if (currentUserRole === 'admin') {
+        const existingIds = new Set(result.map(r => r.logId));
+        SEED_STUDENT_LOGS.forEach(s => {
+          if (!existingIds.has(s.logId)) result.push(s);
+        });
+      }
+      return result;
     }
 
     function getIzinLogs() {
+      let result = [];
       const saved = localStorage.getItem('pkl_logs_izin');
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
           if (Array.isArray(parsed)) {
-            // Filter out any legacy sample records
-            return parsed.filter(i => i.izinId && !i.izinId.includes('20251026') && !i.izinId.includes('20251024'));
+            result = parsed.filter(i => i.izinId && !i.izinId.includes('20251026') && !i.izinId.includes('20251024'));
           }
         } catch(e) {}
       }
-      return [];
+      if (currentUserRole === 'admin') {
+        const approvals = getInboxApprovals();
+        const existingIds = new Set(result.map(r => r.izinId));
+        approvals.forEach(a => {
+          if (!existingIds.has(a.izinId)) {
+            result.push({
+              izinId: a.izinId,
+              tanggal: a.tanggal,
+              nim: a.nim,
+              nama: a.nama,
+              jenis: a.jenis,
+              alasan: a.alasan,
+              docUrl: a.docUrl,
+              status: a.status
+            });
+          }
+        });
+      }
+      return result;
     }
 
     // --- 3. INISIALISASI HALAMAN ---
@@ -2398,6 +2950,7 @@
       } catch(e) {}
 
       lucide.createIcons();
+      applyUserRoleUI();
       updateProfileDisplay();
       checkLoginSession();
       initDates();
@@ -2953,9 +3506,19 @@
       }
 
       if (tabId === 'presensi') {
-        backToAttendanceOverview();
-        updateOnlineAttendanceUI();
-        checkGPS(false);
+        if (currentUserRole === 'admin') {
+          renderAdminStudentsTable();
+        } else {
+          backToAttendanceOverview();
+          updateOnlineAttendanceUI();
+          checkGPS(false);
+        }
+      }
+
+      if (tabId === 'izin') {
+        if (currentUserRole === 'admin') {
+          renderInboxApprovals();
+        }
       }
 
       if (tabId === 'rekap') {
@@ -2976,12 +3539,19 @@
         }
       }
 
+      const isAdm = currentUserRole === 'admin';
       const titles = {
         dashboard: { title: 'Dashboard', sub: 'Sistem Presensi Geofencing PKL Astra Daihatsu Ahmad Yani' },
-        presensi: { title: 'Online Attendance', sub: 'Presensi Kehadiran Geofencing Mobile' },
-        izin: { title: 'Pengajuan Izin / Sakit', sub: 'Formulir ketidakhadiran mekanik magang PKL' },
-        rekap: { title: 'Rekapitulasi Kehadiran', sub: 'Laporan kehadiran & perizinan magang teknisi bengkel' },
-        pengaturan: { title: 'Pengaturan & Geofencing', sub: 'Profil siswa magang, kalibrasi titik bengkel, dan server' }
+        presensi: isAdm 
+          ? { title: 'Data Siswa Magang', sub: 'Direktori & Manajemen Peserta PKL Astra Daihatsu' }
+          : { title: 'Online Attendance', sub: 'Presensi Kehadiran Geofencing Mobile' },
+        izin: isAdm
+          ? { title: 'Inbox Persetujuan', sub: 'Verifikasi pengajuan izin & berkas SKD anak magang' }
+          : { title: 'Pengajuan Izin / Sakit', sub: 'Formulir ketidakhadiran mekanik magang PKL' },
+        rekap: isAdm
+          ? { title: 'Rekap Presensi Seluruh Magang', sub: 'Data rekapitulasi kehadiran seluruh siswa magang Astra Daihatsu' }
+          : { title: 'Rekapitulasi Kehadiran', sub: 'Laporan kehadiran & perizinan magang teknisi bengkel' },
+        pengaturan: { title: 'Pengaturan & Geofencing', sub: 'Profil akun, kalibrasi titik bengkel, dan integrasi server' }
       };
       document.getElementById('page-title').innerText = titles[tabId].title;
       document.getElementById('page-subtitle').innerText = titles[tabId].sub;
@@ -3624,6 +4194,10 @@
         }
       }
 
+      if (currentUserRole === 'admin') {
+        renderAdminRecentAttendance();
+      }
+
       lucide.createIcons();
     }
 
@@ -3682,6 +4256,8 @@
     function renderRekapTable() {
       const filterEl = document.getElementById('rekap-filter-kategori');
       const filter = filterEl ? filterEl.value : 'ALL';
+      const filterSiswaEl = document.getElementById('rekap-filter-siswa');
+      const filterSiswa = (filterSiswaEl && currentUserRole === 'admin') ? filterSiswaEl.value : 'ALL';
       const tbody = document.getElementById('rekap-table-body');
       const mobileCards = document.getElementById('rekap-mobile-cards');
       const badgeCount = document.getElementById('rekap-total-rows-badge');
@@ -3692,26 +4268,28 @@
       const presensiLogs = getAttendanceLogs();
       const izinLogs = getIzinLogs();
 
-      // 1. Group presensi kehadiran berdasarkan tanggal (Clock In & Clock Out 1 barisan per hari)
+      // 1. Group presensi kehadiran berdasarkan tanggal & siswa
       const dailyMap = {};
 
       presensiLogs.forEach(p => {
-        const t = p.tanggal;
-        if (!dailyMap[t]) {
-          dailyMap[t] = {
-            tanggal: t,
+        const groupKey = (currentUserRole === 'admin' ? (p.nim || 'self') : 'self') + '_' + p.tanggal;
+        if (!dailyMap[groupKey]) {
+          dailyMap[groupKey] = {
+            tanggal: p.tanggal,
+            nim: p.nim || currentUser.nim,
+            nama: p.nama || currentUser.nama,
             kategori: 'Hadir',
             inLog: null,
             outLog: null
           };
         }
         if (p.tipe === 'IN') {
-          if (!dailyMap[t].inLog || p.waktu < dailyMap[t].inLog.waktu) {
-            dailyMap[t].inLog = p;
+          if (!dailyMap[groupKey].inLog || p.waktu < dailyMap[groupKey].inLog.waktu) {
+            dailyMap[groupKey].inLog = p;
           }
         } else if (p.tipe === 'OUT') {
-          if (!dailyMap[t].outLog || p.waktu > dailyMap[t].outLog.waktu) {
-            dailyMap[t].outLog = p;
+          if (!dailyMap[groupKey].outLog || p.waktu > dailyMap[groupKey].outLog.waktu) {
+            dailyMap[groupKey].outLog = p;
           }
         }
       });
@@ -3742,6 +4320,8 @@
 
         combined.push({
           tanggal: day.tanggal,
+          nim: day.nim,
+          nama: day.nama,
           kategori: 'Hadir',
           statusTipe: statusTipe,
           statusText: statusText,
@@ -3761,6 +4341,8 @@
       izinLogs.forEach(i => {
         combined.push({
           tanggal: i.tanggal,
+          nim: i.nim || currentUser.nim,
+          nama: i.nama || currentUser.nama,
           kategori: i.jenis || 'Izin',
           statusTipe: i.jenis === 'Sakit' ? 'SAKIT' : 'IZIN',
           statusText: i.jenis === 'Sakit' ? 'Sakit (SKD)' : 'Izin Dispensasi',
@@ -3773,9 +4355,19 @@
           outJarak: null,
           keterangan: i.alasan || '-',
           address: 'Surat Keterangan Magang',
-          buktiUrl: i.docUrl || '-'
+          buktiUrl: i.docUrl || i.buktiUrl || '-'
         });
       });
+
+      // Filter Siswa jika admin
+      if (currentUserRole === 'admin' && filterSiswa && filterSiswa !== 'ALL') {
+        combined = combined.filter(c => c.nim === filterSiswa);
+      }
+
+      // Filter Kategori
+      if (filter !== 'ALL') {
+        combined = combined.filter(c => c.kategori === filter);
+      }
 
       // 4. Urutkan berdasarkan tanggal terbaru
       combined.sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
@@ -4024,7 +4616,7 @@
                 </div>
                 <div>
                   <p class="font-bold text-slate-800 text-xs">${dayName}, ${dayNum} ${fullMonth} ${year}</p>
-                  <p class="text-[10px] text-slate-400 font-medium">Astra Daihatsu A. Yani</p>
+                  <p class="text-[10px] text-slate-400 font-medium">${(currentUserRole === 'admin' && item.nama) ? `<span class="text-blue-600 font-bold">${item.nama} (${item.nim})</span>` : 'Astra Daihatsu A. Yani'}</p>
                 </div>
               </div>
             </td>
@@ -4064,7 +4656,7 @@
                 </div>
                 <div>
                   <span class="text-xs font-bold text-slate-900 block leading-tight">${dayName}, ${dayNum} ${shortMonth} ${year}</span>
-                  <span class="text-[10px] text-slate-400">Shift Kerja Bengkel</span>
+                  <span class="text-[10px] text-slate-400">${(currentUserRole === 'admin' && item.nama) ? `<strong class="text-blue-600 font-bold">${item.nama}</strong>` : 'Shift Kerja Bengkel'}</span>
                 </div>
               </div>
               <div>${statusBadge}</div>
@@ -4563,6 +5155,735 @@
 
     function exportRekapPDF() {
       window.print();
+    }
+
+    // ==================== 13. MULTI-ROLE & HR ADMIN SYSTEM ====================
+
+    function applyUserRoleUI(newRole) {
+      if (newRole) {
+        currentUserRole = newRole;
+        localStorage.setItem('pkl_user_role', newRole);
+      } else {
+        currentUserRole = localStorage.getItem('pkl_user_role') || 'student';
+      }
+
+      const isAdm = currentUserRole === 'admin';
+
+      // 1. Sinkronisasi Data Identitas Pengguna
+      if (isAdm) {
+        currentUser.nama = localStorage.getItem('pkl_admin_nama') || 'HRD & Pembimbing PKL';
+        currentUser.nim = 'Admin Bengkel';
+        currentUser.instansi = 'PT. Astra International Tbk - Daihatsu';
+        currentUser.jurusan = 'Human Capital & Bengkel';
+      } else {
+        currentUser.nama = (localStorage.getItem('pkl_nama') && localStorage.getItem('pkl_nama') !== 'Andi Pratama') ? localStorage.getItem('pkl_nama') : 'Budi Santoso';
+        currentUser.nim = (localStorage.getItem('pkl_nim') && localStorage.getItem('pkl_nim') !== '12345678') ? localStorage.getItem('pkl_nim') : '210103045';
+        currentUser.instansi = localStorage.getItem('pkl_instansi') || 'SMKN 2 Bandar Lampung';
+        currentUser.jurusan = localStorage.getItem('pkl_jurusan') || 'Teknik Kendaraan Ringan (TKR)';
+      }
+
+      // 2. Update Topbar Role Badge
+      const roleBadge = document.getElementById('topbar-role-badge');
+      const roleIcon = document.getElementById('role-badge-icon');
+      const roleText = document.getElementById('role-badge-text');
+
+      if (roleBadge && roleIcon && roleText) {
+        if (isAdm) {
+          roleIcon.innerText = '👔';
+          roleText.innerText = 'HRD / Admin';
+          roleBadge.className = "px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-2xs border bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100";
+        } else {
+          roleIcon.innerText = '👨‍🎓';
+          roleText.innerText = 'Siswa Magang';
+          roleBadge.className = "px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-2xs border bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100";
+        }
+      }
+
+      // 3. Update Menu Sidebar Desktop & Dock Nav Mobile
+      // Menu Tab 2: Presensi -> Data Magang (Admin) vs Online Attendance (Student)
+      const navPresensi = document.getElementById('nav-presensi');
+      if (navPresensi) {
+        navPresensi.innerHTML = isAdm
+          ? `<i data-lucide="users" class="w-4 h-4"></i><span>Data Siswa Magang</span>`
+          : `<i data-lucide="clock" class="w-4 h-4"></i><span>Online Attendance</span>`;
+      }
+      const bnavPresensi = document.getElementById('bnav-presensi');
+      if (bnavPresensi) {
+        const iconDiv = bnavPresensi.querySelector('div');
+        const spanTxt = bnavPresensi.querySelector('span');
+        if (iconDiv) {
+          iconDiv.innerHTML = isAdm
+            ? `<i data-lucide="users" class="w-5 h-5 drop-shadow-xs"></i>`
+            : `<i data-lucide="clock" class="w-5 h-5 drop-shadow-xs"></i>`;
+        }
+        if (spanTxt) spanTxt.innerText = isAdm ? 'Data Magang' : 'Presensi';
+      }
+
+      // Menu Tab 3: Izin/Sakit -> Inbox (Admin) vs Pengajuan Izin/Sakit (Student)
+      const navIzin = document.getElementById('nav-izin');
+      if (navIzin) {
+        navIzin.innerHTML = isAdm
+          ? `<i data-lucide="inbox" class="w-4 h-4"></i><span>Inbox Persetujuan</span>`
+          : `<i data-lucide="file-plus-2" class="w-4 h-4"></i><span>Pengajuan Izin/Sakit</span>`;
+      }
+      const bnavIzin = document.getElementById('bnav-izin');
+      if (bnavIzin) {
+        const iconDiv = bnavIzin.querySelector('div');
+        const spanTxt = bnavIzin.querySelectorAll('span');
+        if (iconDiv) {
+          iconDiv.innerHTML = isAdm
+            ? `<i data-lucide="inbox" class="w-5 h-5 transition-transform group-hover:scale-110"></i><span class="bnav-indicator hidden absolute -top-1 -right-1 w-2 h-2 rounded-full bg-blue-600 shadow-xs shadow-blue-500/50"></span>`
+            : `<i data-lucide="file-plus-2" class="w-5 h-5 transition-transform group-hover:scale-110"></i><span class="bnav-indicator hidden absolute -top-1 -right-1 w-2 h-2 rounded-full bg-blue-600 shadow-xs shadow-blue-500/50"></span>`;
+        }
+        if (spanTxt && spanTxt.length > 1) {
+          spanTxt[1].innerText = isAdm ? 'Inbox' : 'Izin/Sakit';
+        }
+      }
+
+      // Menu Tab 4: Rekap
+      const navRekap = document.getElementById('nav-rekap');
+      if (navRekap) {
+        navRekap.innerHTML = isAdm
+          ? `<i data-lucide="clipboard-list" class="w-4 h-4"></i><span>Rekap Seluruh Magang</span>`
+          : `<i data-lucide="calendar-check" class="w-4 h-4"></i><span>Rekap Bulanan</span>`;
+      }
+      const bnavRekap = document.getElementById('bnav-rekap');
+      if (bnavRekap) {
+        const spanTxt = bnavRekap.querySelectorAll('span');
+        if (spanTxt && spanTxt.length > 1) {
+          spanTxt[1].innerText = isAdm ? 'Rekap Semua' : 'Rekap';
+        }
+      }
+
+      // 4. Tampilan Dashboard (Box Presensi Hari Ini vs Riwayat Terkini Presensi Magang)
+      const studentTodayBox = document.getElementById('box-student-today-attendance');
+      const adminRecentBox = document.getElementById('box-admin-recent-attendance');
+      if (studentTodayBox && adminRecentBox) {
+        if (isAdm) {
+          studentTodayBox.classList.add('hidden');
+          adminRecentBox.classList.remove('hidden');
+          renderAdminRecentAttendance();
+        } else {
+          studentTodayBox.classList.remove('hidden');
+          adminRecentBox.classList.add('hidden');
+        }
+      }
+
+      // 5. Tampilan Tab 2: Presensi / Data Magang Flow
+      const studentAttFlow = document.getElementById('student-attendance-flow');
+      const adminMagangFlow = document.getElementById('admin-data-magang-flow');
+      if (studentAttFlow && adminMagangFlow) {
+        if (isAdm) {
+          studentAttFlow.classList.add('hidden');
+          adminMagangFlow.classList.remove('hidden');
+          renderAdminStudentsTable();
+        } else {
+          studentAttFlow.classList.remove('hidden');
+          adminMagangFlow.classList.add('hidden');
+        }
+      }
+
+      // 6. Tampilan Tab 3: Izin / Inbox Approvals
+      const studentIzinFlow = document.getElementById('student-izin-form-container');
+      const adminInboxFlow = document.getElementById('admin-inbox-approvals-container');
+      if (studentIzinFlow && adminInboxFlow) {
+        if (isAdm) {
+          studentIzinFlow.classList.add('hidden');
+          adminInboxFlow.classList.remove('hidden');
+          renderInboxApprovals();
+        } else {
+          studentIzinFlow.classList.remove('hidden');
+          adminInboxFlow.classList.add('hidden');
+        }
+      }
+
+      // 7. Tampilan Tab 4: Rekap (Tampilkan filter per siswa khusus admin)
+      const rekapSiswaFilter = document.getElementById('rekap-filter-siswa');
+      if (rekapSiswaFilter) {
+        if (isAdm) {
+          rekapSiswaFilter.classList.remove('hidden');
+          populateRekapSiswaFilter();
+        } else {
+          rekapSiswaFilter.classList.add('hidden');
+        }
+      }
+
+      updateProfileDisplay();
+      renderDashboardStats();
+      renderRekapTable();
+      if (window.lucide) lucide.createIcons();
+    }
+
+    // --- 13.1 RIWAYAT TERKINI PRESENSI MAGANG (ADMIN DASHBOARD) ---
+    function renderAdminRecentAttendance() {
+      const container = document.getElementById('admin-recent-list');
+      const badge = document.getElementById('admin-today-badge');
+      if (!container) return;
+
+      const now = new Date();
+      const todayISO = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+
+      const logs = getAttendanceLogs();
+      const students = getStudentsList();
+
+      const todayLogs = logs.filter(l => l.tanggal === todayISO);
+      const uniqueInStudents = new Set(todayLogs.filter(l => l.tipe === 'IN').map(l => l.nim));
+
+      if (badge) {
+        badge.innerText = `${uniqueInStudents.size} Hadir Hari Ini`;
+      }
+
+      if (todayLogs.length === 0) {
+        container.innerHTML = `
+          <div class="py-8 text-center text-slate-400">
+            <i data-lucide="clock" class="w-8 h-8 mx-auto text-slate-300 mb-2"></i>
+            <p class="text-xs font-bold text-slate-600">Belum Ada Presensi Hari Ini</p>
+            <p class="text-[10px] text-slate-400">Presensi anak magang yang masuk hari ini akan tampil live di sini.</p>
+          </div>
+        `;
+        if (window.lucide) lucide.createIcons();
+        return;
+      }
+
+      // Urutkan berdasarkan waktu log terbaru
+      todayLogs.sort((a, b) => (b.waktu || '').localeCompare(a.waktu || ''));
+
+      container.innerHTML = todayLogs.map(log => {
+        const st = students.find(s => s.nim === log.nim) || { nama: log.nama || 'Siswa Magang', instansi: 'SMKN 2 Bandar Lampung' };
+        const isIn = log.tipe === 'IN';
+        const badgeColor = isIn ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-blue-50 text-blue-700 border-blue-200';
+        const badgeIcon = isIn ? 'check-circle-2' : 'log-out';
+        const badgeText = isIn ? 'Clock IN' : 'Clock OUT';
+
+        return `
+          <div class="p-3 bg-slate-50/90 hover:bg-slate-100/90 rounded-2xl border border-slate-200/80 transition flex items-center justify-between gap-3 shadow-2xs">
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-xl ${isIn ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-100 text-blue-700'} font-black text-xs flex items-center justify-center flex-shrink-0">
+                ${st.nama.split(' ').map(w => w[0]).slice(0, 2).join('')}
+              </div>
+              <div>
+                <div class="flex items-center gap-1.5">
+                  <p class="font-bold text-xs text-slate-900">${st.nama}</p>
+                  <span class="text-[9px] px-1.5 py-0.2 rounded font-mono font-bold bg-slate-200 text-slate-700">${log.nim || '-'}</span>
+                </div>
+                <p class="text-[10px] text-slate-400">${st.instansi} • Radius: <strong class="text-slate-600">${log.jarak !== undefined ? log.jarak + ' m' : 'Valid'}</strong></p>
+              </div>
+            </div>
+            <div class="text-right flex flex-col items-end gap-1">
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border ${badgeColor}">
+                <i data-lucide="${badgeIcon}" class="w-3 h-3"></i> ${badgeText}
+              </span>
+              <span class="text-[10px] text-slate-500 font-mono font-bold">${log.waktu || '--:--'} WIB</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    // --- 13.2 DATA SISWA MAGANG (ADMIN MANAGEMENT) ---
+    function renderAdminStudentsTable() {
+      const tbody = document.getElementById('admin-students-table-body');
+      if (!tbody) return;
+
+      const students = getStudentsList();
+      const logs = getAttendanceLogs();
+      const approvals = getInboxApprovals();
+
+      const now = new Date();
+      const todayISO = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+
+      // Stat Calculation
+      const totalStudents = students.length;
+      const todayInStudents = new Set(logs.filter(l => l.tanggal === todayISO && l.tipe === 'IN').map(l => l.nim)).size;
+      const todayPermitStudents = approvals.filter(a => a.tanggal === todayISO && a.status === 'Disetujui').length;
+      const totalSchools = new Set(students.map(s => s.instansi)).size;
+
+      const elTotal = document.getElementById('admin-stat-total-students');
+      const elIn = document.getElementById('admin-stat-today-in');
+      const elPermit = document.getElementById('admin-stat-today-permit');
+      const elSchools = document.getElementById('admin-stat-total-schools');
+
+      if (elTotal) elTotal.innerText = totalStudents;
+      if (elIn) elIn.innerText = todayInStudents;
+      if (elPermit) elPermit.innerText = todayPermitStudents;
+      if (elSchools) elSchools.innerText = totalSchools;
+
+      if (students.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400 text-xs">Belum ada siswa magang terdaftar. Klik tombol Tambah Siswa.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = students.map(s => {
+        const sLogsToday = logs.filter(l => l.tanggal === todayISO && l.nim === s.nim);
+        const hasIn = sLogsToday.find(l => l.tipe === 'IN');
+        const hasOut = sLogsToday.find(l => l.tipe === 'OUT');
+        const isPermit = approvals.find(a => a.tanggal === todayISO && a.nim === s.nim && a.status === 'Disetujui');
+
+        let statusBadge = '';
+        if (hasIn && hasOut) {
+          statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200"><i data-lucide="check-circle" class="w-3 h-3 text-emerald-600"></i> Lengkap (${hasIn.waktu} - ${hasOut.waktu})</span>`;
+        } else if (hasIn) {
+          statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200"><i data-lucide="clock" class="w-3 h-3 text-blue-600"></i> Sedang Shift (IN: ${hasIn.waktu})</span>`;
+        } else if (isPermit) {
+          statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200"><i data-lucide="file-text" class="w-3 h-3 text-amber-600"></i> ${isPermit.jenis} (Disetujui)</span>`;
+        } else {
+          statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-100 text-slate-500 border border-slate-200"><i data-lucide="circle-dashed" class="w-3 h-3 text-slate-400"></i> Belum Masuk</span>`;
+        }
+
+        const initials = s.nama.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
+
+        return `
+          <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+            <td class="py-3.5 px-4 whitespace-nowrap">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 font-bold text-xs flex items-center justify-center flex-shrink-0">
+                  ${initials}
+                </div>
+                <div>
+                  <p class="font-bold text-slate-900 text-xs">${s.nama}</p>
+                  <p class="text-[10px] text-slate-400 font-mono">NIM: ${s.nim}</p>
+                </div>
+              </div>
+            </td>
+            <td class="py-3.5 px-4 whitespace-nowrap">
+              <p class="font-semibold text-slate-800 text-xs">${s.instansi}</p>
+              <p class="text-[10px] text-slate-400">${s.jurusan}</p>
+            </td>
+            <td class="py-3.5 px-4 whitespace-nowrap">
+              ${statusBadge}
+            </td>
+            <td class="py-3.5 px-4 whitespace-nowrap">
+              <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> ${s.status || 'Aktif Magang'}
+              </span>
+            </td>
+            <td class="py-3.5 px-4 text-center whitespace-nowrap">
+              <div class="flex items-center justify-center gap-1.5">
+                <button onclick="filterRekapByStudent('${s.nim}')" class="p-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 transition cursor-pointer" title="Lihat Rekap Presensi">
+                  <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                </button>
+                <button onclick="openManualAttendanceModal('${s.nim}')" class="p-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 transition cursor-pointer" title="Absensi Manual HR">
+                  <i data-lucide="calendar-plus" class="w-3.5 h-3.5"></i>
+                </button>
+                <button onclick="deleteStudent('${s.nim}')" class="p-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 transition cursor-pointer" title="Hapus Siswa">
+                  <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    // Populasikan Dropdown Siswa di Tab Rekap
+    function populateRekapSiswaFilter() {
+      const select = document.getElementById('rekap-filter-siswa');
+      if (!select) return;
+      const currentVal = select.value;
+      const students = getStudentsList();
+
+      let html = `<option value="ALL">Semua Siswa Magang (${students.length})</option>`;
+      students.forEach(s => {
+        html += `<option value="${s.nim}">${s.nama} (${s.nim})</option>`;
+      });
+      select.innerHTML = html;
+      if (currentVal) select.value = currentVal;
+    }
+
+    function filterRekapByStudent(nim) {
+      switchTab('rekap');
+      const select = document.getElementById('rekap-filter-siswa');
+      if (select) {
+        select.value = nim;
+        renderRekapTable();
+      }
+    }
+
+    // --- 13.3 INBOX PERSETUJUAN IZIN / SAKIT (HR ADMIN APPROVALS) ---
+    let currentInboxApprovalFilter = 'ALL';
+
+    function setInboxApprovalFilter(filter) {
+      currentInboxApprovalFilter = filter;
+      const tabs = ['all', 'pending', 'approved', 'rejected'];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`btn-inbox-filter-${t}`);
+        if (btn) {
+          if ((t === 'all' && filter === 'ALL') || (t === 'pending' && filter === 'Pending') || (t === 'approved' && filter === 'Disetujui') || (t === 'rejected' && filter === 'Ditolak')) {
+            btn.className = "px-3 py-1.5 rounded-lg font-bold transition text-blue-700 bg-white shadow-xs cursor-pointer";
+          } else {
+            btn.className = "px-3 py-1.5 rounded-lg font-bold transition text-slate-600 hover:text-slate-900 cursor-pointer";
+          }
+        }
+      });
+      renderInboxApprovals();
+    }
+
+    function renderInboxApprovals() {
+      const container = document.getElementById('inbox-approvals-list');
+      if (!container) return;
+
+      const approvals = getInboxApprovals();
+
+      // Update badge counts
+      const countAll = approvals.length;
+      const countPending = approvals.filter(a => a.status === 'Pending').length;
+      const countApproved = approvals.filter(a => a.status === 'Disetujui').length;
+      const countRejected = approvals.filter(a => a.status === 'Ditolak').length;
+
+      const elAll = document.getElementById('inbox-count-all');
+      const elPending = document.getElementById('inbox-count-pending');
+      const elApproved = document.getElementById('inbox-count-approved');
+      const elRejected = document.getElementById('inbox-count-rejected');
+
+      if (elAll) elAll.innerText = countAll;
+      if (elPending) elPending.innerText = countPending;
+      if (elApproved) elApproved.innerText = countApproved;
+      if (elRejected) elRejected.innerText = countRejected;
+
+      let filtered = approvals;
+      if (currentInboxApprovalFilter !== 'ALL') {
+        filtered = approvals.filter(a => a.status === currentInboxApprovalFilter);
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="py-12 px-4 text-center bg-white rounded-3xl border border-slate-200">
+            <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-3">
+              <i data-lucide="check-circle-2" class="w-6 h-6"></i>
+            </div>
+            <p class="text-sm font-bold text-slate-900">Tidak Ada Permohonan (${currentInboxApprovalFilter})</p>
+            <p class="text-xs text-slate-400 mt-1">Semua permohonan izin dan sakit anak magang telah diproses.</p>
+          </div>
+        `;
+        if (window.lucide) lucide.createIcons();
+        return;
+      }
+
+      // Sort by newest date
+      filtered.sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
+
+      container.innerHTML = filtered.map(item => {
+        const isSakit = item.jenis === 'Sakit';
+        const typeBadge = isSakit 
+          ? `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-red-50 text-red-700 border border-red-200"><i data-lucide="activity" class="w-3 h-3 text-red-500"></i> Sakit (SKD)</span>`
+          : `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200"><i data-lucide="file-text" class="w-3 h-3 text-blue-600"></i> Izin Keperluan</span>`;
+
+        let statusDisplay = '';
+        if (item.status === 'Pending') {
+          statusDisplay = `
+            <div class="flex items-center gap-2">
+              <button onclick="handleApprovePermit('${item.izinId}', 'Disetujui')" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm cursor-pointer">
+                <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                <span>Setujui</span>
+              </button>
+              <button onclick="handleApprovePermit('${item.izinId}', 'Ditolak')" class="px-3.5 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 active:scale-95 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer">
+                <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                <span>Tolak</span>
+              </button>
+            </div>
+          `;
+        } else if (item.status === 'Disetujui') {
+          statusDisplay = `
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-2xs">
+              <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-600"></i> Disetujui HRD (${item.approvedAt || 'Tervalidasi'})
+            </span>
+          `;
+        } else {
+          statusDisplay = `
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-red-50 text-red-700 border border-red-200 shadow-2xs">
+              <i data-lucide="x-circle" class="w-3.5 h-3.5 text-red-600"></i> Ditolak HRD
+            </span>
+          `;
+        }
+
+        const docBtn = (item.buktiUrl && item.buktiUrl.length > 5 && item.buktiUrl !== '-')
+          ? `<button onclick="previewPhotoModal('${item.buktiUrl.replace(/'/g, "\\'")}', '${item.jenis} - ${item.nama}', '${item.tanggal}')" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 transition shadow-2xs cursor-pointer">
+               <i data-lucide="paperclip" class="w-3.5 h-3.5 text-blue-600"></i> Lampiran Berkas / SKD
+             </button>`
+          : `<span class="text-[11px] text-slate-400 italic">Tanpa lampiran berkas</span>`;
+
+        const initials = item.nama.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
+
+        return `
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs hover:shadow-xs transition space-y-3.5">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl bg-[#0d1a3a] text-white flex items-center justify-center font-bold text-xs flex-shrink-0 shadow-xs">
+                  ${initials}
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <h4 class="font-extrabold text-slate-900 text-sm">${item.nama}</h4>
+                    <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded-md bg-slate-100 text-slate-600">${item.nim}</span>
+                  </div>
+                  <p class="text-[11px] text-slate-400 font-medium">${item.instansi || 'SMKN 2 Bandar Lampung'} • Diajukan: <strong class="text-slate-700">${item.tanggal}</strong></p>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                ${typeBadge}
+              </div>
+            </div>
+
+            <!-- Alasan Pengajuan -->
+            <div class="p-3 bg-slate-50/80 rounded-xl border border-slate-100 text-xs text-slate-700">
+              <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">Alasan Ketidakhadiran</p>
+              <p class="font-medium leading-relaxed">${item.alasan || '-'}</p>
+            </div>
+
+            <!-- Footer: Berkas Lampiran & Tombol Approval -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1 border-t border-slate-100">
+              <div>
+                ${docBtn}
+              </div>
+              <div>
+                ${statusDisplay}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    async function handleApprovePermit(izinId, newStatus) {
+      let approvals = getInboxApprovals();
+      const idx = approvals.findIndex(a => a.izinId === izinId);
+      if (idx === -1) return;
+
+      const item = approvals[idx];
+      item.status = newStatus;
+      item.approvedBy = currentUser.nama;
+      item.approvedAt = new Date().toLocaleDateString('id-ID');
+      localStorage.setItem('pkl_inbox_approvals', JSON.stringify(approvals));
+
+      // Kirim sinkronisasi ke backend Google Apps Script / Vercel proxy
+      const targetApi = currentUser.apiUrl || '/api/presensi';
+      if (targetApi && (targetApi.startsWith('http') || targetApi.startsWith('/'))) {
+        const isProxy = targetApi.startsWith('/');
+        fetch(targetApi, {
+          method: 'POST',
+          mode: isProxy ? 'same-origin' : 'no-cors',
+          headers: { 'Content-Type': isProxy ? 'application/json' : 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'approve_izin',
+            izinId: item.izinId,
+            nim: item.nim,
+            status: newStatus,
+            approvedBy: currentUser.nama,
+            secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026"
+          })
+        }).catch(err => console.warn('GAS approve sync error:', err));
+      }
+
+      renderInboxApprovals();
+      renderRekapTable();
+      renderDashboardStats();
+      showAppToast("Status Izin Diperbarui", `Pengajuan dari ${item.nama} telah diatur menjadi: ${newStatus}`, newStatus === 'Disetujui' ? 'success' : 'info');
+    }
+
+    // --- 13.4 FITUR LOGIN & SWITCH ROLE ---
+    function setLoginRoleTab(role) {
+      const btnStudent = document.getElementById('btn-login-tab-student');
+      const btnAdmin = document.getElementById('btn-login-tab-admin');
+      const formStudent = document.getElementById('form-login-student');
+      const formAdmin = document.getElementById('form-login-admin');
+
+      if (role === 'student') {
+        if (btnStudent) btnStudent.className = "py-2.5 rounded-xl transition text-blue-700 bg-white shadow-xs flex items-center justify-center gap-1.5 cursor-pointer";
+        if (btnAdmin) btnAdmin.className = "py-2.5 rounded-xl transition text-slate-500 hover:text-slate-800 flex items-center justify-center gap-1.5 cursor-pointer";
+        if (formStudent) formStudent.classList.remove('hidden');
+        if (formAdmin) formAdmin.classList.add('hidden');
+      } else {
+        if (btnAdmin) btnAdmin.className = "py-2.5 rounded-xl transition text-blue-700 bg-white shadow-xs flex items-center justify-center gap-1.5 cursor-pointer";
+        if (btnStudent) btnStudent.className = "py-2.5 rounded-xl transition text-slate-500 hover:text-slate-800 flex items-center justify-center gap-1.5 cursor-pointer";
+        if (formAdmin) formAdmin.classList.remove('hidden');
+        if (formStudent) formStudent.classList.add('hidden');
+      }
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function closeLoginModal() {
+      const modal = document.getElementById('login-modal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function quickLoginDemo(role) {
+      if (role === 'student') {
+        localStorage.setItem('pkl_user_role', 'student');
+        localStorage.setItem('pkl_nim', '210103045');
+        localStorage.setItem('pkl_nama', 'Budi Santoso');
+        localStorage.setItem('pkl_is_logged_in', 'true');
+        closeLoginModal();
+        applyUserRoleUI('student');
+        showAppToast("Login Berhasil", "Masuk sebagai Budi Santoso (Siswa Magang Astra Daihatsu)", "success");
+      } else {
+        localStorage.setItem('pkl_user_role', 'admin');
+        localStorage.setItem('pkl_is_logged_in', 'true');
+        closeLoginModal();
+        applyUserRoleUI('admin');
+        showAppToast("Login Berhasil", "Masuk sebagai HRD / Pembimbing PKL Astra Daihatsu", "success");
+      }
+    }
+
+    function handleAdminLoginSubmit(event) {
+      event.preventDefault();
+      const user = document.getElementById('login-admin-user').value.trim();
+      const pwd = document.getElementById('login-admin-password').value;
+
+      if (user === 'admin' && (pwd === 'daihatsu2026' || pwd === 'admin123')) {
+        localStorage.setItem('pkl_user_role', 'admin');
+        localStorage.setItem('pkl_is_logged_in', 'true');
+        closeLoginModal();
+        applyUserRoleUI('admin');
+        showAppAlert("Selamat datang di Panel HRD Astra Daihatsu Ahmad Yani!\n\nAnda dapat memverifikasi izin anak magang, memantau riwayat presensi live seluruh mekanik, dan mengelola direktori siswa.", "Login Berhasil", "success");
+      } else {
+        showAppAlert("Username atau Sandi HRD salah!\n\nDefault Username: admin\nDefault Sandi: daihatsu2026", "Gagal Masuk", "error");
+      }
+    }
+
+    // --- 13.5 TAMBAH SISWA & ABSENSI MANUAL (MODAL CRUD) ---
+    function openAddStudentModal() {
+      document.getElementById('modal-add-student').classList.remove('hidden');
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function closeAddStudentModal() {
+      document.getElementById('modal-add-student').classList.add('hidden');
+    }
+
+    function handleSaveNewStudent(e) {
+      e.preventDefault();
+      const nim = document.getElementById('add-student-nim').value.trim();
+      const nama = document.getElementById('add-student-nama').value.trim();
+      const instansi = document.getElementById('add-student-instansi').value.trim();
+      const jurusan = document.getElementById('add-student-jurusan').value.trim();
+      const phone = document.getElementById('add-student-phone').value.trim();
+
+      if (!nim || !nama) {
+        showAppAlert("NIM dan Nama Siswa wajib diisi!", "Perhatian", "warning");
+        return;
+      }
+
+      let students = getStudentsList();
+      if (students.some(s => s.nim === nim)) {
+        showAppAlert("Siswa dengan NIM " + nim + " sudah terdaftar di sistem!", "Duplikasi Data", "warning");
+        return;
+      }
+
+      students.push({
+        nim: nim,
+        nama: nama,
+        instansi: instansi || 'SMK Mitra Astra',
+        jurusan: jurusan || 'Teknik Kendaraan Ringan (TKR)',
+        phone: phone || '-',
+        status: 'Aktif Magang'
+      });
+
+      localStorage.setItem('pkl_students_list', JSON.stringify(students));
+      closeAddStudentModal();
+      renderAdminStudentsTable();
+      populateRekapSiswaFilter();
+      showAppToast("Siswa Magang Ditambahkan", `${nama} (${nim}) berhasil didaftarkan ke direktori.`, "success");
+    }
+
+    async function deleteStudent(nim) {
+      const ok = await showAppConfirm(`Hapus siswa magang dengan NIM ${nim} dari sistem?`, "Hapus Siswa", { okText: "Hapus", isDanger: true });
+      if (ok) {
+        let students = getStudentsList().filter(s => s.nim !== nim);
+        localStorage.setItem('pkl_students_list', JSON.stringify(students));
+        renderAdminStudentsTable();
+        populateRekapSiswaFilter();
+        showAppToast("Siswa Dihapus", `Data siswa magang ${nim} telah dihapus.`, "info");
+      }
+    }
+
+    function openManualAttendanceModal(preselectedNim = '') {
+      const select = document.getElementById('manual-att-student');
+      if (!select) return;
+
+      const students = getStudentsList();
+      select.innerHTML = students.map(s => `<option value="${s.nim}">${s.nama} (${s.nim})</option>`).join('');
+      if (preselectedNim) select.value = preselectedNim;
+
+      const now = new Date();
+      const todayISO = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+      const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+      const dateInp = document.getElementById('manual-att-date');
+      const timeInp = document.getElementById('manual-att-time');
+      if (dateInp) dateInp.value = todayISO;
+      if (timeInp) timeInp.value = timeStr;
+
+      document.getElementById('modal-manual-attendance').classList.remove('hidden');
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function closeManualAttendanceModal() {
+      document.getElementById('modal-manual-attendance').classList.add('hidden');
+    }
+
+    function handleSaveManualAttendance(e) {
+      e.preventDefault();
+      const nim = document.getElementById('manual-att-student').value;
+      const tipe = document.getElementById('manual-att-type').value;
+      const waktu = document.getElementById('manual-att-time').value;
+      const tanggal = document.getElementById('manual-att-date').value;
+      const notes = document.getElementById('manual-att-notes').value.trim();
+
+      const students = getStudentsList();
+      const st = students.find(s => s.nim === nim) || { nama: 'Siswa Magang' };
+
+      const logs = getAttendanceLogs();
+      const newLog = {
+        logId: 'MANUAL_' + Date.now(),
+        nim: nim,
+        nama: st.nama,
+        tanggal: tanggal,
+        waktu: waktu,
+        tipe: tipe,
+        jarak: 0,
+        statusRadius: 'Verifikasi Manual HR',
+        lat: workshopConfig.lat,
+        lng: workshopConfig.lng,
+        address: 'Workshop Astra Daihatsu A. Yani (Input Manual HR: ' + (notes || 'Dispensasi') + ')',
+        photoUrl: '-'
+      };
+
+      logs.push(newLog);
+      localStorage.setItem('pkl_logs_presensi', JSON.stringify(logs));
+
+      // Kirim sinkronisasi ke backend jika terhubung
+      const targetApi = currentUser.apiUrl || '/api/presensi';
+      if (targetApi && (targetApi.startsWith('http') || targetApi.startsWith('/'))) {
+        const isProxy = targetApi.startsWith('/');
+        fetch(targetApi, {
+          method: 'POST',
+          mode: isProxy ? 'same-origin' : 'no-cors',
+          headers: { 'Content-Type': isProxy ? 'application/json' : 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'presensi_manual',
+            nim: nim,
+            nama: st.nama,
+            tipe: tipe,
+            waktu: waktu,
+            tanggal: tanggal,
+            catatan: notes,
+            secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026"
+          })
+        }).catch(err => console.warn('GAS manual att sync error:', err));
+      }
+
+      closeManualAttendanceModal();
+      renderDashboardStats();
+      renderRekapTable();
+      renderAdminRecentAttendance();
+      renderAdminStudentsTable();
+      showAppToast("Presensi Dicatat", `Presensi ${tipe} untuk ${st.nama} berhasil disimpan.`, "success");
     }
   </script>
 </body>

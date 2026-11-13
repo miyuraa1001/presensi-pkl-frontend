@@ -291,6 +291,196 @@ function doPost(e) {
       })).setMimeType(ContentService.MimeType.JSON);
     }
 
+    // ===================================================================
+    // 4. ACTION: APPROVAL / PERSETUJUAN IZIN & SAKIT OLEH HRD / ADMIN
+    // ===================================================================
+    if (data.action === "approve_izin") {
+      let sheetIzin = ss.getSheetByName("Log_Perizinan");
+      if (!sheetIzin) {
+        return ContentService.createTextOutput(JSON.stringify({ 
+          status: "error", 
+          message: "Sheet Log_Perizinan belum dibuat." 
+        })).setMimeType(ContentService.MimeType.JSON);
+      }
+
+      const rows = sheetIzin.getDataRange().getValues();
+      let foundIndex = -1;
+      const targetId = data.izinId;
+
+      for (let i = 1; i < rows.length; i++) {
+        if (rows[i][0] && rows[i][0].toString() === targetId.toString()) {
+          foundIndex = i + 1; // 1-based row index
+          break;
+        }
+      }
+
+      if (foundIndex > 1) {
+        const newStatus = data.status || "Disetujui"; // 'Disetujui' atau 'Ditolak'
+        const approverName = data.adminNama || "HRD Daihatsu";
+        const catatan = data.catatan || "-";
+
+        // Kolom 9: Status
+        sheetIzin.getRange(foundIndex, 9).setValue(newStatus);
+        
+        // Kolom 10 & 11: Catatan Approval & Waktu jika tersedia
+        sheetIzin.getRange(foundIndex, 10).setValue(approverName);
+        sheetIzin.getRange(foundIndex, 11).setValue(catatan);
+        sheetIzin.getRange(foundIndex, 12).setValue(new Date());
+
+        return ContentService.createTextOutput(JSON.stringify({
+          status: "success",
+          message: `Permohonan izin ${targetId} berhasil diubah statusnya menjadi ${newStatus}.`,
+          izinId: targetId,
+          newStatus: newStatus
+        })).setMimeType(ContentService.MimeType.JSON);
+      } else {
+        return ContentService.createTextOutput(JSON.stringify({
+          status: "error",
+          message: `Data perizinan dengan ID ${targetId} tidak ditemukan.`
+        })).setMimeType(ContentService.MimeType.JSON);
+      }
+    }
+
+    // ===================================================================
+    // 5. ACTION: GET DATA ADMINISTRASI UNTUK DASHBOARD & REKAP HRD
+    // ===================================================================
+    if (data.action === "get_admin_data") {
+      const result = {
+        status: "success",
+        timestamp: new Date().toISOString(),
+        students: [],
+        presensi: [],
+        perizinan: [],
+        rekap: []
+      };
+
+      // 1. Ambil Master Siswa Magang
+      const sheetMaster = ss.getSheetByName("Master_PKL");
+      if (sheetMaster) {
+        const mRows = sheetMaster.getDataRange().getValues();
+        for (let i = 1; i < mRows.length; i++) {
+          if (mRows[i][0]) {
+            result.students.push({
+              nim: mRows[i][0],
+              nama: mRows[i][1] || "-",
+              instansi: mRows[i][2] || "-",
+              jurusan: mRows[i][3] || "-",
+              avatar: mRows[i][4] || "",
+              status: mRows[i][5] || "Aktif",
+              updatedAt: mRows[i][6] || ""
+            });
+          }
+        }
+      }
+
+      // 2. Ambil Log Presensi Terkini
+      const sheetPresensi = ss.getSheetByName("Log_Presensi");
+      if (sheetPresensi) {
+        const pRows = sheetPresensi.getDataRange().getValues();
+        // Ambil data (terbaru di atas)
+        for (let i = pRows.length - 1; i >= 1; i--) {
+          if (pRows[i][0]) {
+            result.presensi.push({
+              logId: pRows[i][0],
+              timestamp: pRows[i][1],
+              tanggal: pRows[i][2],
+              waktu: pRows[i][3],
+              nim: pRows[i][4],
+              nama: pRows[i][5],
+              instansi: pRows[i][6],
+              tipe: pRows[i][7],
+              coords: pRows[i][8],
+              jarak: pRows[i][9],
+              statusRadius: pRows[i][10],
+              photoUrl: pRows[i][11]
+            });
+            if (result.presensi.length >= 200) break; // Batasi 200 riwayat terkini
+          }
+        }
+      }
+
+      // 3. Ambil Log Perizinan (Inbox HRD)
+      const sheetIzin = ss.getSheetByName("Log_Perizinan");
+      if (sheetIzin) {
+        const iRows = sheetIzin.getDataRange().getValues();
+        for (let i = iRows.length - 1; i >= 1; i--) {
+          if (iRows[i][0]) {
+            result.perizinan.push({
+              izinId: iRows[i][0],
+              createdAt: iRows[i][1],
+              tanggal: iRows[i][2],
+              nim: iRows[i][3],
+              nama: iRows[i][4],
+              jenis: iRows[i][5],
+              alasan: iRows[i][6],
+              docUrl: iRows[i][7],
+              status: iRows[i][8] || "Pending",
+              approvedBy: iRows[i][9] || "-",
+              approverNote: iRows[i][10] || "-"
+            });
+          }
+        }
+      }
+
+      // 4. Ambil Rekap Bulanan
+      const sheetRekap = ss.getSheetByName("Rekap_Bulanan");
+      if (sheetRekap) {
+        const rRows = sheetRekap.getDataRange().getValues();
+        for (let i = 1; i < rRows.length; i++) {
+          if (rRows[i][0]) {
+            result.rekap.push({
+              nim: rRows[i][0],
+              nama: rRows[i][1],
+              hadir: rRows[i][2] || 0,
+              sakit: rRows[i][3] || 0,
+              izin: rRows[i][4] || 0,
+              persentase: rRows[i][5] || "100%"
+            });
+          }
+        }
+      }
+
+      return ContentService.createTextOutput(JSON.stringify(result)).setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // ===================================================================
+    // 6. ACTION: PRESENSI MANUAL OLEH HRD / PEMBIMBING BENGKEL
+    // ===================================================================
+    if (data.action === "presensi_manual") {
+      let sheetPresensi = ss.getSheetByName("Log_Presensi");
+      if (!sheetPresensi) {
+        sheetPresensi = createLogPresensiSheet(ss);
+      }
+
+      const now = new Date();
+      const tanggalStr = data.tanggal || Utilities.formatDate(now, "GMT+7", "yyyy-MM-dd");
+      const jamStr = (data.waktu || Utilities.formatDate(now, "GMT+7", "HH:mm")) + " WIB";
+      const logId = `MANUAL-${tanggalStr.replace(/-/g,'')}-${data.nim}-${data.tipe}`;
+      
+      sheetPresensi.appendRow([
+        logId,
+        now,
+        tanggalStr,
+        jamStr,
+        data.nim || "-",
+        data.nama || "-",
+        data.instansi || "-",
+        data.tipe || "IN",
+        "Presensi Manual HRD",
+        0,
+        "Disetujui Manual HR",
+        "-"
+      ]);
+
+      updateRekapBulanan(ss, data.nim, data.nama, data.tipe === "IN" ? "hadir" : "pulang");
+
+      return ContentService.createTextOutput(JSON.stringify({
+        status: "success",
+        message: `Presensi manual ${data.tipe} untuk ${data.nama} berhasil dicatat.`,
+        logId: logId
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+
     return ContentService.createTextOutput(JSON.stringify({
       status: "error",
       message: "Action tidak dikenali: " + data.action
