@@ -28,37 +28,37 @@ Aplikasi mendukung 5 cabang workshop resmi Astra Daihatsu di wilayah Lampung den
 1. **Astra Daihatsu Lampung - Ahmad Yani**
    - **ID/Kode:** `BDL_AYANI`
    - **Alamat:** Palapa, Jl. Jenderal Ahmad Yani No. 1, Gotong Royong, Kec. Tj. Karang Pusat, Kota Bandar Lampung, Lampung 35213
-   - **Latitude:** `-5.419142`
-   - **Longitude:** `105.258416`
-   - **Radius Maksimal:** `75 meter`
+   - **Latitude:** `-5.421220` (Showroom & Workshop Pusat)
+   - **Longitude:** `105.252890`
+   - **Radius Standar:** `150 meter` (Mencakup seluruh area showroom, stall bengkel mesin & body repair, cuci mobil, dan parkiran)
 
 2. **Astra Daihatsu Lampung - Soekarno Hatta**
    - **ID/Kode:** `BDL_SOETTA`
-   - **Alamat:** Jl. Lintas Sumatera (Soekarno-Hatta) No. 40A, Sukarame, Kec. Sukarame, Kota Bandar Lampung, Lampung 35122
-   - **Latitude:** `-5.388735`
-   - **Longitude:** `105.291326`
-   - **Radius Maksimal:** `75 meter`
+   - **Alamat:** Jl. Lintas Sumatera (Soekarno-Hatta) No. 40A, Kalibalau Kencana, Kec. Kedamaian, Kota Bandar Lampung, Lampung 35122
+   - **Latitude:** `-5.393713` (Fasilitas Dealer & Bengkel Bypass Kalibalau Kencana)
+   - **Longitude:** `105.288628`
+   - **Radius Standar:** `150 meter`
 
 3. **Astra Daihatsu Lampung - Bandar Jaya**
    - **ID/Kode:** `BDJ_PROKLAMATOR`
-   - **Alamat:** Jl. Proklamator Raya No. 81d, Bandar Jaya Tim., Kec. Terbanggi Besar, Kabupaten Lampung Tengah, Lampung 34161
-   - **Latitude:** `-4.948554`
-   - **Longitude:** `105.215086`
-   - **Radius Maksimal:** `75 meter`
+   - **Alamat:** Jl. Proklamator Raya No. 81D, Bandar Jaya Tim., Kec. Terbanggi Besar, Kabupaten Lampung Tengah, Lampung 34161
+   - **Latitude:** `-4.950139`
+   - **Longitude:** `105.215034`
+   - **Radius Standar:** `150 meter`
 
 4. **Astra Daihatsu Lampung Utara - Kotabumi**
    - **ID/Kode:** `KTB_LAMPURA`
    - **Alamat:** Jl. Alamsyah RPN, Klp. Tujuh, Kec. Kotabumi Sel., Kabupaten Lampung Utara, Lampung 34514
-   - **Latitude:** `-4.832325`
-   - **Longitude:** `104.883214`
-   - **Radius Maksimal:** `75 meter`
+   - **Latitude:** `-4.844410`
+   - **Longitude:** `104.909920`
+   - **Radius Standar:** `150 meter`
 
 5. **Astra Daihatsu Lampung Timur - Bandar Sribawono**
    - **ID/Kode:** `LTM_SRIBAWONO`
    - **Alamat:** Jl. Ir. Sutami, Sri Menanti, Kec. Bandar Sribawono, Kabupaten Lampung Timur, Lampung 34389
-   - **Latitude:** `-5.324824`
-   - **Longitude:** `105.764731`
-   - **Radius Maksimal:** `75 meter`
+   - **Latitude:** `-5.311915`
+   - **Longitude:** `105.750210`
+   - **Radius Standar:** `150 meter`
 
 ### Rumus Geodesik Haversine (Implementasi Client & Server):
 $$d = 2R \cdot \arcsin\left(\sqrt{\sin^2\left(\frac{\Delta \varphi}{2}\right) + \cos(\varphi_1)\cos(\varphi_2)\sin^2\left(\frac{\Delta \lambda}{2}\right)}\right)$$

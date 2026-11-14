@@ -1884,7 +1884,7 @@
       <!-- Logo Header -->
       <div class="text-center space-y-2">
         <div class="w-16 h-16 mx-auto flex items-center justify-center">
-          <img src="Image/Logo-PWA.png" alt="Daihatsu" class="w-16 h-16 object-contain drop-shadow-sm">
+          <img src="Image/Logo-Daihatsu.png" alt="Daihatsu" class="h-10 w-auto object-contain drop-shadow-sm">
         </div>
         <div>
           <h3 id="login-modal-title" class="text-base font-black text-slate-900">Masuk Akun Presensi</h3>
@@ -2629,9 +2629,9 @@
         shortName: 'Ahmad Yani',
         city: 'Bandar Lampung Pusat',
         address: 'Palapa, Jl. Jenderal Ahmad Yani No. 1, Gotong Royong, Kec. Tj. Karang Pusat, Kota Bandar Lampung, Lampung 35213',
-        lat: -5.419142,
-        lng: 105.258416,
-        radiusMeters: 75
+        lat: -5.421220,
+        lng: 105.252890,
+        radiusMeters: 150
       },
       'BDL_SOETTA': {
         id: 'BDL_SOETTA',
@@ -2640,10 +2640,10 @@
         name: 'Astra Daihatsu Lampung - Soekarno Hatta',
         shortName: 'Soekarno Hatta',
         city: 'Bypass Bandar Lampung',
-        address: 'Jl. Lintas Sumatera (Soekarno-Hatta) No. 40A, Sukarame, Kec. Sukarame, Kota Bandar Lampung, Lampung 35122',
-        lat: -5.388735,
-        lng: 105.291326,
-        radiusMeters: 75
+        address: 'Jl. Lintas Sumatera (Soekarno-Hatta) No. 40A, Kalibalau Kencana, Kec. Kedamaian, Kota Bandar Lampung, Lampung 35122',
+        lat: -5.393713,
+        lng: 105.288628,
+        radiusMeters: 150
       },
       'BDJ_PROKLAMATOR': {
         id: 'BDJ_PROKLAMATOR',
@@ -2652,10 +2652,10 @@
         name: 'Astra Daihatsu Lampung - Bandar Jaya',
         shortName: 'Bandar Jaya',
         city: 'Lampung Tengah',
-        address: 'Jl. Proklamator Raya No. 81d, Bandar Jaya Tim., Kec. Terbanggi Besar, Kabupaten Lampung Tengah, Lampung 34161',
-        lat: -4.948554,
-        lng: 105.215086,
-        radiusMeters: 75
+        address: 'Jl. Proklamator Raya No. 81D, Bandar Jaya Tim., Kec. Terbanggi Besar, Kabupaten Lampung Tengah, Lampung 34161',
+        lat: -4.950139,
+        lng: 105.215034,
+        radiusMeters: 150
       },
       'KTB_LAMPURA': {
         id: 'KTB_LAMPURA',
@@ -2665,9 +2665,9 @@
         shortName: 'Kotabumi',
         city: 'Lampung Utara',
         address: 'Jl. Alamsyah RPN, Klp. Tujuh, Kec. Kotabumi Sel., Kabupaten Lampung Utara, Lampung 34514',
-        lat: -4.832325,
-        lng: 104.883214,
-        radiusMeters: 75
+        lat: -4.844410,
+        lng: 104.909920,
+        radiusMeters: 150
       },
       'LTM_SRIBAWONO': {
         id: 'LTM_SRIBAWONO',
@@ -2677,9 +2677,9 @@
         shortName: 'Bandar Sribawono',
         city: 'Lampung Timur',
         address: 'Jl. Ir. Sutami, Sri Menanti, Kec. Bandar Sribawono, Kabupaten Lampung Timur, Lampung 34389',
-        lat: -5.324824,
-        lng: 105.764731,
-        radiusMeters: 75
+        lat: -5.311915,
+        lng: 105.750210,
+        radiusMeters: 150
       }
     };
 
@@ -2769,20 +2769,27 @@
     const parsedLat = parseFloat(savedLatRaw);
     const savedRad = parseInt(localStorage.getItem('pkl_workshop_radius'));
 
-    // Cek apakah koordinat lokal masih memuat nilai lama
-    const isOldCoords = !savedLatRaw || isNaN(parsedLat) ||
-      Math.abs(parsedLat - (-5.4217)) < 0.005 ||
-      Math.abs(parsedLat - (-5.3932)) < 0.005 ||
-      Math.abs(parsedLat - (-5.3970)) < 0.005 ||
-      Math.abs(parsedLat - (-5.393713)) < 0.005 ||
-      Math.abs(parsedLat - (-4.9660)) < 0.005 ||
-      Math.abs(parsedLat - (-4.8444)) < 0.005 ||
-      Math.abs(parsedLat - (-5.3119)) < 0.005;
+    // Cek apakah koordinat lokal masih memuat nilai displaced / koordinat lama yang tidak akurat
+    const isDisplacedOrOldCoords = !savedLatRaw || isNaN(parsedLat) ||
+      Math.abs(parsedLat - (-5.419142)) < 0.0002 ||
+      Math.abs(parsedLat - (-5.388735)) < 0.0002 ||
+      Math.abs(parsedLat - (-4.948554)) < 0.0002 ||
+      Math.abs(parsedLat - (-4.832325)) < 0.0002 ||
+      Math.abs(parsedLat - (-5.324824)) < 0.0002 ||
+      Math.abs(parsedLat - (-5.3932)) < 0.0002 ||
+      Math.abs(parsedLat - (-5.3970)) < 0.0002 ||
+      !savedRad || savedRad <= 75;
 
-    if (isOldCoords || !savedRad || savedRad > 75 || savedRad === 150 || savedRad === 70) {
+    if (isDisplacedOrOldCoords) {
       localStorage.setItem('pkl_workshop_lat', initialBranchObj.lat);
       localStorage.setItem('pkl_workshop_lng', initialBranchObj.lng);
       localStorage.setItem('pkl_workshop_radius', initialBranchObj.radiusMeters);
+      try {
+        const storedCustom = JSON.parse(localStorage.getItem('pkl_custom_branch_configs') || '{}');
+        if (storedCustom['BDL_AYANI'] && Math.abs(storedCustom['BDL_AYANI'].lat - (-5.419142)) < 0.0002) {
+          localStorage.removeItem('pkl_custom_branch_configs');
+        }
+      } catch (e) {}
     }
 
     let workshopConfig = {
