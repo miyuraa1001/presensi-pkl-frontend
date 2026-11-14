@@ -1890,42 +1890,20 @@
         <p id="login-modal-subtitle" class="text-[11px] text-slate-500">Sistem Presensi Geofencing Astra Daihatsu A. Yani</p>
       </div>
 
-      <!-- Segmented Role Selector -->
-      <div class="grid grid-cols-2 p-1 bg-slate-100 rounded-2xl border border-slate-200 text-xs font-bold">
-        <button type="button" onclick="setLoginRoleTab('student')" id="btn-login-tab-student" class="py-2.5 rounded-xl transition text-blue-700 bg-white shadow-xs flex items-center justify-center gap-1.5 cursor-pointer">
-          <span>👨‍🎓</span>
-          <span>Siswa PKL</span>
-        </button>
-        <button type="button" onclick="setLoginRoleTab('admin')" id="btn-login-tab-admin" class="py-2.5 rounded-xl transition text-slate-500 hover:text-slate-800 flex items-center justify-center gap-1.5 cursor-pointer">
-          <span>👔</span>
-          <span>HRD / Admin</span>
-        </button>
-      </div>
-
-      <!-- Sub-Tabs Khusus Siswa PKL: Masuk vs Registrasi Baru -->
-      <div id="student-subtabs" class="grid grid-cols-2 p-1 bg-slate-100 rounded-xl text-xs font-bold">
-        <button type="button" onclick="setStudentAuthMode('login')" id="btn-student-subtab-login" class="py-1.5 px-3 rounded-lg font-bold transition text-blue-700 bg-white shadow-2xs cursor-pointer">
-          Masuk Akun
-        </button>
-        <button type="button" onclick="setStudentAuthMode('register')" id="btn-student-subtab-reg" class="py-1.5 px-3 rounded-lg font-bold transition text-slate-500 hover:text-slate-800 cursor-pointer">
-          Registrasi & Lengkapi Profil
-        </button>
-      </div>
-
-      <!-- FORM 1: LOGIN SISWA PKL -->
+      <!-- FORM LOGIN TUNGGAL (UNTUK SISWA PKL & HRD/ADMIN) -->
       <form id="form-login-student" onsubmit="handleLoginSubmit(event)" class="space-y-3">
         <div>
-          <label class="block text-[11px] font-bold text-slate-700 mb-1">NIM / NISN / Username Peserta</label>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">NIM / NIP / Username Akun</label>
           <div class="relative">
-            <input type="text" id="login-nim" required placeholder="Masukkan NIM / NISN / Username" class="w-full px-3 py-2 pl-9 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono">
-            <i data-lucide="badge-id" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
+            <input type="text" id="login-nim" required placeholder="Masukkan NIM, NIP, atau Username" class="w-full px-3 py-2 pl-9 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono">
+            <i data-lucide="user" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
           </div>
         </div>
 
         <div>
-          <label class="block text-[11px] font-bold text-slate-700 mb-1">Kata Sandi</label>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">Kata Sandi / PIN</label>
           <div class="relative">
-            <input type="password" id="login-password" required placeholder="Masukkan kata sandi" class="w-full px-3 py-2 pl-9 pr-10 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono">
+            <input type="password" id="login-password" required placeholder="Masukkan kata sandi / PIN" class="w-full px-3 py-2 pl-9 pr-10 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono">
             <i data-lucide="lock" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
             <button type="button" onclick="togglePasswordVisibility('login-password', 'eye-login-pwd')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
               <i data-lucide="eye" id="eye-login-pwd" class="w-4 h-4"></i>
@@ -1935,7 +1913,7 @@
 
         <button type="submit" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs rounded-xl shadow-md shadow-blue-600/30 flex items-center justify-center gap-2 transition cursor-pointer">
           <i data-lucide="log-in" class="w-4 h-4"></i>
-          <span>Masuk sebagai Siswa PKL</span>
+          <span>Masuk Aplikasi</span>
         </button>
 
         <div class="text-center pt-2 border-t border-slate-100">
@@ -2067,33 +2045,6 @@
         <div class="text-center pt-2 border-t border-slate-100">
           <p class="text-[11px] text-slate-500">Sudah punya akun PKL? <button type="button" onclick="setStudentAuthMode('login')" class="font-bold text-blue-600 hover:text-blue-700 underline cursor-pointer">Masuk di sini</button></p>
         </div>
-      </form>
-
-      <!-- FORM 3: HRD / ADMIN BENGKEL -->
-      <form id="form-login-admin" onsubmit="handleAdminLoginSubmit(event)" class="hidden space-y-3">
-        <div>
-          <label class="block text-[11px] font-bold text-slate-700 mb-1">Username / ID Admin HRD</label>
-          <div class="relative">
-            <input type="text" id="login-admin-user" required placeholder="Masukkan Username / ID Admin" class="w-full px-3 py-2 pl-9 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono">
-            <i data-lucide="shield" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-[11px] font-bold text-slate-700 mb-1">PIN / Kata Sandi HRD</label>
-          <div class="relative">
-            <input type="password" id="login-admin-password" required placeholder="Masukkan PIN / Sandi" class="w-full px-3 py-2 pl-9 pr-10 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-mono">
-            <i data-lucide="lock" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
-            <button type="button" onclick="togglePasswordVisibility('login-admin-password', 'eye-login-admin-pwd')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
-              <i data-lucide="eye" id="eye-login-admin-pwd" class="w-4 h-4"></i>
-            </button>
-          </div>
-        </div>
-
-        <button type="submit" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs rounded-xl shadow-md shadow-blue-600/30 flex items-center justify-center gap-2 transition cursor-pointer">
-          <i data-lucide="shield-check" class="w-4 h-4"></i>
-          <span>Masuk sebagai HRD / Pembimbing</span>
-        </button>
       </form>
 
       <div class="text-center pt-1 border-t border-slate-100 flex items-center justify-between text-[11px]">
@@ -6385,23 +6336,17 @@
       const formRegister = document.getElementById('form-register-student');
       const modalTitle = document.getElementById('login-modal-title');
       const modalSub = document.getElementById('login-modal-subtitle');
-      const btnTabLogin = document.getElementById('btn-student-subtab-login');
-      const btnTabReg = document.getElementById('btn-student-subtab-reg');
 
       if (mode === 'register') {
         if (formLogin) formLogin.classList.add('hidden');
         if (formRegister) formRegister.classList.remove('hidden');
         if (modalTitle) modalTitle.innerText = "Registrasi & Lengkapi Profil";
         if (modalSub) modalSub.innerText = "Isi data peserta PKL untuk membuka akses presensi";
-        if (btnTabLogin) btnTabLogin.className = "py-1.5 px-3 rounded-lg font-bold transition text-slate-500 hover:text-slate-800 cursor-pointer";
-        if (btnTabReg) btnTabReg.className = "py-1.5 px-3 rounded-lg font-bold transition text-blue-700 bg-white shadow-2xs cursor-pointer";
       } else {
         if (formRegister) formRegister.classList.add('hidden');
         if (formLogin) formLogin.classList.remove('hidden');
         if (modalTitle) modalTitle.innerText = "Masuk Akun Presensi";
         if (modalSub) modalSub.innerText = "Sistem Presensi Geofencing Astra Daihatsu A. Yani";
-        if (btnTabLogin) btnTabLogin.className = "py-1.5 px-3 rounded-lg font-bold transition text-blue-700 bg-white shadow-2xs cursor-pointer";
-        if (btnTabReg) btnTabReg.className = "py-1.5 px-3 rounded-lg font-bold transition text-slate-500 hover:text-slate-800 cursor-pointer";
       }
       if (window.lucide) lucide.createIcons();
     }
@@ -6454,40 +6399,7 @@
     }
 
     function setLoginRoleTab(role) {
-      const btnStudent = document.getElementById('btn-login-tab-student');
-      const btnAdmin = document.getElementById('btn-login-tab-admin');
-      const formStudentLogin = document.getElementById('form-login-student');
-      const formStudentReg = document.getElementById('form-register-student');
-      const formAdmin = document.getElementById('form-login-admin');
-      const subTabs = document.getElementById('student-subtabs');
-      const modalTitle = document.getElementById('login-modal-title');
-      const modalSub = document.getElementById('login-modal-subtitle');
-
-      if (role === 'student') {
-        const nimInput = document.getElementById('login-nim');
-        if (nimInput) nimInput.value = '';
-        const pwdInput = document.getElementById('login-password');
-        if (pwdInput) pwdInput.value = '';
-        if (btnStudent) btnStudent.className = "py-2.5 rounded-xl transition text-blue-700 bg-white shadow-xs flex items-center justify-center gap-1.5 cursor-pointer";
-        if (btnAdmin) btnAdmin.className = "py-2.5 rounded-xl transition text-slate-500 hover:text-slate-800 flex items-center justify-center gap-1.5 cursor-pointer";
-        if (subTabs) subTabs.classList.remove('hidden');
-        if (formAdmin) formAdmin.classList.add('hidden');
-        setStudentAuthMode(studentAuthMode);
-      } else {
-        const adminUserInput = document.getElementById('login-admin-user');
-        if (adminUserInput) adminUserInput.value = '';
-        const adminPwdInput = document.getElementById('login-admin-password');
-        if (adminPwdInput) adminPwdInput.value = '';
-        if (btnAdmin) btnAdmin.className = "py-2.5 rounded-xl transition text-blue-700 bg-white shadow-xs flex items-center justify-center gap-1.5 cursor-pointer";
-        if (btnStudent) btnStudent.className = "py-2.5 rounded-xl transition text-slate-500 hover:text-slate-800 flex items-center justify-center gap-1.5 cursor-pointer";
-        if (subTabs) subTabs.classList.add('hidden');
-        if (formStudentLogin) formStudentLogin.classList.add('hidden');
-        if (formStudentReg) formStudentReg.classList.add('hidden');
-        if (formAdmin) formAdmin.classList.remove('hidden');
-        if (modalTitle) modalTitle.innerText = "Masuk Panel HRD / Pembimbing";
-        if (modalSub) modalSub.innerText = "Akses verifikasi persetujuan & monitoring data PKL";
-      }
-      if (window.lucide) lucide.createIcons();
+      // Form login kini terpadu untuk semua peran (Siswa PKL & HRD)
     }
 
     function showLoginModal(initialAuthMode = 'login') {
@@ -6500,11 +6412,6 @@
       const pwdInput = document.getElementById('login-password');
       if (pwdInput) pwdInput.value = '';
 
-      const adminUserInput = document.getElementById('login-admin-user');
-      if (adminUserInput) adminUserInput.value = '';
-      const adminPwdInput = document.getElementById('login-admin-password');
-      if (adminPwdInput) adminPwdInput.value = '';
-
       // Tampilkan tombol Tutup jika user sudah login, atau beri label wajib jika belum login
       const closeBtn = document.getElementById('btn-close-login-modal');
       const isLoggedIn = localStorage.getItem('pkl_is_logged_in') === 'true';
@@ -6513,7 +6420,6 @@
         closeBtn.className = isLoggedIn ? "text-slate-400 hover:text-slate-600 underline cursor-pointer" : "text-amber-600 font-bold cursor-default pointer-events-none";
       }
 
-      setLoginRoleTab(currentUserRole || 'student');
       setStudentAuthMode(initialAuthMode);
       if (window.lucide) lucide.createIcons();
     }
@@ -6583,14 +6489,23 @@
         return;
       }
 
-      // 2. Akun Indah Pratiwi (Jika dimasukkan di form siswa, arahkan sebagai Admin HRD)
-      if ((inputNim.toLowerCase() === 'indah pratiwi' || inputNim === '14325') && (inputPwd === '1234' || inputPwd === 'daihatsu2026')) {
+      // 2. Akun Indah Pratiwi / Admin HRD
+      if ((inputNim.toLowerCase() === 'admin' || inputNim.toLowerCase() === 'indah pratiwi' || inputNim === '14325') && (inputPwd === '1234' || inputPwd === 'daihatsu2026' || inputPwd === 'admin123')) {
+        const adminName = (inputNim.toLowerCase() === 'indah pratiwi' || inputNim === '14325') ? 'Indah Pratiwi' : (localStorage.getItem('pkl_admin_nama') || 'Indah Pratiwi');
+        const adminNim = '14325';
         currentUserRole = 'admin';
+        currentUser.nim = adminNim;
+        currentUser.nama = adminName;
+        currentUser.username = adminName;
+        currentUser.instansi = 'PT. Astra International Tbk - Daihatsu';
+        currentUser.jurusan = 'HRD';
+        currentUser.cabang = 'Ahmad Yani';
+
         localStorage.setItem('pkl_user_role', 'admin');
-        localStorage.setItem('pkl_nim', '14325');
-        localStorage.setItem('pkl_admin_nama', 'Indah Pratiwi');
-        localStorage.setItem('pkl_nama', 'Indah Pratiwi');
-        localStorage.setItem('pkl_username', 'Indah Pratiwi');
+        localStorage.setItem('pkl_admin_nama', adminName);
+        localStorage.setItem('pkl_nama', adminName);
+        localStorage.setItem('pkl_nim', adminNim);
+        localStorage.setItem('pkl_username', adminName);
         localStorage.setItem('pkl_user_cabang', 'Ahmad Yani');
         localStorage.setItem('pkl_is_logged_in', 'true');
         localStorage.setItem('pkl_profile_completed', 'true');
@@ -6598,7 +6513,7 @@
         setAppBranch('Ahmad Yani');
         closeLoginModal();
         applyUserRoleUI('admin');
-        showAppToast("Login Berhasil", "Masuk sebagai Indah Pratiwi (HRD Astra Daihatsu Ahmad Yani)", "success");
+        showAppAlert(`Selamat datang di Panel HRD Astra Daihatsu Ahmad Yani, ${adminName}!\n\nAnda dapat memverifikasi approvals izin anak PKL, memantau riwayat presensi live seluruh peserta, dan mengelola database Master PKL.`, "Login Berhasil", "success");
         return;
       }
 
@@ -6820,33 +6735,8 @@
     }
 
     function handleAdminLoginSubmit(event) {
-      event.preventDefault();
-      const user = document.getElementById('login-admin-user').value.trim();
-      const pwd = document.getElementById('login-admin-password').value;
-
-      const isAdminMatch = (
-        (user.toLowerCase() === 'admin' || user.toLowerCase() === 'indah pratiwi' || user === '14325') &&
-        (pwd === '1234' || pwd === 'daihatsu2026' || pwd === 'admin123')
-      );
-
-      if (isAdminMatch) {
-        const adminName = (user.toLowerCase() === 'indah pratiwi' || user === '14325') ? 'Indah Pratiwi' : (localStorage.getItem('pkl_admin_nama') || 'Indah Pratiwi');
-        const adminNim = '14325';
-        localStorage.setItem('pkl_user_role', 'admin');
-        localStorage.setItem('pkl_admin_nama', adminName);
-        localStorage.setItem('pkl_nama', adminName);
-        localStorage.setItem('pkl_nim', adminNim);
-        localStorage.setItem('pkl_username', adminName);
-        localStorage.setItem('pkl_user_cabang', 'Ahmad Yani');
-        localStorage.setItem('pkl_is_logged_in', 'true');
-        localStorage.setItem('pkl_profile_completed', 'true');
-        setAppBranch('Ahmad Yani');
-        closeLoginModal();
-        applyUserRoleUI('admin');
-        showAppAlert(`Selamat datang di Panel HRD Astra Daihatsu Ahmad Yani, ${adminName}!\n\nAnda dapat memverifikasi approvals izin anak PKL, memantau riwayat presensi live seluruh peserta, dan mengelola database Master PKL.`, "Login Berhasil", "success");
-      } else {
-        showAppAlert("Username atau Sandi HRD salah!\n\nContoh akun HRD terdaftar:\n• Username: Indah Pratiwi (atau 14325 / admin)\n• Sandi: 1234 (atau daihatsu2026)", "Gagal Masuk", "error");
-      }
+      if (event) event.preventDefault();
+      return handleLoginSubmit(event);
     }
 
     // --- 13.5 TAMBAH SISWA & ABSENSI MANUAL (MODAL CRUD) ---
