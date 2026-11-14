@@ -2619,7 +2619,7 @@
     }
 
     // --- 1. KONFIGURASI PARAMETER GEOFENCING MULTI-CABANG ASTRA DAIHATSU ---
-    const DAIHATSU_BRANCHES = {
+    const DAIHATSU_BRANCHES_DEFAULT = {
       'Ahmad Yani': {
         key: 'Ahmad Yani',
         name: 'Astra Daihatsu Ahmad Yani',
@@ -2633,9 +2633,9 @@
         key: 'Soekarno Hatta',
         name: 'Astra Daihatsu Soekarno Hatta',
         city: 'Bypass Bandar Lampung',
-        address: 'Jl. Soekarno Hatta No. 88, Bypass, Bandar Lampung',
-        lat: -5.3970,
-        lng: 105.2850,
+        address: 'Jl. Soekarno Hatta No. 40, Kalibalau Kencana, Kedamaian, Bandar Lampung',
+        lat: -5.393713,
+        lng: 105.288628,
         radiusMeters: 150
       },
       'Lampung Timur': {
@@ -2666,6 +2666,8 @@
         radiusMeters: 150
       }
     };
+
+    const DAIHATSU_BRANCHES = JSON.parse(JSON.stringify(DAIHATSU_BRANCHES_DEFAULT));
 
     function getBranchConfig(branchKey) {
       if (!branchKey) return DAIHATSU_BRANCHES['Ahmad Yani'];
@@ -2720,6 +2722,23 @@
       localStorage.setItem('pkl_workshop_lat', REAL_DAIHATSU_AHMAD_YANI.lat);
       localStorage.setItem('pkl_workshop_lng', REAL_DAIHATSU_AHMAD_YANI.lng);
       localStorage.setItem('pkl_workshop_radius', REAL_DAIHATSU_AHMAD_YANI.radiusMeters);
+    }
+    // Auto-migrasi jika browser masih menyimpan titik lama Soekarno Hatta (-5.3970) yang meleset ~540m
+    if (!isNaN(parsedLat) && Math.abs(parsedLat - (-5.3970)) < 0.002) {
+      const shBranch = DAIHATSU_BRANCHES['Soekarno Hatta'];
+      localStorage.setItem('pkl_workshop_lat', shBranch.lat);
+      localStorage.setItem('pkl_workshop_lng', shBranch.lng);
+      localStorage.setItem('pkl_workshop_radius', shBranch.radiusMeters);
+    }
+    const storedBranchConfigsRaw = localStorage.getItem('pkl_custom_branch_configs');
+    if (storedBranchConfigsRaw) {
+      try {
+        const parsedConfigs = JSON.parse(storedBranchConfigsRaw);
+        if (parsedConfigs && parsedConfigs['Soekarno Hatta'] && Math.abs(parseFloat(parsedConfigs['Soekarno Hatta'].lat) - (-5.3970)) < 0.002) {
+          delete parsedConfigs['Soekarno Hatta'];
+          localStorage.setItem('pkl_custom_branch_configs', JSON.stringify(parsedConfigs));
+        }
+      } catch(e) {}
     }
     const savedRadius = parseInt(localStorage.getItem('pkl_workshop_radius'));
     if (!savedRadius || savedRadius <= 70) {
@@ -5265,9 +5284,13 @@
     // --- 11. KALIBRASI LOKASI & PENGATURAN BENGKEL ---
     function calibrateCurrentLocation() {
       if (!navigator.geolocation) {
-        alert("Sensor Geolocation tidak didukung pada browser ini.");
+        showAppAlert("Sensor Geolocation tidak didukung pada browser ini.", "Sensor GPS", "error");
         return;
       }
+
+      const branchSel = document.getElementById('cfg-branch-select');
+      const curBranchKey = branchSel ? branchSel.value : (currentUser.cabang || 'Ahmad Yani');
+      const curBranchObj = getBranchConfig(curBranchKey);
 
       navigator.geolocation.getCurrentPosition(
         async (pos) => {
@@ -5276,15 +5299,17 @@
           const acc = Math.round(pos.coords.accuracy);
 
           const ok = await showAppConfirm(
-            `Jadikan posisi GPS Anda saat ini:\n\n• Latitude: ${curLat}\n• Longitude: ${curLng}\n• Akurasi: ±${acc} meter\n\nsebagai TITIK PUSAT Workshop Astra Daihatsu Ahmad Yani?`,
-            "Kalibrasi Titik Bengkel",
+            `Jadikan posisi GPS Anda saat ini:\n\n• Latitude: ${curLat}\n• Longitude: ${curLng}\n• Akurasi: ±${acc} meter\n\nsebagai TITIK PUSAT Workshop ${curBranchObj.name}?`,
+            `Kalibrasi Titik ${curBranchObj.name}`,
             { okText: "Gunakan Titik Ini", isDanger: false }
           );
           if (ok) {
             workshopConfig.lat = curLat;
             workshopConfig.lng = curLng;
-            localStorage.setItem('pkl_workshop_lat', curLat);
-            localStorage.setItem('pkl_workshop_lng', curLng);
+            if (DAIHATSU_BRANCHES[curBranchKey]) {
+              DAIHATSU_BRANCHES[curBranchKey].lat = curLat;
+              DAIHATSU_BRANCHES[curBranchKey].lng = curLng;
+            }
 
             document.getElementById('cfg-workshop-lat').value = curLat;
             document.getElementById('cfg-workshop-lng').value = curLng;
@@ -5297,11 +5322,15 @@
             userLocation.isInside = true;
 
             updateRadiusUI(0, true);
-            alert(`Kalibrasi Berhasil!\n\nTitik pusat bengkel kini diatur ke koordinat Anda saat ini (${curLat}, ${curLng}). Jarak Anda sekarang 0 meter (Dalam Area Bengkel).`);
+            showAppAlert(
+              `Kalibrasi Berhasil!\n\nKoordinat ${curBranchObj.name} diisi dengan posisi Anda saat ini (${curLat}, ${curLng}).\n\nSilakan klik tombol "Simpan Parameter Geofencing (Sinkronkan ke Siswa)" di bawah untuk menyimpan dan menyinkronkan ke seluruh siswa cabang ini.`,
+              "Kalibrasi Berhasil",
+              "success"
+            );
           }
         },
         (err) => {
-          alert(`Gagal mengambil koordinat saat ini: ${err.message}\nPastikan GPS perangkat dan izin lokasi browser aktif.`);
+          showAppAlert(`Gagal mengambil koordinat saat ini: ${err.message}\nPastikan GPS perangkat dan izin lokasi browser aktif.`, "Gagal GPS", "error");
         },
         { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
       );
@@ -5313,27 +5342,39 @@
     }
 
     async function resetWorkshopLocationDefault() {
+      const branchSel = document.getElementById('cfg-branch-select');
+      const curBranchKey = branchSel ? branchSel.value : (currentUser.cabang || 'Ahmad Yani');
+      const defaultBranch = (typeof DAIHATSU_BRANCHES_DEFAULT !== 'undefined' && DAIHATSU_BRANCHES_DEFAULT[curBranchKey])
+        ? DAIHATSU_BRANCHES_DEFAULT[curBranchKey]
+        : DAIHATSU_BRANCHES[curBranchKey];
+
       const ok = await showAppConfirm(
-        "Kembalikan koordinat pusat bengkel ke titik resmi Astra Daihatsu Ahmad Yani (-5.4217, 105.2528, radius 150m)?",
+        `Kembalikan koordinat pusat bengkel ${defaultBranch.name} ke titik default (${defaultBranch.lat}, ${defaultBranch.lng}, radius ${defaultBranch.radiusMeters}m)?`,
         "Reset Titik Bengkel",
         { okText: "Reset ke Default", isDanger: false }
       );
       if (ok) {
-        workshopConfig.lat = REAL_DAIHATSU_AHMAD_YANI.lat;
-        workshopConfig.lng = REAL_DAIHATSU_AHMAD_YANI.lng;
-        workshopConfig.radiusMeters = REAL_DAIHATSU_AHMAD_YANI.radiusMeters;
+        if (DAIHATSU_BRANCHES[curBranchKey]) {
+          DAIHATSU_BRANCHES[curBranchKey].lat = defaultBranch.lat;
+          DAIHATSU_BRANCHES[curBranchKey].lng = defaultBranch.lng;
+          DAIHATSU_BRANCHES[curBranchKey].radiusMeters = defaultBranch.radiusMeters;
+        }
 
-        localStorage.setItem('pkl_workshop_lat', REAL_DAIHATSU_AHMAD_YANI.lat);
-        localStorage.setItem('pkl_workshop_lng', REAL_DAIHATSU_AHMAD_YANI.lng);
-        localStorage.setItem('pkl_workshop_radius', REAL_DAIHATSU_AHMAD_YANI.radiusMeters);
+        workshopConfig.lat = defaultBranch.lat;
+        workshopConfig.lng = defaultBranch.lng;
+        workshopConfig.radiusMeters = defaultBranch.radiusMeters;
 
-        document.getElementById('cfg-workshop-lat').value = REAL_DAIHATSU_AHMAD_YANI.lat;
-        document.getElementById('cfg-workshop-lng').value = REAL_DAIHATSU_AHMAD_YANI.lng;
-        document.getElementById('cfg-workshop-radius').value = REAL_DAIHATSU_AHMAD_YANI.radiusMeters;
-        document.getElementById('radius-val-display').innerText = REAL_DAIHATSU_AHMAD_YANI.radiusMeters + ' meter';
+        localStorage.setItem('pkl_workshop_lat', defaultBranch.lat);
+        localStorage.setItem('pkl_workshop_lng', defaultBranch.lng);
+        localStorage.setItem('pkl_workshop_radius', defaultBranch.radiusMeters);
+
+        document.getElementById('cfg-workshop-lat').value = defaultBranch.lat;
+        document.getElementById('cfg-workshop-lng').value = defaultBranch.lng;
+        document.getElementById('cfg-workshop-radius').value = defaultBranch.radiusMeters;
+        document.getElementById('radius-val-display').innerText = defaultBranch.radiusMeters + ' meter';
 
         checkGPS(false);
-        alert("Koordinat pusat bengkel berhasil dikembalikan ke titik resmi Astra Daihatsu Ahmad Yani.");
+        showAppToast("Reset Default", `Koordinat ${defaultBranch.name} dikembalikan ke default. Klik simpan jika ingin menyinkronkan ke cloud database.`, "info");
       }
     }
 
