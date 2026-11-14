@@ -1,5 +1,5 @@
 # Product Requirement Document (PRD)
-## Project: Sistem Presensi Geofencing & Rekapitulasi Mekanik Magang / PKL
+## Project: Sistem Presensi Geofencing & Rekapitulasi Mekanik PKL
 **Lokasi Implementasi:** Astra Daihatsu Ahmad Yani, Lampung  
 **Arsitektur:** Frontend GitHub Pages (PWA) + Backend Google Apps Script (REST Web App) + Database Google Sheets & Drive Storage
 
@@ -7,7 +7,7 @@
 
 ## 1. Overview & Core Objectives
 
-Aplikasi ini bertujuan untuk mendigitalkan dan mengamankan alur absensi serta pelaporan kehadiran siswa/mahasiswa PKL (magang teknisi mekanik) di Astra Daihatsu Ahmad Yani.
+Aplikasi ini bertujuan untuk mendigitalkan dan mengamankan alur absensi serta pelaporan kehadiran siswa/mahasiswa PKL (teknisi mekanik) di Astra Daihatsu Ahmad Yani.
 
 ### Kunci Solusi:
 1. **Anti-Fake Attendance:** Tidak ada fitur upload file dari galeri untuk presensi; wajib menggunakan live camera stream.
@@ -39,7 +39,7 @@ $$d = 2R \cdot \arcsin\left(\sqrt{\sin^2\left(\frac{\Delta \varphi}{2}\right) + 
 Satu workbook Google Spreadsheet terdiri dari 4 tab sheet:
 
 ### Sheet 1: `Master_PKL`
-Menyimpan referensi siswa magang yang berwenang.
+Menyimpan referensi siswa PKL yang berwenang.
 | Header Kolom | Tipe Data | Deskripsi |
 | :--- | :--- | :--- |
 | `nim_nisn` | String (PK) | Nomor Induk Siswa/Mahasiswa |

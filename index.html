@@ -215,7 +215,7 @@
         <!-- Role Badge Button (Switch Role / Profile) -->
         <button type="button" onclick="showLoginModal()" id="topbar-role-badge" class="px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-2xs border bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100" title="Klik untuk berganti akun / peran">
           <span id="role-badge-icon">👨‍🎓</span>
-          <span id="role-badge-text">Siswa Magang</span>
+          <span id="role-badge-text">Siswa PKL</span>
         </button>
 
         <!-- GPS Status Pill in Topbar (Visible on Mobile & Desktop) -->
@@ -231,7 +231,7 @@
             <img id="topbar-avatar-img" src="" alt="Avatar" class="w-full h-full object-cover hidden">
           </div>
           <div class="hidden sm:block text-left">
-            <p class="text-xs font-bold text-slate-800 leading-tight" id="user-display-name">Mekanik Magang</p>
+            <p class="text-xs font-bold text-slate-800 leading-tight" id="user-display-name">Mekanik PKL</p>
             <p class="text-[10px] text-slate-400 font-medium" id="user-display-nim">NIM: -</p>
           </div>
         </div>
@@ -259,11 +259,11 @@
             </div>
             <div>
               <div class="flex items-center gap-2">
-                <h4 class="font-black text-sm text-white tracking-wide">Pemberitahuan Peserta Magang Baru</h4>
+                <h4 class="font-black text-sm text-white tracking-wide">Pemberitahuan Peserta PKL Baru</h4>
                 <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-amber-400 text-amber-950">Wajib Diisi</span>
               </div>
               <p class="text-xs text-blue-100 mt-0.5 leading-relaxed">
-                Bagi peserta magang yang belum memiliki akun, disarankan untuk <strong>Registrasi & Lengkapi Profil</strong> terlebih dahulu agar penempatan cabang workshop, radius geofencing presensi, dan data tersimpan ke database Astra Daihatsu.
+                Bagi peserta PKL yang belum memiliki akun, disarankan untuk <strong>Registrasi & Lengkapi Profil</strong> terlebih dahulu agar penempatan cabang workshop, radius geofencing presensi, dan data tersimpan ke database Astra Daihatsu.
               </p>
             </div>
           </div>
@@ -280,7 +280,7 @@
 
         <!-- 4 Metric Cards (Dynamically computed from real logs: Student Stats vs HRD Admin Overview) -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <!-- Card 1: Total Hadir (Student) vs Total Siswa Magang (Admin) -->
+          <!-- Card 1: Total Hadir (Student) vs Total Siswa PKL (Admin) -->
           <div class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-sm transition">
             <div class="flex items-center gap-3">
               <div id="stat-icon-wrap-1" class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0">
@@ -340,7 +340,7 @@
             </div>
           </div>
 
-          <!-- Card 4: Total Jam Kerja (Student) vs Cabang Magang (Admin) -->
+          <!-- Card 4: Total Jam Kerja (Student) vs Cabang PKL (Admin) -->
           <div class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-sm transition">
             <div class="flex items-center gap-3">
               <div id="stat-icon-wrap-4" class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
@@ -511,7 +511,7 @@
             </div>
           </div>
 
-          <!-- Box Riwayat Terkini Presensi Magang (Admin / HR View) -->
+          <!-- Box Riwayat Terkini Presensi PKL (Admin / HR View) -->
           <div id="box-admin-recent-attendance" class="hidden bg-white p-5 md:p-6 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col justify-between">
             <div>
               <div class="flex items-center justify-between mb-3.5">
@@ -520,8 +520,8 @@
                     <i data-lucide="activity" class="w-4 h-4"></i>
                   </div>
                   <div>
-                    <h4 class="font-extrabold text-slate-900 text-sm">Riwayat Terkini Presensi Magang</h4>
-                    <p class="text-[10px] text-slate-400">Aktivitas kehadiran siswa magang hari ini</p>
+                    <h4 class="font-extrabold text-slate-900 text-sm">Riwayat Terkini Presensi PKL</h4>
+                    <p class="text-[10px] text-slate-400">Aktivitas kehadiran siswa PKL hari ini</p>
                   </div>
                 </div>
                 <span id="admin-today-badge" class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 whitespace-nowrap">
@@ -548,7 +548,7 @@
 
       </section>
 
-      <!-- ==================== TAB 2: ONLINE ATTENDANCE (STUDENT) & DATA MAGANG (ADMIN) ==================== -->
+      <!-- ==================== TAB 2: ONLINE ATTENDANCE (STUDENT) & DATA PKL (ADMIN) ==================== -->
       <section id="view-presensi" class="hidden w-full pb-6">
 
         <!-- STUDENT FLOW: ONLINE ATTENDANCE -->
@@ -702,13 +702,13 @@
         </div>
         <!-- END STUDENT FLOW -->
 
-        <!-- ==================== ADMIN VIEW: DATA & MANAJEMEN SISWA MAGANG ==================== -->
-        <div id="admin-data-magang-flow" class="hidden max-w-4xl mx-auto space-y-5">
+        <!-- ==================== ADMIN VIEW: DATA & MANAJEMEN SISWA PKL ==================== -->
+        <div id="admin-data-pkl-flow" class="hidden max-w-4xl mx-auto space-y-5">
           <!-- Header Bar with Action Buttons -->
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200">
             <div>
-              <h3 class="font-extrabold text-slate-900 text-lg">Direktori Siswa Magang PKL</h3>
-              <p class="text-xs text-slate-500">Manajemen peserta magang aktif Bengkel Astra Daihatsu Ahmad Yani</p>
+              <h3 class="font-extrabold text-slate-900 text-lg">Direktori Siswa PKL</h3>
+              <p class="text-xs text-slate-500">Manajemen peserta PKL aktif Bengkel Astra Daihatsu Ahmad Yani</p>
             </div>
             <div class="flex items-center gap-2">
               <button onclick="openAddStudentModal()" class="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm transition cursor-pointer">
@@ -725,7 +725,7 @@
           <!-- 4 Summary Stat Cards -->
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-2xs">
-              <p class="text-[11px] font-bold text-slate-400">Total Magang</p>
+              <p class="text-[11px] font-bold text-slate-400">Total PKL</p>
               <p class="text-xl font-black text-slate-900 mt-0.5" id="admin-stat-total-students">4</p>
               <p class="text-[10px] text-blue-600 font-semibold mt-1">Siswa Terdaftar</p>
             </div>
@@ -746,12 +746,12 @@
             </div>
           </div>
 
-          <!-- Table Siswa Magang -->
+          <!-- Table Siswa PKL -->
           <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
             <div class="p-3.5 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
               <div class="flex items-center gap-2">
                 <i data-lucide="users" class="w-4 h-4 text-blue-600"></i>
-                <h4 class="font-extrabold text-xs sm:text-sm text-slate-900">Daftar Siswa Magang Bengkel</h4>
+                <h4 class="font-extrabold text-xs sm:text-sm text-slate-900">Daftar Siswa PKL Bengkel</h4>
               </div>
               <span class="text-xs text-slate-400 font-medium">Periode 2026/2027</span>
             </div>
@@ -762,7 +762,7 @@
                     <th class="py-3 px-4">Nama Siswa & NIM</th>
                     <th class="py-3 px-4">Asal Sekolah & Jurusan</th>
                     <th class="py-3 px-4">Status Kehadiran Hari Ini</th>
-                    <th class="py-3 px-4">Status Magang</th>
+                    <th class="py-3 px-4">Status PKL</th>
                     <th class="py-3 px-4 text-center">Aksi</th>
                   </tr>
                 </thead>
@@ -787,7 +787,7 @@
             </button>
             <div>
               <h3 class="font-extrabold text-slate-900 text-lg">Pengajuan Izin / Sakit</h3>
-              <p class="text-xs text-slate-500">Formulir ketidakhadiran mekanik magang PKL</p>
+              <p class="text-xs text-slate-500">Formulir ketidakhadiran mekanik PKL</p>
             </div>
           </div>
 
@@ -859,7 +859,7 @@
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200">
             <div>
               <h3 class="font-extrabold text-slate-900 text-lg">Inbox Persetujuan Izin & Sakit</h3>
-              <p class="text-xs text-slate-500">Verifikasi permohonan dispensasi dan berkas SKD dokter anak magang</p>
+              <p class="text-xs text-slate-500">Verifikasi permohonan dispensasi dan berkas SKD dokter anak PKL</p>
             </div>
             
             <!-- Segmented Filter Buttons -->
@@ -909,13 +909,13 @@
 
           <div class="text-center my-3">
             <h2 class="text-sm font-extrabold uppercase text-slate-900 tracking-wider">REKAPITULASI KEHADIRAN & JAM KERJA PRAKTIK KERJA LAPANGAN (PKL)</h2>
-            <p class="text-[11px] text-slate-600 font-medium">Bulan Berjalan • Periode Magang Teknisi Bengkel</p>
+            <p class="text-[11px] text-slate-600 font-medium">Bulan Berjalan • Periode PKL Teknisi Bengkel</p>
           </div>
 
           <!-- Student Meta Grid -->
           <div class="grid grid-cols-2 gap-2 text-xs p-3 bg-slate-50 border border-slate-300 rounded-lg mb-4" id="print-user-meta-grid">
             <div>
-              <p><span class="font-bold text-slate-600">Nama Siswa:</span> <span id="print-nama" class="font-black text-slate-900">Mekanik Magang</span></p>
+              <p><span class="font-bold text-slate-600">Nama Siswa:</span> <span id="print-nama" class="font-black text-slate-900">Mekanik PKL</span></p>
               <p class="mt-1"><span class="font-bold text-slate-600">NISN / NIM:</span> <span id="print-nim" class="font-mono font-bold text-slate-900">-</span></p>
             </div>
             <div>
@@ -928,7 +928,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200">
           <div>
             <h3 class="font-extrabold text-slate-900 text-lg">Rekapitulasi Kehadiran</h3>
-            <p class="text-xs text-slate-500">Daftar kehadiran & perizinan magang teknisi bengkel</p>
+            <p class="text-xs text-slate-500">Daftar kehadiran & perizinan PKL teknisi bengkel</p>
           </div>
           <!-- Filter & Export -->
           <div class="flex flex-wrap items-center gap-2.5 no-print">
@@ -1060,7 +1060,7 @@
             <div>
               <p class="text-slate-600 font-medium">Siswa Praktik (PKL),</p>
               <div class="h-20"></div>
-              <p class="font-bold text-slate-900 underline" id="print-sign-student">Mekanik Magang</p>
+              <p class="font-bold text-slate-900 underline" id="print-sign-student">Mekanik PKL</p>
               <p class="text-[10px] text-slate-500">NISN / NIM: <span id="print-sign-nim">-</span></p>
             </div>
             <div>
@@ -1091,7 +1091,7 @@
               </button>
               <div>
                 <h3 class="font-extrabold text-slate-900 text-lg md:text-xl">Pengaturan & Akun</h3>
-                <p class="text-xs text-slate-500">Profil siswa magang, foto, kata sandi, Web APK, dan geofencing</p>
+                <p class="text-xs text-slate-500">Profil siswa PKL, foto, kata sandi, Web APK, dan geofencing</p>
               </div>
             </div>
             <span class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700 border border-slate-200">
@@ -1110,7 +1110,7 @@
                 </div>
                 <div>
                   <h4 id="info-card-title" class="font-extrabold text-sm md:text-base text-white leading-tight">Informasi Peserta PKL</h4>
-                  <p id="info-card-subtitle" class="text-[10px] md:text-xs text-slate-300">Data identitas resmi teknisi magang Astra Daihatsu</p>
+                  <p id="info-card-subtitle" class="text-[10px] md:text-xs text-slate-300">Data identitas resmi teknisi PKL Astra Daihatsu</p>
                 </div>
               </div>
               <span id="info-card-verified-badge" class="text-[10px] md:text-xs font-bold text-cyan-300 bg-white/10 px-3 py-1 rounded-full border border-white/15">
@@ -1132,7 +1132,7 @@
                     </span>
                     <span id="info-profile-sub-badge" class="text-[11px] text-slate-400 font-medium">Workshop Astra Daihatsu</span>
                   </div>
-                  <h3 id="info-profile-nama" class="font-black text-slate-900 text-lg md:text-2xl tracking-tight mt-1 truncate">Mekanik Magang</h3>
+                  <h3 id="info-profile-nama" class="font-black text-slate-900 text-lg md:text-2xl tracking-tight mt-1 truncate">Mekanik PKL</h3>
                   <p class="text-xs md:text-sm font-mono font-semibold text-slate-500 mt-0.5"><span id="info-profile-nim-label">NISN / NIM:</span> <span id="info-profile-nim" class="font-bold text-slate-700">-</span></p>
                 </div>
 
@@ -1247,7 +1247,7 @@
           </div>
 
           <p class="text-xs text-slate-500 leading-relaxed">
-            Keluar dari sesi untuk mengunci aplikasi atau berganti akun siswa magang lainnya.
+            Keluar dari sesi untuk mengunci aplikasi atau berganti akun siswa PKL lainnya.
           </p>
 
           <div class="flex flex-col sm:flex-row gap-2 pt-1">
@@ -1320,7 +1320,7 @@
           <div class="space-y-3">
             <!-- Pilihan Cabang Workshop Multi-Cabang -->
             <div>
-              <label class="block text-[11px] font-bold text-slate-700 mb-1">Pilih Tempat / Cabang Magang Workshop *</label>
+              <label class="block text-[11px] font-bold text-slate-700 mb-1">Pilih Tempat / Cabang PKL Workshop *</label>
               <div class="relative">
                 <select id="cfg-branch-select" onchange="handleBranchChange(this.value)" class="w-full px-3 py-2 pl-9 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 bg-white focus:ring-2 focus:ring-blue-500 cursor-pointer">
                   <option value="Ahmad Yani">Ahmad Yani (Bandar Lampung Pusat)</option>
@@ -1394,7 +1394,7 @@
           </div>
         </div>
 
-        <!-- ==================== KARTU INFO CABANG PENEMPATAN (KHUSUS ANAK MAGANG - READ ONLY) ==================== -->
+        <!-- ==================== KARTU INFO CABANG PENEMPATAN (KHUSUS ANAK PKL - READ ONLY) ==================== -->
         <div id="card-intern-branch-info" class="hidden bg-white p-5 md:p-6 rounded-2xl border border-slate-200/80 shadow-xs space-y-3">
           <div class="flex items-center justify-between border-b border-slate-100 pb-3">
             <div class="flex items-center gap-2">
@@ -1402,7 +1402,7 @@
                 <i data-lucide="building-2" class="w-4 h-4"></i>
               </div>
               <div>
-                <h4 class="font-extrabold text-sm text-slate-900">Cabang Penempatan Magang</h4>
+                <h4 class="font-extrabold text-sm text-slate-900">Cabang Penempatan PKL</h4>
                 <p class="text-[10px] text-slate-500">Lokasi workshop acuan kehadiran presensi Anda</p>
               </div>
             </div>
@@ -1438,7 +1438,7 @@
                 <i data-lucide="arrow-left" class="w-5 h-5"></i>
               </button>
               <div>
-                <h3 id="edit-profile-header-title" class="font-extrabold text-slate-900 text-lg md:text-xl leading-tight">Edit Profil Peserta Magang</h3>
+                <h3 id="edit-profile-header-title" class="font-extrabold text-slate-900 text-lg md:text-xl leading-tight">Edit Profil Peserta PKL</h3>
                 <p id="edit-profile-header-sub" class="text-xs text-slate-500">Ubah identitas dan foto profil siswa PKL</p>
               </div>
             </div>
@@ -1462,7 +1462,7 @@
                 </button>
               </div>
               <div class="text-center sm:text-left flex-1 space-y-1">
-                <h5 id="edit-profile-avatar-title" class="text-xs md:text-sm font-bold text-slate-800">Foto Profil Peserta Magang</h5>
+                <h5 id="edit-profile-avatar-title" class="text-xs md:text-sm font-bold text-slate-800">Foto Profil Peserta PKL</h5>
                 <p class="text-[11px] text-slate-500">Format JPG, PNG atau WebP (otomatis dioptimalkan)</p>
                 <div class="flex items-center justify-center sm:justify-start gap-2 pt-1.5">
                   <button type="button" onclick="document.getElementById('avatar-file-input').click()" class="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-xl text-[11px] md:text-xs font-bold flex items-center gap-1.5 shadow-xs transition">
@@ -1483,7 +1483,7 @@
                 <input type="text" id="cfg-nama" placeholder="Contoh: Muhammad Rizky" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs md:text-sm focus:ring-2 focus:ring-blue-500 font-semibold text-slate-800">
               </div>
               <div>
-                <label id="edit-profile-lbl-nim" class="block text-xs font-bold text-slate-700 mb-1">NISN / NIM / ID Magang</label>
+                <label id="edit-profile-lbl-nim" class="block text-xs font-bold text-slate-700 mb-1">NISN / NIM / ID PKL</label>
                 <input type="text" id="cfg-nim" placeholder="Contoh: 20241001" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs md:text-sm focus:ring-2 focus:ring-blue-500 font-mono text-slate-800">
               </div>
               <div>
@@ -1606,7 +1606,7 @@
             <li>Buka <a href="https://drive.google.com" target="_blank" class="underline font-bold text-blue-700">Google Drive</a> dan buat <strong>3 Folder</strong>:
               <ul class="list-disc pl-4 mt-1 text-[11px] text-blue-800 space-y-0.5">
                 <li><code class="bg-white px-1.5 py-0.5 rounded font-bold">Foto_Presensi_PKL</code> (untuk nampung foto absensi & watermark IN/OUT)</li>
-                <li><code class="bg-white px-1.5 py-0.5 rounded font-bold">Foto_Profil_PKL</code> (untuk nampung foto profil peserta magang)</li>
+                <li><code class="bg-white px-1.5 py-0.5 rounded font-bold">Foto_Profil_PKL</code> (untuk nampung foto profil peserta PKL)</li>
                 <li><code class="bg-white px-1.5 py-0.5 rounded font-bold text-emerald-900">Dokumen_SKD_PKL</code> (untuk nampung berkas/foto surat sakit & Surat Keterangan Dokter)</li>
               </ul>
               <p class="text-[10.5px] text-blue-700 mt-1 italic">Tip: Anda juga bisa menjalankan fungsi <code class="bg-white px-1 rounded font-bold">createDriveFoldersAutomated</code> di Code.gs untuk membuat ketiga folder ini otomatis!</p>
@@ -1894,7 +1894,7 @@
       <div class="grid grid-cols-2 p-1 bg-slate-100 rounded-2xl border border-slate-200 text-xs font-bold">
         <button type="button" onclick="setLoginRoleTab('student')" id="btn-login-tab-student" class="py-2.5 rounded-xl transition text-blue-700 bg-white shadow-xs flex items-center justify-center gap-1.5 cursor-pointer">
           <span>👨‍🎓</span>
-          <span>Siswa Magang</span>
+          <span>Siswa PKL</span>
         </button>
         <button type="button" onclick="setLoginRoleTab('admin')" id="btn-login-tab-admin" class="py-2.5 rounded-xl transition text-slate-500 hover:text-slate-800 flex items-center justify-center gap-1.5 cursor-pointer">
           <span>👔</span>
@@ -1902,7 +1902,7 @@
         </button>
       </div>
 
-      <!-- Sub-Tabs Khusus Siswa Magang: Masuk vs Registrasi Baru -->
+      <!-- Sub-Tabs Khusus Siswa PKL: Masuk vs Registrasi Baru -->
       <div id="student-subtabs" class="grid grid-cols-2 p-1 bg-slate-100 rounded-xl text-xs font-bold">
         <button type="button" onclick="setStudentAuthMode('login')" id="btn-student-subtab-login" class="py-1.5 px-3 rounded-lg font-bold transition text-blue-700 bg-white shadow-2xs cursor-pointer">
           Masuk Akun
@@ -1912,7 +1912,7 @@
         </button>
       </div>
 
-      <!-- FORM 1: LOGIN SISWA MAGANG -->
+      <!-- FORM 1: LOGIN SISWA PKL -->
       <form id="form-login-student" onsubmit="handleLoginSubmit(event)" class="space-y-3">
         <div>
           <label class="block text-[11px] font-bold text-slate-700 mb-1">NIM / NISN / Username Peserta</label>
@@ -1936,26 +1936,26 @@
 
         <button type="submit" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs rounded-xl shadow-md shadow-blue-600/30 flex items-center justify-center gap-2 transition cursor-pointer">
           <i data-lucide="log-in" class="w-4 h-4"></i>
-          <span>Masuk sebagai Siswa Magang</span>
+          <span>Masuk sebagai Siswa PKL</span>
         </button>
 
         <div class="space-y-1.5 pt-1">
           <button type="button" onclick="quickLoginDemo('sunoo')" class="w-full py-2 bg-blue-50 hover:bg-blue-100 text-blue-800 border border-blue-200 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1.5 transition cursor-pointer">
-            <span>⚡ Masuk Cepat: Sunoo (Siswa Magang - 654553)</span>
+            <span>⚡ Masuk Cepat: Sunoo (Siswa PKL - 654553)</span>
           </button>
         </div>
 
         <div class="text-center pt-2 border-t border-slate-100">
-          <p class="text-[11px] text-slate-500">Belum punya akun magang? <button type="button" onclick="setStudentAuthMode('register')" class="font-bold text-blue-600 hover:text-blue-700 underline cursor-pointer">Daftar & Lengkapi Profil</button></p>
+          <p class="text-[11px] text-slate-500">Belum punya akun PKL? <button type="button" onclick="setStudentAuthMode('register')" class="font-bold text-blue-600 hover:text-blue-700 underline cursor-pointer">Daftar & Lengkapi Profil</button></p>
         </div>
       </form>
 
-      <!-- FORM 2: REGISTRASI & LENGKAPI PROFIL SISWA MAGANG BARU -->
+      <!-- FORM 2: REGISTRASI & LENGKAPI PROFIL SISWA PKL BARU -->
       <form id="form-register-student" onsubmit="handleRegisterSubmit(event)" class="hidden space-y-3">
         <div class="p-3 bg-blue-50/80 rounded-2xl border border-blue-100 text-xs text-blue-900 space-y-1">
           <p class="font-bold flex items-center gap-1.5 text-blue-800">
             <i data-lucide="shield-check" class="w-4 h-4 text-blue-600 flex-shrink-0"></i>
-            <span>Lengkapi Profil Peserta Magang</span>
+            <span>Lengkapi Profil Peserta PKL</span>
           </p>
           <p class="text-[11px] text-slate-600 leading-relaxed">Seluruh data identitas di bawah wajib diisi dan akan langsung tersimpan ke database Astra Daihatsu untuk membuka akses penuh menu presensi.</p>
         </div>
@@ -1972,9 +1972,9 @@
           </div>
         </div>
 
-        <!-- Tempat / Cabang Magang Daihatsu -->
+        <!-- Tempat / Cabang PKL Daihatsu -->
         <div>
-          <label class="block text-[11px] font-bold text-slate-700 mb-1">Tempat / Cabang Magang *</label>
+          <label class="block text-[11px] font-bold text-slate-700 mb-1">Tempat / Cabang PKL *</label>
           <div class="relative">
             <select id="reg-cabang" required class="w-full px-3 py-2 pl-9 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-bold bg-white text-slate-800 cursor-pointer">
               <option value="Ahmad Yani">Ahmad Yani (Bandar Lampung Pusat)</option>
@@ -1985,7 +1985,7 @@
             </select>
             <i data-lucide="building-2" class="w-4 h-4 text-blue-600 absolute left-3 top-2.5"></i>
           </div>
-          <p class="text-[10px] text-slate-400 mt-0.5">Titik koordinat dan radius geofence presensi otomatis mengikuti tempat magang ini.</p>
+          <p class="text-[10px] text-slate-400 mt-0.5">Titik koordinat dan radius geofence presensi otomatis mengikuti tempat PKL ini.</p>
         </div>
 
         <!-- NIM / NISN & Username -->
@@ -2072,7 +2072,7 @@
         </button>
 
         <div class="text-center pt-2 border-t border-slate-100">
-          <p class="text-[11px] text-slate-500">Sudah punya akun magang? <button type="button" onclick="setStudentAuthMode('login')" class="font-bold text-blue-600 hover:text-blue-700 underline cursor-pointer">Masuk di sini</button></p>
+          <p class="text-[11px] text-slate-500">Sudah punya akun PKL? <button type="button" onclick="setStudentAuthMode('login')" class="font-bold text-blue-600 hover:text-blue-700 underline cursor-pointer">Masuk di sini</button></p>
         </div>
       </form>
 
@@ -2122,7 +2122,7 @@
     </div>
   </div>
 
-  <!-- ==================== MODAL TAMBAH SISWA MAGANG (ADMIN) ==================== -->
+  <!-- ==================== MODAL Tambah Siswa PKL (ADMIN) ==================== -->
   <div id="modal-add-student" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-xs z-[350] flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-200 space-y-4">
       <div class="flex items-center justify-between pb-2 border-b border-slate-100">
@@ -2130,7 +2130,7 @@
           <div class="w-8 h-8 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center">
             <i data-lucide="user-plus" class="w-4 h-4"></i>
           </div>
-          <h4 class="font-extrabold text-sm text-slate-900">Tambah Siswa Magang</h4>
+          <h4 class="font-extrabold text-sm text-slate-900">Tambah Siswa PKL</h4>
         </div>
         <button type="button" onclick="closeAddStudentModal()" class="p-1 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600">
           <i data-lucide="x" class="w-4 h-4"></i>
@@ -2155,7 +2155,7 @@
           <input type="text" id="add-student-jurusan" required placeholder="Contoh: Teknik Kendaraan Ringan (TKR)" class="w-full px-3 py-2 rounded-xl border border-slate-200">
         </div>
         <div>
-          <label class="block font-bold text-slate-700 mb-1">Tempat / Cabang Magang *</label>
+          <label class="block font-bold text-slate-700 mb-1">Tempat / Cabang PKL *</label>
           <select id="add-student-cabang" class="w-full px-3 py-2 rounded-xl border border-slate-200 font-bold bg-white text-slate-800 cursor-pointer">
             <option value="Ahmad Yani">Ahmad Yani (Bandar Lampung Pusat)</option>
             <option value="Soekarno Hatta">Soekarno Hatta (Bypass Bandar Lampung)</option>
@@ -2171,7 +2171,7 @@
 
         <div class="flex gap-2 pt-2">
           <button type="submit" class="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-sm transition">
-            Simpan Siswa Magang
+            Simpan Siswa PKL
           </button>
           <button type="button" onclick="closeAddStudentModal()" class="py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition">
             Batal
@@ -2198,7 +2198,7 @@
 
       <form onsubmit="handleSaveManualAttendance(event)" class="space-y-3 text-xs">
         <div>
-          <label class="block font-bold text-slate-700 mb-1">Pilih Siswa Magang *</label>
+          <label class="block font-bold text-slate-700 mb-1">Pilih Siswa PKL *</label>
           <select id="manual-att-student" required class="w-full px-3 py-2 rounded-xl border border-slate-200 font-bold text-slate-800 bg-white">
             <!-- Populated dynamically -->
           </select>
@@ -2805,7 +2805,7 @@
     let geofenceCircle = null;
     let userMarker = null;
 
-    // --- MULTI-ROLE & USER STATE (SISWA MAGANG VS HRD / ADMIN BENGKEL) ---
+    // --- MULTI-ROLE & USER STATE (SISWA PKL VS HRD / ADMIN BENGKEL) ---
     let currentUserRole = localStorage.getItem('pkl_user_role') || 'student'; // 'student' | 'admin'
 
     let currentUser = {
@@ -2903,7 +2903,7 @@
       showAppToast("Cabang Workshop Diubah", `Titik pusat presensi disesuaikan ke ${branch.name}`, "info");
     }
 
-    // --- DATA INDUK SISWA MAGANG (MASTER DATA REAL DARI SPREADSHEET ASTRA DAIHATSU) ---
+    // --- DATA INDUK SISWA PKL (MASTER DATA REAL DARI SPREADSHEET ASTRA DAIHATSU) ---
     const DEFAULT_STUDENTS = [
       {
         nim: '654553',
@@ -2914,7 +2914,7 @@
         jurusan: 'Teknik Kendaraan Ringan (TKR)',
         phone: '0812-7890-3344',
         status: 'Aktif',
-        statusRole: 'Anak Magang',
+        statusRole: 'Anak PKL',
         todayStatus: 'Belum Presensi',
         todayIn: '-',
         todayOut: '-',
@@ -2947,7 +2947,13 @@
       }
       try {
         const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          parsed.forEach(s => {
+            if (s.statusRole === 'Anak Magang') s.statusRole = 'Anak PKL';
+            if (s.status === 'Aktif Magang') s.status = 'Aktif PKL';
+          });
+          return parsed;
+        }
         return DEFAULT_STUDENTS;
       } catch {
         return DEFAULT_STUDENTS;
@@ -3561,7 +3567,7 @@
       const infoCabang = document.getElementById('info-profile-cabang');
       if (infoCabang) infoCabang.innerText = currentBranch.name;
 
-      // Adaptasi Informasi Profil Khusus Admin vs Anak Magang
+      // Adaptasi Informasi Profil Khusus Admin vs Anak PKL
       const infoTitle = document.getElementById('info-card-title');
       const infoSub = document.getElementById('info-card-subtitle');
       const infoIcon = document.getElementById('info-card-icon');
@@ -3586,7 +3592,7 @@
         if (infoSub) infoSub.innerText = "Data identitas resmi Administrator & HRD PT Astra International Tbk - Daihatsu";
         if (infoIcon) infoIcon.setAttribute('data-lucide', 'briefcase');
         if (infoRolePill) {
-          infoRolePill.innerText = "HRD & Pembimbing Magang";
+          infoRolePill.innerText = "HRD & Pembimbing PKL";
           infoRolePill.className = "px-2.5 py-0.5 rounded-full text-[10px] md:text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200/80";
         }
         if (infoSubrolePill) infoSubrolePill.innerText = "PT Astra International Tbk - Daihatsu";
@@ -3597,7 +3603,7 @@
         if (infoTagCol3) infoTagCol3.innerText = "Astra Daihatsu";
 
         if (editTitle) editTitle.innerText = "Edit Profil Administrator & HRD";
-        if (editSub) editSub.innerText = "Ubah identitas resmi pembimbing dan pengelola magang PKL";
+        if (editSub) editSub.innerText = "Ubah identitas resmi pembimbing dan pengelola PKL";
         if (editAvatarTitle) editAvatarTitle.innerText = "Foto Profil Pembimbing / HRD";
         if (editLblNama) editLblNama.innerHTML = `Nama Lengkap HRD / Pembimbing <span class="text-red-500">*</span>`;
         if (editLblNim) editLblNim.innerText = "NIP / ID Karyawan";
@@ -3605,7 +3611,7 @@
         if (editLblJurusan) editLblJurusan.innerText = "Divisi / Jabatan";
       } else {
         if (infoTitle) infoTitle.innerText = "Informasi Peserta PKL";
-        if (infoSub) infoSub.innerText = "Data identitas resmi teknisi magang Astra Daihatsu";
+        if (infoSub) infoSub.innerText = "Data identitas resmi teknisi PKL Astra Daihatsu";
         if (infoIcon) infoIcon.setAttribute('data-lucide', 'user-check');
         if (infoRolePill) {
           infoRolePill.innerText = "Siswa PKL Teknisi";
@@ -3618,11 +3624,11 @@
         if (infoLblCol3) infoLblCol3.innerText = "Penempatan Praktik (PKL)";
         if (infoTagCol3) infoTagCol3.innerText = "Cabang Resmi";
 
-        if (editTitle) editTitle.innerText = "Edit Profil Peserta Magang";
+        if (editTitle) editTitle.innerText = "Edit Profil Peserta PKL";
         if (editSub) editSub.innerText = "Ubah identitas dan foto profil siswa PKL";
-        if (editAvatarTitle) editAvatarTitle.innerText = "Foto Profil Peserta Magang";
+        if (editAvatarTitle) editAvatarTitle.innerText = "Foto Profil Peserta PKL";
         if (editLblNama) editLblNama.innerHTML = `Nama Lengkap Siswa <span class="text-red-500">*</span>`;
-        if (editLblNim) editLblNim.innerText = "NISN / NIM / ID Magang";
+        if (editLblNim) editLblNim.innerText = "NISN / NIM / ID PKL";
         if (editLblInstansi) editLblInstansi.innerText = "Asal Sekolah / Kampus (Instansi)";
         if (editLblJurusan) editLblJurusan.innerText = "Jurusan / Program Keahlian";
       }
@@ -3978,14 +3984,14 @@
       const titles = {
         dashboard: { title: 'Dashboard', sub: 'Sistem Presensi Geofencing PKL Astra Daihatsu Ahmad Yani' },
         presensi: isAdm 
-          ? { title: 'Data Siswa Magang', sub: 'Direktori & Manajemen Peserta PKL Astra Daihatsu' }
+          ? { title: 'Data Siswa PKL', sub: 'Direktori & Manajemen Peserta PKL Astra Daihatsu' }
           : { title: 'Online Attendance', sub: 'Presensi Kehadiran Geofencing Mobile' },
         izin: isAdm
-          ? { title: 'Inbox Persetujuan', sub: 'Verifikasi pengajuan izin & berkas SKD anak magang' }
-          : { title: 'Pengajuan Izin / Sakit', sub: 'Formulir ketidakhadiran mekanik magang PKL' },
+          ? { title: 'Inbox Persetujuan', sub: 'Verifikasi pengajuan izin & berkas SKD anak PKL' }
+          : { title: 'Pengajuan Izin / Sakit', sub: 'Formulir ketidakhadiran mekanik PKL' },
         rekap: isAdm
-          ? { title: 'Rekap Presensi Seluruh Magang', sub: 'Data rekapitulasi kehadiran seluruh siswa magang Astra Daihatsu' }
-          : { title: 'Rekapitulasi Kehadiran', sub: 'Laporan kehadiran & perizinan magang teknisi bengkel' },
+          ? { title: 'Rekap Presensi Seluruh PKL', sub: 'Data rekapitulasi kehadiran seluruh siswa PKL Astra Daihatsu' }
+          : { title: 'Rekapitulasi Kehadiran', sub: 'Laporan kehadiran & perizinan PKL teknisi bengkel' },
         pengaturan: { title: 'Pengaturan & Geofencing', sub: 'Profil akun, kalibrasi titik bengkel, dan integrasi server' }
       };
       document.getElementById('page-title').innerText = titles[tabId].title;
@@ -4497,7 +4503,7 @@
 
       if (isAdm) {
         // --- A. METRIK DASHBOARD KHUSUS HRD / ADMIN ---
-        // 1. Total Siswa Magang Terdaftar (Tanpa Akun Admin)
+        // 1. Total Siswa PKL Terdaftar (Tanpa Akun Admin)
         const internStudents = studentsList.filter(s => s.statusRole !== 'Admin' && s.nim !== '14325');
         const totalInterns = internStudents.length > 0 ? internStudents.length : studentsList.length;
 
@@ -4516,14 +4522,14 @@
         // 4. Jumlah Cabang PKL Aktif
         const totalBranches = typeof DAIHATSU_BRANCHES !== 'undefined' ? Object.keys(DAIHATSU_BRANCHES).length : 5;
 
-        // Update Card 1: Total Siswa Magang
+        // Update Card 1: Total Siswa PKL
         const title1 = document.getElementById('stat-title-1');
         const sub1 = document.getElementById('stat-sub-1');
         const val1 = document.getElementById('stat-hadir');
         const unit1 = document.getElementById('stat-unit-1');
         const foot1 = document.getElementById('stat-footer-1');
         const iconWrap1 = document.getElementById('stat-icon-wrap-1');
-        if (title1) title1.innerText = "Total Siswa Magang";
+        if (title1) title1.innerText = "Total Siswa PKL";
         if (sub1) sub1.innerText = "(Database Master)";
         if (val1) val1.innerText = totalInterns;
         if (unit1) unit1.innerText = "Peserta";
@@ -4576,7 +4582,7 @@
         const unit4 = document.getElementById('stat-unit-4');
         const foot4 = document.getElementById('stat-footer-4');
         const iconWrap4 = document.getElementById('stat-icon-wrap-4');
-        if (title4) title4.innerText = "Cabang Magang";
+        if (title4) title4.innerText = "Cabang PKL";
         if (sub4) sub4.innerText = "(Multi-Cabang PKL)";
         if (val4) val4.innerText = totalBranches;
         if (unit4) unit4.innerText = "Cabang";
@@ -4587,7 +4593,7 @@
         }
 
       } else {
-        // --- B. METRIK DASHBOARD KHUSUS SISWA MAGANG ---
+        // --- B. METRIK DASHBOARD KHUSUS SISWA PKL ---
         if (currentUser.nim && currentUser.nim !== '-') {
           presensiLogs = presensiLogs.filter(l => l.nim === currentUser.nim);
           izinLogs = izinLogs.filter(l => l.nim === currentUser.nim);
@@ -4964,7 +4970,7 @@
           inJarak: null,
           outJarak: null,
           keterangan: i.alasan || '-',
-          address: 'Surat Keterangan Magang',
+          address: 'Surat Keterangan PKL',
           buktiUrl: i.docUrl || i.dokumenUrl || i.buktiUrl || '-'
         });
       });
@@ -5454,7 +5460,7 @@
             }).catch(e => console.warn('GAS avatar sync:', e));
           }
 
-          showAppAlert("Foto profil peserta magang berhasil diperbarui!", "Profil Diperbarui", "success");
+          showAppAlert("Foto profil peserta PKL berhasil diperbarui!", "Profil Diperbarui", "success");
         };
         img.src = e.target.result;
       };
@@ -5562,7 +5568,7 @@
 
       updateProfileDisplay();
       if (showAlert) {
-        showAppAlert("Profil peserta magang berhasil diperbarui!", "Profil Tersimpan", "success");
+        showAppAlert("Profil peserta PKL berhasil diperbarui!", "Profil Tersimpan", "success");
       }
       return true;
     }
@@ -5624,7 +5630,7 @@
       updateProfileDisplay();
       checkGPS(false);
 
-      // 3. Sinkronkan ke cloud backend agar semua anak magang otomatis menerima radius terbaru
+      // 3. Sinkronkan ke cloud backend agar semua anak PKL otomatis menerima radius terbaru
       const targetApi = currentUser.apiUrl || '/api/presensi';
       if (targetApi) {
         try {
@@ -5653,7 +5659,7 @@
         } catch(e) {}
       }
 
-      showAppAlert(`Pengaturan Geofencing Berhasil Disimpan!\n\n• Cabang: ${branchKey}\n• Latitude: ${wLat}\n• Longitude: ${wLng}\n• Toleransi Radius: ${wRad} meter\n\nSettingan ini otomatis tersimpan di database Astra Daihatsu dan tersinkronisasi sebagai acuan validasi presensi bagi seluruh anak magang di cabang ini.`, "Pengaturan Tersimpan", "success");
+      showAppAlert(`Pengaturan Geofencing Berhasil Disimpan!\n\n• Cabang: ${branchKey}\n• Latitude: ${wLat}\n• Longitude: ${wLng}\n• Toleransi Radius: ${wRad} meter\n\nSettingan ini otomatis tersimpan di database Astra Daihatsu dan tersinkronisasi sebagai acuan validasi presensi bagi seluruh anak PKL di cabang ini.`, "Pengaturan Tersimpan", "success");
     }
 
     function saveSettings() {
@@ -5852,17 +5858,17 @@
           roleBadge.className = "px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-2xs border bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100";
         } else {
           roleIcon.innerText = '👨‍🎓';
-          roleText.innerText = 'Siswa Magang';
+          roleText.innerText = 'Siswa PKL';
           roleBadge.className = "px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-2xs border bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100";
         }
       }
 
       // 3. Update Menu Sidebar Desktop & Dock Nav Mobile
-      // Menu Tab 2: Presensi -> Data Magang (Admin) vs Online Attendance (Student)
+      // Menu Tab 2: Presensi -> Data PKL (Admin) vs Online Attendance (Student)
       const navPresensi = document.getElementById('nav-presensi');
       if (navPresensi) {
         navPresensi.innerHTML = isAdm
-          ? `<i data-lucide="users" class="w-4 h-4"></i><span>Data Siswa Magang</span>`
+          ? `<i data-lucide="users" class="w-4 h-4"></i><span>Data Siswa PKL</span>`
           : `<i data-lucide="clock" class="w-4 h-4"></i><span>Online Attendance</span>`;
       }
       const bnavPresensi = document.getElementById('bnav-presensi');
@@ -5874,7 +5880,7 @@
             ? `<i data-lucide="users" class="w-5 h-5 drop-shadow-xs"></i>`
             : `<i data-lucide="clock" class="w-5 h-5 drop-shadow-xs"></i>`;
         }
-        if (spanTxt) spanTxt.innerText = isAdm ? 'Data Magang' : 'Presensi';
+        if (spanTxt) spanTxt.innerText = isAdm ? 'Data PKL' : 'Presensi';
       }
 
       // Menu Tab 3: Izin/Sakit -> Inbox (Admin) vs Pengajuan Izin/Sakit (Student)
@@ -5902,7 +5908,7 @@
       const navRekap = document.getElementById('nav-rekap');
       if (navRekap) {
         navRekap.innerHTML = isAdm
-          ? `<i data-lucide="clipboard-list" class="w-4 h-4"></i><span>Rekap Seluruh Magang</span>`
+          ? `<i data-lucide="clipboard-list" class="w-4 h-4"></i><span>Rekap Seluruh PKL</span>`
           : `<i data-lucide="calendar-check" class="w-4 h-4"></i><span>Rekap Bulanan</span>`;
       }
       const bnavRekap = document.getElementById('bnav-rekap');
@@ -5913,7 +5919,7 @@
         }
       }
 
-      // 4. Tampilan Dashboard (Box Presensi Hari Ini vs Riwayat Terkini Presensi Magang)
+      // 4. Tampilan Dashboard (Box Presensi Hari Ini vs Riwayat Terkini Presensi PKL)
       const studentTodayBox = document.getElementById('box-student-today-attendance');
       const adminRecentBox = document.getElementById('box-admin-recent-attendance');
       if (studentTodayBox && adminRecentBox) {
@@ -5927,17 +5933,17 @@
         }
       }
 
-      // 5. Tampilan Tab 2: Presensi / Data Magang Flow
+      // 5. Tampilan Tab 2: Presensi / Data PKL Flow
       const studentAttFlow = document.getElementById('student-attendance-flow');
-      const adminMagangFlow = document.getElementById('admin-data-magang-flow');
-      if (studentAttFlow && adminMagangFlow) {
+      const adminPklFlow = document.getElementById('admin-data-pkl-flow');
+      if (studentAttFlow && adminPklFlow) {
         if (isAdm) {
           studentAttFlow.classList.add('hidden');
-          adminMagangFlow.classList.remove('hidden');
+          adminPklFlow.classList.remove('hidden');
           renderAdminStudentsTable();
         } else {
           studentAttFlow.classList.remove('hidden');
-          adminMagangFlow.classList.add('hidden');
+          adminPklFlow.classList.add('hidden');
         }
       }
 
@@ -5982,7 +5988,7 @@
           radiusBadge.innerHTML = `<i data-lucide="shield-check" class="w-3.5 h-3.5 text-indigo-600"></i> Monitoring Online`;
         }
         if (radiusDesc) {
-          radiusDesc.innerHTML = `Pusat Geofence Workshop <strong>${currentBranch.name}</strong> aktif dengan radius <strong>${workshopConfig.radiusMeters} meter</strong>. Titik ini menjadi acuan validasi absensi anak magang.`;
+          radiusDesc.innerHTML = `Pusat Geofence Workshop <strong>${currentBranch.name}</strong> aktif dengan radius <strong>${workshopConfig.radiusMeters} meter</strong>. Titik ini menjadi acuan validasi absensi anak PKL.`;
         }
       } else {
         if (geoCardTitle) geoCardTitle.innerText = "Status Geofencing Workshop";
@@ -5990,7 +5996,7 @@
         if (geoIcon) geoIcon.className = "w-8 h-8 rounded-lg bg-red-100 text-red-600 flex items-center justify-center";
       }
 
-      // 9. Akses Pengaturan Geofencing Bengkel (Hanya Bisa Diakses Admin, Dihapus dari Akun Anak Magang)
+      // 9. Akses Pengaturan Geofencing Bengkel (Hanya Bisa Diakses Admin, Dihapus dari Akun Anak PKL)
       const cardWorkshopAdmin = document.getElementById('card-workshop-geofence-admin-only');
       const cardInternBranchInfo = document.getElementById('card-intern-branch-info');
       const internRadiusTxt = document.getElementById('intern-view-radius-meters');
@@ -6014,7 +6020,7 @@
       if (window.lucide) lucide.createIcons();
     }
 
-    // --- 13.1 RIWAYAT TERKINI PRESENSI MAGANG (ADMIN DASHBOARD) ---
+    // --- 13.1 Riwayat Terkini Presensi PKL (ADMIN DASHBOARD) ---
     function renderAdminRecentAttendance() {
       const container = document.getElementById('admin-recent-list');
       const badge = document.getElementById('admin-today-badge');
@@ -6038,7 +6044,7 @@
           <div class="py-8 text-center text-slate-400">
             <i data-lucide="clock" class="w-8 h-8 mx-auto text-slate-300 mb-2"></i>
             <p class="text-xs font-bold text-slate-600">Belum Ada Presensi Hari Ini</p>
-            <p class="text-[10px] text-slate-400">Presensi anak magang yang masuk hari ini akan tampil live di sini.</p>
+            <p class="text-[10px] text-slate-400">Presensi anak PKL yang masuk hari ini akan tampil live di sini.</p>
           </div>
         `;
         if (window.lucide) lucide.createIcons();
@@ -6049,7 +6055,7 @@
       todayLogs.sort((a, b) => (b.waktu || '').localeCompare(a.waktu || ''));
 
       container.innerHTML = todayLogs.map(log => {
-        const st = students.find(s => s.nim === log.nim) || { nama: log.nama || 'Siswa Magang', instansi: 'SMKN 2 Bandar Lampung' };
+        const st = students.find(s => s.nim === log.nim) || { nama: log.nama || 'Siswa PKL', instansi: 'SMKN 2 Bandar Lampung' };
         const isIn = log.tipe === 'IN';
         const badgeColor = isIn ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-blue-50 text-blue-700 border-blue-200';
         const badgeIcon = isIn ? 'check-circle-2' : 'log-out';
@@ -6082,7 +6088,7 @@
       if (window.lucide) lucide.createIcons();
     }
 
-    // --- 13.2 DATA SISWA MAGANG (ADMIN MANAGEMENT) ---
+    // --- 13.2 DATA SISWA PKL (ADMIN MANAGEMENT) ---
     function renderAdminStudentsTable() {
       const tbody = document.getElementById('admin-students-table-body');
       if (!tbody) return;
@@ -6111,7 +6117,7 @@
       if (elSchools) elSchools.innerText = totalSchools;
 
       if (students.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400 text-xs">Belum ada siswa magang terdaftar. Klik tombol Tambah Siswa.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400 text-xs">Belum ada siswa PKL terdaftar. Klik tombol Tambah Siswa.</td></tr>`;
         return;
       }
 
@@ -6156,7 +6162,7 @@
             </td>
             <td class="py-3.5 px-4 whitespace-nowrap">
               <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> ${s.status || 'Aktif Magang'}
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> ${s.status || 'Aktif PKL'}
               </span>
             </td>
             <td class="py-3.5 px-4 text-center whitespace-nowrap">
@@ -6186,7 +6192,7 @@
       const currentVal = select.value;
       const students = getStudentsList();
 
-      let html = `<option value="ALL">Semua Siswa Magang (${students.length})</option>`;
+      let html = `<option value="ALL">Semua Siswa PKL (${students.length})</option>`;
       students.forEach(s => {
         html += `<option value="${s.nim}">${s.nama} (${s.nim})</option>`;
       });
@@ -6256,7 +6262,7 @@
               <i data-lucide="check-circle-2" class="w-6 h-6"></i>
             </div>
             <p class="text-sm font-bold text-slate-900">Tidak Ada Permohonan (${currentInboxApprovalFilter})</p>
-            <p class="text-xs text-slate-400 mt-1">Semua permohonan izin dan sakit anak magang telah diproses.</p>
+            <p class="text-xs text-slate-400 mt-1">Semua permohonan izin dan sakit anak PKL telah diproses.</p>
           </div>
         `;
         if (window.lucide) lucide.createIcons();
@@ -6403,7 +6409,7 @@
         if (formLogin) formLogin.classList.add('hidden');
         if (formRegister) formRegister.classList.remove('hidden');
         if (modalTitle) modalTitle.innerText = "Registrasi & Lengkapi Profil";
-        if (modalSub) modalSub.innerText = "Isi data peserta magang untuk membuka akses presensi";
+        if (modalSub) modalSub.innerText = "Isi data peserta PKL untuk membuka akses presensi";
         if (btnTabLogin) btnTabLogin.className = "py-1.5 px-3 rounded-lg font-bold transition text-slate-500 hover:text-slate-800 cursor-pointer";
         if (btnTabReg) btnTabReg.className = "py-1.5 px-3 rounded-lg font-bold transition text-blue-700 bg-white shadow-2xs cursor-pointer";
       } else {
@@ -6488,7 +6494,7 @@
         if (formStudentReg) formStudentReg.classList.add('hidden');
         if (formAdmin) formAdmin.classList.remove('hidden');
         if (modalTitle) modalTitle.innerText = "Masuk Panel HRD / Pembimbing";
-        if (modalSub) modalSub.innerText = "Akses verifikasi persetujuan & monitoring data magang";
+        if (modalSub) modalSub.innerText = "Akses verifikasi persetujuan & monitoring data PKL";
       }
       if (window.lucide) lucide.createIcons();
     }
@@ -6555,7 +6561,7 @@
         return;
       }
 
-      // 1. Akun Sunoo (Siswa Magang - 654553)
+      // 1. Akun Sunoo (Siswa PKL - 654553)
       if ((inputNim.toLowerCase() === 'sunoo' || inputNim === '654553') && (inputPwd === '1234' || inputPwd === 'daihatsu123')) {
         currentUser.nim = '654553';
         currentUser.nama = 'Sunoo';
@@ -6671,7 +6677,7 @@
         }
       }
 
-      showAppAlert("NIM / Username atau kata sandi tidak terdaftar!\n\nBagi peserta magang baru, silakan klik 'Daftar & Lengkapi Profil' terlebih dahulu.", "Akun Tidak Ditemukan", "warning");
+      showAppAlert("NIM / Username atau kata sandi tidak terdaftar!\n\nBagi peserta PKL baru, silakan klik 'Daftar & Lengkapi Profil' terlebih dahulu.", "Akun Tidak Ditemukan", "warning");
     }
 
     async function handleRegisterSubmit(event) {
@@ -6687,7 +6693,7 @@
       const pwdConfirm = document.getElementById('reg-password-confirm').value;
 
       if (!nim || !nama || !instansi || !jurusan || !phone || !pwd) {
-        showAppAlert("Seluruh data identitas peserta magang wajib diisi!", "Perhatian", "warning");
+        showAppAlert("Seluruh data identitas peserta PKL wajib diisi!", "Perhatian", "warning");
         return;
       }
 
@@ -6779,7 +6785,7 @@
           jurusan,
           phone,
           status: 'Aktif',
-          statusRole: 'Anak Magang',
+          statusRole: 'Anak PKL',
           todayStatus: 'Belum Presensi',
           todayIn: '-',
           todayOut: '-',
@@ -6801,7 +6807,7 @@
 
         const branchInfo = getBranchConfig(cabang);
         showAppAlert(
-          `Selamat Datang, ${nama}!\n\nProfil peserta magang Anda berhasil terdaftar dan data lengkap telah tersimpan di database Astra Daihatsu.\n\n• NIM/NISN: ${nim}\n• Username: ${username}\n• Cabang Penempatan: ${branchInfo.name}\n• Sekolah: ${instansi}\n• Jurusan: ${jurusan}\n• No. HP: ${phone}\n\nSeluruh menu presensi, geofencing lokasi ${branchInfo.name}, izin/sakit, dan rekapitulasi kini sudah aktif dan dapat diakses.`,
+          `Selamat Datang, ${nama}!\n\nProfil peserta PKL Anda berhasil terdaftar dan data lengkap telah tersimpan di database Astra Daihatsu.\n\n• NIM/NISN: ${nim}\n• Username: ${username}\n• Cabang Penempatan: ${branchInfo.name}\n• Sekolah: ${instansi}\n• Jurusan: ${jurusan}\n• No. HP: ${phone}\n\nSeluruh menu presensi, geofencing lokasi ${branchInfo.name}, izin/sakit, dan rekapitulasi kini sudah aktif dan dapat diakses.`,
           "Registrasi & Profil Berhasil",
           "success"
         );
@@ -6830,7 +6836,7 @@
         setAppBranch('Ahmad Yani');
         closeLoginModal();
         applyUserRoleUI('student');
-        showAppToast("Login Berhasil", "Masuk sebagai Sunoo (Siswa Magang Astra Daihatsu Ahmad Yani)", "success");
+        showAppToast("Login Berhasil", "Masuk sebagai Sunoo (Siswa PKL Astra Daihatsu Ahmad Yani)", "success");
       } else if (role === 'indah') {
         localStorage.setItem('pkl_user_role', 'admin');
         localStorage.setItem('pkl_nim', '14325');
@@ -6884,7 +6890,7 @@
         setAppBranch('Ahmad Yani');
         closeLoginModal();
         applyUserRoleUI('admin');
-        showAppAlert(`Selamat datang di Panel HRD Astra Daihatsu Ahmad Yani, ${adminName}!\n\nAnda dapat memverifikasi approvals izin anak magang, memantau riwayat presensi live seluruh peserta, dan mengelola database Master PKL.`, "Login Berhasil", "success");
+        showAppAlert(`Selamat datang di Panel HRD Astra Daihatsu Ahmad Yani, ${adminName}!\n\nAnda dapat memverifikasi approvals izin anak PKL, memantau riwayat presensi live seluruh peserta, dan mengelola database Master PKL.`, "Login Berhasil", "success");
       } else {
         showAppAlert("Username atau Sandi HRD salah!\n\nContoh akun HRD terdaftar:\n• Username: Indah Pratiwi (atau 14325 / admin)\n• Sandi: 1234 (atau daihatsu2026)", "Gagal Masuk", "error");
       }
@@ -6927,24 +6933,24 @@
         jurusan: jurusan || 'Teknik Kendaraan Ringan (TKR)',
         cabang: cabang,
         phone: phone || '-',
-        status: 'Aktif Magang'
+        status: 'Aktif PKL'
       });
 
       localStorage.setItem('pkl_students_list', JSON.stringify(students));
       closeAddStudentModal();
       renderAdminStudentsTable();
       populateRekapSiswaFilter();
-      showAppToast("Siswa Magang Ditambahkan", `${nama} (${nim}) berhasil didaftarkan ke direktori.`, "success");
+      showAppToast("Siswa PKL Ditambahkan", `${nama} (${nim}) berhasil didaftarkan ke direktori.`, "success");
     }
 
     async function deleteStudent(nim) {
-      const ok = await showAppConfirm(`Hapus siswa magang dengan NIM ${nim} dari sistem?`, "Hapus Siswa", { okText: "Hapus", isDanger: true });
+      const ok = await showAppConfirm(`Hapus siswa PKL dengan NIM ${nim} dari sistem?`, "Hapus Siswa", { okText: "Hapus", isDanger: true });
       if (ok) {
         let students = getStudentsList().filter(s => s.nim !== nim);
         localStorage.setItem('pkl_students_list', JSON.stringify(students));
         renderAdminStudentsTable();
         populateRekapSiswaFilter();
-        showAppToast("Siswa Dihapus", `Data siswa magang ${nim} telah dihapus.`, "info");
+        showAppToast("Siswa Dihapus", `Data siswa PKL ${nim} telah dihapus.`, "info");
       }
     }
 
@@ -6982,7 +6988,7 @@
       const notes = document.getElementById('manual-att-notes').value.trim();
 
       const students = getStudentsList();
-      const st = students.find(s => s.nim === nim) || { nama: 'Siswa Magang' };
+      const st = students.find(s => s.nim === nim) || { nama: 'Siswa PKL' };
 
       const logs = getAttendanceLogs();
       const newLog = {
