@@ -413,7 +413,7 @@
                       <i data-lucide="check" class="w-3 h-3"></i>
                     </div>
                     <p id="radius-desc-txt" class="text-xs font-bold text-slate-800 leading-snug">
-                      Anda berada di dalam radius workshop (≤ 150 m).
+                      Anda berada di dalam radius workshop (≤ 75 m).
                     </p>
                   </div>
                   
@@ -421,15 +421,15 @@
                   <div class="pl-7 space-y-1 text-[11px] text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
                     <p class="flex justify-between items-center">
                       <span class="font-medium text-slate-400">Pusat Bengkel:</span>
-                      <span id="lbl-workshop-coords" class="font-mono font-bold text-slate-700">-5.4217, 105.2528</span>
+                      <span id="lbl-workshop-coords" class="font-mono font-bold text-slate-700">-5.419142, 105.258416</span>
                     </p>
                     <p class="flex justify-between items-center">
                       <span class="font-medium text-slate-400">Posisi Anda:</span>
-                      <span id="lbl-user-coords" class="font-mono font-bold text-slate-700">-5.4217, 105.2528</span>
+                      <span id="lbl-user-coords" class="font-mono font-bold text-slate-700">-5.419142, 105.258416</span>
                     </p>
                     <p class="flex justify-between items-center">
                       <span class="font-medium text-slate-400">Toleransi Radius:</span>
-                      <span id="lbl-workshop-radius" class="font-bold text-blue-600">150 meter</span>
+                      <span id="lbl-workshop-radius" class="font-bold text-blue-600">75 meter</span>
                     </p>
                   </div>
 
@@ -677,7 +677,7 @@
 
             <!-- Address & Coordinates text -->
             <p id="clock-flow-address-text" class="text-[11px] leading-relaxed text-slate-600 font-medium">
-              H7J3+4GQ, Jl. S. Parman, Palapa, Kec. Tj. Karang Pusat, Kota Bandar Lampung, Lampung 35213, Indonesia (-5.419734, 105.2539566)
+              Palapa, Jl. Jenderal Ahmad Yani No. 1, Gotong Royong, Kec. Tj. Karang Pusat, Kota Bandar Lampung, Lampung 35213 (-5.419142, 105.258416)
             </p>
 
             <!-- Geofencing Radius Callout -->
@@ -1331,7 +1331,7 @@
                 </select>
                 <i data-lucide="building-2" class="w-4 h-4 text-blue-600 absolute left-3 top-2.5"></i>
               </div>
-              <p class="text-[10px] text-slate-500 mt-1" id="cfg-branch-address-hint">Alamat: Jl. Jend. A. Yani No. 1, Palapa, Tj. Karang Pusat, Bandar Lampung</p>
+              <p class="text-[10px] text-slate-500 mt-1" id="cfg-branch-address-hint">Alamat: Palapa, Jl. Jenderal Ahmad Yani No. 1, Gotong Royong, Kec. Tj. Karang Pusat, Kota Bandar Lampung, Lampung 35213</p>
             </div>
 
             <div class="grid grid-cols-2 gap-3">
@@ -2619,66 +2619,109 @@
     }
 
     // --- 1. KONFIGURASI PARAMETER GEOFENCING MULTI-CABANG ASTRA DAIHATSU ---
+    // 5 Data Cabang Valid Resmi Astra Daihatsu Lampung (Radius Maksimal 75m)
     const DAIHATSU_BRANCHES_DEFAULT = {
-      'Ahmad Yani': {
-        key: 'Ahmad Yani',
-        name: 'Astra Daihatsu Ahmad Yani',
+      'BDL_AYANI': {
+        id: 'BDL_AYANI',
+        code: 'BDL_AYANI',
+        key: 'BDL_AYANI',
+        name: 'Astra Daihatsu Lampung - Ahmad Yani',
+        shortName: 'Ahmad Yani',
         city: 'Bandar Lampung Pusat',
-        address: 'Jl. Jend. A. Yani No. 1, Palapa, Tj. Karang Pusat, Bandar Lampung',
-        lat: -5.4217,
-        lng: 105.2528,
-        radiusMeters: 150
+        address: 'Palapa, Jl. Jenderal Ahmad Yani No. 1, Gotong Royong, Kec. Tj. Karang Pusat, Kota Bandar Lampung, Lampung 35213',
+        lat: -5.419142,
+        lng: 105.258416,
+        radiusMeters: 75
       },
-      'Soekarno Hatta': {
-        key: 'Soekarno Hatta',
-        name: 'Astra Daihatsu Soekarno Hatta',
+      'BDL_SOETTA': {
+        id: 'BDL_SOETTA',
+        code: 'BDL_SOETTA',
+        key: 'BDL_SOETTA',
+        name: 'Astra Daihatsu Lampung - Soekarno Hatta',
+        shortName: 'Soekarno Hatta',
         city: 'Bypass Bandar Lampung',
-        address: 'Jl. Soekarno Hatta No. 40, Kalibalau Kencana, Kedamaian, Bandar Lampung',
-        lat: -5.393713,
-        lng: 105.288628,
-        radiusMeters: 150
+        address: 'Jl. Lintas Sumatera (Soekarno-Hatta) No. 40A, Sukarame, Kec. Sukarame, Kota Bandar Lampung, Lampung 35122',
+        lat: -5.388735,
+        lng: 105.291326,
+        radiusMeters: 75
       },
-      'Lampung Timur': {
-        key: 'Lampung Timur',
-        name: 'Astra Daihatsu Lampung Timur',
-        city: 'Bandar Sribhawono',
-        address: 'Jl. Ir. Sutami, Sri Menanti, Bandar Sribhawono, Kab. Lampung Timur',
-        lat: -5.3119,
-        lng: 105.7502,
-        radiusMeters: 150
-      },
-      'Lampung Utara': {
-        key: 'Lampung Utara',
-        name: 'Astra Daihatsu Lampung Utara',
-        city: 'Kotabumi',
-        address: 'Jl. Alamsyah RPN, Kelapa Tujuh, Kec. Kotabumi Selatan, Kab. Lampung Utara',
-        lat: -4.8444,
-        lng: 104.9099,
-        radiusMeters: 150
-      },
-      'Bandar Jaya': {
-        key: 'Bandar Jaya',
-        name: 'Astra Daihatsu Bandar Jaya',
+      'BDJ_PROKLAMATOR': {
+        id: 'BDJ_PROKLAMATOR',
+        code: 'BDJ_PROKLAMATOR',
+        key: 'BDJ_PROKLAMATOR',
+        name: 'Astra Daihatsu Lampung - Bandar Jaya',
+        shortName: 'Bandar Jaya',
         city: 'Lampung Tengah',
-        address: 'Jl. Proklamator Raya No. 10, Bandar Jaya, Lampung Tengah',
-        lat: -4.9660,
-        lng: 105.2120,
-        radiusMeters: 150
+        address: 'Jl. Proklamator Raya No. 81d, Bandar Jaya Tim., Kec. Terbanggi Besar, Kabupaten Lampung Tengah, Lampung 34161',
+        lat: -4.948554,
+        lng: 105.215086,
+        radiusMeters: 75
+      },
+      'KTB_LAMPURA': {
+        id: 'KTB_LAMPURA',
+        code: 'KTB_LAMPURA',
+        key: 'KTB_LAMPURA',
+        name: 'Astra Daihatsu Lampung Utara - Kotabumi',
+        shortName: 'Kotabumi',
+        city: 'Lampung Utara',
+        address: 'Jl. Alamsyah RPN, Klp. Tujuh, Kec. Kotabumi Sel., Kabupaten Lampung Utara, Lampung 34514',
+        lat: -4.832325,
+        lng: 104.883214,
+        radiusMeters: 75
+      },
+      'LTM_SRIBAWONO': {
+        id: 'LTM_SRIBAWONO',
+        code: 'LTM_SRIBAWONO',
+        key: 'LTM_SRIBAWONO',
+        name: 'Astra Daihatsu Lampung Timur - Bandar Sribawono',
+        shortName: 'Bandar Sribawono',
+        city: 'Lampung Timur',
+        address: 'Jl. Ir. Sutami, Sri Menanti, Kec. Bandar Sribawono, Kabupaten Lampung Timur, Lampung 34389',
+        lat: -5.324824,
+        lng: 105.764731,
+        radiusMeters: 75
       }
     };
 
     const DAIHATSU_BRANCHES = JSON.parse(JSON.stringify(DAIHATSU_BRANCHES_DEFAULT));
 
+    // Aliases untuk backward compatibility nama lama di local storage & database
+    DAIHATSU_BRANCHES['Ahmad Yani'] = DAIHATSU_BRANCHES['BDL_AYANI'];
+    DAIHATSU_BRANCHES['Soekarno Hatta'] = DAIHATSU_BRANCHES['BDL_SOETTA'];
+    DAIHATSU_BRANCHES['Bandar Jaya'] = DAIHATSU_BRANCHES['BDJ_PROKLAMATOR'];
+    DAIHATSU_BRANCHES['Lampung Utara'] = DAIHATSU_BRANCHES['KTB_LAMPURA'];
+    DAIHATSU_BRANCHES['Kotabumi'] = DAIHATSU_BRANCHES['KTB_LAMPURA'];
+    DAIHATSU_BRANCHES['Lampung Timur'] = DAIHATSU_BRANCHES['LTM_SRIBAWONO'];
+    DAIHATSU_BRANCHES['Bandar Sribhawono'] = DAIHATSU_BRANCHES['LTM_SRIBAWONO'];
+    DAIHATSU_BRANCHES['Bandar Sribawono'] = DAIHATSU_BRANCHES['LTM_SRIBAWONO'];
+
     function getBranchConfig(branchKey) {
-      if (!branchKey) return DAIHATSU_BRANCHES['Ahmad Yani'];
+      if (!branchKey) return DAIHATSU_BRANCHES['BDL_AYANI'];
       const normalized = branchKey.toString().trim();
       if (DAIHATSU_BRANCHES[normalized]) return DAIHATSU_BRANCHES[normalized];
-      for (const k in DAIHATSU_BRANCHES) {
-        if (k.toLowerCase() === normalized.toLowerCase() || DAIHATSU_BRANCHES[k].name.toLowerCase().includes(normalized.toLowerCase())) {
-          return DAIHATSU_BRANCHES[k];
+
+      const lower = normalized.toLowerCase();
+      // Alias lookup
+      if (lower.includes('soekarno') || lower.includes('soetta') || lower.includes('by pass') || lower.includes('bypass')) return DAIHATSU_BRANCHES['BDL_SOETTA'];
+      if (lower.includes('proklamator') || lower.includes('bandar jaya')) return DAIHATSU_BRANCHES['BDJ_PROKLAMATOR'];
+      if (lower.includes('kotabumi') || lower.includes('lampura') || lower.includes('lampung utara')) return DAIHATSU_BRANCHES['KTB_LAMPURA'];
+      if (lower.includes('sribawono') || lower.includes('sribhawono') || lower.includes('lampung timur')) return DAIHATSU_BRANCHES['LTM_SRIBAWONO'];
+      if (lower.includes('ahmad yani') || lower.includes('ayani') || lower.includes('palapa')) return DAIHATSU_BRANCHES['BDL_AYANI'];
+
+      for (const k in DAIHATSU_BRANCHES_DEFAULT) {
+        const b = DAIHATSU_BRANCHES_DEFAULT[k];
+        if (
+          b.id.toLowerCase() === lower ||
+          b.key.toLowerCase() === lower ||
+          b.name.toLowerCase() === lower ||
+          b.name.toLowerCase().includes(lower) ||
+          b.shortName.toLowerCase() === lower ||
+          b.shortName.toLowerCase().includes(lower)
+        ) {
+          return b;
         }
       }
-      return DAIHATSU_BRANCHES['Ahmad Yani'];
+      return DAIHATSU_BRANCHES['BDL_AYANI'];
     }
 
     // Fungsi menerapkan konfigurasi radius & titik pusat kustom dari cloud database
@@ -2686,13 +2729,14 @@
       if (!customConfigs || typeof customConfigs !== 'object') return;
       for (const branchKey in customConfigs) {
         const cfg = customConfigs[branchKey];
-        if (DAIHATSU_BRANCHES[branchKey] && cfg) {
-          if (cfg.lat && !isNaN(Number(cfg.lat))) DAIHATSU_BRANCHES[branchKey].lat = Number(cfg.lat);
-          if (cfg.lng && !isNaN(Number(cfg.lng))) DAIHATSU_BRANCHES[branchKey].lng = Number(cfg.lng);
-          if (cfg.radiusMeters && !isNaN(Number(cfg.radiusMeters))) DAIHATSU_BRANCHES[branchKey].radiusMeters = Number(cfg.radiusMeters);
+        const targetBranch = getBranchConfig(branchKey);
+        if (targetBranch && cfg) {
+          if (cfg.lat && !isNaN(Number(cfg.lat))) targetBranch.lat = Number(cfg.lat);
+          if (cfg.lng && !isNaN(Number(cfg.lng))) targetBranch.lng = Number(cfg.lng);
+          if (cfg.radiusMeters && !isNaN(Number(cfg.radiusMeters))) targetBranch.radiusMeters = Number(cfg.radiusMeters);
         }
       }
-      const curBranch = localStorage.getItem('pkl_user_cabang') || (typeof currentUser !== 'undefined' ? currentUser.cabang : 'Ahmad Yani') || 'Ahmad Yani';
+      const curBranch = localStorage.getItem('pkl_user_cabang') || (typeof currentUser !== 'undefined' ? currentUser.cabang : 'BDL_AYANI') || 'BDL_AYANI';
       const bObj = getBranchConfig(curBranch);
       if (bObj && typeof workshopConfig !== 'undefined') {
         workshopConfig.lat = bObj.lat;
@@ -2713,40 +2757,33 @@
       }
     } catch(e) {}
 
-    const REAL_DAIHATSU_AHMAD_YANI = DAIHATSU_BRANCHES['Ahmad Yani'];
+    const REAL_DAIHATSU_AHMAD_YANI = DAIHATSU_BRANCHES['BDL_AYANI'];
 
-    // Auto-migrasi jika browser masih menyimpan titik lama PRD (-5.3932) yang meleset 3.26 km ke Rajabasa
+    // Auto-migrasi ke 5 titik koordinat & radius 75m resmi terbaru
+    const rawSavedBranch = localStorage.getItem('pkl_user_cabang') || 'BDL_AYANI';
+    const initialBranchObj = getBranchConfig(rawSavedBranch);
+    const initialBranchKey = initialBranchObj.id;
+    localStorage.setItem('pkl_user_cabang', initialBranchKey);
+
     const savedLatRaw = localStorage.getItem('pkl_workshop_lat');
     const parsedLat = parseFloat(savedLatRaw);
-    if (!savedLatRaw || isNaN(parsedLat) || Math.abs(parsedLat - (-5.3932)) < 0.005) {
-      localStorage.setItem('pkl_workshop_lat', REAL_DAIHATSU_AHMAD_YANI.lat);
-      localStorage.setItem('pkl_workshop_lng', REAL_DAIHATSU_AHMAD_YANI.lng);
-      localStorage.setItem('pkl_workshop_radius', REAL_DAIHATSU_AHMAD_YANI.radiusMeters);
-    }
-    // Auto-migrasi jika browser masih menyimpan titik lama Soekarno Hatta (-5.3970) yang meleset ~540m
-    if (!isNaN(parsedLat) && Math.abs(parsedLat - (-5.3970)) < 0.002) {
-      const shBranch = DAIHATSU_BRANCHES['Soekarno Hatta'];
-      localStorage.setItem('pkl_workshop_lat', shBranch.lat);
-      localStorage.setItem('pkl_workshop_lng', shBranch.lng);
-      localStorage.setItem('pkl_workshop_radius', shBranch.radiusMeters);
-    }
-    const storedBranchConfigsRaw = localStorage.getItem('pkl_custom_branch_configs');
-    if (storedBranchConfigsRaw) {
-      try {
-        const parsedConfigs = JSON.parse(storedBranchConfigsRaw);
-        if (parsedConfigs && parsedConfigs['Soekarno Hatta'] && Math.abs(parseFloat(parsedConfigs['Soekarno Hatta'].lat) - (-5.3970)) < 0.002) {
-          delete parsedConfigs['Soekarno Hatta'];
-          localStorage.setItem('pkl_custom_branch_configs', JSON.stringify(parsedConfigs));
-        }
-      } catch(e) {}
-    }
-    const savedRadius = parseInt(localStorage.getItem('pkl_workshop_radius'));
-    if (!savedRadius || savedRadius <= 70) {
-      localStorage.setItem('pkl_workshop_radius', REAL_DAIHATSU_AHMAD_YANI.radiusMeters);
-    }
+    const savedRad = parseInt(localStorage.getItem('pkl_workshop_radius'));
 
-    const initialBranchKey = localStorage.getItem('pkl_user_cabang') || 'Ahmad Yani';
-    const initialBranchObj = getBranchConfig(initialBranchKey);
+    // Cek apakah koordinat lokal masih memuat nilai lama
+    const isOldCoords = !savedLatRaw || isNaN(parsedLat) ||
+      Math.abs(parsedLat - (-5.4217)) < 0.005 ||
+      Math.abs(parsedLat - (-5.3932)) < 0.005 ||
+      Math.abs(parsedLat - (-5.3970)) < 0.005 ||
+      Math.abs(parsedLat - (-5.393713)) < 0.005 ||
+      Math.abs(parsedLat - (-4.9660)) < 0.005 ||
+      Math.abs(parsedLat - (-4.8444)) < 0.005 ||
+      Math.abs(parsedLat - (-5.3119)) < 0.005;
+
+    if (isOldCoords || !savedRad || savedRad > 75 || savedRad === 150 || savedRad === 70) {
+      localStorage.setItem('pkl_workshop_lat', initialBranchObj.lat);
+      localStorage.setItem('pkl_workshop_lng', initialBranchObj.lng);
+      localStorage.setItem('pkl_workshop_radius', initialBranchObj.radiusMeters);
+    }
 
     let workshopConfig = {
       lat: parseFloat(localStorage.getItem('pkl_workshop_lat')) || initialBranchObj.lat,
@@ -4225,7 +4262,7 @@
     async function submitAttendance() {
       if (activeAttendanceType === 'IN' && !userLocation.isInside) {
         const doCalibrate = await showAppConfirm(
-          `Posisi Anda terdeteksi berjarak ${userLocation.distance} meter dari bengkel (Maksimal radius toleransi: ${workshopConfig.radiusMeters} meter).\n\nJika Anda saat ini sudah berada di area Workshop Astra Daihatsu Ahmad Yani, apakah Anda ingin mengkalibrasikan titik acuan bengkel ke posisi GPS Anda sekarang?`,
+          `Posisi Anda terdeteksi berjarak ${userLocation.distance} meter dari bengkel (Maksimal radius toleransi: ${workshopConfig.radiusMeters} meter).\n\nJika Anda saat ini sudah berada di area ${(getBranchConfig(currentUser.cabang)).name}, apakah Anda ingin mengkalibrasikan titik acuan bengkel ke posisi GPS Anda sekarang?`,
           "Di Luar Radius Bengkel",
           { okText: "Kalibrasi Titik Bengkel", cancelText: "Batal", isDanger: false }
         );
