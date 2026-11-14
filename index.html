@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Presensi PKL - Workshop Astra Daihatsu Ahmad Yani</title>
   
   <!-- PWA & Homescreen Icons (WebAPK / Native Install) -->
@@ -756,7 +756,7 @@
               <span class="text-xs text-slate-400 font-medium">Periode 2026/2027</span>
             </div>
             <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs border-collapse min-w-[620px]">
+              <table class="w-full text-left text-xs border-collapse min-w-[620px] hidden md:table">
                 <thead>
                   <tr class="bg-slate-50/80 border-b border-slate-200 text-slate-500 font-bold uppercase text-[10px] tracking-wider">
                     <th class="py-3 px-4">Nama Siswa & NIM</th>
@@ -767,9 +767,13 @@
                   </tr>
                 </thead>
                 <tbody id="admin-students-table-body" class="divide-y divide-slate-100 font-medium text-slate-700">
-                  <!-- Rendered dynamically -->
+                  <!-- Rendered dynamically for desktop -->
                 </tbody>
               </table>
+              <!-- Mobile Card List for Android Phone Screens -->
+              <div id="admin-students-mobile-cards" class="md:hidden divide-y divide-slate-100 bg-white">
+                <!-- Rendered dynamically for mobile -->
+              </div>
             </div>
           </div>
         </div>
@@ -863,7 +867,7 @@
             </div>
             
             <!-- Segmented Filter Buttons -->
-            <div class="inline-flex p-1 rounded-xl bg-slate-200/70 border border-slate-300/60 text-xs self-start sm:self-auto">
+            <div class="flex overflow-x-auto no-scrollbar p-1 rounded-xl bg-slate-200/70 border border-slate-300/60 text-xs w-full sm:w-auto">
               <button type="button" onclick="setInboxApprovalFilter('ALL')" id="btn-inbox-filter-all" class="px-3 py-1.5 rounded-lg font-bold transition text-blue-700 bg-white shadow-xs cursor-pointer">
                 Semua (<span id="inbox-count-all">0</span>)
               </button>
@@ -1322,12 +1326,12 @@
             <div>
               <label class="block text-[11px] font-bold text-slate-700 mb-1">Pilih Tempat / Cabang PKL Workshop *</label>
               <div class="relative">
-                <select id="cfg-branch-select" onchange="handleBranchChange(this.value)" class="w-full px-3 py-2 pl-9 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 bg-white focus:ring-2 focus:ring-blue-500 cursor-pointer">
-                  <option value="Ahmad Yani">Ahmad Yani (Bandar Lampung Pusat)</option>
-                  <option value="Soekarno Hatta">Soekarno Hatta (Bypass Bandar Lampung)</option>
-                  <option value="Lampung Timur">Lampung Timur (Bandar Sribhawono)</option>
-                  <option value="Lampung Utara">Lampung Utara (Kotabumi)</option>
-                  <option value="Bandar Jaya">Bandar Jaya (Lampung Tengah)</option>
+                <select id="cfg-branch-select" onchange="handleBranchChange(this.value)" class="w-full px-3 py-2.5 pl-9 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 bg-white focus:ring-2 focus:ring-blue-500 cursor-pointer shadow-2xs">
+                  <option value="BDL_AYANI">Astra Daihatsu - Ahmad Yani (Bandar Lampung Pusat)</option>
+                  <option value="BDL_SOETTA">Astra Daihatsu - Soekarno Hatta (Bypass)</option>
+                  <option value="BDJ_PROKLAMATOR">Astra Daihatsu - Bandar Jaya (Lampung Tengah)</option>
+                  <option value="KTB_LAMPURA">Astra Daihatsu - Kotabumi (Lampung Utara)</option>
+                  <option value="LTM_SRIBAWONO">Astra Daihatsu - Bandar Sribawono (Lampung Timur)</option>
                 </select>
                 <i data-lucide="building-2" class="w-4 h-4 text-blue-600 absolute left-3 top-2.5"></i>
               </div>
@@ -1352,22 +1356,23 @@
                 <span id="radius-val-display" class="text-xs font-black text-blue-600">150 meter</span>
               </div>
               <input type="range" id="cfg-workshop-radius" min="30" max="300" step="5" value="150" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600" oninput="document.getElementById('radius-val-display').innerText = this.value + ' meter'">
-              <div class="flex justify-between gap-1.5 pt-1">
-                <button type="button" onclick="setRadiusPreset(70)" class="flex-1 py-1 bg-white hover:bg-slate-200 border border-slate-200 text-[10px] font-bold rounded-lg text-slate-700 transition">70 m (PRD)</button>
-                <button type="button" onclick="setRadiusPreset(100)" class="flex-1 py-1 bg-white hover:bg-slate-200 border border-slate-200 text-[10px] font-bold rounded-lg text-slate-700 transition">100 m</button>
-                <button type="button" onclick="setRadiusPreset(150)" class="flex-1 py-1 bg-blue-50 hover:bg-blue-100 border border-blue-200 text-[10px] font-bold rounded-lg text-blue-700 transition">150 m (Bengkel)</button>
-                <button type="button" onclick="setRadiusPreset(200)" class="flex-1 py-1 bg-white hover:bg-slate-200 border border-slate-200 text-[10px] font-bold rounded-lg text-slate-700 transition">200 m</button>
+              <div class="grid grid-cols-4 gap-1.5 pt-1">
+                <button type="button" onclick="setRadiusPreset(70)" class="py-2 bg-white hover:bg-slate-100 border border-slate-200 text-[10px] font-bold rounded-xl text-slate-700 transition active:scale-95 text-center shadow-2xs">70m (PRD)</button>
+                <button type="button" onclick="setRadiusPreset(100)" class="py-2 bg-white hover:bg-slate-100 border border-slate-200 text-[10px] font-bold rounded-xl text-slate-700 transition active:scale-95 text-center shadow-2xs">100m</button>
+                <button type="button" onclick="setRadiusPreset(150)" class="py-2 bg-blue-50 hover:bg-blue-100 border border-blue-200 text-[10px] font-bold rounded-xl text-blue-700 transition active:scale-95 text-center shadow-2xs">150m (Bengkel)</button>
+                <button type="button" onclick="setRadiusPreset(200)" class="py-2 bg-white hover:bg-slate-100 border border-slate-200 text-[10px] font-bold rounded-xl text-slate-700 transition active:scale-95 text-center shadow-2xs">200m</button>
               </div>
             </div>
 
             <!-- Calibration Action Buttons -->
-            <div class="flex flex-wrap gap-2 pt-1">
-              <button type="button" onclick="calibrateCurrentLocation()" class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm">
-                <i data-lucide="crosshair" class="w-3.5 h-3.5"></i>
+            <div class="flex flex-col sm:flex-row gap-2 pt-1">
+              <button type="button" onclick="calibrateCurrentLocation()" class="w-full sm:flex-1 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-xs active:scale-[0.98]">
+                <i data-lucide="crosshair" class="w-4 h-4"></i>
                 <span>Gunakan Lokasi Saya Saat Ini (Kalibrasi)</span>
               </button>
-              <button type="button" onclick="resetWorkshopLocationDefault()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs font-semibold transition" title="Kembalikan koordinat ke titik resmi Daihatsu A. Yani">
-                Reset Default Bengkel
+              <button type="button" onclick="resetWorkshopLocationDefault()" class="w-full sm:w-auto px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition active:scale-[0.98] flex items-center justify-center gap-1.5" title="Kembalikan koordinat ke titik default resmi">
+                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-slate-500"></i>
+                <span>Reset Default</span>
               </button>
             </div>
 
@@ -1387,8 +1392,8 @@
               <input type="hidden" id="cfg-gps-mode" value="real">
             </div>
 
-            <button type="button" onclick="saveGeofenceSettings()" class="w-full py-2.5 bg-slate-800 hover:bg-slate-900 active:scale-95 text-white rounded-xl font-bold text-xs transition shadow-sm flex items-center justify-center gap-1.5">
-              <i data-lucide="save" class="w-3.5 h-3.5"></i>
+            <button type="button" onclick="saveGeofenceSettings()" class="w-full py-3.5 bg-[#0d1a3a] hover:bg-[#152a5a] active:scale-[0.98] text-white rounded-xl font-bold text-xs transition shadow-md shadow-slate-900/15 flex items-center justify-center gap-2 mt-2">
+              <i data-lucide="save" class="w-4 h-4 text-cyan-300"></i>
               <span>Simpan Parameter Geofencing (Sinkronkan ke Siswa)</span>
             </button>
           </div>
@@ -1423,11 +1428,10 @@
             </div>
           </div>
         </div>
-            </div>
-
-          </div>
-        </div>
-        <!-- ==================== END SCREEN A: MAIN SETTINGS ==================== -->
+      </div>
+    </div>
+  </div>
+  <!-- ==================== END SCREEN A: MAIN SETTINGS ==================== -->
 
         <!-- ==================== SCREEN B: EDIT PROFIL SISWA (SUBPAGE) ==================== -->
         <div id="settings-edit-profile-screen" class="hidden space-y-6 max-w-2xl mx-auto">
@@ -1514,55 +1518,52 @@
     </div>
   </main>
 
-  <!-- ==================== FLOATING iOS STYLE BOTTOM NAVBAR (DOCK) ==================== -->
-  <div class="md:hidden fixed bottom-4 inset-x-0 z-[100] flex justify-center px-4 pointer-events-none">
-    <nav id="mobile-bottom-nav" class="pointer-events-auto w-full max-w-sm bg-white/95 backdrop-blur-2xl border border-slate-200/90 shadow-[0_12px_36px_rgba(15,23,42,0.18),0_2px_8px_rgba(0,0,0,0.06)] rounded-[32px] px-2 py-1.5 flex items-center justify-between transition-all duration-300">
+  <!-- ==================== MODERN NATIVE MOBILE BOTTOM NAVBAR ==================== -->
+  <nav id="mobile-bottom-nav" class="md:hidden fixed bottom-0 inset-x-0 z-[100] bg-white/95 backdrop-blur-xl border-t border-slate-200/90 shadow-[0_-4px_20px_rgba(15,23,42,0.06)] px-1.5 pt-1.5 pb-[max(0.6rem,env(safe-area-inset-bottom,0px))] transition-all">
+    <div class="max-w-md mx-auto flex items-center justify-between">
       
       <!-- 1. Dashboard -->
-      <button onclick="switchTab('dashboard')" id="bnav-dashboard" class="bnav-item flex-1 flex flex-col items-center justify-center py-1 text-blue-600 font-bold transition-all duration-200 active:scale-95 group">
-        <div class="relative flex items-center justify-center">
+      <button onclick="switchTab('dashboard')" id="bnav-dashboard" class="bnav-item flex-1 flex flex-col items-center justify-center py-1 text-blue-600 font-bold transition-all active:scale-95 group">
+        <div class="bnav-icon-wrap relative flex items-center justify-center px-3 py-1 rounded-xl bg-blue-50 text-blue-600 transition-all">
           <i data-lucide="home" class="w-5 h-5 transition-transform group-hover:scale-110"></i>
-          <span class="bnav-indicator absolute -top-1 -right-1 w-2 h-2 rounded-full bg-blue-600 shadow-xs shadow-blue-500/50"></span>
         </div>
-        <span class="text-[10px] mt-0.5 tracking-tight">Beranda</span>
+        <span class="text-[10px] mt-0.5 tracking-tight font-extrabold text-blue-600 bnav-label">Beranda</span>
       </button>
 
-      <!-- 2. Izin/Sakit -->
-      <button onclick="switchTab('izin')" id="bnav-izin" class="bnav-item flex-1 flex flex-col items-center justify-center py-1 text-slate-400 font-medium transition-all duration-200 active:scale-95 group">
-        <div class="relative flex items-center justify-center">
+      <!-- 2. Izin/Sakit / Inbox -->
+      <button onclick="switchTab('izin')" id="bnav-izin" class="bnav-item flex-1 flex flex-col items-center justify-center py-1 text-slate-400 font-medium transition-all active:scale-95 group">
+        <div class="bnav-icon-wrap relative flex items-center justify-center px-3 py-1 rounded-xl text-slate-400 transition-all">
           <i data-lucide="file-plus-2" class="w-5 h-5 transition-transform group-hover:scale-110"></i>
-          <span class="bnav-indicator hidden absolute -top-1 -right-1 w-2 h-2 rounded-full bg-blue-600 shadow-xs shadow-blue-500/50"></span>
         </div>
-        <span class="text-[10px] mt-0.5 tracking-tight">Izin/Sakit</span>
+        <span class="text-[10px] mt-0.5 tracking-tight font-medium text-slate-400 bnav-label">Izin/Sakit</span>
       </button>
 
-      <!-- 3. Online Attendance (Prominent Floating iOS Center Trigger) -->
-      <button onclick="switchTab('presensi')" id="bnav-presensi" class="bnav-item flex-1 flex flex-col items-center justify-center -translate-y-3.5 transition-all duration-200 active:scale-90 group">
-        <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-500 text-white flex items-center justify-center shadow-lg shadow-blue-600/45 border-2 border-white ring-2 ring-blue-500/20 transition transform group-hover:scale-105">
-          <i data-lucide="clock" class="w-5 h-5 drop-shadow-xs"></i>
+      <!-- 3. Presensi / Data PKL -->
+      <button onclick="switchTab('presensi')" id="bnav-presensi" class="bnav-item flex-1 flex flex-col items-center justify-center py-1 text-slate-400 font-medium transition-all active:scale-95 group">
+        <div class="bnav-icon-wrap relative flex items-center justify-center px-3 py-1 rounded-xl text-slate-400 transition-all">
+          <i data-lucide="clock" class="w-5 h-5 transition-transform group-hover:scale-110"></i>
         </div>
-        <span class="text-[10px] font-black text-blue-600 mt-0.5 tracking-tight">Presensi</span>
+        <span class="text-[10px] mt-0.5 tracking-tight font-medium text-slate-400 bnav-label">Presensi</span>
       </button>
 
-      <!-- 4. Rekap Bulanan -->
-      <button onclick="switchTab('rekap')" id="bnav-rekap" class="bnav-item flex-1 flex flex-col items-center justify-center py-1 text-slate-400 font-medium transition-all duration-200 active:scale-95 group">
-        <div class="relative flex items-center justify-center">
+      <!-- 4. Rekap Bulanan / Rekap Semua -->
+      <button onclick="switchTab('rekap')" id="bnav-rekap" class="bnav-item flex-1 flex flex-col items-center justify-center py-1 text-slate-400 font-medium transition-all active:scale-95 group">
+        <div class="bnav-icon-wrap relative flex items-center justify-center px-3 py-1 rounded-xl text-slate-400 transition-all">
           <i data-lucide="calendar-check" class="w-5 h-5 transition-transform group-hover:scale-110"></i>
-          <span class="bnav-indicator hidden absolute -top-1 -right-1 w-2 h-2 rounded-full bg-blue-600 shadow-xs shadow-blue-500/50"></span>
         </div>
-        <span class="text-[10px] mt-0.5 tracking-tight">Rekap</span>
+        <span class="text-[10px] mt-0.5 tracking-tight font-medium text-slate-400 bnav-label">Rekap</span>
       </button>
 
-      <!-- 5. Pengaturan & Geofence -->
-      <button onclick="switchTab('pengaturan')" id="bnav-pengaturan" class="bnav-item flex-1 flex flex-col items-center justify-center py-1 text-slate-400 font-medium transition-all duration-200 active:scale-95 group">
-        <div class="relative flex items-center justify-center">
+      <!-- 5. Pengaturan -->
+      <button onclick="switchTab('pengaturan')" id="bnav-pengaturan" class="bnav-item flex-1 flex flex-col items-center justify-center py-1 text-slate-400 font-medium transition-all active:scale-95 group">
+        <div class="bnav-icon-wrap relative flex items-center justify-center px-3 py-1 rounded-xl text-slate-400 transition-all">
           <i data-lucide="settings" class="w-5 h-5 transition-transform group-hover:scale-110"></i>
-          <span class="bnav-indicator hidden absolute -top-1 -right-1 w-2 h-2 rounded-full bg-blue-600 shadow-xs shadow-blue-500/50"></span>
         </div>
-        <span class="text-[10px] mt-0.5 tracking-tight">Pengaturan</span>
+        <span class="text-[10px] mt-0.5 tracking-tight font-medium text-slate-400 bnav-label">Pengaturan</span>
       </button>
-    </nav>
-  </div>
+
+    </div>
+  </nav>
 
   <!-- ==================== MODAL PREVIEW FOTO BUKTI ==================== -->
   <div id="photo-modal" class="hidden fixed inset-0 bg-black/80 z-[200] flex items-center justify-center p-4">
@@ -2845,8 +2846,25 @@
       currentUser.cabang = branch.key;
 
       const branchSel = document.getElementById('cfg-branch-select');
-      if (branchSel && branchSel.value !== branch.key) {
-        branchSel.value = branch.key;
+      if (branchSel) {
+        let matched = false;
+        for (let i = 0; i < branchSel.options.length; i++) {
+          const optVal = branchSel.options[i].value;
+          if (
+            optVal === branch.id ||
+            optVal === branch.code ||
+            optVal === branch.key ||
+            optVal === branch.shortName ||
+            optVal === branch.name
+          ) {
+            branchSel.selectedIndex = i;
+            matched = true;
+            break;
+          }
+        }
+        if (!matched && branch.id) {
+          branchSel.value = branch.id;
+        }
       }
       const branchHint = document.getElementById('cfg-branch-address-hint');
       if (branchHint) {
@@ -3916,10 +3934,18 @@
           navEl.classList.add('text-slate-300');
         }
         if (bnavEl) {
-          bnavEl.classList.remove('text-blue-600', 'font-bold');
+          bnavEl.classList.remove('text-blue-600');
           bnavEl.classList.add('text-slate-400');
-          const indicator = bnavEl.querySelector('.bnav-indicator');
-          if (indicator) indicator.classList.add('hidden');
+          const wrap = bnavEl.querySelector('.bnav-icon-wrap');
+          if (wrap) {
+            wrap.classList.remove('bg-blue-50', 'text-blue-600');
+            wrap.classList.add('text-slate-400');
+          }
+          const lbl = bnavEl.querySelector('.bnav-label');
+          if (lbl) {
+            lbl.classList.remove('font-extrabold', 'text-blue-600');
+            lbl.classList.add('font-medium', 'text-slate-400');
+          }
         }
       });
 
@@ -3934,10 +3960,18 @@
         activeNav.classList.remove('text-slate-300');
       }
       if (activeBnav) {
-        activeBnav.classList.add('text-blue-600', 'font-bold');
+        activeBnav.classList.add('text-blue-600');
         activeBnav.classList.remove('text-slate-400');
-        const indicator = activeBnav.querySelector('.bnav-indicator');
-        if (indicator) indicator.classList.remove('hidden');
+        const wrap = activeBnav.querySelector('.bnav-icon-wrap');
+        if (wrap) {
+          wrap.classList.add('bg-blue-50', 'text-blue-600');
+          wrap.classList.remove('text-slate-400');
+        }
+        const lbl = activeBnav.querySelector('.bnav-label');
+        if (lbl) {
+          lbl.classList.add('font-extrabold', 'text-blue-600');
+          lbl.classList.remove('font-medium', 'text-slate-400');
+        }
       }
 
       if (tabId === 'presensi') {
@@ -5859,8 +5893,20 @@
         el.innerText = currentBranch.name;
       });
       const branchSel = document.getElementById('cfg-branch-select');
-      if (branchSel && branchSel.value !== currentBranch.key) {
-        branchSel.value = currentBranch.key;
+      if (branchSel) {
+        for (let i = 0; i < branchSel.options.length; i++) {
+          const optVal = branchSel.options[i].value;
+          if (
+            optVal === currentBranch.id ||
+            optVal === currentBranch.code ||
+            optVal === currentBranch.key ||
+            optVal === currentBranch.shortName ||
+            optVal === currentBranch.name
+          ) {
+            branchSel.selectedIndex = i;
+            break;
+          }
+        }
       }
       const branchHint = document.getElementById('cfg-branch-address-hint');
       if (branchHint) {
@@ -5894,12 +5940,12 @@
       }
       const bnavPresensi = document.getElementById('bnav-presensi');
       if (bnavPresensi) {
-        const iconDiv = bnavPresensi.querySelector('div');
-        const spanTxt = bnavPresensi.querySelector('span');
-        if (iconDiv) {
-          iconDiv.innerHTML = isAdm
-            ? `<i data-lucide="users" class="w-5 h-5 drop-shadow-xs"></i>`
-            : `<i data-lucide="clock" class="w-5 h-5 drop-shadow-xs"></i>`;
+        const iconWrap = bnavPresensi.querySelector('.bnav-icon-wrap') || bnavPresensi.querySelector('div');
+        const spanTxt = bnavPresensi.querySelector('.bnav-label') || bnavPresensi.querySelector('span');
+        if (iconWrap) {
+          iconWrap.innerHTML = isAdm
+            ? `<i data-lucide="users" class="w-5 h-5"></i>`
+            : `<i data-lucide="clock" class="w-5 h-5"></i>`;
         }
         if (spanTxt) spanTxt.innerText = isAdm ? 'Data PKL' : 'Presensi';
       }
@@ -5913,15 +5959,15 @@
       }
       const bnavIzin = document.getElementById('bnav-izin');
       if (bnavIzin) {
-        const iconDiv = bnavIzin.querySelector('div');
-        const spanTxt = bnavIzin.querySelectorAll('span');
-        if (iconDiv) {
-          iconDiv.innerHTML = isAdm
-            ? `<i data-lucide="inbox" class="w-5 h-5 transition-transform group-hover:scale-110"></i><span class="bnav-indicator hidden absolute -top-1 -right-1 w-2 h-2 rounded-full bg-blue-600 shadow-xs shadow-blue-500/50"></span>`
-            : `<i data-lucide="file-plus-2" class="w-5 h-5 transition-transform group-hover:scale-110"></i><span class="bnav-indicator hidden absolute -top-1 -right-1 w-2 h-2 rounded-full bg-blue-600 shadow-xs shadow-blue-500/50"></span>`;
+        const iconWrap = bnavIzin.querySelector('.bnav-icon-wrap') || bnavIzin.querySelector('div');
+        const spanTxt = bnavIzin.querySelector('.bnav-label') || bnavIzin.querySelector('span');
+        if (iconWrap) {
+          iconWrap.innerHTML = isAdm
+            ? `<i data-lucide="inbox" class="w-5 h-5 transition-transform group-hover:scale-110"></i>`
+            : `<i data-lucide="file-plus-2" class="w-5 h-5 transition-transform group-hover:scale-110"></i>`;
         }
-        if (spanTxt && spanTxt.length > 1) {
-          spanTxt[1].innerText = isAdm ? 'Inbox' : 'Izin/Sakit';
+        if (spanTxt) {
+          spanTxt.innerText = isAdm ? 'Inbox' : 'Izin/Sakit';
         }
       }
 
@@ -5934,9 +5980,9 @@
       }
       const bnavRekap = document.getElementById('bnav-rekap');
       if (bnavRekap) {
-        const spanTxt = bnavRekap.querySelectorAll('span');
-        if (spanTxt && spanTxt.length > 1) {
-          spanTxt[1].innerText = isAdm ? 'Rekap Semua' : 'Rekap';
+        const spanTxt = bnavRekap.querySelector('.bnav-label') || bnavRekap.querySelector('span');
+        if (spanTxt) {
+          spanTxt.innerText = isAdm ? 'Rekap Semua' : 'Rekap';
         }
       }
 
@@ -6105,6 +6151,68 @@
           </div>
         `;
       }).join('');
+
+      // Render Mobile Card List for Android Phone Screens
+      const mobileCards = document.getElementById('admin-students-mobile-cards');
+      if (mobileCards) {
+        if (students.length === 0) {
+          mobileCards.innerHTML = `<div class="p-6 text-center text-slate-400 text-xs">Belum ada siswa PKL terdaftar.</div>`;
+        } else {
+          mobileCards.innerHTML = students.map(s => {
+            const sLogsToday = logs.filter(l => l.tanggal === todayISO && l.nim === s.nim);
+            const hasIn = sLogsToday.find(l => l.tipe === 'IN');
+            const hasOut = sLogsToday.find(l => l.tipe === 'OUT');
+            const isPermit = approvals.find(a => a.tanggal === todayISO && a.nim === s.nim && a.status === 'Disetujui');
+
+            let statusBadge = '';
+            if (hasIn && hasOut) {
+              statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200"><i data-lucide="check-circle" class="w-3 h-3 text-emerald-600"></i> Lengkap (${hasIn.waktu} - ${hasOut.waktu})</span>`;
+            } else if (hasIn) {
+              statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200"><i data-lucide="clock" class="w-3 h-3 text-blue-600"></i> Sedang Shift (${hasIn.waktu})</span>`;
+            } else if (isPermit) {
+              statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-200"><i data-lucide="file-text" class="w-3 h-3 text-amber-600"></i> ${isPermit.jenis}</span>`;
+            } else {
+              statusBadge = `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-500 border border-slate-200"><i data-lucide="circle-dashed" class="w-3 h-3 text-slate-400"></i> Belum Masuk</span>`;
+            }
+
+            const initials = s.nama.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
+
+            return `
+              <div class="p-3.5 space-y-2.5 hover:bg-slate-50 transition">
+                <div class="flex items-start justify-between gap-2.5">
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-blue-100 text-blue-700 font-bold text-xs flex items-center justify-center flex-shrink-0 shadow-2xs">
+                      ${initials}
+                    </div>
+                    <div>
+                      <h5 class="font-extrabold text-slate-900 text-xs leading-tight">${s.nama}</h5>
+                      <p class="text-[10px] text-slate-400 font-mono">NIM: ${s.nim}</p>
+                      <p class="text-[10px] text-slate-500">${s.instansi}</p>
+                    </div>
+                  </div>
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 flex-shrink-0">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> ${s.status || 'Aktif'}
+                  </span>
+                </div>
+                <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+                  <div>${statusBadge}</div>
+                  <div class="flex items-center gap-1">
+                    <button onclick="filterRekapByStudent('${s.nim}')" class="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 text-[11px] font-bold flex items-center gap-1 shadow-2xs active:scale-95" title="Lihat Rekap">
+                      <i data-lucide="eye" class="w-3 h-3"></i> Detail
+                    </button>
+                    <button onclick="openManualAttendanceModal('${s.nim}')" class="p-1 rounded-lg bg-amber-50 text-amber-700 shadow-2xs active:scale-95" title="Absen Manual">
+                      <i data-lucide="calendar-plus" class="w-3.5 h-3.5"></i>
+                    </button>
+                    <button onclick="deleteStudent('${s.nim}')" class="p-1 rounded-lg bg-red-50 text-red-600 shadow-2xs active:scale-95" title="Hapus">
+                      <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+      }
 
       if (window.lucide) lucide.createIcons();
     }
