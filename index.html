@@ -1117,9 +1117,15 @@
                   <p id="info-card-subtitle" class="text-[10px] md:text-xs text-slate-300">Data identitas resmi teknisi PKL Astra Daihatsu</p>
                 </div>
               </div>
-              <span id="info-card-verified-badge" class="text-[10px] md:text-xs font-bold text-cyan-300 bg-white/10 px-3 py-1 rounded-full border border-white/15">
-                Terverifikasi
-              </span>
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="syncDataFromDatabase(true)" class="text-[10px] md:text-xs font-bold text-white bg-white/20 hover:bg-white/30 active:scale-95 px-2.5 py-1 rounded-full border border-white/20 flex items-center gap-1.5 transition cursor-pointer" title="Sinkronkan Profil Langsung dari Google Spreadsheet">
+                  <i data-lucide="refresh-cw" class="w-3.5 h-3.5 sync-spin-icon"></i>
+                  <span>Sinkron Database</span>
+                </button>
+                <span id="info-card-verified-badge" class="text-[10px] md:text-xs font-bold text-cyan-300 bg-white/10 px-3 py-1 rounded-full border border-white/15">
+                  Terverifikasi
+                </span>
+              </div>
             </div>
 
             <div class="p-5 md:p-6 space-y-5">
@@ -1167,6 +1173,28 @@
                   <span id="info-profile-tag-col3" class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 mt-1">
                     Cabang Resmi
                   </span>
+                </div>
+              </div>
+
+              <!-- Extra Contact Details (WhatsApp & Email Akun) -->
+              <div id="info-profile-contact-row" class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-3 border-t border-slate-100">
+                <div class="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center flex-shrink-0">
+                    <i data-lucide="phone" class="w-4 h-4"></i>
+                  </div>
+                  <div class="min-w-0">
+                    <p id="info-profile-lbl-phone" class="text-[10px] md:text-[11px] font-bold text-slate-400 uppercase tracking-wider">No. WhatsApp / Kontak</p>
+                    <p id="info-profile-phone" class="font-bold text-slate-800 text-xs md:text-sm truncate">0811-9876-1234</p>
+                  </div>
+                </div>
+                <div class="p-3 rounded-xl bg-slate-50 border border-slate-100 flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center flex-shrink-0">
+                    <i data-lucide="mail" class="w-4 h-4"></i>
+                  </div>
+                  <div class="min-w-0">
+                    <p id="info-profile-lbl-email" class="text-[10px] md:text-[11px] font-bold text-slate-400 uppercase tracking-wider">Email Akun Terdaftar</p>
+                    <p id="info-profile-email" class="font-bold text-slate-800 text-xs md:text-sm truncate">indah.pratiwi@daihatsu.astra.co.id</p>
+                  </div>
                 </div>
               </div>
 
@@ -1497,6 +1525,14 @@
               <div class="sm:col-span-2">
                 <label id="edit-profile-lbl-jurusan" class="block text-xs font-bold text-slate-700 mb-1">Jurusan / Program Keahlian</label>
                 <input type="text" id="cfg-jurusan" placeholder="Teknik Kendaraan Ringan (TKR) / Otomotif" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs md:text-sm focus:ring-2 focus:ring-blue-500 text-slate-800 font-medium">
+              </div>
+              <div>
+                <label id="edit-profile-lbl-phone" class="block text-xs font-bold text-slate-700 mb-1">No. WhatsApp / Kontak</label>
+                <input type="text" id="cfg-phone" placeholder="Contoh: 0811-9876-1234" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs md:text-sm focus:ring-2 focus:ring-blue-500 text-slate-800 font-medium">
+              </div>
+              <div>
+                <label id="edit-profile-lbl-email" class="block text-xs font-bold text-slate-700 mb-1">Alamat Email</label>
+                <input type="email" id="cfg-email" placeholder="Contoh: indah.pratiwi@daihatsu.astra.co.id" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs md:text-sm focus:ring-2 focus:ring-blue-500 text-slate-800 font-medium">
               </div>
             </div>
 
@@ -2821,8 +2857,23 @@
         ? 'PT. Astra International Tbk - Daihatsu'
         : (localStorage.getItem('pkl_instansi') || 'SMKN 2 Bandar Lampung'),
       jurusan: (currentUserRole === 'admin')
-        ? 'HRD'
+        ? (localStorage.getItem('pkl_admin_jabatan') || 'HRD & Personalia (PIC PKL)')
         : (localStorage.getItem('pkl_jurusan') || 'Teknik Kendaraan Ringan (TKR)'),
+      jabatan: (currentUserRole === 'admin')
+        ? (localStorage.getItem('pkl_admin_jabatan') || 'HRD & Personalia (PIC PKL)')
+        : 'Siswa PKL Teknisi',
+      divisi: (currentUserRole === 'admin')
+        ? (localStorage.getItem('pkl_admin_divisi') || 'Human Capital & General Affair')
+        : (localStorage.getItem('pkl_jurusan') || 'Teknik Kendaraan Ringan (TKR)'),
+      phone: (currentUserRole === 'admin')
+        ? (localStorage.getItem('pkl_admin_phone') || '0811-9876-1234')
+        : (localStorage.getItem('pkl_phone') || '-'),
+      email: (currentUserRole === 'admin')
+        ? (localStorage.getItem('pkl_admin_email') || 'indah.pratiwi@daihatsu.astra.co.id')
+        : (localStorage.getItem('pkl_email') || '-'),
+      roleAkses: (currentUserRole === 'admin')
+        ? (localStorage.getItem('pkl_admin_role_akses') || 'Super Admin')
+        : 'Peserta PKL',
       apiUrl: localStorage.getItem('pkl_script_url') || '/api/presensi',
       apiSecret: localStorage.getItem('pkl_script_secret') || 'DAIHATSU_PKL_SEC_2026',
       foto: localStorage.getItem('pkl_foto_profil') || '',
@@ -3011,26 +3062,77 @@
           headers: { 'Content-Type': isProxy ? 'application/json' : 'text/plain;charset=utf-8' },
           body: JSON.stringify({
             action: 'get_admin_data',
-            secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026"
+            secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026",
+            directGasUrl: (currentUser.apiUrl && currentUser.apiUrl.startsWith('http')) ? currentUser.apiUrl : undefined
           })
         });
 
         if (isProxy) {
           const json = await res.json();
           if (json && json.status === 'success') {
+            // 0. Simpan & Sinkronkan Akun Admin dari Sheet "Admin"
+            if (Array.isArray(json.admins) && json.admins.length > 0) {
+              localStorage.setItem('pkl_admins_list', JSON.stringify(json.admins));
+
+              if (currentUserRole === 'admin') {
+                const curNip = (currentUser.nim || '').toString().trim().toLowerCase();
+                const curUser = (currentUser.username || '').toString().trim().toLowerCase();
+                const curNama = (currentUser.nama || '').toString().trim().toLowerCase();
+
+                const matchedAdmin = json.admins.find(a => {
+                  const aNip = (a.nip || '').toString().trim().toLowerCase();
+                  const aUser = (a.username || '').toString().trim().toLowerCase();
+                  const aNama = (a.nama || '').toString().trim().toLowerCase();
+                  return (curNip && aNip === curNip) || (curUser && aUser === curUser) || (curNama && aNama === curNama);
+                }) || json.admins[0];
+
+                if (matchedAdmin) {
+                  currentUser.nama = matchedAdmin.nama || currentUser.nama;
+                  currentUser.nim = matchedAdmin.nip || currentUser.nim;
+                  currentUser.username = matchedAdmin.username || currentUser.username;
+                  currentUser.jabatan = matchedAdmin.jabatan || currentUser.jabatan;
+                  currentUser.jurusan = matchedAdmin.jabatan || currentUser.jurusan;
+                  currentUser.divisi = matchedAdmin.divisi || currentUser.divisi;
+                  currentUser.instansi = matchedAdmin.divisi ? ('PT. Astra International Tbk - Daihatsu (' + matchedAdmin.divisi + ')') : 'PT. Astra International Tbk - Daihatsu';
+                  currentUser.phone = (matchedAdmin.phone && matchedAdmin.phone !== '-') ? matchedAdmin.phone : currentUser.phone;
+                  currentUser.email = (matchedAdmin.email && matchedAdmin.email !== '-') ? matchedAdmin.email : currentUser.email;
+                  currentUser.roleAkses = matchedAdmin.roleAkses || currentUser.roleAkses;
+                  if (matchedAdmin.cabang && !matchedAdmin.cabang.toLowerCase().includes('semua')) {
+                    currentUser.cabang = matchedAdmin.cabang;
+                  }
+                  if (matchedAdmin.avatar && matchedAdmin.avatar !== '-' && matchedAdmin.avatar.startsWith('http')) {
+                    currentUser.foto = matchedAdmin.avatar;
+                    localStorage.setItem('pkl_foto_profil', matchedAdmin.avatar);
+                  }
+
+                  localStorage.setItem('pkl_admin_nama', currentUser.nama);
+                  localStorage.setItem('pkl_nama', currentUser.nama);
+                  localStorage.setItem('pkl_nim', currentUser.nim);
+                  localStorage.setItem('pkl_username', currentUser.username);
+                  localStorage.setItem('pkl_admin_jabatan', currentUser.jabatan);
+                  localStorage.setItem('pkl_admin_divisi', currentUser.divisi);
+                  localStorage.setItem('pkl_admin_phone', currentUser.phone);
+                  localStorage.setItem('pkl_admin_email', currentUser.email);
+                  localStorage.setItem('pkl_admin_role_akses', currentUser.roleAkses);
+                }
+              }
+            }
+
             // 1. Simpan Real Students dari Master_PKL
             if (Array.isArray(json.students) && json.students.length > 0) {
               localStorage.setItem('pkl_students_list', JSON.stringify(json.students));
             }
 
             // 2. Simpan Real Attendance Logs dari Log_Presensi
-            if (Array.isArray(json.attendances)) {
-              localStorage.setItem('pkl_logs_presensi', JSON.stringify(json.attendances));
+            const realAttendances = Array.isArray(json.attendances) ? json.attendances : (Array.isArray(json.presensi) ? json.presensi : null);
+            if (realAttendances) {
+              localStorage.setItem('pkl_logs_presensi', JSON.stringify(realAttendances));
             }
 
             // 3. Simpan Real Approvals dari Log_Perizinan
-            if (Array.isArray(json.approvals)) {
-              localStorage.setItem('pkl_inbox_approvals', JSON.stringify(json.approvals));
+            const realApprovals = Array.isArray(json.approvals) ? json.approvals : (Array.isArray(json.perizinan) ? json.perizinan : null);
+            if (realApprovals) {
+              localStorage.setItem('pkl_inbox_approvals', JSON.stringify(realApprovals));
             }
 
             // 4. Simpan & Terapkan Real Branch Configs (Toleransi Radius & Koordinat Cabang dari Database)
@@ -3040,6 +3142,7 @@
             }
 
             // Refresh UI Views dengan data riil database
+            updateProfileDisplay();
             renderDashboardStats();
             renderRekapTable();
             if (currentUserRole === 'admin') {
@@ -3049,7 +3152,10 @@
             }
 
             if (showToastNotice) {
-              showAppToast("Database Tersinkron", `Data berhasil diperbarui langsung dari Google Sheets.`, "success");
+              const toastMsg = (currentUserRole === 'admin') 
+                ? `Data akun Admin (${currentUser.nama}) dan database berhasil disinkronkan langsung dari Google Spreadsheet.`
+                : `Data berhasil diperbarui langsung dari Google Sheets.`;
+              showAppToast("Database Tersinkron", toastMsg, "success");
             }
           }
         }
@@ -3577,12 +3683,25 @@
       const infoNim = document.getElementById('info-profile-nim');
       if (infoNim) infoNim.innerText = (currentUser.nim && currentUser.nim !== '-') ? currentUser.nim : '-';
       const infoInstansi = document.getElementById('info-profile-instansi');
-      if (infoInstansi) infoInstansi.innerText = currentUser.instansi || '-';
       const infoJurusan = document.getElementById('info-profile-jurusan');
-      if (infoJurusan) infoJurusan.innerText = currentUser.jurusan || '-';
-      const currentBranch = getBranchConfig(currentUser.cabang);
       const infoCabang = document.getElementById('info-profile-cabang');
-      if (infoCabang) infoCabang.innerText = currentBranch.name;
+      const infoPhone = document.getElementById('info-profile-phone');
+      const infoEmail = document.getElementById('info-profile-email');
+      const currentBranch = getBranchConfig(currentUser.cabang);
+
+      if (isAdm) {
+        if (infoInstansi) infoInstansi.innerText = currentUser.divisi || 'Human Capital & General Affair';
+        if (infoJurusan) infoJurusan.innerText = currentUser.jabatan || 'HRD & Personalia (PIC PKL)';
+        if (infoCabang) infoCabang.innerText = currentUser.cabang || 'Semua Cabang (Pusat)';
+        if (infoPhone) infoPhone.innerText = (currentUser.phone && currentUser.phone !== '-') ? currentUser.phone : '0811-9876-1234';
+        if (infoEmail) infoEmail.innerText = (currentUser.email && currentUser.email !== '-') ? currentUser.email : 'indah.pratiwi@daihatsu.astra.co.id';
+      } else {
+        if (infoInstansi) infoInstansi.innerText = currentUser.instansi || '-';
+        if (infoJurusan) infoJurusan.innerText = currentUser.jurusan || '-';
+        if (infoCabang) infoCabang.innerText = currentBranch.name;
+        if (infoPhone) infoPhone.innerText = currentUser.phone || '-';
+        if (infoEmail) infoEmail.innerText = currentUser.email || '-';
+      }
 
       // Adaptasi Informasi Profil Khusus Admin vs Anak PKL
       const infoTitle = document.getElementById('info-card-title');
@@ -3603,29 +3722,33 @@
       const editLblNim = document.getElementById('edit-profile-lbl-nim');
       const editLblInstansi = document.getElementById('edit-profile-lbl-instansi');
       const editLblJurusan = document.getElementById('edit-profile-lbl-jurusan');
+      const editLblPhone = document.getElementById('edit-profile-lbl-phone');
+      const editLblEmail = document.getElementById('edit-profile-lbl-email');
 
       if (isAdm) {
         if (infoTitle) infoTitle.innerText = "Informasi Profil Pembimbing & HRD";
-        if (infoSub) infoSub.innerText = "Data identitas resmi Administrator & HRD PT Astra International Tbk - Daihatsu";
+        if (infoSub) infoSub.innerText = "Data identitas resmi Administrator terhubung langsung ke sheet Admin Google Spreadsheet";
         if (infoIcon) infoIcon.setAttribute('data-lucide', 'briefcase');
         if (infoRolePill) {
-          infoRolePill.innerText = "HRD & Pembimbing PKL";
+          infoRolePill.innerText = currentUser.roleAkses || "Super Admin HRD";
           infoRolePill.className = "px-2.5 py-0.5 rounded-full text-[10px] md:text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200/80";
         }
         if (infoSubrolePill) infoSubrolePill.innerText = "PT Astra International Tbk - Daihatsu";
         if (infoNimLabel) infoNimLabel.innerText = "NIP / ID Karyawan:";
-        if (infoLblCol1) infoLblCol1.innerText = "Instansi / Perusahaan";
-        if (infoLblCol2) infoLblCol2.innerText = "Divisi / Jabatan";
+        if (infoLblCol1) infoLblCol1.innerText = "Divisi / Bagian";
+        if (infoLblCol2) infoLblCol2.innerText = "Jabatan Resmi";
         if (infoLblCol3) infoLblCol3.innerText = "Wilayah Penugasan";
         if (infoTagCol3) infoTagCol3.innerText = "Astra Daihatsu";
 
         if (editTitle) editTitle.innerText = "Edit Profil Administrator & HRD";
-        if (editSub) editSub.innerText = "Ubah identitas resmi pembimbing dan pengelola PKL";
+        if (editSub) editSub.innerText = "Ubah identitas resmi pembimbing PKL (sinkron otomatis ke database sheet Admin)";
         if (editAvatarTitle) editAvatarTitle.innerText = "Foto Profil Pembimbing / HRD";
         if (editLblNama) editLblNama.innerHTML = `Nama Lengkap HRD / Pembimbing <span class="text-red-500">*</span>`;
         if (editLblNim) editLblNim.innerText = "NIP / ID Karyawan";
-        if (editLblInstansi) editLblInstansi.innerText = "Perusahaan / Instansi";
-        if (editLblJurusan) editLblJurusan.innerText = "Divisi / Jabatan";
+        if (editLblInstansi) editLblInstansi.innerText = "Divisi / Bagian Kerja";
+        if (editLblJurusan) editLblJurusan.innerText = "Jabatan Resmi (PIC PKL)";
+        if (editLblPhone) editLblPhone.innerText = "No. WhatsApp HRD";
+        if (editLblEmail) editLblEmail.innerText = "Email Resmi Daihatsu";
       } else {
         if (infoTitle) infoTitle.innerText = "Informasi Peserta PKL";
         if (infoSub) infoSub.innerText = "Data identitas resmi teknisi PKL Astra Daihatsu";
@@ -3648,6 +3771,8 @@
         if (editLblNim) editLblNim.innerText = "NISN / NIM / ID PKL";
         if (editLblInstansi) editLblInstansi.innerText = "Asal Sekolah / Kampus (Instansi)";
         if (editLblJurusan) editLblJurusan.innerText = "Jurusan / Program Keahlian";
+        if (editLblPhone) editLblPhone.innerText = "No. WhatsApp Siswa";
+        if (editLblEmail) editLblEmail.innerText = "Alamat Email";
       }
 
       const branchSel = document.getElementById('cfg-branch-select');
@@ -3996,6 +4121,8 @@
 
       if (tabId === 'pengaturan') {
         closeEditProfilePage();
+        updateProfileDisplay();
+        syncDataFromDatabase(false);
       }
 
       if (tabId === 'dashboard') {
@@ -4009,9 +4136,7 @@
       }
 
       // Selalu sinkronkan data terbaru dari database backend saat beralih tab
-      if (tabId !== 'pengaturan') {
-        syncDataFromDatabase(false);
-      }
+      syncDataFromDatabase(false);
 
       const isAdm = currentUserRole === 'admin';
       const titles = {
@@ -5539,15 +5664,19 @@
     }
 
     function openEditProfilePage() {
-      // Sync form input fields with currentUser
+      const isAdm = currentUserRole === 'admin';
       const cfgNama = document.getElementById('cfg-nama');
       if (cfgNama) cfgNama.value = currentUser.nama || '';
       const cfgNim = document.getElementById('cfg-nim');
       if (cfgNim) cfgNim.value = (currentUser.nim && currentUser.nim !== '-') ? currentUser.nim : '';
       const cfgInstansi = document.getElementById('cfg-instansi');
-      if (cfgInstansi) cfgInstansi.value = currentUser.instansi || '';
+      if (cfgInstansi) cfgInstansi.value = isAdm ? (currentUser.divisi || 'Human Capital & General Affair') : (currentUser.instansi || '');
       const cfgJurusan = document.getElementById('cfg-jurusan');
-      if (cfgJurusan) cfgJurusan.value = currentUser.jurusan || '';
+      if (cfgJurusan) cfgJurusan.value = isAdm ? (currentUser.jabatan || 'HRD & Personalia (PIC PKL)') : (currentUser.jurusan || '');
+      const cfgPhone = document.getElementById('cfg-phone');
+      if (cfgPhone) cfgPhone.value = (currentUser.phone && currentUser.phone !== '-') ? currentUser.phone : '';
+      const cfgEmail = document.getElementById('cfg-email');
+      if (cfgEmail) cfgEmail.value = (currentUser.email && currentUser.email !== '-') ? currentUser.email : '';
 
       const mainScreen = document.getElementById('settings-main-screen');
       const editScreen = document.getElementById('settings-edit-profile-screen');
@@ -5571,35 +5700,61 @@
     }
 
     function saveProfileAndReturn() {
+      const isAdm = currentUserRole === 'admin';
       const success = saveProfile(false);
       if (success) {
         closeEditProfilePage();
-        showAppToast("Profil Berhasil Disimpan", "Data identitas peserta PKL telah diperbarui di sistem.", "success");
+        showAppToast("Profil Berhasil Disimpan", isAdm ? "Data identitas Admin & HRD telah diperbarui dan disinkronkan ke database sheet Admin." : "Data identitas peserta PKL telah diperbarui di sistem.", "success");
       }
     }
 
     function saveProfile(showAlert = true) {
+      const isAdm = currentUserRole === 'admin';
       const nama = document.getElementById('cfg-nama').value.trim();
       const nim = document.getElementById('cfg-nim').value.trim();
-      const instansi = document.getElementById('cfg-instansi').value.trim();
-      const jurusan = document.getElementById('cfg-jurusan').value.trim();
+      const valInstansi = document.getElementById('cfg-instansi').value.trim();
+      const valJurusan = document.getElementById('cfg-jurusan').value.trim();
+      const phoneInput = document.getElementById('cfg-phone');
+      const emailInput = document.getElementById('cfg-email');
+      const phone = phoneInput ? phoneInput.value.trim() : (currentUser.phone || '-');
+      const email = emailInput ? emailInput.value.trim() : (currentUser.email || '-');
 
       if (!nama) {
-        showAppAlert("Nama lengkap siswa wajib diisi!", "Perhatian", "warning");
+        showAppAlert(isAdm ? "Nama lengkap Admin / HRD wajib diisi!" : "Nama lengkap siswa wajib diisi!", "Perhatian", "warning");
         return false;
       }
 
       currentUser.nama = nama;
       currentUser.nim = nim || '-';
-      currentUser.instansi = instansi;
-      currentUser.jurusan = jurusan;
+      currentUser.phone = phone || '-';
+      currentUser.email = email || '-';
 
-      localStorage.setItem('pkl_nama', currentUser.nama);
-      localStorage.setItem('pkl_nim', currentUser.nim);
-      localStorage.setItem('pkl_instansi', currentUser.instansi);
-      localStorage.setItem('pkl_jurusan', currentUser.jurusan);
+      if (isAdm) {
+        currentUser.divisi = valInstansi || 'Human Capital & General Affair';
+        currentUser.jabatan = valJurusan || 'HRD & Personalia (PIC PKL)';
+        currentUser.jurusan = currentUser.jabatan;
+        currentUser.instansi = 'PT. Astra International Tbk - Daihatsu';
 
-      // Sinkronisasi data profil ke Google Spreadsheet Master_PKL (jika URL terpasang)
+        localStorage.setItem('pkl_admin_nama', currentUser.nama);
+        localStorage.setItem('pkl_nama', currentUser.nama);
+        localStorage.setItem('pkl_nim', currentUser.nim);
+        localStorage.setItem('pkl_admin_divisi', currentUser.divisi);
+        localStorage.setItem('pkl_admin_jabatan', currentUser.jabatan);
+        localStorage.setItem('pkl_admin_phone', currentUser.phone);
+        localStorage.setItem('pkl_admin_email', currentUser.email);
+      } else {
+        currentUser.instansi = valInstansi;
+        currentUser.jurusan = valJurusan;
+
+        localStorage.setItem('pkl_nama', currentUser.nama);
+        localStorage.setItem('pkl_nim', currentUser.nim);
+        localStorage.setItem('pkl_instansi', currentUser.instansi);
+        localStorage.setItem('pkl_jurusan', currentUser.jurusan);
+        localStorage.setItem('pkl_phone', currentUser.phone);
+        localStorage.setItem('pkl_email', currentUser.email);
+      }
+
+      // Sinkronisasi data profil ke Google Spreadsheet (sheet Admin atau Master_PKL)
       const targetApi = currentUser.apiUrl || '/api/presensi';
       if (targetApi && (targetApi.startsWith('http') || targetApi.startsWith('/'))) {
         const isProxy = targetApi.startsWith('/');
@@ -5609,21 +5764,36 @@
           headers: { 'Content-Type': isProxy ? 'application/json' : 'text/plain;charset=utf-8' },
           body: JSON.stringify({
             action: 'update_profil',
+            role: isAdm ? 'admin' : 'student',
+            statusRole: isAdm ? 'Admin' : 'anak PKL',
             nim: currentUser.nim,
             nama: currentUser.nama,
             username: currentUser.username || currentUser.nama,
-            cabang: currentUser.cabang || 'Ahmad Yani',
+            cabang: currentUser.cabang || (isAdm ? 'Semua Cabang (Pusat)' : 'Ahmad Yani'),
+            jabatan: currentUser.jabatan,
+            divisi: currentUser.divisi,
+            phone: currentUser.phone,
+            email: currentUser.email,
             instansi: currentUser.instansi,
             jurusan: currentUser.jurusan,
             fotoBase64: currentUser.foto || '',
-            secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026"
+            secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026",
+            directGasUrl: (currentUser.apiUrl && currentUser.apiUrl.startsWith('http')) ? currentUser.apiUrl : undefined
           })
+        }).then(async res => {
+          if (isProxy) {
+            const resData = await res.json();
+            if (resData && resData.status === 'success') {
+              console.log("GAS Profil Sync Success:", resData.message);
+              syncDataFromDatabase(false);
+            }
+          }
         }).catch(err => console.warn('GAS profile sync error:', err));
       }
 
       updateProfileDisplay();
       if (showAlert) {
-        showAppAlert("Profil peserta PKL berhasil diperbarui!", "Profil Tersimpan", "success");
+        showAppAlert(isAdm ? "Profil Administrator / HRD berhasil diperbarui dan disinkronkan ke sheet Admin!" : "Profil peserta PKL berhasil diperbarui!", "Profil Tersimpan", "success");
       }
       return true;
     }
@@ -6693,14 +6863,24 @@
         currentUser.nama = adminName;
         currentUser.username = adminName;
         currentUser.instansi = 'PT. Astra International Tbk - Daihatsu';
-        currentUser.jurusan = 'HRD';
-        currentUser.cabang = 'Ahmad Yani';
+        currentUser.jabatan = localStorage.getItem('pkl_admin_jabatan') || 'HRD & Personalia (PIC PKL)';
+        currentUser.divisi = localStorage.getItem('pkl_admin_divisi') || 'Human Capital & General Affair';
+        currentUser.phone = localStorage.getItem('pkl_admin_phone') || '0811-9876-1234';
+        currentUser.email = localStorage.getItem('pkl_admin_email') || 'indah.pratiwi@daihatsu.astra.co.id';
+        currentUser.roleAkses = localStorage.getItem('pkl_admin_role_akses') || 'Super Admin';
+        currentUser.jurusan = currentUser.jabatan;
+        currentUser.cabang = 'Semua Cabang (Pusat)';
 
         localStorage.setItem('pkl_user_role', 'admin');
         localStorage.setItem('pkl_admin_nama', adminName);
         localStorage.setItem('pkl_nama', adminName);
         localStorage.setItem('pkl_nim', adminNim);
         localStorage.setItem('pkl_username', adminName);
+        localStorage.setItem('pkl_admin_jabatan', currentUser.jabatan);
+        localStorage.setItem('pkl_admin_divisi', currentUser.divisi);
+        localStorage.setItem('pkl_admin_phone', currentUser.phone);
+        localStorage.setItem('pkl_admin_email', currentUser.email);
+        localStorage.setItem('pkl_admin_role_akses', currentUser.roleAkses);
         localStorage.setItem('pkl_user_cabang', 'Ahmad Yani');
         localStorage.setItem('pkl_is_logged_in', 'true');
         localStorage.setItem('pkl_profile_completed', 'true');
@@ -6708,6 +6888,7 @@
         setAppBranch('Ahmad Yani');
         closeLoginModal();
         applyUserRoleUI('admin');
+        syncDataFromDatabase(false);
         showAppAlert(`Selamat datang di Panel HRD Astra Daihatsu Ahmad Yani, ${adminName}!\n\nAnda dapat memverifikasi approvals izin anak PKL, memantau riwayat presensi live seluruh peserta, dan mengelola database Master PKL.`, "Login Berhasil", "success");
         return;
       }
@@ -6742,14 +6923,18 @@
               action: 'login_user',
               loginInput: inputNim,
               password: inputPwd,
-              secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026"
+              secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026",
+              directGasUrl: (currentUser.apiUrl && currentUser.apiUrl.startsWith('http')) ? currentUser.apiUrl : undefined
             })
           });
           if (isProxy) {
             const data = await res.json();
             if (data.status === 'success' && data.user) {
               const u = data.user;
-              const role = (u.role === 'Admin') ? 'admin' : 'student';
+              const isAdm = (u.role && u.role.toString().toLowerCase() === 'admin') || 
+                            (u.statusRole && u.statusRole.toString().toLowerCase() === 'admin') ||
+                            (u.roleAkses && u.roleAkses.toString().toLowerCase().includes('admin'));
+              const role = isAdm ? 'admin' : 'student';
               currentUserRole = role;
               localStorage.setItem('pkl_user_role', role);
               localStorage.setItem('pkl_nim', u.nim || inputNim);
@@ -6765,10 +6950,34 @@
               currentUser.nama = u.nama || inputNim;
               currentUser.username = u.username || inputNim;
               currentUser.cabang = u.cabang || 'Ahmad Yani';
+              currentUser.instansi = u.instansi || '-';
+              currentUser.jurusan = u.jurusan || '-';
+
+              if (isAdm) {
+                currentUser.jabatan = u.jabatan || u.jurusan || 'HRD & Personalia (PIC PKL)';
+                currentUser.divisi = u.divisi || u.instansi || 'Human Capital & General Affair';
+                currentUser.phone = (u.phone && u.phone !== '-') ? u.phone : (currentUser.phone || '0811-9876-1234');
+                currentUser.email = (u.email && u.email !== '-') ? u.email : (currentUser.email || 'indah.pratiwi@daihatsu.astra.co.id');
+                currentUser.roleAkses = u.roleAkses || 'Super Admin';
+                currentUser.jurusan = currentUser.jabatan;
+
+                localStorage.setItem('pkl_admin_nama', currentUser.nama);
+                localStorage.setItem('pkl_admin_jabatan', currentUser.jabatan);
+                localStorage.setItem('pkl_admin_divisi', currentUser.divisi);
+                localStorage.setItem('pkl_admin_phone', currentUser.phone);
+                localStorage.setItem('pkl_admin_email', currentUser.email);
+                localStorage.setItem('pkl_admin_role_akses', currentUser.roleAkses);
+              }
+
+              if (u.avatar && u.avatar !== '-' && u.avatar.startsWith('http')) {
+                currentUser.foto = u.avatar;
+                localStorage.setItem('pkl_foto_profil', u.avatar);
+              }
 
               setAppBranch(u.cabang || 'Ahmad Yani');
               closeLoginModal();
               applyUserRoleUI(role);
+              syncDataFromDatabase(false);
               showAppToast("Login Berhasil", `Selamat datang, ${u.nama}!`, "success");
               return;
             } else if (data.status === 'error') {
