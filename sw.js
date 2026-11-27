@@ -1,4 +1,4 @@
-const CACHE_NAME = "presensi-pkl-v49";
+const CACHE_NAME = "presensi-pkl-v50";
 const ASSETS_TO_CACHE = [
   "./",
   "./index.html",
@@ -34,6 +34,9 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
+  // Jangan pernah intercept atau cache request API backend
+  if (event.request.url.includes("/api/")) return;
+
   if (event.request.method === "GET") {
     // Network-First untuk navigasi halaman HTML agar user langsung mendapat update terbaru
     if (event.request.mode === 'navigate' || event.request.destination === 'document') {

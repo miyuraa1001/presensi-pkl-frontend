@@ -1361,56 +1361,35 @@
             <!-- ==================== KOLOM KANAN (5 KOLOM DI DESKTOP): KEAMANAN + PWA + SESI ==================== -->
             <div class="contents lg:flex lg:flex-col lg:col-span-5 lg:gap-6">
 
-              <!-- CARD 3: KEAMANAN & KATA SANDI (Mobile Order: 4) -->
+              <!-- CARD 3: KEAMANAN & KATA SANDI (COMPACT - BUKA SUBPAGE) (Mobile Order: 4) -->
               <div class="order-4 lg:order-none bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
-                <div class="flex items-center justify-between gap-3 border-b border-slate-100 pb-3.5">
+                <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-3.5">
                   <div class="flex items-center gap-3 min-w-0">
                     <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-700 border border-amber-200/70 flex items-center justify-center flex-shrink-0">
-                      <i data-lucide="lock" class="w-4 h-4"></i>
+                      <i data-lucide="shield-check" class="w-4 h-4"></i>
                     </div>
                     <div class="min-w-0">
-                      <h4 class="font-extrabold text-sm sm:text-base text-slate-900 leading-tight truncate">Keamanan &amp; Kata Sandi</h4>
-                      <p class="text-[11px] text-slate-500 mt-0.5 truncate">Perbarui kata sandi akun untuk menjaga keamanan akses</p>
+                      <h4 class="font-extrabold text-sm sm:text-base text-slate-900 leading-snug">Keamanan &amp; Kata Sandi</h4>
+                      <p class="text-[11px] text-slate-500 mt-0.5">Kelola kata sandi untuk keamanan akses akun</p>
                     </div>
                   </div>
                   <span class="text-[10px] font-bold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200/70 whitespace-nowrap flex-shrink-0">Terlindungi</span>
                 </div>
 
-                <!-- Vertical 1-Column Clean Form -->
-                <div class="space-y-3.5">
-                  <div>
-                    <label for="cfg-old-pwd" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5">Kata Sandi Lama / Saat Ini</label>
-                    <div class="relative">
-                      <input type="password" id="cfg-old-pwd" placeholder="Masukkan kata sandi saat ini" autocomplete="current-password" class="w-full h-11 px-3.5 pr-10 rounded-xl border border-slate-200 text-xs sm:text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 font-mono text-slate-800">
-                      <button type="button" onclick="togglePasswordVisibility('cfg-old-pwd', 'eye-old-pwd')" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer" aria-label="Tampilkan kata sandi lama">
-                        <i data-lucide="eye" id="eye-old-pwd" class="w-4 h-4"></i>
-                      </button>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 p-4 rounded-xl bg-slate-50 border border-slate-200/60">
+                  <div class="flex items-center gap-3 min-w-0">
+                    <div class="w-9 h-9 rounded-xl bg-white border border-slate-200/80 text-slate-600 flex items-center justify-center flex-shrink-0 shadow-2xs">
+                      <i data-lucide="key-round" class="w-4 h-4"></i>
+                    </div>
+                    <div class="min-w-0">
+                      <p class="text-xs font-bold text-slate-800">Kata Sandi Akun</p>
+                      <p class="text-[11px] text-slate-500 font-mono tracking-widest mt-0.5">••••••••••••</p>
                     </div>
                   </div>
-
-                  <div>
-                    <label for="cfg-new-pwd" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5">Kata Sandi Baru</label>
-                    <div class="relative">
-                      <input type="password" id="cfg-new-pwd" placeholder="Minimal 6 karakter" autocomplete="new-password" class="w-full h-11 px-3.5 pr-10 rounded-xl border border-slate-200 text-xs sm:text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 font-mono text-slate-800">
-                      <button type="button" onclick="togglePasswordVisibility('cfg-new-pwd', 'eye-new-pwd')" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer" aria-label="Tampilkan kata sandi baru">
-                        <i data-lucide="eye" id="eye-new-pwd" class="w-4 h-4"></i>
-                      </button>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label for="cfg-confirm-pwd" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5">Konfirmasi Kata Sandi Baru</label>
-                    <div class="relative">
-                      <input type="password" id="cfg-confirm-pwd" placeholder="Ulangi kata sandi baru" autocomplete="new-password" class="w-full h-11 px-3.5 pr-10 rounded-xl border border-slate-200 text-xs sm:text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 font-mono text-slate-800">
-                      <button type="button" onclick="togglePasswordVisibility('cfg-confirm-pwd', 'eye-confirm-pwd')" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer" aria-label="Tampilkan konfirmasi kata sandi">
-                        <i data-lucide="eye" id="eye-confirm-pwd" class="w-4 h-4"></i>
-                      </button>
-                    </div>
-                  </div>
-
-                  <button type="button" onclick="saveNewPassword()" class="w-full h-11 bg-amber-600 hover:bg-amber-700 active:scale-[0.98] text-white rounded-xl font-bold text-xs sm:text-sm transition shadow-sm shadow-amber-600/20 flex items-center justify-center gap-2 cursor-pointer mt-1">
-                    <i data-lucide="key" class="w-4 h-4"></i>
-                    <span>Simpan Kata Sandi Baru</span>
+                  <button type="button" onclick="openChangePasswordPage()" class="w-full sm:w-auto h-10 px-4 bg-amber-600 hover:bg-amber-700 active:scale-[0.98] text-white rounded-xl font-bold text-xs transition shadow-sm shadow-amber-600/20 flex items-center justify-center gap-1.5 cursor-pointer flex-shrink-0 whitespace-nowrap">
+                    <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+                    <span>Ubah Kata Sandi</span>
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
                   </button>
                 </div>
               </div>
@@ -1452,12 +1431,12 @@
 
               <!-- CARD 5: SESI & MANAJEMEN AKUN (Mobile Order: 5) -->
               <div class="order-5 lg:order-none bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
-                <div class="flex items-center justify-between gap-3 border-b border-slate-100 pb-3.5">
+                <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-3.5">
                   <div class="flex items-center gap-3 min-w-0">
                     <div class="w-9 h-9 rounded-xl bg-red-50 text-red-600 border border-red-100 flex items-center justify-center flex-shrink-0">
                       <i data-lucide="shield-alert" class="w-4 h-4"></i>
                     </div>
-                    <h4 class="font-extrabold text-sm sm:text-base text-slate-900 truncate">Sesi &amp; Manajemen Akun</h4>
+                    <h4 class="font-extrabold text-sm sm:text-base text-slate-900 leading-snug">Sesi &amp; Manajemen Akun</h4>
                   </div>
                   <span class="text-[10px] text-emerald-700 font-bold bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200/80 whitespace-nowrap flex-shrink-0">Sesi Aktif</span>
                 </div>
@@ -1565,6 +1544,78 @@
               <button type="button" onclick="saveProfileAndReturn()" class="w-full flex-1 h-11 bg-[#0d59a8] hover:bg-[#0b4a8c] active:scale-[0.98] text-white rounded-xl font-bold text-xs sm:text-sm transition shadow-sm shadow-blue-700/20 flex items-center justify-center gap-2 cursor-pointer">
                 <i data-lucide="check" class="w-4 h-4"></i>
                 <span>Simpan Perubahan</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================== SCREEN C: UBAH KATA SANDI (SUBPAGE) ==================== -->
+        <div id="settings-change-password-screen" class="hidden space-y-6 max-w-xl mx-auto">
+          <div class="flex items-center justify-between gap-3 pb-3.5 border-b border-slate-200">
+            <div class="flex items-center gap-3 min-w-0">
+              <button type="button" onclick="closeChangePasswordPage()" class="p-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 active:scale-95 text-slate-700 transition cursor-pointer flex-shrink-0" aria-label="Kembali ke Pengaturan">
+                <i data-lucide="arrow-left" class="w-5 h-5"></i>
+              </button>
+              <div class="min-w-0">
+                <h3 class="font-extrabold text-slate-900 text-lg sm:text-xl leading-tight">Ubah Kata Sandi</h3>
+                <p class="text-xs text-slate-500">Perbarui kata sandi secara berkala demi keamanan akun Anda</p>
+              </div>
+            </div>
+            <span class="text-[10px] sm:text-xs font-bold text-amber-700 bg-amber-50 px-3 py-1 rounded-full border border-amber-200 whitespace-nowrap flex-shrink-0">
+              Keamanan
+            </span>
+          </div>
+
+          <div class="bg-white p-5 sm:p-7 rounded-2xl border border-slate-200/80 shadow-sm space-y-5">
+            <div class="p-3.5 rounded-xl bg-amber-50/70 border border-amber-200/70 flex items-start gap-3">
+              <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <i data-lucide="shield-alert" class="w-4 h-4"></i>
+              </div>
+              <div class="text-[11px] sm:text-xs text-amber-900/90 leading-relaxed">
+                <p class="font-bold text-amber-900">Tips Keamanan Kata Sandi</p>
+                <p class="mt-0.5">Gunakan minimal 6 karakter kombinasi huruf &amp; angka, dan jangan bagikan kata sandi Anda kepada orang lain.</p>
+              </div>
+            </div>
+
+            <div class="space-y-4">
+              <div>
+                <label for="cfg-old-pwd" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5">Kata Sandi Lama / Saat Ini <span class="text-red-500">*</span></label>
+                <div class="relative">
+                  <input type="password" id="cfg-old-pwd" placeholder="Masukkan kata sandi saat ini" autocomplete="current-password" class="w-full h-11 px-3.5 pr-10 rounded-xl border border-slate-200 text-xs sm:text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 font-mono text-slate-800">
+                  <button type="button" onclick="togglePasswordVisibility('cfg-old-pwd', 'eye-old-pwd')" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer" aria-label="Tampilkan kata sandi lama">
+                    <i data-lucide="eye" id="eye-old-pwd" class="w-4 h-4"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label for="cfg-new-pwd" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5">Kata Sandi Baru <span class="text-red-500">*</span></label>
+                <div class="relative">
+                  <input type="password" id="cfg-new-pwd" placeholder="Minimal 6 karakter" autocomplete="new-password" class="w-full h-11 px-3.5 pr-10 rounded-xl border border-slate-200 text-xs sm:text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 font-mono text-slate-800">
+                  <button type="button" onclick="togglePasswordVisibility('cfg-new-pwd', 'eye-new-pwd')" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer" aria-label="Tampilkan kata sandi baru">
+                    <i data-lucide="eye" id="eye-new-pwd" class="w-4 h-4"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label for="cfg-confirm-pwd" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5">Konfirmasi Kata Sandi Baru <span class="text-red-500">*</span></label>
+                <div class="relative">
+                  <input type="password" id="cfg-confirm-pwd" placeholder="Ulangi kata sandi baru" autocomplete="new-password" class="w-full h-11 px-3.5 pr-10 rounded-xl border border-slate-200 text-xs sm:text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 font-mono text-slate-800">
+                  <button type="button" onclick="togglePasswordVisibility('cfg-confirm-pwd', 'eye-confirm-pwd')" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer" aria-label="Tampilkan konfirmasi kata sandi">
+                    <i data-lucide="eye" id="eye-confirm-pwd" class="w-4 h-4"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex flex-col-reverse sm:flex-row gap-3 pt-3 border-t border-slate-100">
+              <button type="button" onclick="closeChangePasswordPage()" class="w-full sm:w-36 h-11 bg-white hover:bg-slate-100 active:scale-[0.98] text-slate-700 rounded-xl font-bold text-xs sm:text-sm border border-slate-200 transition cursor-pointer">
+                Batal
+              </button>
+              <button type="button" onclick="saveNewPassword()" class="w-full flex-1 h-11 bg-amber-600 hover:bg-amber-700 active:scale-[0.98] text-white rounded-xl font-bold text-xs sm:text-sm transition shadow-sm shadow-amber-600/20 flex items-center justify-center gap-2 cursor-pointer">
+                <i data-lucide="key" class="w-4 h-4"></i>
+                <span>Simpan Kata Sandi Baru</span>
               </button>
             </div>
           </div>
@@ -2799,6 +2850,25 @@
         workshopConfig.lat = bObj.lat;
         workshopConfig.lng = bObj.lng;
         workshopConfig.radiusMeters = bObj.radiusMeters;
+        localStorage.setItem('pkl_workshop_lat', bObj.lat);
+        localStorage.setItem('pkl_workshop_lng', bObj.lng);
+        localStorage.setItem('pkl_workshop_radius', bObj.radiusMeters);
+
+        const internRadEl = document.getElementById('intern-view-radius-meters');
+        if (internRadEl) internRadEl.innerText = bObj.radiusMeters + ' meter';
+        const internAddrEl = document.getElementById('intern-branch-address-display');
+        if (internAddrEl) internAddrEl.innerText = bObj.address;
+        document.querySelectorAll('.app-branch-name').forEach(el => { el.innerText = bObj.name; });
+
+        const cfgLat = document.getElementById('cfg-workshop-lat');
+        const cfgLng = document.getElementById('cfg-workshop-lng');
+        const cfgRad = document.getElementById('cfg-workshop-radius');
+        const radDisp = document.getElementById('radius-val-display');
+        if (cfgLat) cfgLat.value = bObj.lat;
+        if (cfgLng) cfgLng.value = bObj.lng;
+        if (cfgRad) cfgRad.value = bObj.radiusMeters;
+        if (radDisp) radDisp.innerText = bObj.radiusMeters + ' meter';
+
         if (typeof updateDistanceUI === 'function') updateDistanceUI();
         if (typeof updateRadiusUI === 'function' && typeof userLocation !== 'undefined') {
           updateRadiusUI(userLocation.distance, userLocation.isInside);
@@ -3075,9 +3145,13 @@
       syncIcons.forEach(el => el.classList.add('animate-spin'));
 
       try {
-        const isProxy = targetApi.startsWith('/');
-        const res = await fetch(targetApi, {
+        // Selalu gunakan proxy /api/presensi jika diakses lewat domain web/PWA agar response JSON terbaca (bukan no-cors)
+        const isWebOrigin = window.location.protocol === 'http:' || window.location.protocol === 'https:';
+        const fetchUrl = isWebOrigin ? '/api/presensi' : targetApi;
+        const isProxy = fetchUrl.startsWith('/');
+        const res = await fetch(fetchUrl, {
           method: 'POST',
+          cache: 'no-store',
           mode: isProxy ? 'same-origin' : 'no-cors',
           headers: { 'Content-Type': isProxy ? 'application/json' : 'text/plain;charset=utf-8' },
           body: JSON.stringify({
@@ -3138,9 +3212,44 @@
               }
             }
 
-            // 1. Simpan Real Students dari Master_PKL
+            // 1. Simpan Real Students dari Master_PKL & Sinkronkan Profil Siswa PKL yang sedang login
             if (Array.isArray(json.students) && json.students.length > 0) {
               localStorage.setItem('pkl_students_list', JSON.stringify(json.students));
+
+              if (currentUserRole === 'student') {
+                const curNim = (currentUser.nim || '').toString().trim().toLowerCase();
+                const curUser = (currentUser.username || '').toString().trim().toLowerCase();
+                const curNama = (currentUser.nama || '').toString().trim().toLowerCase();
+
+                const matchedStudent = json.students.find(s => {
+                  const sNim = (s.nim || '').toString().trim().toLowerCase();
+                  const sUser = (s.username || '').toString().trim().toLowerCase();
+                  const sNama = (s.nama || '').toString().trim().toLowerCase();
+                  return (curNim && sNim === curNim) || (curUser && sUser === curUser) || (curNama && sNama === curNama);
+                });
+
+                if (matchedStudent) {
+                  currentUser.nama = matchedStudent.nama || currentUser.nama;
+                  currentUser.nim = matchedStudent.nim || currentUser.nim;
+                  currentUser.username = matchedStudent.username || currentUser.username;
+                  currentUser.instansi = matchedStudent.instansi || currentUser.instansi;
+                  currentUser.jurusan = matchedStudent.jurusan || currentUser.jurusan;
+                  if (matchedStudent.cabang) {
+                    currentUser.cabang = matchedStudent.cabang;
+                    localStorage.setItem('pkl_user_cabang', matchedStudent.cabang);
+                  }
+                  if (matchedStudent.avatar && matchedStudent.avatar !== '-' && matchedStudent.avatar.startsWith('http')) {
+                    currentUser.foto = matchedStudent.avatar;
+                    localStorage.setItem('pkl_foto_profil', matchedStudent.avatar);
+                  }
+
+                  localStorage.setItem('pkl_nama', currentUser.nama);
+                  localStorage.setItem('pkl_nim', currentUser.nim);
+                  localStorage.setItem('pkl_username', currentUser.username);
+                  localStorage.setItem('pkl_instansi', currentUser.instansi);
+                  localStorage.setItem('pkl_jurusan', currentUser.jurusan);
+                }
+              }
             }
 
             // 2. Simpan Real Attendance Logs dari Log_Presensi
@@ -3189,6 +3298,13 @@
         syncIcons.forEach(el => el.classList.remove('animate-spin'));
       }
     }
+
+    // Auto-sinkronisasi database saat aplikasi PWA dibuka kembali dari background di HP
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible' && localStorage.getItem('pkl_is_logged_in') === 'true') {
+        syncDataFromDatabase(false);
+      }
+    });
 
     // State Geolocation
     let userLocation = {
