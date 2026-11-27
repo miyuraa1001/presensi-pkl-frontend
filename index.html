@@ -4867,6 +4867,7 @@
         nim: currentUser.nim,
         nama: currentUser.nama,
         instansi: currentUser.instansi,
+        cabang: currentUser.cabang || 'Ahmad Yani',
         latitude: userLocation.lat,
         longitude: userLocation.lng,
         jarak: userLocation.distance,
@@ -4878,8 +4879,10 @@
         directGasUrl: (currentUser.apiUrl && currentUser.apiUrl.startsWith('http')) ? currentUser.apiUrl : undefined
       };
 
-      // 1. Transmisi ke Backend Vercel / Google Apps Script
+      // 1. Transmisi ke Backend Vercel / Google Apps Script (dengan verifikasi geofencing server-side)
       let backendSuccess = false;
+      let verifiedDistance = userLocation.distance;
+      let verifiedStatus = statusRadiusValue;
       const targetApi = '/api/presensi';
       try {
         const res = await fetch(targetApi, {
@@ -4890,7 +4893,16 @@
           body: JSON.stringify(payload)
         });
         if (res.ok) {
-          backendSuccess = true;
+          const resJson = await res.json().catch(() => null);
+          if (resJson && resJson.status === 'error' && (resJson.code === 'OUT_OF_RADIUS' || resJson.code === 'INVALID_COORDS')) {
+            showAppAlert(resJson.message || "Lokasi Anda berada di luar radius resmi workshop.", "Validasi Radius Ditolak", "error");
+            return;
+          }
+          if (resJson && resJson.status === 'success') {
+            backendSuccess = true;
+            if (typeof resJson.serverDistance === 'number') verifiedDistance = resJson.serverDistance;
+            if (resJson.statusRadius) verifiedStatus = resJson.statusRadius;
+          }
         }
       } catch (err) {
         console.warn("GAS / Proxy Connection Error:", err);
@@ -4905,8 +4917,8 @@
         waktu: timeShort,
         waktuFull: timeFormatted,
         tipe: activeAttendanceType,
-        jarak: userLocation.distance,
-        statusRadius: statusRadiusValue,
+        jarak: verifiedDistance,
+        statusRadius: verifiedStatus,
         address: fullAddr,
         coords: `${userLocation.lat.toFixed(6)}, ${userLocation.lng.toFixed(6)}`,
         photoUrl: "-"
