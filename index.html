@@ -5171,8 +5171,8 @@
         // 3. Inbox Menunggu Persetujuan HRD
         const pendingApprovals = inboxList.filter(a => a.status === 'Menunggu Persetujuan' || a.status === 'Pending').length;
 
-        // 4. Jumlah Cabang PKL Aktif
-        const totalBranches = typeof DAIHATSU_BRANCHES !== 'undefined' ? Object.keys(DAIHATSU_BRANCHES).length : 5;
+        // 4. Jumlah Cabang PKL Aktif (hitung cabang resmi saja, tanpa alias)
+        const totalBranches = typeof DAIHATSU_BRANCHES_DEFAULT !== 'undefined' ? Object.keys(DAIHATSU_BRANCHES_DEFAULT).length : 5;
 
         // Update Card 1: Total Siswa PKL
         const title1 = document.getElementById('stat-title-1');
