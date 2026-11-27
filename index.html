@@ -3386,9 +3386,25 @@
                 nim: String(a.nim || '').trim(),
                 nama: String(a.nama || '').trim(),
                 tanggal: normalizeSheetDate(a.tanggal),
+                status: a.status === 'Approved' ? 'Disetujui' : (a.status === 'Rejected' ? 'Ditolak' : (a.status || 'Pending')),
                 docUrl: normalizeDriveImageUrl(a.docUrl) || '-'
               }));
               localStorage.setItem('pkl_inbox_approvals', JSON.stringify(normalizedApprovals));
+              if (currentUserRole !== 'admin' && currentUser.nim) {
+                const curNimStr = String(currentUser.nim).trim();
+                const myIzinLogs = normalizedApprovals
+                  .filter(a => a.nim === curNimStr)
+                  .map(a => ({
+                    izinId: a.izinId,
+                    nim: a.nim,
+                    tanggal: a.tanggal,
+                    jenis: a.jenis || 'Izin',
+                    alasan: a.alasan || '-',
+                    docUrl: a.docUrl || '-',
+                    statusApproval: a.status || 'Pending'
+                  }));
+                localStorage.setItem('pkl_logs_izin', JSON.stringify(myIzinLogs));
+              }
             }
 
             // 4. Simpan & Terapkan Real Branch Configs (Toleransi Radius & Koordinat Cabang dari Database)
@@ -4403,7 +4419,6 @@
       if (tabId === 'pengaturan') {
         closeEditProfilePage();
         updateProfileDisplay();
-        syncDataFromDatabase(false);
       }
 
       if (tabId === 'dashboard') {
@@ -4763,32 +4778,33 @@
         deviceTimestamp: now.toISOString(),
         fotoBase64: "-",
         address: fullAddr,
-        secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026"
+        secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026",
+        directGasUrl: (currentUser.apiUrl && currentUser.apiUrl.startsWith('http')) ? currentUser.apiUrl : undefined
       };
 
       // 1. Transmisi ke Backend Vercel / Google Apps Script
       let backendSuccess = false;
-      const targetApi = currentUser.apiUrl || '/api/presensi';
-      if (targetApi && (targetApi.startsWith('http') || targetApi.startsWith('/'))) {
-        try {
-          const isProxy = targetApi.startsWith('/');
-          const res = await fetch(targetApi, {
-            method: 'POST',
-            mode: isProxy ? 'same-origin' : 'no-cors',
-            headers: { 'Content-Type': isProxy ? 'application/json' : 'text/plain;charset=utf-8' },
-            body: JSON.stringify(payload)
-          });
-          if (res.ok) {
-            backendSuccess = true;
-          }
-        } catch (err) {
-          console.warn("GAS / Proxy Connection Error:", err);
+      const targetApi = '/api/presensi';
+      try {
+        const res = await fetch(targetApi, {
+          method: 'POST',
+          mode: 'same-origin',
+          cache: 'no-store',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (res.ok) {
+          backendSuccess = true;
         }
+      } catch (err) {
+        console.warn("GAS / Proxy Connection Error:", err);
       }
 
       // 2. Simpan Transaksi ke Local Storage Offline-First
       const newLog = {
         logId: `ABS-${dateStr.replace(/-/g,'')}-${currentUser.nim}-${activeAttendanceType}`,
+        nim: String(currentUser.nim || '').trim(),
+        nama: currentUser.nama || '-',
         tanggal: dateStr,
         waktu: timeShort,
         waktuFull: timeFormatted,
@@ -4876,45 +4892,48 @@
 
       let fileBase64Data = "";
       let fileNameData = "";
+      let fileTypeData = "";
       if (fileInput.files && fileInput.files[0]) {
         const file = fileInput.files[0];
         fileNameData = file.name;
+        fileTypeData = file.type || (file.name.toLowerCase().endsWith('.pdf') ? 'application/pdf' : 'image/jpeg');
         fileBase64Data = await fileToBase64(file);
       }
 
-      // Payload JSON PRD Seksi 5.B
+      // Payload JSON PRD Seksi 5.B (kompatibel dengan kategori & jenis)
       const payload = {
         action: 'izin_sakit',
-        nim: currentUser.nim,
+        nim: String(currentUser.nim || '').trim(),
         nama: currentUser.nama,
+        kategori: jenis,
         jenis: jenis,
         tanggal: tanggal,
         alasan: alasan,
         fileBase64: fileBase64Data,
         fileName: fileNameData,
-        secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026"
+        fileType: fileTypeData,
+        secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026",
+        directGasUrl: (currentUser.apiUrl && currentUser.apiUrl.startsWith('http')) ? currentUser.apiUrl : undefined
       };
 
       // Transmisi ke GAS / Vercel Proxy
-      const targetApi = currentUser.apiUrl || '/api/presensi';
-      if (targetApi && (targetApi.startsWith('http') || targetApi.startsWith('/'))) {
-        try {
-          const isProxy = targetApi.startsWith('/');
-          await fetch(targetApi, {
-            method: 'POST',
-            mode: isProxy ? 'same-origin' : 'no-cors',
-            headers: { 'Content-Type': isProxy ? 'application/json' : 'text/plain;charset=utf-8' },
-            body: JSON.stringify(payload)
-          });
-        } catch (err) {
-          console.warn("GAS / Proxy Izin Sync Error:", err);
-        }
+      try {
+        await fetch('/api/presensi', {
+          method: 'POST',
+          mode: 'same-origin',
+          cache: 'no-store',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      } catch (err) {
+        console.warn("GAS / Proxy Izin Sync Error:", err);
       }
 
       // Simpan ke Local Storage
       const izinLogs = getIzinLogs();
       izinLogs.unshift({
         izinId: `IZN-${tanggal.replace(/-/g,'')}-${currentUser.nim}`,
+        nim: String(currentUser.nim || '').trim(),
         tanggal: tanggal,
         jenis: jenis,
         alasan: alasan,
@@ -5917,27 +5936,33 @@
           localStorage.setItem('pkl_foto_profil', dataUrl);
           updateProfileDisplay();
           
-          // Sinkronisasi otomatis foto profil ke Google Drive (jika URL Apps Script terpasang)
-          const targetApi = currentUser.apiUrl || '/api/presensi';
-          if (targetApi && (targetApi.startsWith('http') || targetApi.startsWith('/'))) {
-            const isProxy = targetApi.startsWith('/');
-            fetch(targetApi, {
-              method: 'POST',
-              mode: isProxy ? 'same-origin' : 'no-cors',
-              headers: { 'Content-Type': isProxy ? 'application/json' : 'text/plain;charset=utf-8' },
-              body: JSON.stringify({
-                action: 'update_profil',
-                nim: currentUser.nim,
-                nama: currentUser.nama,
-                instansi: currentUser.instansi,
-                jurusan: currentUser.jurusan,
-                fotoBase64: dataUrl,
-                secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026"
-              })
-            }).catch(e => console.warn('GAS avatar sync:', e));
-          }
+          // Sinkronisasi otomatis foto profil ke Google Drive melalui Vercel Proxy
+          const isAdm = currentUserRole === 'admin';
+          fetch('/api/presensi', {
+            method: 'POST',
+            mode: 'same-origin',
+            cache: 'no-store',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'update_profil',
+              role: isAdm ? 'admin' : 'student',
+              statusRole: isAdm ? 'Admin' : 'anak PKL',
+              nim: String(currentUser.nim || '').trim(),
+              nama: currentUser.nama,
+              username: currentUser.username || currentUser.nama,
+              instansi: currentUser.instansi,
+              jurusan: currentUser.jurusan,
+              fotoBase64: dataUrl,
+              secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026",
+              directGasUrl: (currentUser.apiUrl && currentUser.apiUrl.startsWith('http')) ? currentUser.apiUrl : undefined
+            })
+          }).catch(e => console.warn('GAS avatar sync:', e));
 
-          showAppAlert("Foto profil peserta PKL berhasil diperbarui!", "Profil Diperbarui", "success");
+          showAppAlert(
+            isAdm ? "Foto profil Admin berhasil diperbarui!" : "Foto profil peserta PKL berhasil diperbarui!",
+            "Profil Diperbarui",
+            "success"
+          );
         };
         img.src = e.target.result;
       };
@@ -6186,33 +6211,31 @@
       checkGPS(false);
 
       // 3. Sinkronkan ke cloud backend agar semua anak PKL otomatis menerima radius terbaru
-      const targetApi = currentUser.apiUrl || '/api/presensi';
-      if (targetApi) {
-        try {
-          const isProxy = targetApi.startsWith('/');
-          fetch(targetApi, {
-            method: 'POST',
-            mode: isProxy ? 'same-origin' : 'no-cors',
-            headers: { 'Content-Type': isProxy ? 'application/json' : 'text/plain;charset=utf-8' },
-            body: JSON.stringify({
-              action: 'save_branch_config',
-              branchKey: branchKey,
-              lat: wLat,
-              lng: wLng,
-              radius: wRad,
-              updatedBy: currentUser.nama || 'HRD',
-              secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026"
-            })
-          }).then(async res => {
-            if (isProxy) {
-              const data = await res.json();
-              if (data && data.status === 'success') {
-                showAppToast("Cloud Database Tersinkron", `Toleransi radius ${wRad}m cabang ${branchKey} berhasil tersimpan ke database & tersinkron ke akun siswa.`, "success");
-              }
+      try {
+        fetch('/api/presensi', {
+          method: 'POST',
+          mode: 'same-origin',
+          cache: 'no-store',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'save_branch_config',
+            branchKey: branchKey,
+            lat: wLat,
+            lng: wLng,
+            radius: wRad,
+            updatedBy: currentUser.nama || 'HRD',
+            secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026",
+            directGasUrl: (currentUser.apiUrl && currentUser.apiUrl.startsWith('http')) ? currentUser.apiUrl : undefined
+          })
+        }).then(async res => {
+          if (res.ok) {
+            const data = await res.json();
+            if (data && data.status === 'success') {
+              showAppToast("Cloud Database Tersinkron", `Toleransi radius ${wRad}m cabang ${branchKey} berhasil tersimpan ke database & tersinkron ke akun siswa.`, "success");
             }
-          }).catch(err => console.warn('Sync geofence error:', err));
-        } catch(e) {}
-      }
+          }
+        }).catch(err => console.warn('Sync geofence error:', err));
+      } catch(e) {}
 
       showAppAlert(`Pengaturan Geofencing Berhasil Disimpan!\n\n• Cabang: ${branchKey}\n• Latitude: ${wLat}\n• Longitude: ${wLng}\n• Toleransi Radius: ${wRad} meter\n\nSettingan ini otomatis tersimpan di database Astra Daihatsu dan tersinkronisasi sebagai acuan validasi presensi bagi seluruh anak PKL di cabang ini.`, "Pengaturan Tersimpan", "success");
     }
@@ -6689,10 +6712,11 @@
           mobileCards.innerHTML = `<div class="p-6 text-center text-slate-400 text-xs">Belum ada siswa PKL terdaftar.</div>`;
         } else {
           mobileCards.innerHTML = students.map(s => {
-            const sLogsToday = logs.filter(l => l.tanggal === todayISO && l.nim === s.nim);
+            const sNim = String(s.nim || '').trim();
+            const sLogsToday = logs.filter(l => l.tanggal === todayISO && String(l.nim || '').trim() === sNim);
             const hasIn = sLogsToday.find(l => l.tipe === 'IN');
             const hasOut = sLogsToday.find(l => l.tipe === 'OUT');
-            const isPermit = approvals.find(a => a.tanggal === todayISO && a.nim === s.nim && a.status === 'Disetujui');
+            const isPermit = approvals.find(a => a.tanggal === todayISO && String(a.nim || '').trim() === sNim && a.status === 'Disetujui');
 
             let statusBadge = '';
             if (hasIn && hasOut) {
@@ -6781,10 +6805,11 @@
       }
 
       tbody.innerHTML = students.map(s => {
-        const sLogsToday = logs.filter(l => l.tanggal === todayISO && l.nim === s.nim);
+        const sNim = String(s.nim || '').trim();
+        const sLogsToday = logs.filter(l => l.tanggal === todayISO && String(l.nim || '').trim() === sNim);
         const hasIn = sLogsToday.find(l => l.tipe === 'IN');
         const hasOut = sLogsToday.find(l => l.tipe === 'OUT');
-        const isPermit = approvals.find(a => a.tanggal === todayISO && a.nim === s.nim && a.status === 'Disetujui');
+        const isPermit = approvals.find(a => a.tanggal === todayISO && String(a.nim || '').trim() === sNim && a.status === 'Disetujui');
 
         let statusBadge = '';
         if (hasIn && hasOut) {
@@ -7026,24 +7051,22 @@
       item.approvedAt = new Date().toLocaleDateString('id-ID');
       localStorage.setItem('pkl_inbox_approvals', JSON.stringify(approvals));
 
-      // Kirim sinkronisasi ke backend Google Apps Script / Vercel proxy
-      const targetApi = currentUser.apiUrl || '/api/presensi';
-      if (targetApi && (targetApi.startsWith('http') || targetApi.startsWith('/'))) {
-        const isProxy = targetApi.startsWith('/');
-        fetch(targetApi, {
-          method: 'POST',
-          mode: isProxy ? 'same-origin' : 'no-cors',
-          headers: { 'Content-Type': isProxy ? 'application/json' : 'text/plain;charset=utf-8' },
-          body: JSON.stringify({
-            action: 'approve_izin',
-            izinId: item.izinId,
-            nim: item.nim,
-            status: newStatus,
-            approvedBy: currentUser.nama,
-            secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026"
-          })
-        }).catch(err => console.warn('GAS approve sync error:', err));
-      }
+      // Kirim sinkronisasi ke backend Google Apps Script via Vercel proxy
+      fetch('/api/presensi', {
+        method: 'POST',
+        mode: 'same-origin',
+        cache: 'no-store',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'approve_izin',
+          izinId: item.izinId,
+          nim: String(item.nim || '').trim(),
+          status: newStatus,
+          approvedBy: currentUser.nama,
+          secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026",
+          directGasUrl: (currentUser.apiUrl && currentUser.apiUrl.startsWith('http')) ? currentUser.apiUrl : undefined
+        })
+      }).catch(err => console.warn('GAS approve sync error:', err));
 
       renderInboxApprovals();
       renderRekapTable();
@@ -7394,29 +7417,27 @@
       }
 
       try {
-        // Kirim sinkronisasi ke backend (Vercel Proxy / Google Apps Script)
-        const targetApi = currentUser.apiUrl || '/api/presensi';
-        if (targetApi && (targetApi.startsWith('http') || targetApi.startsWith('/'))) {
-          const isProxy = targetApi.startsWith('/');
-          fetch(targetApi, {
-            method: 'POST',
-            mode: isProxy ? 'same-origin' : 'no-cors',
-            headers: { 'Content-Type': isProxy ? 'application/json' : 'text/plain;charset=utf-8' },
-            body: JSON.stringify({
-              action: 'register_siswa',
-              nim: nim,
-              nama: nama,
-              username: username,
-              cabang: cabang,
-              instansi: instansi,
-              jurusan: jurusan,
-              phone: phone,
-              password: pwd,
-              fotoBase64: avatarBase64,
-              secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026"
-            })
-          }).catch(err => console.warn('GAS register sync error:', err));
-        }
+        // Kirim sinkronisasi ke backend via Vercel Proxy
+        fetch('/api/presensi', {
+          method: 'POST',
+          mode: 'same-origin',
+          cache: 'no-store',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'register_siswa',
+            nim: nim,
+            nama: nama,
+            username: username,
+            cabang: cabang,
+            instansi: instansi,
+            jurusan: jurusan,
+            phone: phone,
+            password: pwd,
+            fotoBase64: avatarBase64,
+            secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026",
+            directGasUrl: (currentUser.apiUrl && currentUser.apiUrl.startsWith('http')) ? currentUser.apiUrl : undefined
+          })
+        }).catch(err => console.warn('GAS register sync error:', err));
 
         // Simpan ke local storage
         currentUser.nama = nama;
@@ -7595,13 +7616,14 @@
       const notes = document.getElementById('manual-att-notes').value.trim();
 
       const students = getStudentsList();
-      const st = students.find(s => s.nim === nim) || { nama: 'Siswa PKL' };
+      const st = students.find(s => String(s.nim || '').trim() === String(nim || '').trim()) || { nama: 'Siswa PKL', instansi: '-' };
 
       const logs = getAttendanceLogs();
       const newLog = {
         logId: 'MANUAL_' + Date.now(),
-        nim: nim,
+        nim: String(nim || '').trim(),
         nama: st.nama,
+        instansi: st.instansi || '-',
         tanggal: tanggal,
         waktu: waktu,
         tipe: tipe,
@@ -7616,26 +7638,25 @@
       logs.push(newLog);
       localStorage.setItem('pkl_logs_presensi', JSON.stringify(logs));
 
-      // Kirim sinkronisasi ke backend jika terhubung
-      const targetApi = currentUser.apiUrl || '/api/presensi';
-      if (targetApi && (targetApi.startsWith('http') || targetApi.startsWith('/'))) {
-        const isProxy = targetApi.startsWith('/');
-        fetch(targetApi, {
-          method: 'POST',
-          mode: isProxy ? 'same-origin' : 'no-cors',
-          headers: { 'Content-Type': isProxy ? 'application/json' : 'text/plain;charset=utf-8' },
-          body: JSON.stringify({
-            action: 'presensi_manual',
-            nim: nim,
-            nama: st.nama,
-            tipe: tipe,
-            waktu: waktu,
-            tanggal: tanggal,
-            catatan: notes,
-            secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026"
-          })
-        }).catch(err => console.warn('GAS manual att sync error:', err));
-      }
+      // Kirim sinkronisasi ke backend via Vercel Proxy
+      fetch('/api/presensi', {
+        method: 'POST',
+        mode: 'same-origin',
+        cache: 'no-store',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'presensi_manual',
+          nim: String(nim || '').trim(),
+          nama: st.nama,
+          instansi: st.instansi || '-',
+          tipe: tipe,
+          waktu: waktu,
+          tanggal: tanggal,
+          catatan: notes,
+          secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026",
+          directGasUrl: (currentUser.apiUrl && currentUser.apiUrl.startsWith('http')) ? currentUser.apiUrl : undefined
+        })
+      }).catch(err => console.warn('GAS manual att sync error:', err));
 
       closeManualAttendanceModal();
       renderDashboardStats();
