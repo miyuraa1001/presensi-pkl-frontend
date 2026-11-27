@@ -3335,6 +3335,9 @@
           headers: { 'Content-Type': isProxy ? 'application/json' : 'text/plain;charset=utf-8' },
           body: JSON.stringify({
             action: 'get_admin_data',
+            scope: currentUserRole === 'admin' ? 'admin' : 'student',
+            role: currentUserRole,
+            nim: currentUserRole === 'admin' ? undefined : String(currentUser.nim || '').trim(),
             secretToken: undefined,
             directGasUrl: (currentUser.apiUrl && currentUser.apiUrl.startsWith('http')) ? currentUser.apiUrl : undefined
           })
@@ -3343,69 +3346,74 @@
         if (isProxy) {
           const json = await res.json();
           if (json && json.status === 'success') {
-            // 0. Simpan & Sinkronkan Akun Admin dari Sheet "Admin"
-            if (Array.isArray(json.admins) && json.admins.length > 0) {
-              localStorage.setItem('pkl_admins_list', JSON.stringify(json.admins));
+            // 0. Simpan & Sinkronkan Akun Admin dari Sheet "Admin" (HANYA jika role Admin)
+            if (currentUserRole === 'admin' && Array.isArray(json.admins) && json.admins.length > 0) {
+              const safeAdmins = json.admins.map(({ password, ...rest }) => rest);
+              localStorage.setItem('pkl_admins_list', JSON.stringify(safeAdmins));
 
-              if (currentUserRole === 'admin') {
-                const curNip = (currentUser.nim || '').toString().trim().toLowerCase();
-                const curUser = (currentUser.username || '').toString().trim().toLowerCase();
-                const curNama = (currentUser.nama || '').toString().trim().toLowerCase();
+              const curNip = (currentUser.nim || '').toString().trim().toLowerCase();
+              const curUser = (currentUser.username || '').toString().trim().toLowerCase();
+              const curNama = (currentUser.nama || '').toString().trim().toLowerCase();
 
-                const matchedAdmin = json.admins.find(a => {
-                  const aNip = (a.nip || '').toString().trim().toLowerCase();
-                  const aUser = (a.username || '').toString().trim().toLowerCase();
-                  const aNama = (a.nama || '').toString().trim().toLowerCase();
-                  return (curNip && aNip === curNip) || (curUser && aUser === curUser) || (curNama && aNama === curNama);
-                }) || json.admins[0];
+              const matchedAdmin = safeAdmins.find(a => {
+                const aNip = (a.nip || '').toString().trim().toLowerCase();
+                const aUser = (a.username || '').toString().trim().toLowerCase();
+                const aNama = (a.nama || '').toString().trim().toLowerCase();
+                return (curNip && aNip === curNip) || (curUser && aUser === curUser) || (curNama && aNama === curNama);
+              }) || safeAdmins[0];
 
-                if (matchedAdmin) {
-                  currentUser.nama = matchedAdmin.nama || currentUser.nama;
-                  currentUser.nim = matchedAdmin.nip || currentUser.nim;
-                  currentUser.username = matchedAdmin.username || currentUser.username;
-                  currentUser.jabatan = matchedAdmin.jabatan || currentUser.jabatan;
-                  currentUser.jurusan = matchedAdmin.jabatan || currentUser.jurusan;
-                  currentUser.divisi = matchedAdmin.divisi || currentUser.divisi;
-                  currentUser.instansi = matchedAdmin.divisi ? ('PT. Astra International Tbk - Daihatsu (' + matchedAdmin.divisi + ')') : 'PT. Astra International Tbk - Daihatsu';
-                  currentUser.phone = (matchedAdmin.phone && matchedAdmin.phone !== '-') ? matchedAdmin.phone : currentUser.phone;
-                  currentUser.email = (matchedAdmin.email && matchedAdmin.email !== '-') ? matchedAdmin.email : currentUser.email;
-                  currentUser.roleAkses = matchedAdmin.roleAkses || currentUser.roleAkses;
-                  if (matchedAdmin.cabang && !matchedAdmin.cabang.toLowerCase().includes('semua')) {
-                    currentUser.cabang = matchedAdmin.cabang;
-                  }
-                  if (matchedAdmin.avatar && matchedAdmin.avatar !== '-' && matchedAdmin.avatar.startsWith('http')) {
-                    currentUser.foto = matchedAdmin.avatar;
-                    localStorage.setItem('pkl_foto_profil', matchedAdmin.avatar);
-                  }
-
-                  localStorage.setItem('pkl_admin_nama', currentUser.nama);
-                  localStorage.setItem('pkl_nama', currentUser.nama);
-                  localStorage.setItem('pkl_nim', currentUser.nim);
-                  localStorage.setItem('pkl_username', currentUser.username);
-                  localStorage.setItem('pkl_admin_jabatan', currentUser.jabatan);
-                  localStorage.setItem('pkl_admin_divisi', currentUser.divisi);
-                  localStorage.setItem('pkl_admin_phone', currentUser.phone);
-                  localStorage.setItem('pkl_admin_email', currentUser.email);
-                  localStorage.setItem('pkl_admin_role_akses', currentUser.roleAkses);
+              if (matchedAdmin) {
+                currentUser.nama = matchedAdmin.nama || currentUser.nama;
+                currentUser.nim = matchedAdmin.nip || currentUser.nim;
+                currentUser.username = matchedAdmin.username || currentUser.username;
+                currentUser.jabatan = matchedAdmin.jabatan || currentUser.jabatan;
+                currentUser.jurusan = matchedAdmin.jabatan || currentUser.jurusan;
+                currentUser.divisi = matchedAdmin.divisi || currentUser.divisi;
+                currentUser.instansi = matchedAdmin.divisi ? ('PT. Astra International Tbk - Daihatsu (' + matchedAdmin.divisi + ')') : 'PT. Astra International Tbk - Daihatsu';
+                currentUser.phone = (matchedAdmin.phone && matchedAdmin.phone !== '-') ? matchedAdmin.phone : currentUser.phone;
+                currentUser.email = (matchedAdmin.email && matchedAdmin.email !== '-') ? matchedAdmin.email : currentUser.email;
+                currentUser.roleAkses = matchedAdmin.roleAkses || currentUser.roleAkses;
+                if (matchedAdmin.cabang && !matchedAdmin.cabang.toLowerCase().includes('semua')) {
+                  currentUser.cabang = matchedAdmin.cabang;
                 }
+                if (matchedAdmin.avatar && matchedAdmin.avatar !== '-' && matchedAdmin.avatar.startsWith('http')) {
+                  currentUser.foto = normalizeDriveImageUrl(matchedAdmin.avatar);
+                  localStorage.setItem('pkl_foto_profil', currentUser.foto);
+                }
+
+                localStorage.setItem('pkl_admin_nama', currentUser.nama);
+                localStorage.setItem('pkl_nama', currentUser.nama);
+                localStorage.setItem('pkl_nim', currentUser.nim);
+                localStorage.setItem('pkl_username', currentUser.username);
+                localStorage.setItem('pkl_admin_jabatan', currentUser.jabatan);
+                localStorage.setItem('pkl_admin_divisi', currentUser.divisi);
+                localStorage.setItem('pkl_admin_phone', currentUser.phone);
+                localStorage.setItem('pkl_admin_email', currentUser.email);
+                localStorage.setItem('pkl_admin_role_akses', currentUser.roleAkses);
               }
+            } else if (currentUserRole !== 'admin') {
+              localStorage.removeItem('pkl_admins_list');
             }
 
-            // 1. Simpan Real Students dari Master_PKL & Sinkronkan Profil Siswa PKL yang sedang login
+            // 1. Simpan Real Students dari Master_PKL (SELALU buang field password; batasi ke NIM sendiri jika siswa)
             if (Array.isArray(json.students) && json.students.length > 0) {
-              localStorage.setItem('pkl_students_list', JSON.stringify(json.students));
+              const sanitizedStudents = json.students.map(({ password, ...rest }) => rest);
 
-              if (currentUserRole === 'student') {
+              if (currentUserRole === 'admin') {
+                localStorage.setItem('pkl_students_list', JSON.stringify(sanitizedStudents));
+              } else {
                 const curNim = (currentUser.nim || '').toString().trim().toLowerCase();
                 const curUser = (currentUser.username || '').toString().trim().toLowerCase();
                 const curNama = (currentUser.nama || '').toString().trim().toLowerCase();
 
-                const matchedStudent = json.students.find(s => {
+                const matchedStudent = sanitizedStudents.find(s => {
                   const sNim = (s.nim || '').toString().trim().toLowerCase();
                   const sUser = (s.username || '').toString().trim().toLowerCase();
                   const sNama = (s.nama || '').toString().trim().toLowerCase();
                   return (curNim && sNim === curNim) || (curUser && sUser === curUser) || (curNama && sNama === curNama);
                 });
+
+                localStorage.setItem('pkl_students_list', JSON.stringify(matchedStudent ? [matchedStudent] : []));
 
                 if (matchedStudent) {
                   currentUser.nama = matchedStudent.nama || currentUser.nama;
@@ -3418,8 +3426,8 @@
                     localStorage.setItem('pkl_user_cabang', matchedStudent.cabang);
                   }
                   if (matchedStudent.avatar && matchedStudent.avatar !== '-' && matchedStudent.avatar.startsWith('http')) {
-                    currentUser.foto = matchedStudent.avatar;
-                    localStorage.setItem('pkl_foto_profil', matchedStudent.avatar);
+                    currentUser.foto = normalizeDriveImageUrl(matchedStudent.avatar);
+                    localStorage.setItem('pkl_foto_profil', currentUser.foto);
                   }
 
                   localStorage.setItem('pkl_nama', currentUser.nama);
