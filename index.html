@@ -7862,6 +7862,293 @@
       }
       window.syncAllCustomDropdowns = upgradeAllSelects;
     })();
+
+    // =========================================================================
+    // GLOBAL CUSTOM DATE & TIME PICKER (PENGGANTI KALENDER/JAM BAWAAN OS/HP)
+    // =========================================================================
+    (function initGlobalCustomDateTimePickers() {
+      const MONTHS_ID = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+      const MONTHS_SHORT_ID = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+      const DAYS_ID = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+      const DAYS_SHORT_ID = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
+
+      let dtPortal = null;
+      let activeInput = null;
+      let viewYear = new Date().getFullYear();
+      let viewMonth = new Date().getMonth();
+      let tempDateISO = '';
+      let tempHour = '08';
+      let tempMin = '00';
+
+      function parseISO(str) {
+        const m = String(str || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+        if (m) return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+        return new Date();
+      }
+
+      function toISO(y, m, d) {
+        return `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+      }
+
+      function formatIndoDateFull(iso) {
+        if (!iso) return 'Pilih tanggal...';
+        const d = parseISO(iso);
+        if (isNaN(d.getTime())) return iso;
+        return `${DAYS_ID[d.getDay()]}, ${d.getDate()} ${MONTHS_ID[d.getMonth()]} ${d.getFullYear()}`;
+      }
+
+      function syncDateTimeTrigger(inputEl) {
+        if (!inputEl || !inputEl._dtTrigger) return;
+        const lbl = inputEl._dtTrigger.querySelector('.custom-dt-label');
+        if (!lbl) return;
+        if (inputEl._dtKind === 'date') {
+          lbl.textContent = inputEl.value ? formatIndoDateFull(inputEl.value) : 'Pilih tanggal...';
+        } else {
+          lbl.textContent = inputEl.value ? `${inputEl.value} WIB` : 'Pilih waktu...';
+        }
+      }
+
+      function ensureDtPortal() {
+        if (dtPortal) return dtPortal;
+        dtPortal = document.createElement('div');
+        dtPortal.id = 'app-custom-datetime-portal';
+        dtPortal.className = 'fixed inset-0 z-[9999] hidden flex items-end sm:items-center justify-center p-0 sm:p-4';
+        dtPortal.innerHTML = `
+          <div id="app-dt-backdrop" class="fixed inset-0 bg-slate-900/50 backdrop-blur-[2px]"></div>
+          <div id="app-dt-card" class="relative z-10 w-full sm:max-w-sm bg-white rounded-t-3xl sm:rounded-3xl border border-slate-200/90 shadow-2xl overflow-hidden dd-sheet-anim sm:dd-popover-anim pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] sm:pb-0"></div>
+        `;
+        document.body.appendChild(dtPortal);
+        dtPortal.querySelector('#app-dt-backdrop').addEventListener('click', closeDtPicker);
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && activeInput) closeDtPicker();
+        });
+        return dtPortal;
+      }
+
+      function closeDtPicker() {
+        if (dtPortal) dtPortal.classList.add('hidden');
+        activeInput = null;
+      }
+
+      function renderCalendarCard() {
+        const card = dtPortal.querySelector('#app-dt-card');
+        const selDate = parseISO(tempDateISO);
+        const now = new Date();
+        const todayISO = toISO(now.getFullYear(), now.getMonth(), now.getDate());
+        const firstDay = new Date(viewYear, viewMonth, 1).getDay();
+        const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+
+        let cellsHtml = '';
+        for (let i = 0; i < firstDay; i++) {
+          cellsHtml += `<div class="h-9"></div>`;
+        }
+        for (let day = 1; day <= daysInMonth; day++) {
+          const iso = toISO(viewYear, viewMonth, day);
+          const isSelected = iso === tempDateISO;
+          const isToday = iso === todayISO;
+          const cls = isSelected
+            ? 'h-9 w-9 mx-auto rounded-xl bg-blue-600 text-white font-extrabold text-xs shadow-md shadow-blue-600/30 flex items-center justify-center cursor-pointer transition'
+            : (isToday
+                ? 'h-9 w-9 mx-auto rounded-xl bg-blue-50 text-blue-700 border border-blue-300 font-extrabold text-xs flex items-center justify-center hover:bg-blue-100 cursor-pointer transition'
+                : 'h-9 w-9 mx-auto rounded-xl text-slate-700 font-semibold text-xs flex items-center justify-center hover:bg-slate-100 active:bg-slate-200 cursor-pointer transition');
+          cellsHtml += `<button type="button" data-iso="${iso}" class="dt-day-btn ${cls}">${day}</button>`;
+        }
+
+        card.innerHTML = `
+          <div class="bg-gradient-to-r from-[#08132b] via-[#112550] to-[#1d4ed8] px-5 pt-4 pb-4 text-white">
+            <div class="w-10 h-1 rounded-full bg-white/25 mx-auto mb-3 sm:hidden"></div>
+            <p class="text-[10px] font-bold uppercase tracking-wider text-cyan-300">Pilih Tanggal</p>
+            <h4 class="text-lg font-black tracking-tight mt-0.5">${DAYS_ID[selDate.getDay()]}, ${selDate.getDate()} ${MONTHS_SHORT_ID[selDate.getMonth()]} ${selDate.getFullYear()}</h4>
+          </div>
+          <div class="p-4 space-y-3">
+            <div class="flex items-center justify-between">
+              <button type="button" id="dt-prev-month" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center transition cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+              </button>
+              <span class="text-sm font-extrabold text-slate-900">${MONTHS_ID[viewMonth]} ${viewYear}</span>
+              <button type="button" id="dt-next-month" class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center transition cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+              </button>
+            </div>
+            <div class="grid grid-cols-7 gap-1 text-center text-[10px] font-bold text-slate-400 uppercase">
+              ${DAYS_SHORT_ID.map(d => `<div class="py-1">${d}</div>`).join('')}
+            </div>
+            <div class="grid grid-cols-7 gap-1">
+              ${cellsHtml}
+            </div>
+            <div class="flex items-center justify-between gap-2 pt-2 border-t border-slate-100">
+              <button type="button" id="dt-today-btn" class="px-3 h-10 rounded-xl text-xs font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 transition cursor-pointer">Hari Ini</button>
+              <div class="flex items-center gap-2">
+                <button type="button" id="dt-cancel-btn" class="px-3.5 h-10 rounded-xl text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition cursor-pointer">Batal</button>
+                <button type="button" id="dt-ok-btn" class="px-5 h-10 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-sm shadow-blue-600/25 transition cursor-pointer">Pilih</button>
+              </div>
+            </div>
+          </div>
+        `;
+
+        card.querySelector('#dt-prev-month').addEventListener('click', () => {
+          viewMonth--;
+          if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+          renderCalendarCard();
+        });
+        card.querySelector('#dt-next-month').addEventListener('click', () => {
+          viewMonth++;
+          if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+          renderCalendarCard();
+        });
+        card.querySelectorAll('.dt-day-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            tempDateISO = btn.dataset.iso;
+            renderCalendarCard();
+          });
+        });
+        card.querySelector('#dt-today-btn').addEventListener('click', () => {
+          const t = new Date();
+          viewYear = t.getFullYear();
+          viewMonth = t.getMonth();
+          tempDateISO = toISO(viewYear, viewMonth, t.getDate());
+          renderCalendarCard();
+        });
+        card.querySelector('#dt-cancel-btn').addEventListener('click', closeDtPicker);
+        card.querySelector('#dt-ok-btn').addEventListener('click', () => {
+          if (activeInput) {
+            activeInput.value = tempDateISO;
+            syncDateTimeTrigger(activeInput);
+            activeInput.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+          closeDtPicker();
+        });
+      }
+
+      function renderTimeCard() {
+        const card = dtPortal.querySelector('#app-dt-card');
+        const hours = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, '0'));
+        const mins = ['00','05','10','15','20','25','30','35','40','45','50','55'];
+
+        card.innerHTML = `
+          <div class="bg-gradient-to-r from-[#08132b] via-[#112550] to-[#1d4ed8] px-5 pt-4 pb-4 text-white">
+            <div class="w-10 h-1 rounded-full bg-white/25 mx-auto mb-3 sm:hidden"></div>
+            <p class="text-[10px] font-bold uppercase tracking-wider text-cyan-300">Pilih Waktu Presensi</p>
+            <h4 class="text-2xl font-black font-mono tracking-tight mt-0.5">${tempHour}:${tempMin} <span class="text-xs font-sans font-semibold text-blue-200">WIB</span></h4>
+          </div>
+          <div class="p-4 space-y-3">
+            <div class="grid grid-cols-4 gap-1.5">
+              ${['07:30','08:00','16:00','17:00'].map(p => `<button type="button" data-preset="${p}" class="dt-preset-btn py-1.5 rounded-lg text-[11px] font-bold bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200/70 cursor-pointer transition">${p}</button>`).join('')}
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <p class="text-[10px] font-bold text-slate-400 uppercase mb-1.5 text-center">Jam</p>
+                <div class="grid grid-cols-4 gap-1 max-h-40 overflow-y-auto p-1 bg-slate-50 rounded-xl border border-slate-100">
+                  ${hours.map(h => `<button type="button" data-h="${h}" class="dt-h-btn py-1.5 rounded-lg text-xs font-mono font-bold cursor-pointer transition ${h === tempHour ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-700 hover:bg-white'}">${h}</button>`).join('')}
+                </div>
+              </div>
+              <div>
+                <p class="text-[10px] font-bold text-slate-400 uppercase mb-1.5 text-center">Menit</p>
+                <div class="grid grid-cols-3 gap-1 max-h-40 overflow-y-auto p-1 bg-slate-50 rounded-xl border border-slate-100">
+                  ${mins.map(m => `<button type="button" data-m="${m}" class="dt-m-btn py-1.5 rounded-lg text-xs font-mono font-bold cursor-pointer transition ${m === tempMin ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-700 hover:bg-white'}">${m}</button>`).join('')}
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+              <button type="button" id="dt-cancel-btn" class="px-4 h-10 rounded-xl text-xs font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition cursor-pointer">Batal</button>
+              <button type="button" id="dt-ok-btn" class="px-5 h-10 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-sm shadow-blue-600/25 transition cursor-pointer">Simpan Waktu</button>
+            </div>
+          </div>
+        `;
+
+        card.querySelectorAll('.dt-preset-btn').forEach(b => b.addEventListener('click', () => {
+          const [h, m] = b.dataset.preset.split(':');
+          tempHour = h; tempMin = m;
+          renderTimeCard();
+        }));
+        card.querySelectorAll('.dt-h-btn').forEach(b => b.addEventListener('click', () => {
+          tempHour = b.dataset.h;
+          renderTimeCard();
+        }));
+        card.querySelectorAll('.dt-m-btn').forEach(b => b.addEventListener('click', () => {
+          tempMin = b.dataset.m;
+          renderTimeCard();
+        }));
+        card.querySelector('#dt-cancel-btn').addEventListener('click', closeDtPicker);
+        card.querySelector('#dt-ok-btn').addEventListener('click', () => {
+          if (activeInput) {
+            activeInput.value = `${tempHour}:${tempMin}`;
+            syncDateTimeTrigger(activeInput);
+            activeInput.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+          closeDtPicker();
+        });
+      }
+
+      function openDtPicker(inputEl) {
+        ensureDtPortal();
+        activeInput = inputEl;
+        if (inputEl._dtKind === 'date') {
+          const d = parseISO(inputEl.value);
+          viewYear = d.getFullYear();
+          viewMonth = d.getMonth();
+          tempDateISO = toISO(viewYear, viewMonth, d.getDate());
+          renderCalendarCard();
+        } else {
+          const parts = (inputEl.value || '08:00').split(':');
+          tempHour = String(parts[0] || '08').padStart(2, '0');
+          tempMin = String(parts[1] || '00').padStart(2, '0');
+          renderTimeCard();
+        }
+        dtPortal.classList.remove('hidden');
+      }
+
+      function upgradeDateTimeInput(inputEl) {
+        if (!inputEl || inputEl.dataset.customDt === 'true') return;
+        const kind = inputEl.getAttribute('type');
+        if (kind !== 'date' && kind !== 'time') return;
+        inputEl.dataset.customDt = 'true';
+        inputEl._dtKind = kind;
+
+        inputEl.classList.add('sr-only');
+        inputEl.setAttribute('tabindex', '-1');
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'w-full h-11 px-3.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-xs font-bold text-slate-800 shadow-2xs transition flex items-center justify-between gap-2 text-left cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500';
+        const iconSvg = kind === 'date'
+          ? '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-blue-600 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>'
+          : '<svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-blue-600 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
+        btn.innerHTML = `<span class="custom-dt-label truncate flex-1"></span>${iconSvg}`;
+
+        inputEl.parentNode.insertBefore(btn, inputEl.nextSibling);
+        inputEl._dtTrigger = btn;
+
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          openDtPicker(inputEl);
+        });
+        inputEl.addEventListener('change', () => syncDateTimeTrigger(inputEl));
+        syncDateTimeTrigger(inputEl);
+      }
+
+      const inpValDesc = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value');
+      if (inpValDesc && inpValDesc.set) {
+        Object.defineProperty(HTMLInputElement.prototype, 'value', {
+          get() { return inpValDesc.get.call(this); },
+          set(v) {
+            inpValDesc.set.call(this, v);
+            if (this._dtTrigger) syncDateTimeTrigger(this);
+          }
+        });
+      }
+
+      function upgradeAllDateTime() {
+        document.querySelectorAll('input[type="date"], input[type="time"]').forEach(upgradeDateTimeInput);
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', upgradeAllDateTime);
+      } else {
+        upgradeAllDateTime();
+      }
+    })();
   </script>
 </body>
 </html>
