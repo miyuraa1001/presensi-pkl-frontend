@@ -824,7 +824,7 @@
                   <input type="radio" name="jenis_izin" value="Sakit" checked class="peer sr-only" onchange="updateFormIzinType()">
                   <div class="p-3 rounded-xl border-2 border-slate-200 peer-checked:border-red-500 peer-checked:bg-red-50/50 flex items-center justify-center gap-1.5 font-bold text-xs text-slate-700 peer-checked:text-red-700 transition">
                     <i data-lucide="activity" class="w-4 h-4 text-red-500 flex-shrink-0"></i>
-                    <span>Sakit (Wajib SKD)</span>
+                    <span>Sakit</span>
                   </div>
                 </label>
 
@@ -854,8 +854,8 @@
             <div>
               <div class="flex items-center justify-between mb-1">
                 <label class="text-xs font-bold text-slate-700">Lampiran Dokumen Bukti</label>
-                <span id="doc-req-badge" class="text-[10px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded-md border border-red-200">
-                  Wajib untuk Sakit (SKD)
+                <span id="doc-req-badge" class="text-[10px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
+                  Opsional
                 </span>
               </div>
               
@@ -864,7 +864,7 @@
                 <div class="w-8 h-8 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-1.5">
                   <i data-lucide="upload-cloud" class="w-4 h-4"></i>
                 </div>
-                <p class="text-xs font-bold text-slate-800" id="file-name-preview">Klik untuk mengunggah foto / file surat dokter</p>
+                <p class="text-xs font-bold text-slate-800" id="file-name-preview">Opsional: Klik untuk unggah foto / dokumen pendukung</p>
                 <p class="text-[10px] text-slate-400 mt-0.5">Format: JPG, PNG, PDF (Maksimal 2 MB)</p>
               </div>
             </div>
@@ -4837,12 +4837,12 @@
     function updateFormIzinType() {
       const jenis = document.querySelector('input[name="jenis_izin"]:checked').value;
       const reqBadge = document.getElementById('doc-req-badge');
+      if (!reqBadge) return;
+      reqBadge.className = "text-[10px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200";
       if (jenis === 'Sakit') {
-        reqBadge.innerText = "Wajib untuk Sakit (SKD) *";
-        reqBadge.className = "text-[11px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded-md border border-red-200";
+        reqBadge.innerText = "SKD / Bukti (Opsional)";
       } else {
-        reqBadge.innerText = "Dispensasi / Bukti Surat (Opsional)";
-        reqBadge.className = "text-[11px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200";
+        reqBadge.innerText = "Dispensasi / Bukti (Opsional)";
       }
     }
 
@@ -4868,15 +4868,11 @@
       const tanggal = document.getElementById('izin-tanggal').value;
       const alasan = document.getElementById('izin-alasan').value;
       const fileInput = document.getElementById('file-dokumen');
-
-      if (jenis === 'Sakit' && (!fileInput.files || fileInput.files.length === 0)) {
-        showAppAlert("Wajib melampirkan berkas foto atau file Surat Keterangan Dokter (SKD) untuk permohonan Sakit!", "Lampiran SKD Diperlukan", "warning");
-        return;
-      }
+      const hasAttachment = Boolean(fileInput.files && fileInput.files.length > 0);
 
       const btn = document.getElementById('btn-submit-izin');
       btn.disabled = true;
-      btn.innerHTML = `<span class="animate-spin inline-block mr-2">⏳</span> Mengunggah SKD & Mengirim Formulir...`;
+      btn.innerHTML = `<span class="animate-spin inline-block mr-2">⏳</span> ${hasAttachment ? 'Mengunggah Dokumen & Mengirim Formulir...' : 'Mengirim Formulir...'}`;
 
       let fileBase64Data = "";
       let fileNameData = "";
@@ -4928,12 +4924,20 @@
       localStorage.setItem('pkl_logs_izin', JSON.stringify(izinLogs));
 
       btn.disabled = false;
-      btn.innerHTML = `<span>Kirim Permohonan Izin / Sakit</span>`;
-      showAppAlert(`Permohonan ${jenis} berhasil dikirim dan tersimpan di database Google Sheets & Google Drive (Folder Dokumen SKD)!`, "Permohonan Terkirim", "success");
+      btn.innerHTML = `<i data-lucide="send" class="w-4 h-4"></i><span>Kirim Permohonan Izin / Sakit</span>`;
+      if (window.lucide) lucide.createIcons();
+      showAppAlert(
+        hasAttachment
+          ? `Permohonan ${jenis} beserta lampiran dokumen berhasil dikirim dan tersimpan di database!`
+          : `Permohonan ${jenis} berhasil dikirim dan tersimpan di database!`,
+        "Permohonan Terkirim",
+        "success"
+      );
       showAppToast(`Pengajuan ${jenis} berhasil dikirim!`, "success");
       
       e.target.reset();
-      document.getElementById('file-name-preview').innerText = "Klik untuk mengunggah foto / file surat dokter";
+      document.getElementById('file-name-preview').innerText = "Opsional: Klik untuk unggah foto / dokumen pendukung";
+      updateFormIzinType();
       initDates();
       renderDashboardStats();
       renderRekapTable();
