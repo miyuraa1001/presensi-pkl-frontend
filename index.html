@@ -3097,6 +3097,12 @@
       gpsMode: 'real'
     };
 
+    // Bersihkan kunci sensitif lama dari localStorage saat startup (Poin 7)
+    try {
+      localStorage.removeItem('pkl_user_password');
+      localStorage.removeItem('pkl_script_secret');
+    } catch (e) {}
+
     function getAuthSessionToken() {
       return localStorage.getItem('pkl_session_token') || '';
     }
@@ -6509,32 +6515,20 @@
     }
 
     async function testGasConnection() {
-      const scriptUrlEl = document.getElementById('cfg-script-url');
-      const scriptSecretEl = document.getElementById('cfg-script-secret');
-      const url = (scriptUrlEl ? scriptUrlEl.value.trim() : '') || currentUser.apiUrl || '/api/presensi';
-      const secret = (scriptSecretEl ? scriptSecretEl.value.trim() : '') || '';
-      
       showToast("Mengirim ping tes koneksi backend...", "info");
       
       try {
-        if (url.startsWith('/')) {
-          // Vercel Serverless Function Proxy
-          const res = await fetch(url, { method: 'GET' });
-          const data = await res.json();
-          if (data.status === 'online') {
-            if (data.gasConfigured) {
-              showAppAlert(`Koneksi Vercel Proxy Berhasil!\n\nStatus: Online\nGAS Configured: Terhubung\nPesan: ${data.message}`, "Koneksi Berhasil", "success");
-            } else {
-              showAppAlert(`Vercel Proxy Aktif, namun variabel GAS_URL belum diatur di Dashboard Vercel.\n\nSilakan tambahkan GAS_URL dan GAS_SECRET_CODE di Vercel Dashboard > Settings > Environment Variables.`, "Perlu Konfigurasi Vercel", "warning");
-            }
+        // Selalu uji koneksi melalui Vercel Proxy tanpa menempelkan token di query string URL (Poin 10)
+        const res = await fetch('/api/presensi', { method: 'GET', cache: 'no-store' });
+        const data = await res.json();
+        if (data.status === 'online') {
+          if (data.gasConfigured) {
+            showAppAlert(`Koneksi Vercel Proxy Berhasil!\n\nStatus: Online\nGAS Configured: Terhubung\nPesan: ${data.message}`, "Koneksi Berhasil", "success");
           } else {
-            showAppAlert(`Respon Proxy: ${JSON.stringify(data)}`, "Hasil Tes", "info");
+            showAppAlert(`Vercel Proxy Aktif, namun variabel GAS_URL belum diatur di Dashboard Vercel.\n\nSilakan tambahkan GAS_URL dan GAS_SECRET_CODE di Vercel Dashboard > Settings > Environment Variables.`, "Perlu Konfigurasi Vercel", "warning");
           }
         } else {
-          // Direct Google Apps Script
-          const testUrl = url.includes('?') ? `${url}&secretToken=${encodeURIComponent(secret)}` : `${url}?secretToken=${encodeURIComponent(secret)}`;
-          await fetch(testUrl, { method: 'GET', mode: 'no-cors' });
-          showAppAlert("Koneksi ke Google Apps Script berhasil dijangkau (HTTP Request terkirim tanpa error jaringan)!", "Koneksi Berhasil", "success");
+          showAppAlert(`Respon Proxy: ${JSON.stringify(data)}`, "Hasil Tes", "info");
         }
       } catch (err) {
         showAppAlert("Gagal menghubungi endpoint: " + err.toString(), "Error Koneksi", "error");
@@ -7554,7 +7548,7 @@
         localStorage.setItem('pkl_instansi', instansi);
         localStorage.setItem('pkl_jurusan', jurusan);
         localStorage.setItem('pkl_phone', phone);
-        localStorage.setItem('pkl_user_password', pwd);
+        localStorage.removeItem('pkl_user_password');
         localStorage.setItem('pkl_user_role', 'student');
         localStorage.setItem('pkl_is_logged_in', 'true');
         localStorage.setItem('pkl_profile_completed', 'true');

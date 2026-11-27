@@ -5,12 +5,22 @@
 // untuk Watermark GPS Map Camera Presensi PKL Astra Daihatsu.
 
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  const origin = req.headers.origin || '';
+  const allowedEnv = (process.env.ALLOWED_ORIGIN || '').trim();
+  const isAllowedOrigin = !origin ||
+    (allowedEnv && origin === allowedEnv) ||
+    /^https:\/\/[a-z0-9-]+\.vercel\.app$/i.test(origin) ||
+    /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin);
+
+  if (origin && isAllowedOrigin) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Vary', 'Origin');
+  }
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS');
   res.setHeader('Cache-Control', 's-maxage=86400, stale-while-revalidate');
 
   if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+    return res.status(isAllowedOrigin ? 200 : 403).end();
   }
 
   const { lat, lng } = req.query;
