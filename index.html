@@ -1117,103 +1117,137 @@
             <!-- ==================== KOLOM KIRI (7 KOLOM DI DESKTOP): PROFIL + GEOFENCING ==================== -->
             <div class="contents lg:flex lg:flex-col lg:col-span-7 lg:gap-6">
 
-              <!-- CARD 1: INFORMASI PROFIL UTAMA (Mobile Order: 1) -->
-              <div class="order-1 lg:order-none bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
-                <!-- Card Header Gradient Navy Daihatsu (Compact) -->
-                <div class="bg-gradient-to-r from-[#0F172A] via-[#162a54] to-[#1E3A8A] p-3.5 sm:p-4 text-white flex items-center justify-between gap-2">
-                  <div class="flex items-center gap-2.5 min-w-0">
-                    <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 flex-shrink-0">
-                      <i id="info-card-icon" data-lucide="user-check" class="w-4 h-4 sm:w-5 sm:h-5 text-cyan-300"></i>
+              <!-- CARD 1: EXECUTIVE DIGITAL ID CARD — INFORMASI PROFIL UTAMA (Mobile Order: 1) -->
+              <div class="order-1 lg:order-none bg-white rounded-2xl border border-slate-200/80 shadow-md shadow-slate-200/50 overflow-hidden">
+                <!-- Astra Daihatsu Top Accent Bar -->
+                <div class="h-1 w-full bg-gradient-to-r from-red-600 via-blue-600 to-cyan-400"></div>
+
+                <!-- Premium Dark Navy Hero Banner (Integrated Avatar + Name + Role + Verified) -->
+                <div class="relative bg-gradient-to-br from-[#08132b] via-[#112550] to-[#1d4ed8] p-4 sm:p-5 text-white overflow-hidden">
+                  <!-- Decorative Mesh & Glow -->
+                  <div class="absolute inset-0 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:18px_18px] opacity-15 pointer-events-none"></div>
+                  <div class="absolute -top-12 -right-12 w-40 h-40 bg-cyan-400/20 rounded-full blur-2xl pointer-events-none"></div>
+                  <div class="absolute -bottom-10 -left-10 w-36 h-36 bg-red-500/15 rounded-full blur-2xl pointer-events-none"></div>
+
+                  <div class="relative z-10 space-y-4">
+                    <!-- Top Meta Strip -->
+                    <div class="flex items-center justify-between gap-2 pb-3 border-b border-white/10">
+                      <div class="flex items-center gap-2 min-w-0">
+                        <div class="w-7 h-7 rounded-lg bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/15 flex-shrink-0">
+                          <i id="info-card-icon" data-lucide="user-check" class="w-3.5 h-3.5 text-cyan-300"></i>
+                        </div>
+                        <div class="min-w-0">
+                          <h4 id="info-card-title" class="font-extrabold text-xs sm:text-sm text-white leading-tight truncate">Informasi Peserta PKL</h4>
+                          <p id="info-card-subtitle" class="text-[10px] text-blue-200/80 truncate">Kartu Identitas Digital Astra Daihatsu</p>
+                        </div>
+                      </div>
+                      <span id="info-card-verified-badge" class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-300 bg-emerald-500/15 px-2.5 py-1 rounded-full border border-emerald-400/30 whitespace-nowrap flex-shrink-0">
+                        <i data-lucide="badge-check" class="w-3 h-3"></i>
+                        <span>Terverifikasi</span>
+                      </span>
                     </div>
-                    <div class="min-w-0">
-                      <h4 id="info-card-title" class="font-extrabold text-xs sm:text-sm text-white leading-tight truncate">Informasi Peserta PKL</h4>
-                      <p id="info-card-subtitle" class="text-[10px] sm:text-[11px] text-slate-300 mt-0.5 truncate">Data identitas resmi teknisi PKL Astra Daihatsu</p>
+
+                    <!-- Integrated Profile Identity Row -->
+                    <div class="flex items-center gap-3.5 sm:gap-4">
+                      <div class="relative flex-shrink-0">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-slate-800 to-blue-900 flex items-center justify-center text-white font-black text-2xl sm:text-3xl overflow-hidden shadow-lg ring-2 ring-white/30">
+                          <span id="info-avatar-initials">M</span>
+                          <img id="info-avatar-img" src="" alt="Foto Profil" class="w-full h-full object-cover hidden">
+                        </div>
+                        <span class="w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-[#0f2147] absolute -bottom-0.5 -right-0.5 shadow-sm" title="Akun Aktif"></span>
+                      </div>
+
+                      <div class="flex-1 min-w-0">
+                        <div class="flex flex-wrap items-center gap-1.5">
+                          <span id="info-profile-role-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-cyan-400/20 text-cyan-200 border border-cyan-300/30">
+                            Siswa PKL Teknisi
+                          </span>
+                          <span id="info-profile-sub-badge" class="hidden sm:inline text-[11px] text-blue-200/75 font-medium">Workshop Astra Daihatsu</span>
+                        </div>
+                        <h3 id="info-profile-nama" class="font-black text-white text-lg sm:text-2xl tracking-tight mt-1 truncate drop-shadow-xs">Mekanik PKL</h3>
+                        <div class="inline-flex items-center gap-1.5 mt-1 px-2.5 py-0.5 rounded-lg bg-white/10 backdrop-blur-xs border border-white/15 text-[11px] font-mono">
+                          <span id="info-profile-nim-label" class="text-blue-200/80">NISN / NIM:</span>
+                          <span id="info-profile-nim" class="font-bold text-white tracking-wide">-</span>
+                        </div>
+                      </div>
+
+                      <!-- Desktop Action Button -->
+                      <div class="hidden sm:block flex-shrink-0">
+                        <button type="button" onclick="openEditProfilePage()" class="h-10 px-4 bg-white hover:bg-blue-50 active:scale-[0.98] text-[#0d1a3a] rounded-xl font-extrabold text-xs transition shadow-md flex items-center gap-2 cursor-pointer whitespace-nowrap">
+                          <i data-lucide="edit-3" class="w-3.5 h-3.5 text-blue-600"></i>
+                          <span>Edit Profil</span>
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                  <div class="flex items-center gap-1.5 flex-shrink-0">
-                    <span id="info-card-verified-badge" class="text-[10px] sm:text-[11px] font-bold text-cyan-300 bg-white/10 px-2.5 py-1 rounded-full border border-white/15 whitespace-nowrap">
-                      Terverifikasi
-                    </span>
                   </div>
                 </div>
 
-                <!-- Card Body (Compact Horizontal Hero on Mobile & Desktop) -->
-                <div class="p-4 sm:p-5 space-y-4">
-                  <!-- Hero Profile Row (Always Horizontal for High Information Density) -->
-                  <div class="flex items-center gap-3.5 sm:gap-4 text-left">
-                    <div class="w-14 h-14 sm:w-18 sm:h-18 rounded-2xl bg-gradient-to-br from-[#0F172A] to-[#1E3A8A] flex items-center justify-center text-white font-black text-xl sm:text-2xl overflow-hidden shadow-md border-2 border-white ring-2 ring-slate-200 flex-shrink-0">
-                      <span id="info-avatar-initials">M</span>
-                      <img id="info-avatar-img" src="" alt="Foto Profil" class="w-full h-full object-cover hidden">
-                    </div>
-                    <div class="flex-1 min-w-0">
-                      <div class="flex flex-wrap items-center gap-1.5">
-                        <span id="info-profile-role-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200/70">
-                          Siswa PKL Teknisi
-                        </span>
-                        <span id="info-profile-sub-badge" class="hidden sm:inline text-[11px] text-slate-400 font-medium">Workshop Astra Daihatsu</span>
-                      </div>
-                      <h3 id="info-profile-nama" class="font-black text-slate-900 text-base sm:text-xl tracking-tight mt-0.5 truncate">Mekanik PKL</h3>
-                      <p class="text-[11px] sm:text-xs font-mono font-semibold text-slate-500">
-                        <span id="info-profile-nim-label">NISN / NIM:</span>
-                        <span id="info-profile-nim" class="font-bold text-slate-800">-</span>
-                      </p>
-                    </div>
-
-                    <!-- Desktop Action Button (Top Right) -->
-                    <div class="hidden sm:block flex-shrink-0">
-                      <button type="button" onclick="openEditProfilePage()" class="h-10 px-4 bg-[#0d59a8] hover:bg-[#0b4a8c] active:scale-[0.98] text-white rounded-xl font-bold text-xs transition shadow-sm shadow-blue-700/20 flex items-center gap-2 cursor-pointer whitespace-nowrap">
-                        <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
-                        <span>Edit Profil</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  <!-- Sub-Grid Detail 3 Kolom -->
-                  <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-4 border-t border-slate-100">
-                    <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/60 min-w-0">
-                      <p id="info-profile-lbl-col1" class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Asal Sekolah / Kampus</p>
-                      <p id="info-profile-instansi" class="font-bold text-slate-800 text-xs sm:text-sm mt-1 truncate">-</p>
-                    </div>
-                    <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/60 min-w-0">
-                      <p id="info-profile-lbl-col2" class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Program Keahlian</p>
-                      <p id="info-profile-jurusan" class="font-bold text-slate-800 text-xs sm:text-sm mt-1 truncate">Teknik Kendaraan Ringan (TKR)</p>
-                    </div>
-                    <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/60 flex items-center justify-between sm:flex-col sm:items-start sm:justify-between gap-1.5 min-w-0">
-                      <div class="min-w-0 w-full">
-                        <p id="info-profile-lbl-col3" class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Penempatan Praktik (PKL)</p>
-                        <p id="info-profile-cabang" class="font-bold text-slate-800 text-xs sm:text-sm mt-1 truncate">Astra Daihatsu Ahmad Yani</p>
-                      </div>
-                      <span id="info-profile-tag-col3" class="px-2 py-0.5 rounded-md text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 whitespace-nowrap flex-shrink-0">
-                        Cabang Resmi
-                      </span>
-                    </div>
-                  </div>
-
-                  <!-- Baris Kontak 2 Kolom (WhatsApp & Email) -->
-                  <div id="info-profile-contact-row" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                    <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/60 flex items-center gap-3 min-w-0">
-                      <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center flex-shrink-0">
-                        <i data-lucide="phone" class="w-4 h-4"></i>
+                <!-- Structured Icon-Accented Bento Details -->
+                <div class="p-4 sm:p-5 space-y-3">
+                  <!-- Row 1: 2-Column Academic / Work Identity -->
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="p-3.5 rounded-xl bg-slate-50/80 hover:bg-slate-50 border border-slate-200/70 flex items-start gap-3 transition min-w-0">
+                      <div class="w-9 h-9 rounded-xl bg-indigo-100/80 text-indigo-700 flex items-center justify-center flex-shrink-0">
+                        <i data-lucide="graduation-cap" class="w-4 h-4"></i>
                       </div>
                       <div class="min-w-0">
-                        <p id="info-profile-lbl-phone" class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">No. WhatsApp / Kontak</p>
-                        <p id="info-profile-phone" class="font-bold text-slate-800 text-xs sm:text-sm mt-0.5 truncate">0811-9876-1234</p>
+                        <p id="info-profile-lbl-col1" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Asal Sekolah / Kampus</p>
+                        <p id="info-profile-instansi" class="font-extrabold text-slate-800 text-xs sm:text-sm mt-0.5 leading-snug">-</p>
                       </div>
                     </div>
-                    <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/60 flex items-center gap-3 min-w-0">
-                      <div class="w-9 h-9 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center flex-shrink-0">
-                        <i data-lucide="mail" class="w-4 h-4"></i>
+
+                    <div class="p-3.5 rounded-xl bg-slate-50/80 hover:bg-slate-50 border border-slate-200/70 flex items-start gap-3 transition min-w-0">
+                      <div class="w-9 h-9 rounded-xl bg-blue-100/80 text-blue-700 flex items-center justify-center flex-shrink-0">
+                        <i data-lucide="award" class="w-4 h-4"></i>
                       </div>
                       <div class="min-w-0">
-                        <p id="info-profile-lbl-email" class="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">Email Akun Terdaftar</p>
-                        <p id="info-profile-email" class="font-bold text-slate-800 text-xs sm:text-sm mt-0.5 truncate">indah.pratiwi@daihatsu.astra.co.id</p>
+                        <p id="info-profile-lbl-col2" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Program Keahlian</p>
+                        <p id="info-profile-jurusan" class="font-extrabold text-slate-800 text-xs sm:text-sm mt-0.5 leading-snug">Teknik Kendaraan Ringan (TKR)</p>
                       </div>
                     </div>
                   </div>
 
-                  <!-- Mobile-Only Action Button (Bottom Full Width) -->
+                  <!-- Row 2: Featured Placement Highlight Strip (Full Width, Non-Truncated) -->
+                  <div class="p-3.5 rounded-xl bg-gradient-to-r from-blue-50/90 via-indigo-50/40 to-white border border-blue-200/70 flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3 min-w-0">
+                      <div class="w-9 h-9 rounded-xl bg-[#0d59a8] text-white flex items-center justify-center flex-shrink-0 shadow-xs">
+                        <i data-lucide="map-pin" class="w-4 h-4"></i>
+                      </div>
+                      <div class="min-w-0">
+                        <p id="info-profile-lbl-col3" class="text-[10px] font-bold text-blue-600/80 uppercase tracking-wider">Penempatan Praktik (PKL)</p>
+                        <p id="info-profile-cabang" class="font-extrabold text-slate-900 text-xs sm:text-sm mt-0.5 leading-snug">Astra Daihatsu Ahmad Yani</p>
+                      </div>
+                    </div>
+                    <span id="info-profile-tag-col3" class="px-2.5 py-1 rounded-lg text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 whitespace-nowrap flex-shrink-0">
+                      Cabang Resmi
+                    </span>
+                  </div>
+
+                  <!-- Row 3: Unified Contact Strip (WhatsApp & Email) -->
+                  <div id="info-profile-contact-row" class="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-slate-200/70 rounded-xl border border-slate-200/80 bg-white overflow-hidden">
+                    <div class="p-3 flex items-center gap-3 min-w-0">
+                      <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center flex-shrink-0">
+                        <i data-lucide="phone" class="w-3.5 h-3.5"></i>
+                      </div>
+                      <div class="min-w-0">
+                        <p id="info-profile-lbl-phone" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">No. WhatsApp</p>
+                        <p id="info-profile-phone" class="font-bold text-slate-800 text-xs mt-0.5 truncate">-</p>
+                      </div>
+                    </div>
+                    <div class="p-3 flex items-center gap-3 min-w-0">
+                      <div class="w-8 h-8 rounded-lg bg-sky-50 text-sky-600 border border-sky-100 flex items-center justify-center flex-shrink-0">
+                        <i data-lucide="mail" class="w-3.5 h-3.5"></i>
+                      </div>
+                      <div class="min-w-0">
+                        <p id="info-profile-lbl-email" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Email Akun</p>
+                        <p id="info-profile-email" class="font-bold text-slate-800 text-xs mt-0.5 truncate">-</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Mobile-Only Action Button -->
                   <div class="sm:hidden pt-1">
-                    <button type="button" onclick="openEditProfilePage()" class="w-full h-11 px-4 bg-[#0d59a8] hover:bg-[#0b4a8c] active:scale-[0.98] text-white rounded-xl font-bold text-xs transition shadow-sm shadow-blue-700/20 flex items-center justify-center gap-2 cursor-pointer">
+                    <button type="button" onclick="openEditProfilePage()" class="w-full h-11 px-4 bg-gradient-to-r from-[#0d59a8] to-[#1d4ed8] hover:from-[#0b4a8c] hover:to-[#1e40af] active:scale-[0.98] text-white rounded-xl font-bold text-xs transition shadow-md shadow-blue-700/20 flex items-center justify-center gap-2 cursor-pointer">
                       <i data-lucide="edit-3" class="w-4 h-4"></i>
                       <span>Edit Informasi Profil</span>
                     </button>
@@ -3953,7 +3987,7 @@
         if (infoIcon) infoIcon.setAttribute('data-lucide', 'briefcase');
         if (infoRolePill) {
           infoRolePill.innerText = currentUser.roleAkses || "Super Admin HRD";
-          infoRolePill.className = "px-2.5 py-0.5 rounded-full text-[10px] md:text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200/80";
+          infoRolePill.className = "px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-400/20 text-amber-200 border border-amber-300/30";
         }
         if (infoSubrolePill) infoSubrolePill.innerText = "PT Astra International Tbk - Daihatsu";
         if (infoNimLabel) infoNimLabel.innerText = "NIP / ID Karyawan:";
@@ -3977,7 +4011,7 @@
         if (infoIcon) infoIcon.setAttribute('data-lucide', 'user-check');
         if (infoRolePill) {
           infoRolePill.innerText = "Siswa PKL Teknisi";
-          infoRolePill.className = "px-2.5 py-0.5 rounded-full text-[10px] md:text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200/60";
+          infoRolePill.className = "px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-cyan-400/20 text-cyan-200 border border-cyan-300/30";
         }
         if (infoSubrolePill) infoSubrolePill.innerText = "Workshop Astra Daihatsu";
         if (infoNimLabel) infoNimLabel.innerText = "NISN / NIM:";
