@@ -911,7 +911,7 @@
       </section>
 
       <!-- ==================== TAB 4: REKAP BULANAN ==================== -->
-      <section id="view-rekap" class="hidden space-y-5">
+      <section id="view-rekap" class="hidden space-y-3 sm:space-y-4">
         
         <!-- Print-only Title Header -->
         <div class="print-only-header mb-6">
@@ -949,13 +949,13 @@
           </div>
         </div>
 
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-2.5 pb-2.5 md:border-b md:border-slate-200">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-2 md:pb-3 md:border-b md:border-slate-200">
           <div class="hidden md:block">
             <h3 class="font-extrabold text-slate-900 text-lg">Rekapitulasi Kehadiran</h3>
             <p class="text-xs text-slate-500">Daftar kehadiran &amp; perizinan PKL teknisi bengkel</p>
           </div>
           <!-- Filter & Export (Compact 2-Col Row on Mobile) -->
-          <div class="grid grid-cols-2 sm:flex sm:items-center gap-2.5 w-full md:w-auto no-print">
+          <div class="grid grid-cols-2 sm:flex sm:items-center gap-2 w-full md:w-auto no-print">
             <select id="rekap-filter-kategori" onchange="renderRekapTable()" class="h-10 px-3 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-700 shadow-2xs focus:ring-2 focus:ring-blue-500 cursor-pointer">
               <option value="ALL">Semua Kategori</option>
               <option value="Hadir">Hadir Saja</option>
@@ -969,81 +969,82 @@
           </div>
         </div>
 
-        <!-- Rekap Quick Metric Pills -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <!-- Rekap Quick Metric Pills (Compact Grid) -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
           <!-- Hadir -->
-          <div class="bg-emerald-50/80 border border-emerald-100 p-3 rounded-xl flex items-center gap-2.5">
-            <span class="w-7 h-7 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">
+          <div class="bg-emerald-50/80 border border-emerald-100 p-2.5 sm:p-3 rounded-xl flex items-center gap-2">
+            <span class="w-7 h-7 rounded-lg bg-emerald-500 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">
               <i data-lucide="check" class="w-3.5 h-3.5"></i>
             </span>
-            <div>
-              <p class="text-[10px] text-emerald-800 font-bold">Hadir</p>
-              <p class="text-xs font-extrabold text-slate-900" id="rekap-metric-hadir">0 Hari</p>
+            <div class="min-w-0">
+              <p class="text-[10px] text-emerald-800 font-bold leading-none">Hadir</p>
+              <p class="text-xs sm:text-sm font-extrabold text-slate-900 mt-0.5 truncate" id="rekap-metric-hadir">0 Hari</p>
             </div>
           </div>
           <!-- Sakit -->
-          <div class="bg-red-50/80 border border-red-100 p-3 rounded-xl flex items-center gap-2.5">
-            <span class="w-7 h-7 rounded-full bg-red-500 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">
+          <div class="bg-red-50/80 border border-red-100 p-2.5 sm:p-3 rounded-xl flex items-center gap-2">
+            <span class="w-7 h-7 rounded-lg bg-red-500 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">
               <i data-lucide="activity" class="w-3.5 h-3.5"></i>
             </span>
-            <div>
-              <p class="text-[10px] text-red-800 font-bold">Sakit</p>
-              <p class="text-xs font-extrabold text-slate-900" id="rekap-metric-sakit">0 Hari</p>
+            <div class="min-w-0">
+              <p class="text-[10px] text-red-800 font-bold leading-none">Sakit</p>
+              <p class="text-xs sm:text-sm font-extrabold text-slate-900 mt-0.5 truncate" id="rekap-metric-sakit">0 Hari</p>
             </div>
           </div>
           <!-- Izin -->
-          <div class="bg-amber-50/80 border border-amber-100 p-3 rounded-xl flex items-center gap-2.5">
-            <span class="w-7 h-7 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">
+          <div class="bg-amber-50/80 border border-amber-100 p-2.5 sm:p-3 rounded-xl flex items-center gap-2">
+            <span class="w-7 h-7 rounded-lg bg-amber-500 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">
               <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
             </span>
-            <div>
-              <p class="text-[10px] text-amber-800 font-bold">Izin</p>
-              <p class="text-xs font-extrabold text-slate-900" id="rekap-metric-izin">0 Hari</p>
+            <div class="min-w-0">
+              <p class="text-[10px] text-amber-800 font-bold leading-none">Izin</p>
+              <p class="text-xs sm:text-sm font-extrabold text-slate-900 mt-0.5 truncate" id="rekap-metric-izin">0 Hari</p>
             </div>
           </div>
           <!-- Jam Kerja -->
-          <div class="bg-blue-50/80 border border-blue-100 p-3 rounded-xl flex items-center gap-2.5">
-            <span class="w-7 h-7 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">
+          <div class="bg-blue-50/80 border border-blue-100 p-2.5 sm:p-3 rounded-xl flex items-center gap-2">
+            <span class="w-7 h-7 rounded-lg bg-blue-500 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">
               <i data-lucide="clock" class="w-3.5 h-3.5"></i>
             </span>
-            <div>
-              <p class="text-[10px] text-blue-800 font-bold">Jam Kerja</p>
-              <p class="text-xs font-extrabold text-slate-900" id="rekap-metric-jam">0 Jam</p>
+            <div class="min-w-0">
+              <p class="text-[10px] text-blue-800 font-bold leading-none">Jam Kerja</p>
+              <p class="text-xs sm:text-sm font-extrabold text-slate-900 mt-0.5 truncate" id="rekap-metric-jam">0 Jam</p>
             </div>
           </div>
         </div>
 
         <!-- Table & Card Data Log Presensi (Dynamic Switcher) -->
         <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
-          <!-- Card Header Info Bar with View Switcher -->
-          <div class="p-3.5 md:p-4 bg-slate-50/80 border-b border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div class="flex items-center gap-2.5">
-              <div class="w-8 h-8 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0">
-                <i data-lucide="clipboard-list" class="w-4 h-4"></i>
+          <!-- Card Header Info Bar with View Switcher (Tight & Clean) -->
+          <div class="p-3 sm:p-3.5 bg-slate-50/80 border-b border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div class="flex items-center justify-between sm:justify-start gap-2.5">
+              <div class="flex items-center gap-2 min-w-0">
+                <div class="w-7 h-7 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="clipboard-list" class="w-4 h-4"></i>
+                </div>
+                <div class="min-w-0">
+                  <h4 class="font-extrabold text-xs sm:text-sm text-slate-900 leading-tight truncate">Riwayat Presensi &amp; Kehadiran</h4>
+                  <p class="hidden sm:block text-[10px] text-slate-400">Sinkronisasi data otomatis dengan Geofencing Astra Daihatsu</p>
+                </div>
               </div>
-              <div>
-                <h4 class="font-extrabold text-xs md:text-sm text-slate-900 leading-tight">Riwayat Presensi & Kehadiran</h4>
-                <p class="text-[10px] text-slate-400">Sinkronisasi data otomatis dengan Geofencing Astra Daihatsu</p>
-              </div>
+              <span id="rekap-total-rows-badge" class="sm:hidden px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200 whitespace-nowrap">
+                0 Catatan
+              </span>
             </div>
 
             <!-- View Mode Switcher (Kartu vs Tabel) & Badge -->
-            <div class="flex items-center justify-between sm:justify-end gap-2.5 no-print">
+            <div class="flex items-center justify-between sm:justify-end gap-2 no-print">
               <!-- Switcher: Kartu | Tabel -->
-              <div class="inline-flex p-1 rounded-xl bg-slate-200/70 border border-slate-300/60 text-xs">
-                <button type="button" onclick="setRekapViewMode('card')" id="btn-view-card" class="px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 transition text-blue-700 bg-white shadow-xs cursor-pointer">
+              <div class="grid grid-cols-2 sm:inline-flex w-full sm:w-auto p-0.5 rounded-xl bg-slate-200/70 border border-slate-300/60 text-xs">
+                <button type="button" onclick="setRekapViewMode('card')" id="btn-view-card" class="px-3 py-1.5 rounded-lg font-bold flex items-center justify-center gap-1.5 transition text-blue-700 bg-white shadow-xs cursor-pointer">
                   <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i>
                   <span>Kartu</span>
                 </button>
-                <button type="button" onclick="setRekapViewMode('table')" id="btn-view-table" class="px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 transition text-slate-600 hover:text-slate-900 cursor-pointer">
+                <button type="button" onclick="setRekapViewMode('table')" id="btn-view-table" class="px-3 py-1.5 rounded-lg font-bold flex items-center justify-center gap-1.5 transition text-slate-600 hover:text-slate-900 cursor-pointer">
                   <i data-lucide="table" class="w-3.5 h-3.5"></i>
                   <span>Tabel</span>
                 </button>
               </div>
-
-              <span id="rekap-total-rows-badge" class="px-2.5 py-1 rounded-full text-[10px] md:text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 whitespace-nowrap">
-                0 Catatan
-              </span>
             </div>
           </div>
 
@@ -5708,59 +5709,59 @@
           tbody.appendChild(tr);
         }
 
-        // B. Render Mobile Card (Clock IN & Clock OUT Jadi Satu Barisan/Blok di 1 Kartu)
+        // B. Render Mobile Card (Compact, Padat, Tanpa Rongga Berlebih)
         if (mobileCards) {
           const card = document.createElement('div');
-          card.className = `p-4 hover:bg-slate-50/60 transition bg-white border-l-4 ${accentBorder} space-y-3`;
+          card.className = `p-3 sm:p-3.5 hover:bg-slate-50/60 transition bg-white border-l-4 ${accentBorder} space-y-2`;
           card.innerHTML = `
             <!-- Header Kartu: Tanggal & Status -->
             <div class="flex items-center justify-between gap-2">
-              <div class="flex items-center gap-2.5">
-                <div class="w-9 h-9 rounded-xl ${dateBoxBg} flex flex-col items-center justify-center font-bold text-xs border ${dateBoxBorder} ${dateColor} leading-none flex-shrink-0">
+              <div class="flex items-center gap-2 min-w-0">
+                <div class="w-8 h-8 rounded-lg ${dateBoxBg} flex flex-col items-center justify-center font-bold border ${dateBoxBorder} ${dateColor} leading-none flex-shrink-0">
                   <span class="text-[8px] uppercase font-bold">${shortMonth}</span>
                   <span class="text-xs font-black">${dayNum}</span>
                 </div>
-                <div>
-                  <span class="text-xs font-bold text-slate-900 block leading-tight">${dayName}, ${dayNum} ${shortMonth} ${year}</span>
-                  <span class="text-[10px] text-slate-400">${(currentUserRole === 'admin' && item.nama) ? `<strong class="text-blue-600 font-bold">${item.nama}</strong>` : 'Shift Kerja Bengkel'}</span>
+                <div class="min-w-0">
+                  <span class="text-xs font-bold text-slate-900 block leading-tight truncate">${dayName}, ${dayNum} ${shortMonth} ${year}</span>
+                  <span class="text-[10px] text-slate-400 truncate block">${(currentUserRole === 'admin' && item.nama) ? `<strong class="text-blue-600 font-bold">${item.nama}</strong>` : 'Shift Kerja Bengkel'}</span>
                 </div>
               </div>
-              <div>${statusBadge}</div>
+              <div class="flex-shrink-0">${statusBadge}</div>
             </div>
 
-            <!-- Blok Tengah: Clock IN & Clock OUT Berdampingan (Satu Barisan) -->
-            <div class="grid grid-cols-2 gap-2.5 text-xs bg-slate-50/90 p-3 rounded-2xl border border-slate-100">
-              <!-- Box Clock IN -->
-              <div class="bg-white p-2.5 rounded-xl border border-slate-200/70 shadow-2xs">
+            <!-- Blok Tengah: Jam Masuk & Jam Selesai Berdampingan (Padat) -->
+            <div class="grid grid-cols-2 gap-2 text-xs bg-slate-50 p-2 rounded-xl border border-slate-100">
+              <!-- Box Jam Masuk -->
+              <div class="bg-white px-2.5 py-2 rounded-lg border border-slate-200/70">
                 <div class="flex items-center gap-1.5 text-[10px] font-bold text-emerald-700">
-                  <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                  <span>Clock IN</span>
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                  <span>Jam Masuk</span>
                 </div>
-                <p class="font-black font-mono text-sm text-slate-900 mt-1">
+                <p class="font-black font-mono text-xs sm:text-sm text-slate-900 mt-0.5">
                   ${item.inTime !== '-' ? item.inTime + ' WIB' : '--:--'}
                 </p>
-                <p class="text-[10px] text-slate-400 mt-0.5 truncate">
+                <p class="text-[10px] text-slate-400 truncate">
                   ${item.inJarak !== null ? item.inJarak + ' m • Valid' : (item.kategori === 'Hadir' ? 'Belum masuk' : item.keterangan || '-')}
                 </p>
               </div>
 
-              <!-- Box Clock OUT -->
-              <div class="bg-white p-2.5 rounded-xl border border-slate-200/70 shadow-2xs">
+              <!-- Box Jam Selesai -->
+              <div class="bg-white px-2.5 py-2 rounded-lg border border-slate-200/70">
                 <div class="flex items-center gap-1.5 text-[10px] font-bold text-blue-700">
-                  <span class="w-2 h-2 rounded-full bg-blue-500"></span>
-                  <span>Clock OUT</span>
+                  <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                  <span>Jam Selesai</span>
                 </div>
-                <p class="font-black font-mono text-sm text-slate-900 mt-1">
+                <p class="font-black font-mono text-xs sm:text-sm text-slate-900 mt-0.5">
                   ${item.outTime !== '-' ? item.outTime + ' WIB' : (item.inTime !== '-' ? 'Belum Pulang' : '--:--')}
                 </p>
-                <p class="text-[10px] text-slate-400 mt-0.5 truncate">
+                <p class="text-[10px] text-slate-400 truncate">
                   ${item.outJarak !== null ? item.outJarak + ' m • Valid' : (item.inTime !== '-' ? 'Shift Berjalan' : '-')}
                 </p>
               </div>
             </div>
 
             <!-- Footer Kartu: Durasi Total & Verifikasi -->
-            <div class="flex items-center justify-between text-xs pt-0.5">
+            <div class="flex items-center justify-between text-xs">
               <div class="flex items-center gap-1.5 text-slate-600 font-semibold text-[11px]">
                 <i data-lucide="timer" class="w-3.5 h-3.5 text-slate-400"></i>
                 <span>Durasi: <strong class="text-slate-900 font-bold">${item.duration}</strong></span>
