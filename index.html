@@ -6525,7 +6525,9 @@
         { okText: "Ya, Keluar Akun", isDanger: true }
       );
       if (ok) {
+        currentUser.foto = '';
         localStorage.setItem('pkl_is_logged_in', 'false');
+        localStorage.removeItem('pkl_foto_profil');
         localStorage.removeItem('pkl_session_token');
         localStorage.removeItem('pkl_admins_list');
         localStorage.removeItem('pkl_user_password');
@@ -6736,7 +6738,6 @@
         if (isAdm) {
           studentTodayBox.classList.add('hidden');
           adminRecentBox.classList.remove('hidden');
-          renderAdminRecentAttendance();
         } else {
           studentTodayBox.classList.remove('hidden');
           adminRecentBox.classList.add('hidden');
@@ -6750,7 +6751,6 @@
         if (isAdm) {
           studentAttFlow.classList.add('hidden');
           adminPklFlow.classList.remove('hidden');
-          renderAdminStudentsTable();
         } else {
           studentAttFlow.classList.remove('hidden');
           adminPklFlow.classList.add('hidden');
@@ -6764,11 +6764,17 @@
         if (isAdm) {
           studentIzinFlow.classList.add('hidden');
           adminInboxFlow.classList.remove('hidden');
-          renderInboxApprovals();
         } else {
           studentIzinFlow.classList.remove('hidden');
           adminInboxFlow.classList.add('hidden');
         }
+      }
+
+      // Render data panel Admin secara aman setelah seluruh visibilitas menu selesai diubah
+      if (isAdm) {
+        try { renderAdminRecentAttendance(); } catch (e) { console.warn('renderAdminRecentAttendance err:', e); }
+        try { renderAdminStudentsTable(); } catch (e) { console.warn('renderAdminStudentsTable err:', e); }
+        try { renderInboxApprovals(); } catch (e) { console.warn('renderInboxApprovals err:', e); }
       }
 
       // 7. Tampilan Tab 4: Rekap (Tampilkan filter per siswa khusus admin)
@@ -6841,6 +6847,7 @@
 
       const logs = getAttendanceLogs();
       const students = getStudentsList();
+      const approvals = getInboxApprovals();
 
       const todayLogs = logs.filter(l => l.tanggal === todayISO);
       const uniqueInStudents = new Set(todayLogs.filter(l => l.tipe === 'IN').map(l => l.nim));
@@ -7484,11 +7491,15 @@
           if (u.avatar && u.avatar !== '-' && u.avatar.startsWith('http')) {
             currentUser.foto = normalizeDriveImageUrl(u.avatar);
             localStorage.setItem('pkl_foto_profil', currentUser.foto);
+          } else {
+            currentUser.foto = '';
+            localStorage.removeItem('pkl_foto_profil');
           }
 
           setAppBranch(u.cabang || 'Ahmad Yani');
           closeLoginModal();
           applyUserRoleUI(role);
+          switchTab('dashboard');
           syncDataFromDatabase(false);
           showAppToast("Login Berhasil", `Selamat datang, ${u.nama}!`, "success");
           return;
