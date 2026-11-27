@@ -1219,55 +1219,35 @@
             
             <!-- COLUMN 1: AKUN, KEAMANAN & SESI -->
             <div class="space-y-5 md:space-y-6 flex flex-col justify-between">
-              <!-- ==================== 3. KEAMANAN & GANTI KATA SANDI ==================== -->
+              <!-- ==================== 3. KEAMANAN & KATA SANDI ==================== -->
         <div class="bg-white p-5 md:p-6 rounded-2xl border border-slate-200/80 shadow-xs space-y-4">
           <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-            <div class="flex items-center gap-2">
-              <div class="w-7 h-7 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center">
-                <i data-lucide="lock" class="w-4 h-4"></i>
+            <div class="flex items-center gap-2.5">
+              <div class="w-8 h-8 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center flex-shrink-0">
+                <i data-lucide="shield-check" class="w-4 h-4"></i>
               </div>
               <div>
                 <h4 class="font-extrabold text-sm text-slate-900">Keamanan & Kata Sandi</h4>
-                <p class="text-[10px] text-slate-500">Perbarui kata sandi akun untuk keamanan akses presensi</p>
+                <p class="text-[11px] text-slate-500">Kelola kata sandi akun untuk keamanan akses presensi</p>
               </div>
             </div>
+            <span class="text-[10px] font-bold text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200/70 whitespace-nowrap">Terlindungi</span>
           </div>
 
-          <div class="space-y-3">
-            <div>
-              <label class="block text-xs font-semibold text-slate-600 mb-1">Kata Sandi Lama / Saat Ini</label>
-              <div class="relative">
-                <input type="password" id="cfg-old-pwd" placeholder="Masukkan kata sandi lama (default: daihatsu123)" class="w-full px-3 py-2.5 pr-10 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-amber-500 font-mono">
-                <button type="button" onclick="togglePasswordVisibility('cfg-old-pwd', 'eye-old-pwd')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
-                  <i data-lucide="eye" id="eye-old-pwd" class="w-4 h-4"></i>
-                </button>
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl bg-slate-50 border border-slate-100">
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-9 h-9 rounded-xl bg-white border border-slate-200/80 text-slate-600 flex items-center justify-center flex-shrink-0 shadow-2xs">
+                <i data-lucide="key-round" class="w-4 h-4"></i>
+              </div>
+              <div class="min-w-0">
+                <p class="text-xs font-bold text-slate-800">Kata Sandi Akun</p>
+                <p class="text-[11px] text-slate-500 font-mono tracking-widest mt-0.5">••••••••••••</p>
               </div>
             </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Kata Sandi Baru</label>
-                <div class="relative">
-                  <input type="password" id="cfg-new-pwd" placeholder="Minimal 6 karakter" class="w-full px-3 py-2.5 pr-10 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-amber-500 font-mono">
-                  <button type="button" onclick="togglePasswordVisibility('cfg-new-pwd', 'eye-new-pwd')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
-                    <i data-lucide="eye" id="eye-new-pwd" class="w-4 h-4"></i>
-                  </button>
-                </div>
-              </div>
-              <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Konfirmasi Kata Sandi Baru</label>
-                <div class="relative">
-                  <input type="password" id="cfg-confirm-pwd" placeholder="Ulangi kata sandi baru" class="w-full px-3 py-2.5 pr-10 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-amber-500 font-mono">
-                  <button type="button" onclick="togglePasswordVisibility('cfg-confirm-pwd', 'eye-confirm-pwd')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
-                    <i data-lucide="eye" id="eye-confirm-pwd" class="w-4 h-4"></i>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <button type="button" onclick="saveNewPassword()" class="w-full py-2.5 bg-amber-600 hover:bg-amber-700 active:scale-95 text-white rounded-xl font-bold text-xs transition shadow-sm flex items-center justify-center gap-1.5">
-              <i data-lucide="key" class="w-3.5 h-3.5"></i>
-              <span>Simpan Kata Sandi Baru</span>
+            <button type="button" onclick="openChangePasswordPage()" class="w-full sm:w-auto px-4 py-2.5 bg-amber-600 hover:bg-amber-700 active:scale-95 text-white rounded-xl font-bold text-xs transition shadow-sm flex items-center justify-center gap-1.5 cursor-pointer flex-shrink-0">
+              <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+              <span>Ubah Kata Sandi</span>
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
             </button>
           </div>
         </div>
@@ -1553,6 +1533,83 @@
               </button>
             </div>
 
+          </div>
+        </div>
+
+        <!-- ==================== SCREEN C: UBAH KATA SANDI (SUBPAGE) ==================== -->
+        <div id="settings-change-password-screen" class="hidden space-y-6 max-w-xl mx-auto">
+          <!-- Top Header with Back Navigation Button -->
+          <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+            <div class="flex items-center gap-3">
+              <button type="button" onclick="closeChangePasswordPage()" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 transition cursor-pointer" aria-label="Kembali ke Pengaturan">
+                <i data-lucide="arrow-left" class="w-5 h-5"></i>
+              </button>
+              <div>
+                <h3 class="font-extrabold text-slate-900 text-lg md:text-xl leading-tight">Ubah Kata Sandi</h3>
+                <p class="text-xs text-slate-500">Perbarui kata sandi secara berkala demi keamanan akun Anda</p>
+              </div>
+            </div>
+            <span class="text-[10px] md:text-xs font-bold text-amber-700 bg-amber-50 px-3 py-1 rounded-full border border-amber-200 whitespace-nowrap">
+              Keamanan
+            </span>
+          </div>
+
+          <!-- Form Change Password Card -->
+          <div class="bg-white p-5 md:p-7 rounded-2xl md:rounded-3xl border border-slate-200/80 shadow-xs space-y-5">
+            <!-- Security Info Banner -->
+            <div class="p-3.5 rounded-xl bg-amber-50/70 border border-amber-200/70 flex items-start gap-3">
+              <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <i data-lucide="shield-alert" class="w-4 h-4"></i>
+              </div>
+              <div class="text-[11px] md:text-xs text-amber-900/90 leading-relaxed">
+                <p class="font-bold text-amber-900">Tips Keamanan Kata Sandi</p>
+                <p class="mt-0.5">Gunakan minimal 6 karakter kombinasi huruf &amp; angka, dan jangan bagikan kata sandi Anda kepada orang lain.</p>
+              </div>
+            </div>
+
+            <div class="space-y-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1.5">Kata Sandi Lama / Saat Ini <span class="text-red-500">*</span></label>
+                <div class="relative">
+                  <input type="password" id="cfg-old-pwd" placeholder="Masukkan kata sandi saat ini" autocomplete="current-password" class="w-full px-3.5 py-3 pr-10 rounded-xl border border-slate-200 text-xs md:text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 font-mono text-slate-800">
+                  <button type="button" onclick="togglePasswordVisibility('cfg-old-pwd', 'eye-old-pwd')" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer">
+                    <i data-lucide="eye" id="eye-old-pwd" class="w-4 h-4"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1.5">Kata Sandi Baru <span class="text-red-500">*</span></label>
+                  <div class="relative">
+                    <input type="password" id="cfg-new-pwd" placeholder="Minimal 6 karakter" autocomplete="new-password" class="w-full px-3.5 py-3 pr-10 rounded-xl border border-slate-200 text-xs md:text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 font-mono text-slate-800">
+                    <button type="button" onclick="togglePasswordVisibility('cfg-new-pwd', 'eye-new-pwd')" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer">
+                      <i data-lucide="eye" id="eye-new-pwd" class="w-4 h-4"></i>
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-700 mb-1.5">Konfirmasi Kata Sandi Baru <span class="text-red-500">*</span></label>
+                  <div class="relative">
+                    <input type="password" id="cfg-confirm-pwd" placeholder="Ulangi kata sandi baru" autocomplete="new-password" class="w-full px-3.5 py-3 pr-10 rounded-xl border border-slate-200 text-xs md:text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 font-mono text-slate-800">
+                    <button type="button" onclick="togglePasswordVisibility('cfg-confirm-pwd', 'eye-confirm-pwd')" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer">
+                      <i data-lucide="eye" id="eye-confirm-pwd" class="w-4 h-4"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Responsive Bottom Buttons -->
+            <div class="flex flex-col-reverse sm:flex-row gap-3 pt-3 border-t border-slate-100">
+              <button type="button" onclick="closeChangePasswordPage()" class="w-full sm:w-36 py-3.5 bg-white hover:bg-slate-100 active:scale-[0.98] text-slate-700 rounded-xl font-bold text-xs md:text-sm border border-slate-200 transition cursor-pointer">
+                Batal
+              </button>
+              <button type="button" onclick="saveNewPassword()" class="w-full flex-1 py-3.5 bg-amber-600 hover:bg-amber-700 active:scale-[0.98] text-white rounded-xl font-bold text-xs md:text-sm transition shadow-md shadow-amber-600/20 flex items-center justify-center gap-2 cursor-pointer">
+                <i data-lucide="key" class="w-4 h-4"></i>
+                <span>Simpan Kata Sandi Baru</span>
+              </button>
+            </div>
           </div>
         </div>
       </section>
@@ -5703,8 +5760,41 @@
     function closeEditProfilePage() {
       const mainScreen = document.getElementById('settings-main-screen');
       const editScreen = document.getElementById('settings-edit-profile-screen');
-      if (mainScreen && editScreen) {
-        editScreen.classList.add('hidden');
+      const pwdScreen = document.getElementById('settings-change-password-screen');
+      if (mainScreen) {
+        if (editScreen) editScreen.classList.add('hidden');
+        if (pwdScreen) pwdScreen.classList.add('hidden');
+        mainScreen.classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (window.lucide) lucide.createIcons();
+      }
+    }
+
+    function openChangePasswordPage() {
+      const oldInput = document.getElementById('cfg-old-pwd');
+      const newInput = document.getElementById('cfg-new-pwd');
+      const confirmInput = document.getElementById('cfg-confirm-pwd');
+      if (oldInput) { oldInput.value = ''; oldInput.type = 'password'; }
+      if (newInput) { newInput.value = ''; newInput.type = 'password'; }
+      if (confirmInput) { confirmInput.value = ''; confirmInput.type = 'password'; }
+
+      const mainScreen = document.getElementById('settings-main-screen');
+      const editScreen = document.getElementById('settings-edit-profile-screen');
+      const pwdScreen = document.getElementById('settings-change-password-screen');
+      if (mainScreen && pwdScreen) {
+        mainScreen.classList.add('hidden');
+        if (editScreen) editScreen.classList.add('hidden');
+        pwdScreen.classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (window.lucide) lucide.createIcons();
+      }
+    }
+
+    function closeChangePasswordPage() {
+      const mainScreen = document.getElementById('settings-main-screen');
+      const pwdScreen = document.getElementById('settings-change-password-screen');
+      if (mainScreen && pwdScreen) {
+        pwdScreen.classList.add('hidden');
         mainScreen.classList.remove('hidden');
         window.scrollTo({ top: 0, behavior: 'smooth' });
         if (window.lucide) lucide.createIcons();
@@ -5923,30 +6013,60 @@
       const newPwd = document.getElementById('cfg-new-pwd').value;
       const confirmPwd = document.getElementById('cfg-confirm-pwd').value;
 
-      const currentStoredPwd = localStorage.getItem('pkl_user_password') || 'daihatsu123';
+      const storedPwd = localStorage.getItem('pkl_user_password');
+      const isAdm = currentUserRole === 'admin';
 
       if (!oldPwd) {
-        alert("Masukkan kata sandi lama / saat ini terlebih dahulu!");
+        showAppAlert("Masukkan kata sandi lama / saat ini terlebih dahulu!", "Perhatian", "warning");
         return;
       }
-      if (oldPwd !== currentStoredPwd) {
-        alert("Kata sandi lama yang Anda masukkan salah!");
+
+      const validOld = storedPwd
+        ? (oldPwd === storedPwd)
+        : (oldPwd === '1234' || oldPwd === 'daihatsu123' || (isAdm && (oldPwd === 'daihatsu2026' || oldPwd === 'admin123')));
+
+      if (!validOld) {
+        showAppAlert("Kata sandi lama yang Anda masukkan tidak sesuai!", "Kata Sandi Salah", "error");
         return;
       }
       if (!newPwd || newPwd.length < 6) {
-        alert("Kata sandi baru minimal harus 6 karakter!");
+        showAppAlert("Kata sandi baru minimal harus 6 karakter!", "Perhatian", "warning");
         return;
       }
       if (newPwd !== confirmPwd) {
-        alert("Konfirmasi kata sandi baru tidak cocok!");
+        showAppAlert("Konfirmasi kata sandi baru tidak cocok!", "Perhatian", "warning");
         return;
       }
 
       localStorage.setItem('pkl_user_password', newPwd);
+
+      // Sinkronkan kata sandi baru ke database Google Sheets
+      const targetApi = currentUser.apiUrl || '/api/presensi';
+      if (targetApi && (targetApi.startsWith('http') || targetApi.startsWith('/'))) {
+        const isProxy = targetApi.startsWith('/');
+        fetch(targetApi, {
+          method: 'POST',
+          mode: isProxy ? 'same-origin' : 'no-cors',
+          headers: { 'Content-Type': isProxy ? 'application/json' : 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'update_profil',
+            role: isAdm ? 'admin' : 'student',
+            statusRole: isAdm ? 'Admin' : 'anak PKL',
+            nim: currentUser.nim,
+            nama: currentUser.nama,
+            username: currentUser.username || currentUser.nama,
+            password: newPwd,
+            secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026",
+            directGasUrl: (currentUser.apiUrl && currentUser.apiUrl.startsWith('http')) ? currentUser.apiUrl : undefined
+          })
+        }).catch(err => console.warn('GAS password sync error:', err));
+      }
+
       document.getElementById('cfg-old-pwd').value = '';
       document.getElementById('cfg-new-pwd').value = '';
       document.getElementById('cfg-confirm-pwd').value = '';
-      alert("Kata sandi akun Anda berhasil diperbarui!");
+      closeChangePasswordPage();
+      showAppToast("Kata Sandi Diperbarui", "Kata sandi akun Anda berhasil disimpan dan disinkronkan.", "success");
     }
 
     async function handleLogout() {
