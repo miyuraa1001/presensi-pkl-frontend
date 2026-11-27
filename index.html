@@ -207,7 +207,7 @@
         <i data-lucide="info" class="w-3.5 h-3.5"></i>
       </div>
       <div>
-        <p class="font-semibold text-slate-300 text-[11px]">Sistem PRD v1.0.0</p>
+        <p class="font-semibold text-slate-300 text-[11px]">Sistem Presensi v1.0</p>
         <p class="text-slate-500 text-[10px] flex items-center gap-1">
           <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Kalibrasi GPS Presisi
         </p>
@@ -1393,16 +1393,16 @@
 
                     <!-- Slider Toleransi Radius & 4 Preset -->
                     <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/60 space-y-3">
-                      <div class="flex justify-between items-center">
-                        <label for="cfg-workshop-radius" class="text-xs font-semibold uppercase tracking-wider text-slate-600">Toleransi Radius Geofencing</label>
-                        <span id="radius-val-display" class="text-xs sm:text-sm font-black text-blue-600 bg-blue-50 px-2.5 py-0.5 rounded-lg border border-blue-200/70">150 meter</span>
+                      <div class="flex justify-between items-center gap-2">
+                        <label for="cfg-workshop-radius" class="text-xs font-semibold uppercase tracking-wider text-slate-600 leading-snug">Toleransi Radius Geofencing</label>
+                        <span id="radius-val-display" class="text-xs sm:text-sm font-extrabold text-[#1d4ed8] bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-200/80 whitespace-nowrap flex-shrink-0 tabular-nums">150 meter</span>
                       </div>
-                      <input type="range" id="cfg-workshop-radius" min="30" max="300" step="5" value="150" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-600" oninput="document.getElementById('radius-val-display').innerText = this.value + ' meter'">
+                      <input type="range" id="cfg-workshop-radius" min="30" max="300" step="5" value="150" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#1d4ed8]" oninput="setRadiusPreset(this.value)">
                       <div class="grid grid-cols-4 gap-2 pt-0.5">
-                        <button type="button" onclick="setRadiusPreset(70)" class="py-2 bg-white hover:bg-slate-100 border border-slate-200 text-[11px] font-bold rounded-xl text-slate-700 transition active:scale-95 text-center shadow-2xs cursor-pointer">70m (PRD)</button>
-                        <button type="button" onclick="setRadiusPreset(100)" class="py-2 bg-white hover:bg-slate-100 border border-slate-200 text-[11px] font-bold rounded-xl text-slate-700 transition active:scale-95 text-center shadow-2xs cursor-pointer">100m</button>
-                        <button type="button" onclick="setRadiusPreset(150)" class="py-2 bg-blue-50 hover:bg-blue-100 border border-blue-200 text-[11px] font-bold rounded-xl text-blue-700 transition active:scale-95 text-center shadow-2xs cursor-pointer">150m</button>
-                        <button type="button" onclick="setRadiusPreset(200)" class="py-2 bg-white hover:bg-slate-100 border border-slate-200 text-[11px] font-bold rounded-xl text-slate-700 transition active:scale-95 text-center shadow-2xs cursor-pointer">200m</button>
+                        <button type="button" data-radius-preset="70" onclick="setRadiusPreset(70)" class="radius-preset-btn h-10 bg-white hover:bg-slate-100 border border-slate-200 text-xs font-bold rounded-xl text-slate-700 transition active:scale-95 text-center shadow-2xs cursor-pointer tabular-nums">70m</button>
+                        <button type="button" data-radius-preset="100" onclick="setRadiusPreset(100)" class="radius-preset-btn h-10 bg-white hover:bg-slate-100 border border-slate-200 text-xs font-bold rounded-xl text-slate-700 transition active:scale-95 text-center shadow-2xs cursor-pointer tabular-nums">100m</button>
+                        <button type="button" data-radius-preset="150" onclick="setRadiusPreset(150)" class="radius-preset-btn h-10 bg-blue-50 hover:bg-blue-100 border-[#1d4ed8] text-xs font-bold rounded-xl text-[#1d4ed8] ring-1 ring-blue-500/20 transition active:scale-95 text-center shadow-2xs cursor-pointer tabular-nums">150m</button>
+                        <button type="button" data-radius-preset="200" onclick="setRadiusPreset(200)" class="radius-preset-btn h-10 bg-white hover:bg-slate-100 border border-slate-200 text-xs font-bold rounded-xl text-slate-700 transition active:scale-95 text-center shadow-2xs cursor-pointer tabular-nums">200m</button>
                       </div>
                     </div>
 
@@ -6043,9 +6043,24 @@
       );
     }
 
+    function updateRadiusPresetActiveUI(val) {
+      const numVal = parseInt(val, 10);
+      document.querySelectorAll('.radius-preset-btn').forEach(btn => {
+        const presetVal = parseInt(btn.getAttribute('data-radius-preset'), 10);
+        if (presetVal === numVal) {
+          btn.className = "radius-preset-btn h-10 bg-blue-50 hover:bg-blue-100 border border-[#1d4ed8] text-xs font-bold rounded-xl text-[#1d4ed8] ring-1 ring-blue-500/20 transition active:scale-95 text-center shadow-2xs cursor-pointer tabular-nums";
+        } else {
+          btn.className = "radius-preset-btn h-10 bg-white hover:bg-slate-100 border border-slate-200 text-xs font-bold rounded-xl text-slate-700 transition active:scale-95 text-center shadow-2xs cursor-pointer tabular-nums";
+        }
+      });
+    }
+
     function setRadiusPreset(val) {
-      document.getElementById('cfg-workshop-radius').value = val;
-      document.getElementById('radius-val-display').innerText = val + ' meter';
+      const slider = document.getElementById('cfg-workshop-radius');
+      const disp = document.getElementById('radius-val-display');
+      if (slider) slider.value = val;
+      if (disp) disp.innerText = val + ' meter';
+      updateRadiusPresetActiveUI(val);
     }
 
     async function resetWorkshopLocationDefault() {
