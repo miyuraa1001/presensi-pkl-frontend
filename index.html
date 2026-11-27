@@ -3907,15 +3907,18 @@
           popupAnchor: [0, -34]
         });
 
+        const activeBranch = getBranchConfig(currentUser.cabang);
+        const workshopPopupHtml = `
+            <div style="font-family: inherit; font-size: 11.5px; line-height: 1.4;">
+              <strong style="color: #dc2626; font-size: 12.5px; display: block; margin-bottom: 2px;">${escapeHtml(activeBranch.name)}</strong>
+              <span style="color: #334155; display: block;">${escapeHtml(activeBranch.address)}</span>
+              <span style="color: #64748b; font-size: 10.5px; display: block; margin-top: 4px; font-weight: 600;">Radius Geofence: ${escapeHtml(workshopConfig.radiusMeters || activeBranch.radiusMeters)} meter</span>
+            </div>
+          `;
+
         workshopMarker = L.marker([workshopConfig.lat, workshopConfig.lng], { icon: workshopIcon })
           .addTo(liveMap)
-          .bindPopup(`
-            <div style="font-family: inherit; font-size: 11.5px; line-height: 1.4;">
-              <strong style="color: #dc2626; font-size: 12.5px; display: block; margin-bottom: 2px;">Astra Daihatsu Ahmad Yani</strong>
-              <span style="color: #334155; display: block;">Jl. Jend. A. Yani No. 1, Palapa, Tj. Karang Pusat</span>
-              <span style="color: #64748b; font-size: 10.5px; display: block; margin-top: 4px; font-weight: 600;">Pusat Geofence Presensi PKL</span>
-            </div>
-          `, { minWidth: 215, maxWidth: 260, autoPanPaddingTopLeft: [12, 48], autoPanPaddingBottomRight: [12, 16] });
+          .bindPopup(workshopPopupHtml, { minWidth: 215, maxWidth: 260, autoPanPaddingTopLeft: [12, 48], autoPanPaddingBottomRight: [12, 16] });
 
         // Lingkaran Radius Geofence (150m)
         geofenceCircle = L.circle([workshopConfig.lat, workshopConfig.lng], {
@@ -3955,14 +3958,23 @@
     function updateMapPositions() {
       if (!liveMap) return;
 
-      // Update Workshop Marker & Circle
+      // Update Workshop Marker, Popup Cabang Aktif & Circle
       if (workshopMarker) {
         workshopMarker.setLatLng([workshopConfig.lat, workshopConfig.lng]);
+        const curBranch = getBranchConfig(currentUser.cabang);
+        workshopMarker.setPopupContent(`
+          <div style="font-family: inherit; font-size: 11.5px; line-height: 1.4;">
+            <strong style="color: #dc2626; font-size: 12.5px; display: block; margin-bottom: 2px;">${escapeHtml(curBranch.name)}</strong>
+            <span style="color: #334155; display: block;">${escapeHtml(curBranch.address)}</span>
+            <span style="color: #64748b; font-size: 10.5px; display: block; margin-top: 4px; font-weight: 600;">Radius Geofence: ${escapeHtml(workshopConfig.radiusMeters || curBranch.radiusMeters)} meter</span>
+          </div>
+        `);
       }
 
       if (geofenceCircle) {
         geofenceCircle.setLatLng([workshopConfig.lat, workshopConfig.lng]);
         geofenceCircle.setRadius(workshopConfig.radiusMeters);
+        geofenceCircle.setPopupContent(`Radius Geofence: ${escapeHtml(workshopConfig.radiusMeters)} meter`);
 
         // Hijau jika dalam radius, Merah jika di luar
         if (userLocation.isInside) {
