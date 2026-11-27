@@ -4962,6 +4962,10 @@
         if (res.ok) {
           const resJson = await res.json().catch(() => null);
           if (resJson && resJson.status === 'error' && (resJson.code === 'OUT_OF_RADIUS' || resJson.code === 'INVALID_COORDS')) {
+            if (btnSubmit) {
+              btnSubmit.disabled = false;
+              btnSubmit.innerHTML = `<span id="btn-submit-attendance-label">${activeAttendanceType === 'IN' ? 'Konfirmasi Presensi Masuk' : 'Konfirmasi Presensi Selesai'}</span>`;
+            }
             showAppAlert(resJson.message || "Lokasi Anda berada di luar radius resmi workshop.", "Validasi Radius Ditolak", "error");
             return;
           }
