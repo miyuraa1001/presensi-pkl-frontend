@@ -744,8 +744,9 @@
               <!-- Geofencing Radius Callout -->
               <div id="clock-flow-geofence-alert" class="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center justify-between gap-2">
                 <span id="clock-flow-geofence-msg" class="inline-flex items-center gap-1.5"><i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600 flex-shrink-0"></i><span>Lokasi Valid: Terverifikasi di area workshop Astra Daihatsu (0 m)</span></span>
-                <button onclick="calibrateCurrentLocation()" class="min-h-[34px] px-2.5 rounded-lg text-xs font-bold text-emerald-700 hover:bg-emerald-100 transition whitespace-nowrap cursor-pointer">
-                  Kalibrasi
+                <button type="button" onclick="checkGPS(true)" class="min-h-[34px] px-2.5 rounded-lg text-xs font-bold text-emerald-700 hover:bg-emerald-100 transition whitespace-nowrap inline-flex items-center gap-1 cursor-pointer">
+                  <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                  <span>Refresh GPS</span>
                 </button>
               </div>
             </div>
@@ -4805,13 +4806,21 @@
       lucide.createIcons();
     }
 
-    // Inisialisasi Peta Roadmap Leaflet di Screen 2 (Image 1)
+    // Inisialisasi Peta Roadmap Leaflet di Screen 2 beserta Lingkaran Radius Geofencing
+    let clockFlowRadiusCircle = null;
+    let clockFlowWorkshopDot = null;
+
     function initOrUpdateClockFlowMap() {
       const mapContainer = document.getElementById('clock-flow-leaflet-map');
       if (!mapContainer) return;
 
       const lat = userLocation.lat;
       const lng = userLocation.lng;
+      const wLat = workshopConfig.lat;
+      const wLng = workshopConfig.lng;
+      const rad = workshopConfig.radiusMeters || 75;
+      const isInside = userLocation.isInside;
+      const circleColor = isInside ? '#10b981' : '#ef4444';
 
       if (!clockFlowMap) {
         clockFlowMap = L.map('clock-flow-leaflet-map', {
@@ -4819,7 +4828,7 @@
           attributionControl: false
         }).setView([lat, lng], 17);
 
-        // Gunakan Tile Roadmap Google Maps Resmi (Bebas API Key & Sesuai Desain Klien)
+        // Gunakan Tile Roadmap Google Maps Resmi (Bebas API Key)
         L.tileLayer('https://mt{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
           maxZoom: 20,
           subdomains: ['0', '1', '2', '3']
@@ -4842,6 +4851,34 @@
           }).addTo(clockFlowMap);
         }
         clockFlowMap.setView([lat, lng], 17);
+      }
+
+      // Gambar / perbarui Lingkaran Radius Geofencing & Titik Pusat Workshop
+      if (clockFlowRadiusCircle) {
+        clockFlowRadiusCircle.setLatLng([wLat, wLng]);
+        clockFlowRadiusCircle.setRadius(rad);
+        clockFlowRadiusCircle.setStyle({ color: circleColor, fillColor: circleColor });
+      } else {
+        clockFlowRadiusCircle = L.circle([wLat, wLng], {
+          radius: rad,
+          color: circleColor,
+          fillColor: circleColor,
+          fillOpacity: 0.16,
+          weight: 2,
+          dashArray: '6 4'
+        }).addTo(clockFlowMap);
+      }
+
+      if (clockFlowWorkshopDot) {
+        clockFlowWorkshopDot.setLatLng([wLat, wLng]);
+      } else {
+        clockFlowWorkshopDot = L.circleMarker([wLat, wLng], {
+          radius: 5,
+          color: '#ffffff',
+          weight: 2,
+          fillColor: '#1d4ed8',
+          fillOpacity: 1
+        }).addTo(clockFlowMap);
       }
 
       setTimeout(() => {
@@ -5943,8 +5980,12 @@
       lucide.createIcons();
     }
 
-    // --- 11. KALIBRASI LOKASI & PENGATURAN BENGKEL ---
+    // --- 11. KALIBRASI LOKASI & PENGATURAN BENGKEL (KHUSUS ADMIN) ---
     function calibrateCurrentLocation() {
+      if (currentUserRole !== 'admin') {
+        checkGPS(true);
+        return;
+      }
       if (!navigator.geolocation) {
         showAppAlert("Sensor Geolocation tidak didukung pada browser ini.", "Sensor GPS", "error");
         return;
