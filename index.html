@@ -3011,6 +3011,7 @@
         if (cfgLng) cfgLng.value = bObj.lng;
         if (cfgRad) cfgRad.value = bObj.radiusMeters;
         if (radDisp) radDisp.innerText = bObj.radiusMeters + ' meter';
+        if (typeof updateRadiusPresetActiveUI === 'function') updateRadiusPresetActiveUI(bObj.radiusMeters);
 
         if (typeof updateDistanceUI === 'function') updateDistanceUI();
         if (typeof updateRadiusUI === 'function' && typeof userLocation !== 'undefined') {
@@ -3048,7 +3049,7 @@
       Math.abs(parsedLat - (-5.324824)) < 0.0002 ||
       Math.abs(parsedLat - (-5.3932)) < 0.0002 ||
       Math.abs(parsedLat - (-5.3970)) < 0.0002 ||
-      !savedRad || savedRad <= 75;
+      !savedRad || isNaN(savedRad) || savedRad < 30;
 
     if (isDisplacedOrOldCoords) {
       localStorage.setItem('pkl_workshop_lat', initialBranchObj.lat);
@@ -3201,6 +3202,7 @@
       if (cfgWRad) cfgWRad.value = branch.radiusMeters;
       const radDisplay = document.getElementById('radius-val-display');
       if (radDisplay) radDisplay.innerText = branch.radiusMeters + ' meter';
+      if (typeof updateRadiusPresetActiveUI === 'function') updateRadiusPresetActiveUI(branch.radiusMeters);
 
       const lblCoords = document.getElementById('lbl-workshop-coords');
       if (lblCoords) lblCoords.innerText = `${branch.lat.toFixed(4)}, ${branch.lng.toFixed(4)}`;
@@ -4238,6 +4240,7 @@
       if (cfgWRad) cfgWRad.value = workshopConfig.radiusMeters;
       const radDisplay = document.getElementById('radius-val-display');
       if (radDisplay) radDisplay.innerText = workshopConfig.radiusMeters + ' meter';
+      if (typeof updateRadiusPresetActiveUI === 'function') updateRadiusPresetActiveUI(workshopConfig.radiusMeters);
 
       // Dashboard Labels
       const lblCoords = document.getElementById('lbl-workshop-coords');
