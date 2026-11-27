@@ -25,8 +25,43 @@ export default async function handler(req, res) {
     payload = typeof req.body === 'object' ? { ...req.body } : JSON.parse(req.body || '{}');
   }
 
-  // Baca Environment Variables dari Dashboard Vercel atau directGasUrl dari client
-  const gasUrl = payload.directGasUrl || req.headers['x-gas-url'] || process.env.GAS_URL || process.env.VITE_GAS_URL;
+  // Validasi ketat whitelist domain Google Apps Script (Anti-SSRF)
+  const isAllowedGasUrl = (rawUrl) => {
+    if (!rawUrl || typeof rawUrl !== 'string') return false;
+    try {
+      const u = new URL(rawUrl.trim());
+      return (
+        u.protocol === 'https:' &&
+        u.hostname === 'script.google.com' &&
+        u.pathname.startsWith('/macros/s/') &&
+        !u.username &&
+        !u.password
+      );
+    } catch {
+      return false;
+    }
+  };
+
+  // Prioritaskan Environment Variable server Vercel; hanya izinkan directGasUrl jika env belum disetel & lolos whitelist GAS
+  const envGasUrl = (process.env.GAS_URL || process.env.VITE_GAS_URL || '').trim();
+  const clientCandidateUrl = (payload.directGasUrl || req.headers['x-gas-url'] || '').toString().trim();
+  const usingTrustedEnvUrl = Boolean(envGasUrl);
+
+  let gasUrl = envGasUrl;
+  if (!usingTrustedEnvUrl && clientCandidateUrl) {
+    if (!isAllowedGasUrl(clientCandidateUrl)) {
+      return res.status(400).json({
+        status: "error",
+        code: "INVALID_TARGET_URL",
+        message: "URL target tidak valid. Hanya URL resmi Google Apps Script (https://script.google.com/macros/s/...) yang diizinkan."
+      });
+    }
+    gasUrl = clientCandidateUrl;
+  }
+
+  // Hapus directGasUrl dari payload sebelum diteruskan ke backend
+  delete payload.directGasUrl;
+
   const secretCode = process.env.GAS_SECRET_CODE || process.env.API_SECRET_CODE || "DAIHATSU_PKL_SEC_2026";
 
   // Endpoint GET: Status Check & Verifikasi Konfigurasi
@@ -52,8 +87,8 @@ export default async function handler(req, res) {
     }
 
     try {
-      // Sisipkan Secret Code secara otomatis jika belum ada di payload
-      if (!payload.secretToken && secretCode) {
+      // Sisipkan Secret Code server HANYA jika meneruskan ke GAS_URL resmi dari Environment Variables Vercel
+      if (usingTrustedEnvUrl && !payload.secretToken && secretCode) {
         payload.secretToken = secretCode;
       }
 
