@@ -28,11 +28,15 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700;1,800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700;1,800&display=swap');
     
     * {
       font-family: 'Plus Jakarta Sans', sans-serif;
       -webkit-tap-highlight-color: transparent;
+    }
+
+    .font-signature {
+      font-family: 'Caveat', cursive !important;
     }
 
     /* Leaflet Map custom styles */
@@ -189,7 +193,7 @@
   </aside>
 
   <!-- ==================== MAIN CONTENT WRAPPER ==================== -->
-  <main class="flex-1 flex flex-col min-h-screen overflow-y-auto">
+  <main class="flex-1 flex flex-col justify-between min-h-screen overflow-y-auto overflow-x-hidden">
 
     <!-- TOPBAR / HEADER (Mobile + Desktop) -->
     <header class="bg-white/95 backdrop-blur-md border-b border-slate-200/90 px-3 sm:px-6 md:px-8 py-2.5 sm:py-3.5 flex items-center justify-between sticky top-0 z-30 shadow-[0_1px_4px_rgba(15,23,42,0.04)]">
@@ -244,8 +248,8 @@
       </div>
     </header>
 
-    <!-- CONTENT BODY CONTAINER (Extra padding-bottom on mobile for Bottom Navbar) -->
-    <div class="p-4 md:p-8 flex-1 max-w-7xl w-full mx-auto pb-36 md:pb-8">
+    <!-- CONTENT BODY CONTAINER -->
+    <div class="p-4 sm:p-6 md:p-8 flex-1 max-w-7xl w-full mx-auto">
 
       <!-- ==================== TAB 1: DASHBOARD ==================== -->
       <section id="view-dashboard" class="space-y-6">
@@ -1090,7 +1094,7 @@
       </section>
 
       <!-- ==================== TAB 5: PENGATURAN & GPS CONFIG ==================== -->
-      <section id="view-pengaturan" class="hidden w-full max-w-7xl mx-auto overflow-x-hidden pb-24 lg:pb-8">
+      <section id="view-pengaturan" class="hidden w-full max-w-7xl mx-auto overflow-x-hidden pb-4">
 
         <!-- ==================== SCREEN A: MAIN SETTINGS & INFO OVERVIEW ==================== -->
         <div id="settings-main-screen" class="space-y-6">
@@ -1623,6 +1627,37 @@
       </section>
 
     </div>
+
+    <!-- ==================== GLOBAL SIGNATURE FOOTER (ALL MENUS) ==================== -->
+    <footer id="app-global-footer" class="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 pt-4 pb-28 md:pb-8 mt-auto print:hidden">
+      <!-- 1. Decorative Divider -->
+      <div class="w-full border-t border-dashed border-slate-300/80 mt-6 mb-5 relative">
+        <div class="w-16 h-0.5 bg-gradient-to-r from-red-600/70 via-blue-700/70 to-transparent absolute -top-px left-0 rounded-full"></div>
+      </div>
+
+      <!-- 2. Signature Sign-off (Right Aligned) -->
+      <div class="flex justify-end px-2 sm:px-4 mb-4">
+        <span class="font-signature text-2xl sm:text-3xl text-slate-600 italic tracking-wide select-none">
+          &mdash; Astra Daihatsu Workshop Team
+        </span>
+      </div>
+
+      <!-- 3. Copyright & Utility Bar (Centered) -->
+      <div class="text-center space-y-1.5 text-[11px] sm:text-xs text-slate-500">
+        <p class="leading-relaxed">
+          &copy; 2026 Sistem Presensi PKL &ndash; PT Astra International Tbk (Daihatsu Lampung Ahmad Yani)
+          <span class="hidden sm:inline mx-1.5 text-slate-300">|</span>
+          <span class="block sm:inline text-slate-400">Jl. Jend. Ahmad Yani No. 1, Bandar Lampung</span>
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1 text-[11px] text-slate-400">
+          <button type="button" onclick="showPwaGuideModal()" class="hover:text-slate-700 transition-colors cursor-pointer">Panduan Penggunaan</button>
+          <span class="text-slate-300">|</span>
+          <button type="button" onclick="switchTab('pengaturan')" class="hover:text-slate-700 transition-colors cursor-pointer">Status Geofencing (<span id="footer-geofence-radius">75m</span>)</button>
+          <span class="text-slate-300">|</span>
+          <a href="https://wa.me/6281198761234" target="_blank" rel="noopener noreferrer" class="hover:text-slate-700 transition-colors">Hubungi Pembimbing</a>
+        </div>
+      </div>
+    </footer>
   </main>
 
   <!-- ==================== MODERN NATIVE MOBILE BOTTOM NAVBAR ==================== -->
@@ -2856,6 +2891,8 @@
 
         const internRadEl = document.getElementById('intern-view-radius-meters');
         if (internRadEl) internRadEl.innerText = bObj.radiusMeters + ' meter';
+        const footerRadEl = document.getElementById('footer-geofence-radius');
+        if (footerRadEl) footerRadEl.innerText = bObj.radiusMeters + 'm';
         const internAddrEl = document.getElementById('intern-branch-address-display');
         if (internAddrEl) internAddrEl.innerText = bObj.address;
         document.querySelectorAll('.app-branch-name').forEach(el => { el.innerText = bObj.name; });
