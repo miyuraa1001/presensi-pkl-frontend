@@ -249,16 +249,16 @@
     </header>
 
     <!-- CONTENT BODY CONTAINER -->
-    <div class="p-4 sm:p-6 md:p-8 flex-1 max-w-7xl w-full mx-auto">
+    <div class="p-3.5 sm:p-6 md:p-8 flex-1 max-w-6xl lg:max-w-7xl w-full mx-auto">
 
       <!-- ==================== TAB 1: DASHBOARD ==================== -->
-      <section id="view-dashboard" class="space-y-6">
+      <section id="view-dashboard" class="space-y-4 sm:space-y-5">
         
         <!-- Hero Banner Daihatsu -->
         <div class="rounded-2xl overflow-hidden shadow-sm border border-slate-200/80 bg-slate-900">
           <img src="Image/Picture-Hero.png" 
                alt="Disiplin Hari Ini, Untuk Masa Depan Nanti - Astra Daihatsu" 
-               class="w-full h-auto object-cover block">
+               class="w-full h-28 sm:h-36 md:h-auto object-cover block">
         </div>
 
         <!-- Onboarding Notice Banner (Wajib Melengkapi Profil bagi Peserta Baru) -->
@@ -289,83 +289,83 @@
         </div>
 
         <!-- 4 Metric Cards (Dynamically computed from real logs: Student Stats vs HRD Admin Overview) -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
           <!-- Card 1: Total Hadir (Student) vs Total Siswa PKL (Admin) -->
-          <div class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-sm transition">
-            <div class="flex items-center gap-3">
-              <div id="stat-icon-wrap-1" class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0">
-                <i data-lucide="calendar-check-2" class="w-5 h-5"></i>
+          <div class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-sm transition">
+            <div class="flex items-center gap-2.5">
+              <div id="stat-icon-wrap-1" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0">
+                <i data-lucide="calendar-check-2" class="w-4 h-4"></i>
               </div>
-              <div>
-                <p id="stat-title-1" class="text-xs font-bold text-slate-600 leading-tight">Total Hadir</p>
-                <p id="stat-sub-1" class="text-[10px] text-slate-400 font-medium">(Bulan Ini)</p>
+              <div class="min-w-0">
+                <p id="stat-title-1" class="text-[11px] sm:text-xs font-bold text-slate-600 leading-tight truncate">Total Hadir</p>
+                <p id="stat-sub-1" class="text-[10px] text-slate-400 font-medium truncate">(Bulan Ini)</p>
               </div>
             </div>
-            <div class="flex items-baseline gap-1 mt-3">
-              <span class="text-2xl md:text-3xl font-black text-slate-900" id="stat-hadir">0</span>
-              <span id="stat-unit-1" class="text-xs font-semibold text-slate-400">Hari</span>
+            <div class="flex items-baseline gap-1 mt-2">
+              <span class="text-xl sm:text-2xl md:text-3xl font-black text-slate-900" id="stat-hadir">0</span>
+              <span id="stat-unit-1" class="text-[11px] sm:text-xs font-semibold text-slate-400">Hari</span>
             </div>
-            <div id="stat-footer-1" class="flex items-center gap-1 mt-1.5 text-xs font-bold text-emerald-600">
+            <div id="stat-footer-1" class="flex items-center gap-1 mt-1 text-[10px] sm:text-xs font-bold text-emerald-600 truncate">
               <span>Presensi Valid Masuk</span>
             </div>
           </div>
 
           <!-- Card 2: Total Sakit (Student) vs Hadir Hari Ini (Admin) -->
-          <div class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-sm transition">
-            <div class="flex items-center gap-3">
-              <div id="stat-icon-wrap-2" class="w-10 h-10 rounded-xl bg-red-50 text-red-500 flex items-center justify-center flex-shrink-0">
-                <i data-lucide="activity" class="w-5 h-5"></i>
+          <div class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-sm transition">
+            <div class="flex items-center gap-2.5">
+              <div id="stat-icon-wrap-2" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-red-50 text-red-500 flex items-center justify-center flex-shrink-0">
+                <i data-lucide="activity" class="w-4 h-4"></i>
               </div>
-              <div>
-                <p id="stat-title-2" class="text-xs font-bold text-slate-600">Total Sakit</p>
-                <p id="stat-sub-2" class="text-[10px] text-slate-400 font-medium">(SKD Dokter)</p>
+              <div class="min-w-0">
+                <p id="stat-title-2" class="text-[11px] sm:text-xs font-bold text-slate-600 leading-tight truncate">Total Sakit</p>
+                <p id="stat-sub-2" class="text-[10px] text-slate-400 font-medium truncate">(SKD Dokter)</p>
               </div>
             </div>
-            <div class="flex items-baseline gap-1 mt-3">
-              <span class="text-2xl md:text-3xl font-black text-slate-900" id="stat-sakit">0</span>
-              <span id="stat-unit-2" class="text-xs font-semibold text-slate-400">Hari</span>
+            <div class="flex items-baseline gap-1 mt-2">
+              <span class="text-xl sm:text-2xl md:text-3xl font-black text-slate-900" id="stat-sakit">0</span>
+              <span id="stat-unit-2" class="text-[11px] sm:text-xs font-semibold text-slate-400">Hari</span>
             </div>
-            <div id="stat-footer-2" class="flex items-center gap-1 mt-1.5 text-xs font-semibold text-slate-400">
+            <div id="stat-footer-2" class="flex items-center gap-1 mt-1 text-[10px] sm:text-xs font-semibold text-slate-400 truncate">
               Surat Dokter Terverifikasi
             </div>
           </div>
 
           <!-- Card 3: Total Izin (Student) vs Inbox Persetujuan (Admin) -->
-          <div class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-sm transition">
-            <div class="flex items-center gap-3">
-              <div id="stat-icon-wrap-3" class="w-10 h-10 rounded-xl bg-orange-50 text-orange-500 flex items-center justify-center flex-shrink-0">
-                <i data-lucide="file-text" class="w-5 h-5"></i>
+          <div class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-sm transition">
+            <div class="flex items-center gap-2.5">
+              <div id="stat-icon-wrap-3" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-orange-50 text-orange-500 flex items-center justify-center flex-shrink-0">
+                <i data-lucide="file-text" class="w-4 h-4"></i>
               </div>
-              <div>
-                <p id="stat-title-3" class="text-xs font-bold text-slate-600">Total Izin</p>
-                <p id="stat-sub-3" class="text-[10px] text-slate-400 font-medium">(Dispensasi)</p>
+              <div class="min-w-0">
+                <p id="stat-title-3" class="text-[11px] sm:text-xs font-bold text-slate-600 leading-tight truncate">Total Izin</p>
+                <p id="stat-sub-3" class="text-[10px] text-slate-400 font-medium truncate">(Dispensasi)</p>
               </div>
             </div>
-            <div class="flex items-baseline gap-1 mt-3">
-              <span class="text-2xl md:text-3xl font-black text-slate-900" id="stat-izin">0</span>
-              <span id="stat-unit-3" class="text-xs font-semibold text-slate-400">Hari</span>
+            <div class="flex items-baseline gap-1 mt-2">
+              <span class="text-xl sm:text-2xl md:text-3xl font-black text-slate-900" id="stat-izin">0</span>
+              <span id="stat-unit-3" class="text-[11px] sm:text-xs font-semibold text-slate-400">Hari</span>
             </div>
-            <div id="stat-footer-3" class="flex items-center gap-1 mt-1.5 text-xs font-semibold text-slate-400">
+            <div id="stat-footer-3" class="flex items-center gap-1 mt-1 text-[10px] sm:text-xs font-semibold text-slate-400 truncate">
               Dispensasi Disetujui
             </div>
           </div>
 
           <!-- Card 4: Total Jam Kerja (Student) vs Cabang PKL (Admin) -->
-          <div class="bg-white p-4 md:p-5 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-sm transition">
-            <div class="flex items-center gap-3">
-              <div id="stat-icon-wrap-4" class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
-                <i data-lucide="clock" class="w-5 h-5"></i>
+          <div class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-sm transition">
+            <div class="flex items-center gap-2.5">
+              <div id="stat-icon-wrap-4" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
+                <i data-lucide="clock" class="w-4 h-4"></i>
               </div>
-              <div>
-                <p id="stat-title-4" class="text-xs font-bold text-slate-600">Total Jam Kerja</p>
-                <p id="stat-sub-4" class="text-[10px] text-slate-400 font-medium">(Akumulasi)</p>
+              <div class="min-w-0">
+                <p id="stat-title-4" class="text-[11px] sm:text-xs font-bold text-slate-600 leading-tight truncate">Total Jam Kerja</p>
+                <p id="stat-sub-4" class="text-[10px] text-slate-400 font-medium truncate">(Akumulasi)</p>
               </div>
             </div>
-            <div class="flex items-baseline gap-1 mt-3">
-              <span class="text-2xl md:text-3xl font-black text-slate-900" id="stat-jam">0</span>
-              <span id="stat-unit-4" class="text-xs font-semibold text-slate-400">Jam</span>
+            <div class="flex items-baseline gap-1 mt-2">
+              <span class="text-xl sm:text-2xl md:text-3xl font-black text-slate-900" id="stat-jam">0</span>
+              <span id="stat-unit-4" class="text-[11px] sm:text-xs font-semibold text-slate-400">Jam</span>
             </div>
-            <div id="stat-footer-4" class="flex items-center gap-1 mt-1.5 text-xs font-semibold text-slate-400">
+            <div id="stat-footer-4" class="flex items-center gap-1 mt-1 text-[10px] sm:text-xs font-semibold text-slate-400 truncate">
               Akumulasi 8 Jam/Shift
             </div>
           </div>
@@ -564,66 +564,66 @@
         <!-- STUDENT FLOW: ONLINE ATTENDANCE -->
         <div id="student-attendance-flow" class="max-w-md mx-auto space-y-4">
 
-        <!-- ==================== SUB-SCREEN 1: ONLINE ATTENDANCE OVERVIEW (IMAGE 2) ==================== -->
-        <div id="presensi-screen-overview" class="space-y-4">
-          <!-- Top App Bar -->
-          <div class="flex items-center justify-between pb-2 border-b border-slate-200">
-            <button onclick="switchTab('dashboard')" class="p-2 -ml-2 rounded-xl hover:bg-slate-100 text-slate-700 transition" aria-label="Kembali ke Dashboard">
-              <i data-lucide="chevron-left" class="w-6 h-6"></i>
+        <!-- ==================== SUB-SCREEN 1: PRESENSI KEHADIRAN OVERVIEW ==================== -->
+        <div id="presensi-screen-overview" class="space-y-3">
+          <!-- Top App Bar (Desktop Only - Mobile sudah tampil di Topbar utama) -->
+          <div class="hidden md:flex items-center justify-between pb-2 border-b border-slate-200">
+            <button onclick="switchTab('dashboard')" class="p-2 -ml-2 rounded-xl hover:bg-slate-100 text-slate-700 transition cursor-pointer" aria-label="Kembali ke Dashboard">
+              <i data-lucide="chevron-left" class="w-5 h-5"></i>
             </button>
-            <h3 class="font-extrabold text-slate-900 text-lg">Online Attendance</h3>
+            <h3 class="font-extrabold text-slate-900 text-base">Presensi Kehadiran</h3>
             <div class="w-8"></div>
           </div>
 
-          <!-- Card 1: Big Live Digital Clock & Date (Image 2) -->
-          <div class="bg-white rounded-3xl p-6 shadow-xs border border-slate-100 text-center space-y-1.5">
-            <h2 id="online-att-time" class="text-4xl sm:text-5xl font-extrabold text-[#1d4ed8] tracking-tight font-mono">
+          <!-- Card 1: Compact Live Digital Clock & Date -->
+          <div class="bg-white rounded-2xl py-4 px-5 shadow-xs border border-slate-200/80 text-center space-y-1">
+            <h2 id="online-att-time" class="text-4xl sm:text-5xl font-extrabold text-[#1d4ed8] tracking-tight font-mono leading-none">
               09:06
             </h2>
             <p id="online-att-date" class="text-xs sm:text-sm font-semibold text-slate-500">
-              Friday, November 13th 2026
+              Jumat, 27 November 2026
             </p>
           </div>
 
-          <!-- Card 2 & 3: Clock In & Clock Out Status Boxes (Image 2) -->
-          <div class="grid grid-cols-2 gap-3.5">
-            <!-- Clock In Card -->
-            <div class="bg-white rounded-3xl p-4 shadow-xs border border-slate-100 flex flex-col justify-between h-28 sm:h-32">
-              <span class="text-xs font-bold text-[#1d4ed8]">Clock In</span>
-              <span id="online-att-in-val" class="text-2xl sm:text-3xl font-extrabold text-[#1d4ed8] tracking-tight">
+          <!-- Card 2 & 3: Jam Masuk & Jam Selesai Status Boxes -->
+          <div class="grid grid-cols-2 gap-3">
+            <!-- Jam Masuk Card -->
+            <div class="bg-white rounded-2xl p-3.5 shadow-xs border border-slate-200/80 flex flex-col justify-between h-24 sm:h-28">
+              <span class="text-xs font-bold text-[#1d4ed8]">Jam Masuk</span>
+              <span id="online-att-in-val" class="text-2xl sm:text-3xl font-extrabold text-[#1d4ed8] tracking-tight font-mono">
                 --:--
               </span>
-              <div></div>
+              <span class="text-[10px] text-slate-400 font-medium">Waktu mulai PKL</span>
             </div>
 
-            <!-- Clock Out Card -->
-            <div class="bg-white rounded-3xl p-4 shadow-xs border border-slate-100 flex flex-col justify-between h-28 sm:h-32">
-              <span class="text-xs font-bold text-[#1d4ed8]">Clock Out</span>
-              <span id="online-att-out-val" class="text-2xl sm:text-3xl font-extrabold text-[#1d4ed8] tracking-tight">
-                :
+            <!-- Jam Selesai Card -->
+            <div class="bg-white rounded-2xl p-3.5 shadow-xs border border-slate-200/80 flex flex-col justify-between h-24 sm:h-28">
+              <span class="text-xs font-bold text-[#1d4ed8]">Jam Selesai</span>
+              <span id="online-att-out-val" class="text-2xl sm:text-3xl font-extrabold text-[#1d4ed8] tracking-tight font-mono">
+                --:--
               </span>
-              <div></div>
+              <span class="text-[10px] text-slate-400 font-medium">Waktu pulang PKL</span>
             </div>
           </div>
 
           <!-- Geofence & Location Info Pill -->
-          <div class="p-3.5 rounded-2xl bg-blue-50/70 border border-blue-100 flex items-center justify-between text-xs">
-            <div class="flex items-center gap-2.5">
-              <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
-              <div>
-                <p class="font-bold text-slate-800">Workshop Astra Daihatsu A. Yani</p>
-                <p class="text-[11px] text-slate-500" id="online-att-gps-status">Jarak: 0 m • Dalam Radius Bengkel</p>
+          <div class="p-3 rounded-xl bg-blue-50/70 border border-blue-100 flex items-center justify-between gap-2 text-xs">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse flex-shrink-0"></div>
+              <div class="min-w-0">
+                <p class="font-bold text-slate-800 truncate app-branch-name">Workshop Astra Daihatsu A. Yani</p>
+                <p class="text-[11px] text-slate-500 truncate" id="online-att-gps-status">Jarak: 0 m • Dalam Radius Bengkel</p>
               </div>
             </div>
-            <button onclick="checkGPS(true)" class="text-[11px] font-bold text-blue-600 hover:text-blue-700 underline">
+            <button onclick="checkGPS(true)" class="text-[11px] font-bold text-blue-600 hover:text-blue-700 underline whitespace-nowrap flex-shrink-0 cursor-pointer">
               Cek GPS
             </button>
           </div>
 
-          <!-- Bottom Action Button (Image 2) -->
-          <div class="pt-2">
-            <button id="btn-online-att-action" onclick="handlePrimaryAttendanceAction()" class="w-full py-4 bg-[#0d59a8] hover:bg-[#0b4a8c] active:scale-[0.98] text-white rounded-2xl font-bold text-base shadow-lg shadow-blue-700/25 transition flex items-center justify-center gap-2">
-              <span id="btn-online-att-label">Clock In</span>
+          <!-- Bottom Action Button -->
+          <div class="pt-1">
+            <button id="btn-online-att-action" onclick="handlePrimaryAttendanceAction()" class="w-full h-12 bg-[#0d59a8] hover:bg-[#0b4a8c] active:scale-[0.98] text-white rounded-xl font-bold text-sm shadow-md shadow-blue-700/25 transition flex items-center justify-center gap-2 cursor-pointer">
+              <span id="btn-online-att-label">Presensi Masuk</span>
             </button>
           </div>
         </div>
@@ -794,34 +794,34 @@
       <section id="view-izin" class="hidden space-y-5 w-full mx-auto">
         
         <!-- STUDENT VIEW: FORM PENGAJUAN IZIN / SAKIT -->
-        <div id="student-izin-form-container" class="max-w-xl mx-auto space-y-5">
-          <div class="flex items-center gap-3 pb-3 border-b border-slate-200">
-            <button onclick="switchTab('dashboard')" class="p-2 rounded-lg hover:bg-slate-200 text-slate-700 transition" aria-label="Kembali ke Dashboard">
+        <div id="student-izin-form-container" class="max-w-xl mx-auto space-y-3 sm:space-y-4">
+          <div class="hidden md:flex items-center gap-3 pb-3 border-b border-slate-200">
+            <button onclick="switchTab('dashboard')" class="p-2 rounded-lg hover:bg-slate-200 text-slate-700 transition cursor-pointer" aria-label="Kembali ke Dashboard">
               <i data-lucide="arrow-left" class="w-5 h-5"></i>
             </button>
             <div>
               <h3 class="font-extrabold text-slate-900 text-lg">Pengajuan Izin / Sakit</h3>
-              <p class="text-xs text-slate-500">Formulir ketidakhadiran mekanik PKL</p>
+              <p class="text-xs text-slate-500">Formulir ketidakhadiran siswa PKL</p>
             </div>
           </div>
 
-          <form id="form-perizinan" onsubmit="submitPerizinan(event)" class="bg-white p-5 md:p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
+          <form id="form-perizinan" onsubmit="submitPerizinan(event)" class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-3">
             <!-- Jenis Pengajuan (Sakit vs Izin) -->
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-2">Jenis Pengajuan</label>
-              <div class="grid grid-cols-2 gap-3">
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">Jenis Pengajuan</label>
+              <div class="grid grid-cols-2 gap-2.5">
                 <label class="cursor-pointer">
                   <input type="radio" name="jenis_izin" value="Sakit" checked class="peer sr-only" onchange="updateFormIzinType()">
-                  <div class="p-3.5 rounded-xl border-2 border-slate-200 peer-checked:border-red-500 peer-checked:bg-red-50/50 flex items-center justify-center gap-2 font-bold text-xs text-slate-700 peer-checked:text-red-700 transition">
-                    <i data-lucide="activity" class="w-4 h-4 text-red-500"></i>
+                  <div class="p-3 rounded-xl border-2 border-slate-200 peer-checked:border-red-500 peer-checked:bg-red-50/50 flex items-center justify-center gap-1.5 font-bold text-xs text-slate-700 peer-checked:text-red-700 transition">
+                    <i data-lucide="activity" class="w-4 h-4 text-red-500 flex-shrink-0"></i>
                     <span>Sakit (Wajib SKD)</span>
                   </div>
                 </label>
 
                 <label class="cursor-pointer">
                   <input type="radio" name="jenis_izin" value="Izin" class="peer sr-only" onchange="updateFormIzinType()">
-                  <div class="p-3.5 rounded-xl border-2 border-slate-200 peer-checked:border-blue-600 peer-checked:bg-blue-50/50 flex items-center justify-center gap-2 font-bold text-xs text-slate-700 peer-checked:text-blue-700 transition">
-                    <i data-lucide="file-text" class="w-4 h-4 text-slate-500 peer-checked:text-blue-600"></i>
+                  <div class="p-3 rounded-xl border-2 border-slate-200 peer-checked:border-blue-600 peer-checked:bg-blue-50/50 flex items-center justify-center gap-1.5 font-bold text-xs text-slate-700 peer-checked:text-blue-700 transition">
+                    <i data-lucide="file-text" class="w-4 h-4 text-slate-500 peer-checked:text-blue-600 flex-shrink-0"></i>
                     <span>Izin Keperluan</span>
                   </div>
                 </label>
@@ -830,37 +830,37 @@
 
             <!-- Date Picker Tanggal Izin (PRD Section 4.3 point 2) -->
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1.5">Tanggal Tidak Hadir</label>
-              <input type="date" id="izin-tanggal" required class="w-full p-3 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-semibold text-slate-800">
+              <label class="block text-xs font-bold text-slate-700 mb-1">Tanggal Tidak Hadir</label>
+              <input type="date" id="izin-tanggal" required class="w-full h-11 px-3 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 font-semibold text-slate-800">
             </div>
 
             <!-- Alasan / Catatan Keperluan -->
             <div>
-              <label class="block text-xs font-bold text-slate-700 mb-1.5">Alasan / Catatan Detail</label>
-              <textarea id="izin-alasan" rows="3" required placeholder="Contoh: Demam tinggi, perlu istirahat berdasarkan diagnosa dokter..." class="w-full p-3 rounded-xl border border-slate-200 text-xs focus:outline-hidden focus:ring-2 focus:ring-blue-500 placeholder:text-slate-400"></textarea>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Alasan / Catatan Detail</label>
+              <textarea id="izin-alasan" rows="2" required placeholder="Contoh: Demam tinggi, perlu istirahat berdasarkan diagnosa dokter..." class="w-full p-3 rounded-xl border border-slate-200 text-xs focus:outline-hidden focus:ring-2 focus:ring-blue-500 placeholder:text-slate-400"></textarea>
             </div>
 
             <!-- Unggah Dokumen Bukti (SKD / Surat Dispensasi) -->
             <div>
-              <div class="flex items-center justify-between mb-1.5">
+              <div class="flex items-center justify-between mb-1">
                 <label class="text-xs font-bold text-slate-700">Lampiran Dokumen Bukti</label>
-                <span id="doc-req-badge" class="text-[11px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded-md border border-red-200">
+                <span id="doc-req-badge" class="text-[10px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded-md border border-red-200">
                   Wajib untuk Sakit (SKD)
                 </span>
               </div>
               
-              <div onclick="document.getElementById('file-dokumen').click()" class="border-2 border-dashed border-slate-200 hover:border-blue-500 rounded-2xl p-5 text-center cursor-pointer bg-slate-50/50 hover:bg-blue-50/30 transition">
+              <div onclick="document.getElementById('file-dokumen').click()" class="border-2 border-dashed border-slate-200 hover:border-blue-500 rounded-xl py-4 px-4 text-center cursor-pointer bg-slate-50/50 hover:bg-blue-50/30 transition">
                 <input type="file" id="file-dokumen" accept="image/*,application/pdf" class="hidden" onchange="previewUploadDoc(this)">
-                <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-2">
-                  <i data-lucide="upload-cloud" class="w-5 h-5"></i>
+                <div class="w-8 h-8 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-1.5">
+                  <i data-lucide="upload-cloud" class="w-4 h-4"></i>
                 </div>
                 <p class="text-xs font-bold text-slate-800" id="file-name-preview">Klik untuk mengunggah foto / file surat dokter</p>
-                <p class="text-[11px] text-slate-400 mt-0.5">Format: JPG, PNG, PDF (Maksimal 2 MB)</p>
+                <p class="text-[10px] text-slate-400 mt-0.5">Format: JPG, PNG, PDF (Maksimal 2 MB)</p>
               </div>
             </div>
 
             <!-- Submit Button -->
-            <button type="submit" id="btn-submit-izin" class="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-blue-600/30 transition">
+            <button type="submit" id="btn-submit-izin" class="w-full h-11 bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-sm shadow-blue-600/25 transition cursor-pointer">
               <i data-lucide="send" class="w-4 h-4"></i>
               <span>Kirim Permohonan Izin / Sakit</span>
             </button>
@@ -939,22 +939,22 @@
           </div>
         </div>
 
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200">
-          <div>
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-2.5 pb-2.5 md:border-b md:border-slate-200">
+          <div class="hidden md:block">
             <h3 class="font-extrabold text-slate-900 text-lg">Rekapitulasi Kehadiran</h3>
-            <p class="text-xs text-slate-500">Daftar kehadiran & perizinan PKL teknisi bengkel</p>
+            <p class="text-xs text-slate-500">Daftar kehadiran &amp; perizinan PKL teknisi bengkel</p>
           </div>
-          <!-- Filter & Export -->
-          <div class="flex flex-wrap items-center gap-2.5 no-print">
-            <select id="rekap-filter-kategori" onchange="renderRekapTable()" class="px-3 py-2 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-700 shadow-xs focus:ring-2 focus:ring-blue-500 cursor-pointer">
+          <!-- Filter & Export (Compact 2-Col Row on Mobile) -->
+          <div class="grid grid-cols-2 sm:flex sm:items-center gap-2.5 w-full md:w-auto no-print">
+            <select id="rekap-filter-kategori" onchange="renderRekapTable()" class="h-10 px-3 rounded-xl border border-slate-200 bg-white text-xs font-bold text-slate-700 shadow-2xs focus:ring-2 focus:ring-blue-500 cursor-pointer">
               <option value="ALL">Semua Kategori</option>
               <option value="Hadir">Hadir Saja</option>
               <option value="Sakit">Sakit Saja</option>
               <option value="Izin">Izin Saja</option>
             </select>
-            <button onclick="exportRekapPDF()" id="btn-export-pdf" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm transition cursor-pointer">
+            <button onclick="exportRekapPDF()" id="btn-export-pdf" class="h-10 px-3.5 bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm transition cursor-pointer whitespace-nowrap">
               <i data-lucide="printer" class="w-3.5 h-3.5"></i>
-              <span>Cetak / Export PDF</span>
+              <span>Cetak / PDF</span>
             </button>
           </div>
         </div>
@@ -1097,9 +1097,9 @@
       <section id="view-pengaturan" class="hidden w-full max-w-7xl mx-auto overflow-x-hidden pb-4">
 
         <!-- ==================== SCREEN A: MAIN SETTINGS & INFO OVERVIEW ==================== -->
-        <div id="settings-main-screen" class="space-y-6">
-          <!-- Page Header Row -->
-          <div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-200/80">
+        <div id="settings-main-screen" class="space-y-4 sm:space-y-5">
+          <!-- Page Header Row (Desktop Only - Mobile sudah tampil di Topbar utama) -->
+          <div class="hidden md:flex flex-wrap items-center justify-between gap-3 pb-3.5 border-b border-slate-200/80">
             <div class="flex items-center gap-3 min-w-0">
               <button type="button" onclick="switchTab('dashboard')" class="p-2 rounded-xl bg-white border border-slate-200/80 hover:bg-slate-100 active:scale-95 text-slate-700 transition shadow-2xs flex-shrink-0 cursor-pointer" aria-label="Kembali ke Dashboard">
                 <i data-lucide="arrow-left" class="w-4 h-4"></i>
@@ -1118,52 +1118,52 @@
           </div>
 
           <!-- ==================== 12-COLUMN ASYMMETRIC BENTO GRID (DESKTOP) + PRIORITY STACK (MOBILE) ==================== -->
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 items-start">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-3.5 lg:gap-6 items-start">
 
             <!-- ==================== KOLOM KIRI (7 KOLOM DI DESKTOP): PROFIL + GEOFENCING ==================== -->
             <div class="contents lg:flex lg:flex-col lg:col-span-7 lg:gap-6">
 
               <!-- CARD 1: INFORMASI PROFIL UTAMA (Mobile Order: 1) -->
               <div class="order-1 lg:order-none bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
-                <!-- Card Header Gradient Navy Daihatsu -->
-                <div class="bg-gradient-to-r from-[#0F172A] via-[#162a54] to-[#1E3A8A] p-4 sm:p-5 text-white flex flex-wrap items-center justify-between gap-3">
-                  <div class="flex items-center gap-3 min-w-0">
-                    <div class="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 flex-shrink-0">
-                      <i id="info-card-icon" data-lucide="user-check" class="w-5 h-5 text-cyan-300"></i>
+                <!-- Card Header Gradient Navy Daihatsu (Compact) -->
+                <div class="bg-gradient-to-r from-[#0F172A] via-[#162a54] to-[#1E3A8A] p-3.5 sm:p-4 text-white flex items-center justify-between gap-2">
+                  <div class="flex items-center gap-2.5 min-w-0">
+                    <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20 flex-shrink-0">
+                      <i id="info-card-icon" data-lucide="user-check" class="w-4 h-4 sm:w-5 sm:h-5 text-cyan-300"></i>
                     </div>
                     <div class="min-w-0">
-                      <h4 id="info-card-title" class="font-extrabold text-sm sm:text-base text-white leading-tight truncate">Informasi Peserta PKL</h4>
-                      <p id="info-card-subtitle" class="text-[11px] text-slate-300 mt-0.5 truncate">Data identitas resmi teknisi PKL Astra Daihatsu</p>
+                      <h4 id="info-card-title" class="font-extrabold text-xs sm:text-sm text-white leading-tight truncate">Informasi Peserta PKL</h4>
+                      <p id="info-card-subtitle" class="text-[10px] sm:text-[11px] text-slate-300 mt-0.5 truncate">Data identitas resmi teknisi PKL Astra Daihatsu</p>
                     </div>
                   </div>
-                  <div class="flex items-center gap-2 flex-shrink-0">
-                    <button type="button" onclick="syncDataFromDatabase(true)" class="text-[11px] font-bold text-white bg-white/15 hover:bg-white/25 active:scale-95 px-3 py-1.5 rounded-full border border-white/20 flex items-center gap-1.5 transition cursor-pointer whitespace-nowrap" title="Sinkronkan Profil Langsung dari Google Spreadsheet">
-                      <i data-lucide="refresh-cw" class="w-3.5 h-3.5 sync-spin-icon"></i>
+                  <div class="flex items-center gap-1.5 flex-shrink-0">
+                    <button type="button" onclick="syncDataFromDatabase(true)" class="text-[10px] sm:text-[11px] font-bold text-white bg-white/15 hover:bg-white/25 active:scale-95 px-2.5 py-1 rounded-full border border-white/20 flex items-center gap-1 transition cursor-pointer whitespace-nowrap" title="Sinkronkan Profil Langsung dari Google Spreadsheet">
+                      <i data-lucide="refresh-cw" class="w-3 h-3 sync-spin-icon"></i>
                       <span class="hidden sm:inline">Sinkron DB</span>
                     </button>
-                    <span id="info-card-verified-badge" class="text-[11px] font-bold text-cyan-300 bg-white/10 px-3 py-1.5 rounded-full border border-white/15 whitespace-nowrap">
+                    <span id="info-card-verified-badge" class="text-[10px] sm:text-[11px] font-bold text-cyan-300 bg-white/10 px-2.5 py-1 rounded-full border border-white/15 whitespace-nowrap">
                       Terverifikasi
                     </span>
                   </div>
                 </div>
 
-                <!-- Card Body -->
-                <div class="p-5 sm:p-6 space-y-5">
-                  <!-- Hero Profile Row -->
-                  <div class="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-4">
-                    <div class="w-20 h-20 rounded-2xl bg-[#0F172A] flex items-center justify-center text-white font-black text-2xl overflow-hidden shadow-md border-2 border-white ring-2 ring-slate-200 flex-shrink-0">
+                <!-- Card Body (Compact Horizontal Hero on Mobile & Desktop) -->
+                <div class="p-4 sm:p-5 space-y-4">
+                  <!-- Hero Profile Row (Always Horizontal for High Information Density) -->
+                  <div class="flex items-center gap-3.5 sm:gap-4 text-left">
+                    <div class="w-14 h-14 sm:w-18 sm:h-18 rounded-2xl bg-gradient-to-br from-[#0F172A] to-[#1E3A8A] flex items-center justify-center text-white font-black text-xl sm:text-2xl overflow-hidden shadow-md border-2 border-white ring-2 ring-slate-200 flex-shrink-0">
                       <span id="info-avatar-initials">M</span>
                       <img id="info-avatar-img" src="" alt="Foto Profil" class="w-full h-full object-cover hidden">
                     </div>
                     <div class="flex-1 min-w-0">
-                      <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
-                        <span id="info-profile-role-badge" class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200/70">
+                      <div class="flex flex-wrap items-center gap-1.5">
+                        <span id="info-profile-role-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200/70">
                           Siswa PKL Teknisi
                         </span>
-                        <span id="info-profile-sub-badge" class="text-[11px] text-slate-400 font-medium">Workshop Astra Daihatsu</span>
+                        <span id="info-profile-sub-badge" class="hidden sm:inline text-[11px] text-slate-400 font-medium">Workshop Astra Daihatsu</span>
                       </div>
-                      <h3 id="info-profile-nama" class="font-black text-slate-900 text-lg sm:text-xl tracking-tight mt-1.5 truncate">Mekanik PKL</h3>
-                      <p class="text-xs font-mono font-semibold text-slate-500 mt-0.5">
+                      <h3 id="info-profile-nama" class="font-black text-slate-900 text-base sm:text-xl tracking-tight mt-0.5 truncate">Mekanik PKL</h3>
+                      <p class="text-[11px] sm:text-xs font-mono font-semibold text-slate-500">
                         <span id="info-profile-nim-label">NISN / NIM:</span>
                         <span id="info-profile-nim" class="font-bold text-slate-800">-</span>
                       </p>
@@ -1173,7 +1173,7 @@
                     <div class="hidden sm:block flex-shrink-0">
                       <button type="button" onclick="openEditProfilePage()" class="h-10 px-4 bg-[#0d59a8] hover:bg-[#0b4a8c] active:scale-[0.98] text-white rounded-xl font-bold text-xs transition shadow-sm shadow-blue-700/20 flex items-center gap-2 cursor-pointer whitespace-nowrap">
                         <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
-                        <span>Edit Informasi Profil</span>
+                        <span>Edit Profil</span>
                       </button>
                     </div>
                   </div>
@@ -4477,10 +4477,10 @@
       }
       const dateEl = document.getElementById('online-att-date');
       if (dateEl) {
-        dateEl.innerText = formatEnglishDateWithSuffix(now);
+        dateEl.innerText = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
       }
 
-      // 2. Status Clock In & Clock Out Hari Ini
+      // 2. Status Jam Masuk & Jam Selesai Hari Ini
       const { inLog, outLog } = getTodayAttendanceRecord();
       
       const inValEl = document.getElementById('online-att-in-val');
@@ -4490,7 +4490,7 @@
 
       const outValEl = document.getElementById('online-att-out-val');
       if (outValEl) {
-        outValEl.innerText = outLog ? outLog.waktu.slice(0, 5) : ':';
+        outValEl.innerText = outLog ? outLog.waktu.slice(0, 5) : '--:--';
       }
 
       // 3. Status Geofence Pill
@@ -4502,19 +4502,19 @@
         gpsPill.innerText = radStatus;
       }
 
-      // 4. Tombol Aksi Utama (Image 2)
+      // 4. Tombol Aksi Utama
       const btnAction = document.getElementById('btn-online-att-action');
       const btnLabel = document.getElementById('btn-online-att-label');
       if (btnAction && btnLabel) {
         if (!inLog) {
-          btnLabel.innerText = "Clock In";
-          btnAction.className = "w-full py-4 bg-[#0d59a8] hover:bg-[#0b4a8c] active:scale-[0.98] text-white rounded-2xl font-bold text-base shadow-lg shadow-blue-700/25 transition flex items-center justify-center gap-2 cursor-pointer";
+          btnLabel.innerText = "Presensi Masuk";
+          btnAction.className = "w-full h-12 bg-[#0d59a8] hover:bg-[#0b4a8c] active:scale-[0.98] text-white rounded-xl font-bold text-sm shadow-md shadow-blue-700/25 transition flex items-center justify-center gap-2 cursor-pointer";
         } else if (!outLog) {
-          btnLabel.innerText = "Clock Out";
-          btnAction.className = "w-full py-4 bg-[#0d59a8] hover:bg-[#0b4a8c] active:scale-[0.98] text-white rounded-2xl font-bold text-base shadow-lg shadow-blue-700/25 transition flex items-center justify-center gap-2 cursor-pointer";
+          btnLabel.innerText = "Presensi Selesai";
+          btnAction.className = "w-full h-12 bg-[#0d59a8] hover:bg-[#0b4a8c] active:scale-[0.98] text-white rounded-xl font-bold text-sm shadow-md shadow-blue-700/25 transition flex items-center justify-center gap-2 cursor-pointer";
         } else {
-          btnLabel.innerText = "Attendance Completed ✓";
-          btnAction.className = "w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl font-bold text-base shadow-lg shadow-emerald-700/25 transition flex items-center justify-center gap-2 cursor-pointer";
+          btnLabel.innerText = "Presensi Hari Ini Selesai ✓";
+          btnAction.className = "w-full h-12 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-sm shadow-md shadow-emerald-700/25 transition flex items-center justify-center gap-2 cursor-pointer";
         }
       }
     }
@@ -5399,14 +5399,14 @@
       }
 
       const emptyHtml = `
-        <div class="py-12 px-4 text-center">
-          <div class="flex flex-col items-center justify-center text-slate-400 space-y-2.5">
-            <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center shadow-xs">
-              <i data-lucide="clipboard-list" class="w-6 h-6"></i>
+        <div class="py-6 px-4 text-center">
+          <div class="flex flex-col items-center justify-center text-slate-400 space-y-2">
+            <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shadow-xs">
+              <i data-lucide="clipboard-list" class="w-5 h-5"></i>
             </div>
             <p class="text-sm font-bold text-slate-800">Belum Ada Riwayat Presensi</p>
-            <p class="text-xs text-slate-400 max-w-sm">Data presensi Clock In dan Clock Out Anda per hari akan otomatis tertata rapi dalam satu barisan di sini.</p>
-            <button onclick="switchTab('presensi')" class="mt-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
+            <p class="text-xs text-slate-400 max-w-sm">Data presensi Jam Masuk dan Jam Selesai Anda per hari akan otomatis tertata rapi di sini.</p>
+            <button onclick="switchTab('presensi')" class="mt-1.5 h-10 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm cursor-pointer">
               <i data-lucide="clock" class="w-3.5 h-3.5"></i> Lakukan Presensi Sekarang
             </button>
           </div>
