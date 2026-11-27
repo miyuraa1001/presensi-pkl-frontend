@@ -1,298 +1,292 @@
-# Product Requirement Document (PRD)
-## Project: Sistem Presensi Geofencing & Rekapitulasi Mekanik PKL
-**Lokasi Implementasi:** Astra Daihatsu Ahmad Yani, Lampung  
-**Arsitektur:** Frontend GitHub Pages (PWA) + Backend Google Apps Script (REST Web App) + Database Google Sheets & Drive Storage
+# Product Requirement Document (PRD) & Panduan Teknis Pembuatan Sistem
+## Sistem Presensi PKL Geofencing & Monitoring Multi-Cabang — Astra Daihatsu DSO Lampung
+
+- **Nama Proyek:** Sistem Presensi PKL – Daihatsu DSO LAMPUNG
+- **Lokasi Implementasi:** PT. Astra International Tbk – Daihatsu Sales Operation (DSO) Lampung (5 Cabang Resmi)
+- **Tipe Aplikasi:** Progressive Web App (PWA) Mobile-First & Responsive Desktop
+- **Arsitektur:** Frontend SPA (Vercel) + Serverless API Proxy (Vercel Functions) + Backend REST API (Google Apps Script) + Database (Google Sheets 6-Sheet) & Cloud Storage (Google Drive)
+- **Versi Dokumen:** 2.0 (Final Production Release)
+- **Status Sistem:** Production-Ready (Teruji Fungsional, UI/UX, dan Keamanan 10/10)
+
+> **Catatan Penggunaan Dokumen Ini:** Dokumen ini dirancang sebagai *Single Source of Truth* untuk penyusunan **Laporan PKL**, **Laporan PRD**, maupun referensi konteks lengkap bagi asisten AI lain agar memahami seluruh arsitektur, alur fitur, skema database, keamanan, dan langkah pembuatan sistem dari nol hingga produksi.
 
 ---
 
-## 1. Overview & Core Objectives
+## 1. Latar Belakang, Tujuan & Ruang Lingkup
 
-Aplikasi ini bertujuan untuk mendigitalkan dan mengamankan alur absensi serta pelaporan kehadiran siswa/mahasiswa PKL (teknisi mekanik) di Astra Daihatsu Ahmad Yani.
+### 1.1. Latar Belakang
+Proses pencatatan kehadiran peserta Praktik Kerja Lapangan (PKL) di lingkungan bengkel/dealer Astra Daihatsu sebelumnya masih bergantung pada absensi manual (kertas/tanda tangan) yang rentan terhadap:
+1. Titip absen atau manipulasi jam kehadiran.
+2. Kesulitan HRD / Pembimbing dalam memantau kehadiran peserta lintas 5 cabang di Lampung secara *real-time*.
+3. Rekapitulasi bulanan dan pengarsipan surat izin/sakit yang memakan waktu lama saat pembuatan laporan penilaian sekolah/kampus.
 
-### Kunci Solusi:
-1. **Anti-Fake Attendance:** Tidak ada fitur upload file dari galeri untuk presensi; wajib menggunakan live camera stream.
-2. **Geofencing Presisi:** Validasi radius kantor menggunakan formula Haversine ($\le 70\text{ meter}$ untuk Masuk/IN).
-3. **Automated Geotag Watermark:** Menempelkan metadata identitas, koordinat GPS, timestamp, dan lokasi bengkel langsung ke foto via HTML5 Canvas sebelum transmisi data.
-4. **Logika Dual Clock (IN & OUT):**
-   - **Clock IN:** Wajib berada di **dalam** radius workshop ($\le 70\text{ m}$).
-   - **Clock OUT:** Dilakukan saat selesai kerja / meninggalkan perimeter workshop ($> 70\text{ m}$) atau selesai shift.
-5. **Manajemen Izin & Sakit:** Wajib mengunggah bukti Surat Keterangan Dokter (SKD) untuk sakit atau bukti dispensasi untuk izin keperluan.
-6. **Zero-Cost Serverless Backend:** Menggunakan Google Apps Script untuk menerima JSON payload, menyimpan foto ke Google Drive, dan mencatat baris data ke Google Sheets secara real-time.
+### 1.2. Tujuan Utama
+1. **Digitalisasi Presensi Berbasis Geofencing GPS:** Memastikan siswa PKL benar-benar hadir di area workshop saat melakukan Presensi Masuk (`IN`) menggunakan validasi radius Haversine di sisi **client dan server**.
+2. **Monitoring Terpusat Multi-Cabang (5 Cabang Lampung):** Memudahkan Admin/HRD memantau kehadiran, menyetujui/menolak izin, mencatat presensi manual, dan mengatur titik pusat serta radius geofencing dari satu dashboard.
+3. **Zero-Cost Serverless Infrastructure:** Memanfaatkan Vercel (Hobby/Free) + Google Apps Script + Google Sheets + Google Drive tanpa biaya sewa server/VPS bulanan.
+4. **Pengalaman Native App (PWA):** Dapat diinstal langsung ke *homescreen* HP Android/iOS melalui browser tanpa perlu Play Store/App Store.
 
 ---
 
-## 2. Parameter Geofencing Multi-Cabang Astra Daihatsu Lampung
+## 2. Arsitektur Sistem & Tech Stack
 
-Aplikasi mendukung 5 cabang workshop resmi Astra Daihatsu di wilayah Lampung dengan toleransi radius maksimal **75 meter**:
+### 2.1. Diagram Arsitektur Alur Data
+```
+[Browser / PWA Siswa & Admin]
+       │
+       │ HTTPS POST/GET (JSON, same-origin, cache: no-store)
+       ▼
+[Vercel Serverless Proxy]
+  ├── /api/presensi.js  ──► Validasi CORS ketat, Anti-SSRF whitelist GAS,
+  │                         injeksi GAS_SECRET_CODE dari Env Var Vercel
+  └── /api/geocode.js   ──► Reverse Geocoding (OpenStreetMap Nominatim +
+                            BigDataCloud fallback) + Google Plus Code
+       │
+       │ HTTPS POST (JSON + secretToken + HMAC sessionToken)
+       ▼
+[Google Apps Script Web App (Code.gs)]
+  ├── Autentikasi (Salted SHA-256 + Rate Limit 5x/5 menit)
+  ├── Otorisasi RBAC (HMAC-SHA256 Signed Session Token)
+  ├── Validasi Geofencing Haversine Server-Side
+  └── CRUD Data & File Upload
+       │
+       ├──► [Google Sheets — 6 Sheet Database]
+       └──► [Google Drive — 3 Folder Media & Dokumen]
+```
 
-1. **Astra Daihatsu Lampung - Ahmad Yani**
-   - **ID/Kode:** `BDL_AYANI`
-   - **Alamat:** Palapa, Jl. Jenderal Ahmad Yani No. 1, Gotong Royong, Kec. Tj. Karang Pusat, Kota Bandar Lampung, Lampung 35213
-   - **Latitude:** `-5.421220` (Showroom & Workshop Pusat)
-   - **Longitude:** `105.252890`
-   - **Radius Standar:** `150 meter` (Mencakup seluruh area showroom, stall bengkel mesin & body repair, cuci mobil, dan parkiran)
+### 2.2. Teknologi yang Digunakan
+| Lapisan | Teknologi | Fungsi |
+| :--- | :--- | :--- |
+| **Frontend UI** | HTML5, Vanilla JavaScript (ES6+), Tailwind CSS (CDN) | Single Page Application (SPA) ringan tanpa kompleksitas bundler |
+| **Tipografi & Ikon** | Plus Jakarta Sans (Google Fonts), Lucide Icons (SVG) | Tipografi korporat modern (`tabular-nums`) & 100% ikon vektor |
+| **Peta & Lokasi** | Leaflet.js 1.9.4, Google Maps Roadmap Tile, Geolocation API (WGS84) | Peta interaktif, marker cabang, lingkaran radius geofencing, kalkulasi Haversine |
+| **PWA & Offline** | Web App Manifest (`manifest.json`), Service Worker (`sw.js`) | Instalasi homescreen, caching aset statis (bypass `/api/` untuk data live) |
+| **API Proxy** | Vercel Serverless Functions (Node.js ESM: `api/presensi.js`, `api/geocode.js`) | Mengatasi CORS, menyembunyikan `GAS_URL` & `GAS_SECRET_CODE`, anti-SSRF |
+| **Backend Logic** | Google Apps Script (`Code.gs`) | REST API endpoint (`doGet`, `doPost`), enkripsi, validasi server, integrasi Drive/Sheets |
+| **Database & Storage** | Google Sheets (6 Sheet) & Google Drive (3 Folder) | Penyimpanan data terstruktur real-time & file foto profil / dokumen bukti |
 
-2. **Astra Daihatsu Lampung - Soekarno Hatta**
-   - **ID/Kode:** `BDL_SOETTA`
-   - **Alamat:** Jl. Lintas Sumatera (Soekarno-Hatta) No. 40A, Kalibalau Kencana, Kec. Kedamaian, Kota Bandar Lampung, Lampung 35122
-   - **Latitude:** `-5.393713` (Fasilitas Dealer & Bengkel Bypass Kalibalau Kencana)
-   - **Longitude:** `105.288628`
-   - **Radius Standar:** `150 meter`
+### 2.3. Struktur File Repositori
+```text
+presensi-pkl/
+├── index.html                        # Aplikasi utama SPA (UI, CSS, JS, Custom Engine)
+├── sw.js                             # Service Worker PWA (caching aset + bypass /api/)
+├── manifest.json                     # Konfigurasi PWA (nama, ikon, theme-color, standalone)
+├── vercel.json                       # Header keamanan cache untuk sw.js & manifest.json
+├── api/
+│   ├── presensi.js                   # Vercel Proxy aman ke Google Apps Script
+│   └── geocode.js                    # Reverse geocoding alamat & Google Plus Code
+├── Image/                            # Aset logo Daihatsu, hero banner, dan ikon PWA (192/512/maskable)
+├── Code.gs                           # Kode backend Google Apps Script (lokal/tidak di-commit ke Git publik)
+└── spesifikasi_produk_presensi_pkl.md# Dokumen PRD & Panduan Lengkap ini
+```
 
-3. **Astra Daihatsu Lampung - Bandar Jaya**
-   - **ID/Kode:** `BDJ_PROKLAMATOR`
-   - **Alamat:** Jl. Proklamator Raya No. 81D, Bandar Jaya Tim., Kec. Terbanggi Besar, Kabupaten Lampung Tengah, Lampung 34161
-   - **Latitude:** `-4.950139`
-   - **Longitude:** `105.215034`
-   - **Radius Standar:** `150 meter`
+---
 
-4. **Astra Daihatsu Lampung Utara - Kotabumi**
-   - **ID/Kode:** `KTB_LAMPURA`
-   - **Alamat:** Jl. Alamsyah RPN, Klp. Tujuh, Kec. Kotabumi Sel., Kabupaten Lampung Utara, Lampung 34514
-   - **Latitude:** `-4.844410`
-   - **Longitude:** `104.909920`
-   - **Radius Standar:** `150 meter`
+## 3. Parameter Geofencing Multi-Cabang (5 Cabang Resmi)
 
-5. **Astra Daihatsu Lampung Timur - Bandar Sribawono**
-   - **ID/Kode:** `LTM_SRIBAWONO`
-   - **Alamat:** Jl. Ir. Sutami, Sri Menanti, Kec. Bandar Sribawono, Kabupaten Lampung Timur, Lampung 34389
-   - **Latitude:** `-5.311915`
-   - **Longitude:** `105.750210`
-   - **Radius Standar:** `150 meter`
+Aplikasi mendukung **5 cabang resmi Astra Daihatsu Lampung** dengan titik pusat dan toleransi radius (rentang slider `30m–300m`, preset `70m`, `100m`, `150m`, `200m`) yang dapat dikalibrasi oleh Admin dan tersinkronisasi real-time ke seluruh siswa:
 
-### Rumus Geodesik Haversine (Implementasi Client & Server):
+| No | Kode ID (`Config_Cabang`) | Nama Cabang Resmi | Wilayah | Latitude | Longitude | Radius Default |
+| :-: | :--- | :--- | :--- | :-: | :-: | :-: |
+| 1 | `BDL_AYANI` | Astra Daihatsu Lampung - Ahmad Yani | Bandar Lampung Pusat | `-5.421220` | `105.252890` | `150 m` |
+| 2 | `BDL_SOETTA` | Astra Daihatsu Lampung - Soekarno Hatta | Bypass Bandar Lampung | `-5.393713` | `105.288628` | `150 m` |
+| 3 | `BDJ_PROKLAMATOR` | Astra Daihatsu Lampung - Bandar Jaya | Lampung Tengah | `-4.950139` | `105.215034` | `150 m` |
+| 4 | `KTB_LAMPURA` | Astra Daihatsu Lampung Utara - Kotabumi | Kotabumi | `-4.844410` | `104.909920` | `150 m` |
+| 5 | `LTM_SRIBAWONO` | Astra Daihatsu Lampung Timur - Bandar Sribawono | Bandar Sribawono | `-5.311915` | `105.750210` | `150 m` |
+
+### Rumus Geodesik Haversine (Dijalankan di Client & Server)
 $$d = 2R \cdot \arcsin\left(\sqrt{\sin^2\left(\frac{\Delta \varphi}{2}\right) + \cos(\varphi_1)\cos(\varphi_2)\sin^2\left(\frac{\Delta \lambda}{2}\right)}\right)$$
-*di mana $R = 6371000\text{ m}$ (radius bumi).*
+*dengan $R = 6.371.000\text{ meter}$ (jari-jari bumi).*
+
+- **Presensi Masuk (`IN`):** Wajib berada di **dalam** radius resmi cabang ($d \le \text{radius}$). Divalidasi ulang di server (`Code.gs`); jika di luar radius akan ditolak dengan kode `OUT_OF_RADIUS`.
+- **Presensi Selesai (`OUT`):** Dapat dilakukan di dalam radius (`VALID_OUT`) maupun saat sudah meninggalkan area (`FLAG_OUT_RADIUS`) dengan pencatatan jarak aktual dari server.
 
 ---
 
-## 3. Database Schema (Google Sheets)
+## 4. Skema Database (Google Sheets — 6 Sheet) & Google Drive
 
-Satu workbook Google Spreadsheet terdiri dari 4 tab sheet:
+### 4.1. Daftar Sheet di Workbook `Database Presensi PKL`
 
-### Sheet 1: `Master_PKL`
-Menyimpan referensi siswa PKL yang berwenang.
-| Header Kolom | Tipe Data | Deskripsi |
+#### 1. Sheet `Master_PKL` (Data Peserta PKL)
+| Kolom | Nama Header | Tipe | Keterangan |
+| :-: | :--- | :--- | :--- |
+| A | `NIM / NISN` | String (PK) | ID unik peserta PKL |
+| B | `Nama Lengkap` | String | Nama lengkap siswa/mahasiswa |
+| C | `Asal Sekolah / Kampus` | String | Instansi pendidikan asal |
+| D | `Jurusan / Program` | String | Contoh: Teknik Kendaraan Ringan (TKR) |
+| E | `URL Foto Profil` | String | Link Google Drive (dinormalisasi ke thumbnail URL) |
+| F | `Status PKL` | String | `Aktif` / `Selesai` |
+| G | `Role` | String | `anak PKL` |
+| H | `Username` | String | Username login peserta |
+| I | `Password` | String | Tersimpan aman dalam format `sha256$<salt>$<hash>` |
+| J | `Cabang` | String | Kode cabang (`BDL_AYANI`, `BDL_SOETTA`, dll.) |
+| K | `Terakhir Diupdate` | DateTime | Timestamp pembaruan terakhir |
+
+#### 2. Sheet `Admin` (Data Akun HRD / Pembimbing)
+| Kolom | Nama Header | Keterangan |
+| :-: | :--- | :--- |
+| A–F | `NIP_ID`, `Nama Lengkap`, `Jabatan`, `Divisi_Bagian`, `No_WhatsApp`, `Email` | Identitas resmi HRD / Pembimbing |
+| G–H | `UserName`, `Password` | Kredensial login (`sha256$<salt>$<hash>`) |
+| I–K | `Role_Akses`, `Cabang_Tugas`, `Status_Akun` | Hak akses (`Super Admin`) & status aktif |
+| L–N | `URL Foto Profil`, `Waktu Dibuat`, `Terakhir Login` | Avatar Drive & audit login |
+
+#### 3. Sheet `Log_Presensi` (Transaksi Masuk & Selesai Harian)
+`Log_ID` (`ABS-YYYYMMDD-NIM-TIPE`), `Server Timestamp`, `Tanggal` (`YYYY-MM-DD`), `Waktu` (`HH:mm:ss WIB`), `NIM_NISN`, `Nama Lengkap`, `Asal Sekolah`, `Tipe Absen` (`IN`/`OUT`), `Koordinat GPS`, `Jarak Ke Bengkel (m)` *(hasil kalkulasi server)*, `Status Geofencing` (`VALID_IN`, `VALID_OUT`, `FLAG_OUT_RADIUS`, `Disetujui Manual HR`), `URL Foto Bukti`.
+
+#### 4. Sheet `Log_Perizinan` (Pengajuan Izin & Sakit)
+`Izin_ID` (`IZN-YYYYMMDD-NIM`), `Timestamp`, `Tanggal Izin`, `NIM_NISN`, `Nama Lengkap`, `Kategori` (`Sakit` / `Izin`), `Alasan`, `URL Dokumen SKD (Drive)` *(opsional, `-` jika tanpa lampiran)*, `Status Approval` (`Pending` / `Disetujui` / `Ditolak`), `Disetujui Oleh`, `Catatan Approver`.
+
+#### 5. Sheet `Rekap_Bulanan` (Ringkasan Statistik per Peserta)
+`NIM_NISN`, `Nama Lengkap`, `Total Hadir`, `Total Sakit`, `Total Izin`, `Persentase Kehadiran`. Diperbarui otomatis oleh server saat presensi `IN` maupun saat Admin menyetujui (`Disetujui`) izin/sakit.
+
+#### 6. Sheet `Config_Cabang` (Konfigurasi Geofencing 5 Cabang)
+`ID_Cabang`, `Nama Cabang Workshop`, `Kota / Wilayah`, `Alamat Lengkap`, `Latitude`, `Longitude`, `Radius_Meter`, `Terakhir Diupdate`, `Diupdate Oleh`.
+
+### 4.2. Folder Google Drive
+1. `Foto_Presensi_PKL` — Penyimpanan foto bukti presensi (jika digunakan).
+2. `Foto_Profil_PKL` — Penyimpanan foto profil peserta PKL & Admin.
+3. `Dokumen_SKD_PKL` — Penyimpanan lampiran opsional (JPG/PNG/PDF) pengajuan Sakit/Izin.
+
+---
+
+## 5. Spesifikasi Fitur & Menu (Dual-Role: User vs Admin)
+
+Aplikasi memiliki **5 Tab Utama** (Sidebar di Desktop, Bottom Navbar di Mobile) yang secara dinamis menyesuaikan konten berdasarkan peran (`student` vs `admin`):
+
+### 5.1. Mode Siswa PKL (`student`)
+1. **Beranda (`view-dashboard`):**
+   - Hero Banner Astra Daihatsu.
+   - 4 Kartu KPI (`Total Hadir`, `Total Sakit`, `Total Izin`, `Total Jam Kerja`) dengan `tabular-nums`.
+   - Peta Interaktif **Status Geofencing Workshop** (Leaflet.js + lingkaran radius + tombol *Bengkel* & *Posisi Saya* + popup informasi cabang dinamis).
+   - Kartu **Presensi Hari Ini** (status Jam Masuk & Jam Selesai + tombol pintas presensi).
+2. **Presensi (`view-presensi`):**
+   - **Sub-Screen 1 (Overview):** Jam digital WIB live, kartu Jam Masuk & Jam Selesai (`--:--`), status jarak GPS + tombol *Cek GPS*, dan tombol CTA utama (*Presensi Masuk* / *Presensi Selesai*). Layout 2 kolom proporsional di Desktop.
+   - **Sub-Screen 2 (Konfirmasi & Peta):** Detail waktu & tanggal kerja, peta interaktif lengkap dengan **lingkaran radius geofencing** (hijau jika valid, merah jika di luar radius) & titik biru pusat bengkel, alamat reverse-geocoding + Google Plus Code, tombol *Refresh GPS*, dan tombol *Konfirmasi Presensi*.
+3. **Izin & Sakit (`view-izin`):**
+   - Formulir pengajuan **Sakit** atau **Izin Keperluan** dengan Custom Date Picker, input alasan detail, dan dropzone unggah dokumen pendukung (JPG/PNG/PDF maks 2 MB) yang bersifat **opsional** untuk keduanya.
+   - Panel panduan pengajuan di sisi kanan (tampilan Desktop 2 kolom).
+4. **Rekap Kehadiran (`view-rekap`):**
+   - Filter kategori (Semua, Hadir, Sakit, Izin) via Custom Dropdown + tombol **Cetak / Export PDF** (format laporan siap cetak dengan kop resmi & kolom tanda tangan).
+   - Tampilan kartu kompak di Mobile dan tabel terstruktur di Desktop (Clock In & Clock Out berdampingan dalam 1 baris + durasi kerja).
+5. **Pengaturan & Profil (`view-pengaturan`):**
+   - **Executive Digital ID Card** profil peserta (avatar Drive dengan fallback inisial dinamis jika foto kosong/gagal muat, badge verifikasi, identitas sekolah/jurusan/cabang/kontak).
+   - Informasi penempatan cabang & radius aktif (read-only untuk siswa).
+   - Sub-halaman **Edit Informasi Profil** (ubah data & unggah foto profil) dan **Ubah Kata Sandi** (verifikasi sandi lama ke server).
+   - Kartu instalasi PWA & tombol **Keluar Akun**.
+
+### 5.2. Mode Admin / HRD (`admin`)
+1. **Beranda (`view-dashboard`):**
+   - 4 Kartu KPI Organisasi (`Total Siswa PKL`, `Hadir Hari Ini`, `Inbox Persetujuan`, `Cabang PKL: 5 Cabang`).
+   - Peta **Monitoring Geofence Cabang** + kartu **Riwayat Presensi Terkini Hari Ini**.
+2. **Inbox Persetujuan (`view-izin`):**
+   - Filter status (`Semua`, `Pending`, `Disetujui`, `Ditolak`) dengan badge counter live.
+   - Kartu permohonan izin/sakit siswa lengkap dengan alasan, tombol preview lampiran berkas/SKD, serta tombol aksi **Setujui** / **Tolak** yang langsung menyinkronkan ke `Log_Perizinan` & `Rekap_Bulanan`.
+3. **Data Siswa PKL (`view-presensi`):**
+   - Statistik cepat (Total Peserta, Hadir Hari Ini, Izin/Sakit, Total Sekolah/Kampus).
+   - Direktori peserta PKL (tabel Desktop & kartu Mobile) dengan status shift hari ini (*Lengkap*, *Sedang Shift*, *Izin/Sakit*, *Belum Masuk*).
+   - Aksi per siswa: **Lihat Rekap**, **Input Presensi Manual HR** (Custom Dropdown + Custom Date/Time Picker), **Tambah Siswa Baru**, dan **Hapus Siswa**.
+4. **Rekap Semua (`view-rekap`):**
+   - Rekap kehadiran seluruh peserta PKL lintas cabang dengan filter kategori & filter per siswa, serta Export PDF.
+5. **Pengaturan (`view-pengaturan`):**
+   - Profil Admin tersinkron 2 arah dengan sheet `Admin`, Edit Profil, Ubah Kata Sandi.
+   - Panel **Titik Pusat & Radius Bengkel (Khusus Admin)**: pilih salah satu dari 5 cabang, ubah Latitude/Longitude, atur toleransi radius via slider (`30m–300m`) atau 4 tombol preset dinamis (`70m`, `100m`, `150m`, `200m`), tombol **Gunakan Lokasi Saya Saat Ini** (Kalibrasi GPS), **Reset Default**, dan **Simpan Parameter Geofencing** (otomatis tersinkron ke `Config_Cabang` & seluruh akun siswa).
+
+---
+
+## 6. Kontrak API (Endpoint & Actions)
+
+Seluruh komunikasi frontend dilakukan via `POST /api/presensi` (`Content-Type: application/json`, `cache: 'no-store'`) yang diteruskan oleh Vercel Proxy ke `Code.gs`:
+
+| `action` | Hak Akses | Deskripsi |
 | :--- | :--- | :--- |
-| `nim_nisn` | String (PK) | Nomor Induk Siswa/Mahasiswa |
-| `nama_lengkap` | String | Nama lengkap peserta |
-| `instansi` | String | Asal sekolah / kampus (contoh: SMKN 2 Bandar Lampung) |
-| `jurusan` | String | Teknik Kendaraan Ringan (TKR) / Otomotif |
-| `status_aktif` | Boolean | `TRUE` / `FALSE` |
+| `login_user` | Publik | Verifikasi login Admin/Siswa (Salted SHA-256 + rate limit), mengembalikan profil user, `sessionToken`, & `branchConfigs`. |
+| `register_siswa` | Publik | Mendaftarkan peserta PKL baru ke `Master_PKL` + upload avatar opsional ke Drive, mengembalikan `sessionToken` siswa. |
+| `get_admin_data` | Authenticated | Mengambil data sinkronisasi. Jika `sessionToken` Admin valid → semua data (tanpa password). Jika siswa → hanya data milik NIM sendiri + `branchConfigs`. |
+| `presensi` | Siswa | Mencatat Clock IN/OUT ke `Log_Presensi` + validasi Haversine server-side terhadap `Config_Cabang` + update `Rekap_Bulanan`. |
+| `izin_sakit` | Siswa | Mencatat pengajuan Sakit/Izin ke `Log_Perizinan` + upload lampiran opsional (JPG/PNG/PDF) ke Drive. |
+| `update_profil` | Authenticated | Memperbarui profil, foto profil Drive, atau kata sandi (wajib sesi Admin jika mengubah sheet `Admin`). |
+| `approve_izin` | **Khusus Admin** | Mengubah status izin (`Disetujui`/`Ditolak`), mencatat nama approver, & memperbarui `Rekap_Bulanan`. |
+| `presensi_manual` | **Khusus Admin** | Mencatat presensi manual HRD ke `Log_Presensi` & memperbarui `Rekap_Bulanan`. |
+| `save_branch_config` | **Khusus Admin** | Menyimpan koordinat & radius cabang ke `Config_Cabang` agar tersinkron ke seluruh siswa. |
 
-### Sheet 2: `Log_Presensi`
-Menyimpan data transaksi clock-in dan clock-out harian.
-| Header Kolom | Tipe Data | Deskripsi |
-| :--- | :--- | :--- |
-| `log_id` | String | Format: `ABS-YYYYMMDD-[NIM]-[TIPE]` |
-| `server_timestamp`| DateTime | Waktu saat Google Apps Script memproses request |
-| `tanggal` | Date | `YYYY-MM-DD` |
-| `nim_nisn` | String | Foreign Key ke `Master_PKL` |
-| `nama` | String | Nama siswa |
-| `tipe` | Enum | `IN` atau `OUT` |
-| `device_time` | String | Jam lokal dari HP siswa (`HH:mm:ss`) |
-| `lat_long` | String | Contoh: `-5.393200, 105.261900` |
-| `jarak_meter` | Number | Jarak kalkulasi dari titik workshop |
-| `status_radius` | Enum | `VALID_IN`, `INVALID_IN`, `VALID_OUT`, `FLAG_OUT_RADIUS` |
-| `drive_photo_url` | String | Direct link preview foto watermark di Google Drive |
-
-### Sheet 3: `Log_Perizinan`
-Menyimpan permohonan izin tidak masuk atau sakit.
-| Header Kolom | Tipe Data | Deskripsi |
-| :--- | :--- | :--- |
-| `izin_id` | String | Format: `IZN-YYYYMMDD-[NIM]` |
-| `timestamp` | DateTime | Waktu pengajuan formulir |
-| `tanggal_izin` | Date | Tanggal tidak hadir |
-| `nim_nisn` | String | NIM/NISN siswa |
-| `nama` | String | Nama siswa |
-| `kategori` | Enum | `Sakit` atau `Izin` |
-| `alasan` | Text | Penjelasan detail |
-| `drive_dokumen_url` | String | URL file foto surat dokter / surat izin di Google Drive |
-| `status_approval`| Enum | `Pending`, `Approved`, `Rejected` |
-
-### Sheet 4: `Rekap_Bulanan`
-Tabel matriks monitoring kehadiran untuk mentor bengkel dan laporan kampus (Tanggal 01–31, Total Hadir, Total Sakit, Total Izin, Total Jam Kerja).
+Endpoint tambahan:
+- `GET /api/presensi` — Status kesehatan proxy & konfigurasi `GAS_URL`.
+- `GET /api/geocode?lat=...&lng=...` — Reverse geocoding alamat & Google Plus Code.
 
 ---
 
-## 4. Spesifikasi Modul & Flow Fungsional
+## 7. Arsitektur Keamanan (10/10 Kontrol Terimplementasi)
 
-### 4.1. Modul Geolocation & Radar Engine
-1. Saat user membuka aplikasi, trigger `navigator.geolocation.getCurrentPosition` dengan opsi `{ enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }`.
-2. Hitung jarak pengguna terhadap koordinat bengkel Daihatsu Ahmad Yani.
-3. Update UI state:
-   - Jika $\text{Jarak} \le 70\text{ m}$: Status hijau *"Dalam Area Bengkel"*, izinkan Clock IN.
-   - Jika $\text{Jarak} > 70\text{ m}$: Status merah *"Di Luar Radius Bengkel"*, cegah aksi Clock IN dan tampilkan peringatan dialog.
-
-### 4.2. Modul Kamera & Canvas Watermarking
-1. Inisialisasi video feed via `navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment', width: { ideal: 1280 } } })`.
-2. Saat tombol "Ambil Foto Presensi" ditekan:
-   - Ambil frame video ke elemen `<canvas>`.
-   - Gambar background transparan hitam pada area bawah foto ($20\%\text{ tinggi canvas}$).
-   - Tulis teks watermark:
-     - **Baris 1 (Cyan):** `[CLOCK IN/OUT] {NIM} - {NAMA}`
-     - **Baris 2 (Putih):** `WAKTU : {DD-MM-YYYY, HH:mm:ss WIB}`
-     - **Baris 3 (Abu-abu terang):** `LOKASI: Workshop Astra Daihatsu Ahmad Yani (Jarak: {X} m)`
-     - **Baris 4 (Abu-abu):** `GPS   : Lat {lat}, Long {lng} | Akurasi: ±{acc}m`
-   - Konversi canvas menjadi Base64 JPEG dengan kompresi kualitas $0.70$ (target payload $\le 200\text{ KB}$).
-
-### 4.3. Modul Pengajuan Izin/Sakit
-1. Radio button toggle: `Sakit` atau `Izin`.
-2. Input date picker tanggal izin.
-3. Text input alasan keperluan.
-4. Input file lampiran bukti:
-   - Jika `Sakit`: File SKD (Surat Keterangan Dokter) berstatus **wajib**.
-   - Konversi file bukti ke Base64 sebelum dikirim ke backend.
+1. **Zero Hardcoded Credentials & Secrets:** Tidak ada password atau token rahasia di `index.html`; `GAS_SECRET_CODE` hanya disimpan di Environment Variables Vercel dan disisipkan otomatis di sisi server (`api/presensi.js`).
+2. **Penghapusan Kebocoran Password & Data Scoping:** Backend tidak pernah mengembalikan kolom `password` pada API respons, dan membatasi data siswa hanya untuk NIM yang bersangkutan.
+3. **Signed Session Token (HMAC-SHA256) & Server-Side RBAC:** Setiap login menerbitkan token bertanda tangan HMAC-SHA256 (berlaku 7 hari). Aksi Admin (`approve_izin`, `presensi_manual`, `save_branch_config`, edit sheet `Admin`) diverifikasi langsung di server.
+4. **Server-Side Geofencing Validation:** Jarak Haversine dihitung ulang di `Code.gs` terhadap `Config_Cabang` (anti-bypass DevTools/Inspect Element).
+5. **Anti-SSRF Proxy:** `api/presensi.js` memprioritaskan `process.env.GAS_URL`, memblokir domain di luar `https://script.google.com/macros/s/...`, dan tidak pernah menyisipkan secret token server ke URL kiriman client.
+6. **Proteksi Stored XSS:** Seluruh data pengguna yang dirender ke `.innerHTML` disanitasi melalui `escapeHtml()`, `escapeJsAttr()`, dan `sanitizeMediaUrl()`.
+7. **Pembersihan `localStorage`:** Password dan secret token tidak pernah disimpan di `localStorage`; sesi & cache sensitif dibersihkan otomatis saat logout.
+8. **CORS Ketat:** `api/presensi.js` dan `api/geocode.js` hanya mengizinkan origin resmi (`*.vercel.app`, `localhost`, atau `ALLOWED_ORIGIN`).
+9. **Salted SHA-256 Password Hashing & Login Rate Limiting:** Password di-hash dengan salt acak (`sha256$<salt>$<hex>`) dengan auto-upgrade dari akun lama, serta pembatasan 5x gagal login / 5 menit via `CacheService`.
+10. **Tes Koneksi Aman:** Uji koneksi backend menggunakan `GET /api/presensi` tanpa pernah menempelkan token di query string URL.
 
 ---
 
-## 5. Spesifikasi Kontrak API (Google Apps Script)
+## 8. Sistem Desain UI/UX (Design System)
 
-Backend Apps Script harus dideploy sebagai **Web App** dengan konfigurasi:
-- *Execute as:* **Me (pemilik Google Account)**
-- *Who has access:* **Anyone**
-
-Endpoint menerima HTTP POST dengan payload JSON di `e.postData.contents`.
-
-### A. Endpoint Request: Presensi
-```json
-{
-  "action": "presensi",
-  "tipe": "IN", // atau "OUT"
-  "nim": "12345678",
-  "nama": "Andi Pratama",
-  "instansi": "SMKN 2 Bandar Lampung",
-  "latitude": -5.3932,
-  "longitude": 105.2619,
-  "jarak": 12,
-  "statusRadius": "VALID_IN",
-  "deviceTimestamp": "2026-11-11T08:15:32.000Z",
-  "fotoBase64": "data:image/jpeg;base64,/9j/4AAQSkZJRg..."
-}
-```
-
-### B. Endpoint Request: Pengajuan Izin/Sakit
-```json
-{
-  "action": "izin_sakit",
-  "nim": "12345678",
-  "nama": "Andi Pratama",
-  "jenis": "Sakit", // atau "Izin"
-  "tanggal": "2026-11-12",
-  "alasan": "Demam berdarah dan rawat inap",
-  "fileBase64": "data:image/jpeg;base64,...",
-  "fileName": "skd_andi.jpg"
-}
-```
-
-### C. Respons Server
-```json
-{
-  "status": "success",
-  "message": "Presensi IN berhasil dicatat.",
-  "fileUrl": "https://drive.google.com/file/d/xxxxx/view"
-}
-```
+- **Palet Warna Resmi:**
+  - Brand Navy: `#0d1a3a` (Sidebar, Digital ID Card, Header Aksen)
+  - Primary Action Blue: `#1d4ed8` / Hover `#1e40af` (CTA, Active Tab, Focus Ring)
+  - Daihatsu Accent Red: `#dc2626` (Pin Workshop, Sakit, Aksi Destruktif)
+  - Semantic Status: Emerald (`#10b981` Valid/Hadir), Amber (`#d97706` Pending/Keamanan), Slate (`#0f172a`–`#64748b` Teks WCAG AA).
+- **Tipografi:** `Plus Jakarta Sans` (400–800) dengan `tabular-nums` pada seluruh jam, angka KPI, jarak, dan NIM.
+- **Standar Komponen:** Card `rounded-2xl`, Button/Input `rounded-xl` (tinggi sentuh minimal `40px–48px`), Badge `rounded-full`, Global Custom Dropdown Engine, Global Custom Date & Time Picker, dan Global Footer seragam (`© 2026 Sistem Presensi PKL – Daihatsu DSO LAMPUNG`).
 
 ---
 
-## 6. Logic Backend Google Apps Script (Snippet Referensi)
+## 9. Panduan Pembuatan Website Langkah demi Langkah (Step-by-Step)
 
-File `Code.gs` di Google Apps Script harus mengimplementasikan alur berikut:
+Bagian ini dapat dijadikan acuan langsung untuk bab **Implementasi Sistem** pada Laporan PKL:
 
-```javascript
-const SPREADSHEET_ID = "MASUKKAN_SPREADSHEET_ID_DISINI";
-const FOLDER_PRESENSI_ID = "MASUKKAN_FOLDER_DRIVE_PRESENSI_ID";
-const FOLDER_IZIN_ID = "MASUKKAN_FOLDER_DRIVE_IZIN_ID";
+### Tahap 1: Persiapan Database & Cloud Storage (Google Workspace)
+1. Buat **Google Spreadsheet** baru di Google Drive dengan nama `Database Presensi PKL`, lalu catat **Spreadsheet ID** dari URL-nya.
+2. Buat 3 folder di Google Drive (`Foto_Presensi_PKL`, `Foto_Profil_PKL`, `Dokumen_SKD_PKL`) dengan izin *Anyone with the link → Viewer*, lalu catat masing-masing **Folder ID**.
 
-function doPost(e) {
-  try {
-    const data = JSON.parse(e.postData.contents);
-    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-    
-    if (data.action === "presensi") {
-      // 1. Simpan Foto Base64 ke Google Drive
-      const folder = DriveApp.getFolderById(FOLDER_PRESENSI_ID);
-      const cleanBase64 = data.fotoBase64.replace(/^data:image\/(png|jpeg);base64,/, "");
-      const decodedBlob = Utilities.newBlob(Utilities.base64Decode(cleanBase64), "image/jpeg", `${data.tipe}_${data.nim}_${Date.now()}.jpg`);
-      const file = folder.createFile(decodedBlob);
-      file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-      const fileUrl = file.getUrl();
+### Tahap 2: Pembuatan Backend REST API (Google Apps Script)
+1. Dari Spreadsheet, buka menu **Extensions → Apps Script**.
+2. Tempelkan seluruh kode backend (`Code.gs`), isi konstanta `SPREADSHEET_ID`, 3 `FOLDER_*_ID`, dan `API_SECRET_TOKEN` (string acak minimal 32 karakter).
+3. Jalankan fungsi `setupDatabaseSheets` sekali dari toolbar editor Apps Script untuk membuat dan memformat otomatis 6 sheet (`Master_PKL`, `Admin`, `Log_Presensi`, `Log_Perizinan`, `Rekap_Bulanan`, `Config_Cabang`).
+4. Klik **Deploy → New deployment → Web app** (*Execute as: Me*, *Who has access: Anyone*), lalu salin **Web App URL** (`https://script.google.com/macros/s/.../exec`).
 
-      // 2. Tulis baris ke sheet Log_Presensi
-      const sheet = ss.getSheetByName("Log_Presensi");
-      const logId = `ABS-${Utilities.formatDate(new Date(), "GMT+7", "yyyyMMdd")}-${data.nim}-${data.tipe}`;
-      
-      sheet.appendRow([
-        logId,
-        new Date(),
-        Utilities.formatDate(new Date(), "GMT+7", "yyyy-MM-dd"),
-        data.nim,
-        data.nama,
-        data.tipe,
-        Utilities.formatDate(new Date(), "GMT+7", "HH:mm:ss"),
-        `${data.latitude}, ${data.longitude}`,
-        data.jarak,
-        data.statusRadius,
-        fileUrl
-      ]);
+### Tahap 3: Pembangunan Frontend PWA & Vercel Proxy
+1. Buat repositori GitHub dan struktur file (`index.html`, `sw.js`, `manifest.json`, `vercel.json`, `api/presensi.js`, `api/geocode.js`, dan folder `Image/`).
+2. Bangun antarmuka SPA responsif di `index.html`:
+   - Layout shell: Desktop Sidebar + Sticky Topbar + 5 Section Views + Global Footer + Mobile Bottom Navbar.
+   - Integrasikan **Leaflet.js** untuk peta geofencing + lingkaran radius + reverse geocoding `/api/geocode`.
+   - Implementasikan **Global Custom Dropdown** & **Custom Date/Time Picker** agar tampilan konsisten di Android, iOS, dan Desktop.
+   - Implementasikan helper keamanan (`escapeHtml`, `escapeJsAttr`, `sanitizeMediaUrl`, `getAuthSessionToken`).
+3. Konfigurasikan `manifest.json` dan Service Worker (`sw.js`) agar aset statis ter-cache dengan baik sementara endpoint `/api/` selalu mengambil data langsung dari server (`network-only`).
+4. Buat `api/presensi.js` sebagai jembatan aman antara frontend dan Google Apps Script (mengatasi CORS, memvalidasi origin, mencegah SSRF, dan menyisipkan `GAS_SECRET_CODE` di sisi server).
 
-      return ContentService.createTextOutput(JSON.stringify({ status: "success", fileUrl: fileUrl }))
-        .setMimeType(ContentService.MimeType.JSON);
-    }
-    
-    if (data.action === "izin_sakit") {
-      // Simpan file bukti izin/SKD ke folder izin
-      const folder = DriveApp.getFolderById(FOLDER_IZIN_ID);
-      let docUrl = "-";
-      if (data.fileBase64) {
-        const cleanDoc = data.fileBase64.replace(/^data:.*?;base64,/, "");
-        const docBlob = Utilities.newBlob(Utilities.base64Decode(cleanDoc), "image/jpeg", `DOC_${data.jenis}_${data.nim}_${Date.now()}.jpg`);
-        const docFile = folder.createFile(docBlob);
-        docFile.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-        docUrl = docFile.getUrl();
-      }
+### Tahap 4: Deployment ke Vercel & Konfigurasi Environment Variables
+1. Hubungkan repositori GitHub ke **Vercel** (Framework Preset: *Other / Static*, Root Directory: `./`).
+2. Masuk ke **Vercel Dashboard → Project Settings → Environment Variables**, lalu tambahkan:
+   - `GAS_URL` = URL Web App Google Apps Script dari Tahap 2.
+   - `GAS_SECRET_CODE` = Kode rahasia yang sama persis dengan `API_SECRET_TOKEN` di `Code.gs`.
+   - `ALLOWED_ORIGIN` *(opsional)* = Domain produksi Vercel Anda.
+3. Lakukan **Deploy / Redeploy** agar Vercel membangun frontend beserta Serverless Functions (`/api/presensi` & `/api/geocode`).
+4. *(Catatan Keamanan Git)* Pastikan file `Code.gs` lokal yang berisi ID Spreadsheet/Drive pribadi **tidak di-commit** ke repositori GitHub publik.
 
-      const sheet = ss.getSheetByName("Log_Perizinan");
-      const izinId = `IZN-${Utilities.formatDate(new Date(), "GMT+7", "yyyyMMdd")}-${data.nim}`;
-      
-      sheet.appendRow([
-        izinId,
-        new Date(),
-        data.tanggal,
-        data.nim,
-        data.nama,
-        data.jenis,
-        data.alasan,
-        docUrl,
-        "Pending"
-      ]);
-
-      return ContentService.createTextOutput(JSON.stringify({ status: "success", fileUrl: docUrl }))
-        .setMimeType(ContentService.MimeType.JSON);
-    }
-  } catch (err) {
-    return ContentService.createTextOutput(JSON.stringify({ status: "error", message: err.toString() }))
-      .setMimeType(ContentService.MimeType.JSON);
-  }
-}
-```
+### Tahap 5: Pengujian & Instalasi PWA
+1. Uji alur **Siswa PKL**: Registrasi/Login → Cek GPS & Lingkaran Radius → Presensi Masuk (`IN`) & Selesai (`OUT`) → Pengajuan Sakit/Izin tanpa & dengan lampiran → Cek Rekap & Export PDF → Edit Profil & Ganti Kata Sandi.
+2. Uji alur **Admin HRD**: Login Admin → Verifikasi KPI (5 Cabang) → Approve/Reject Inbox Perizinan → Tambah/Hapus Siswa & Input Presensi Manual → Ubah Radius Geofencing & verifikasi persistensi setelah reload.
+3. Uji instalasi **PWA**: Buka URL Vercel di Chrome Android / Safari iOS → klik **Install App / Add to Home Screen** → pastikan aplikasi berjalan *standalone* seperti aplikasi native.
 
 ---
 
-## 7. Instruksi Konfigurasi PWA (Add to Homescreen)
+## 10. Rekomendasi Struktur Bab untuk Laporan PKL
 
-Untuk memungkinkan instalasi PWA di smartphone:
-1. Pastikan project memiliki file `manifest.json` di root direktori dengan field `"display": "standalone"`.
-2. Repositori wajib di-host melalui HTTPS (GitHub Pages secara default sudah memenuhi kriteria ini).
-3. Pastikan viewport meta-tag terpasang:
-   `<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">`.
-
----
-
-## 8. Panduan Eksekusi AI Coding Engine (Instruction for Antigravity)
-
-Saat memodifikasi atau menambah fitur pada codebase ini:
-1. **Pertahankan Single-File Mandate:** Seluruh antarmuka, komponen Tailwind, skrip geofencing, dan modul kamera harus tetap berada di dalam `index.html` tanpa memecah ke berkas JS/CSS terpisah.
-2. **Kepatuhan Geofencing:** Jangan bypass kalkulasi jarak Haversine di client-side. Validasi jarak $\le 70\text{ m}$ harus tetap menjadi pemblokir utama sebelum `submitAttendance` dijalankan.
-3. **Pemberian Nama ID & State:** Pertahankan sinkronisasi ID elemen HTML dan key JSON payload agar kompatibel langsung dengan backend Google Apps Script.
+Jika dokumen ini digunakan untuk menyusun **Laporan PKL**, berikut pemetaan materinya:
+- **BAB I Pendahuluan:** Ambil dari **Bagian 1** (Latar Belakang, Rumusan Masalah, Tujuan, Ruang Lingkup).
+- **BAB II Landasan Teori:** Ambil dari **Bagian 2.2** (PWA, Geofencing, Rumus Haversine pada **Bagian 3**, Serverless REST API, HMAC-SHA256 & Salted SHA-256).
+- **BAB III Analisis & Perancangan Sistem:** Ambil dari **Bagian 2.1** (Diagram Arsitektur), **Bagian 4** (Skema 6 Tabel Database & ERD), **Bagian 5** (Use Case Siswa vs Admin), dan **Bagian 8** (Desain UI/UX).
+- **BAB IV Implementasi & Pengujian:** Ambil dari **Bagian 6** (Kontrak API), **Bagian 7** (Implementasi Keamanan 10 Kontrol), dan **Bagian 9** (Langkah Pembuatan & Skenario Pengujian Black-Box).
+- **BAB V Penutup:** Kesimpulan & saran pengembangan lanjutan (mis. notifikasi WhatsApp/Email otomatis, autentikasi biometrik WebAuthn/Passkey).
