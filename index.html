@@ -1558,17 +1558,13 @@
                 </div>
 
                 <p class="text-xs text-slate-500 leading-relaxed">
-                  Keluar dari sesi untuk mengunci aplikasi atau berganti akun lainnya, atau bersihkan cache lokal perangkat.
+                  Keluar dari sesi untuk mengunci aplikasi atau berganti akun lainnya.
                 </p>
 
-                <div class="grid grid-cols-2 gap-3">
-                  <button type="button" onclick="handleLogout()" class="h-11 px-3 bg-red-600 hover:bg-red-700 active:scale-[0.98] text-white rounded-xl font-bold text-xs transition shadow-sm shadow-red-600/20 flex items-center justify-center gap-1.5 cursor-pointer">
+                <div>
+                  <button type="button" onclick="handleLogout()" class="w-full h-11 px-4 bg-red-600 hover:bg-red-700 active:scale-[0.98] text-white rounded-xl font-bold text-xs sm:text-sm transition shadow-sm shadow-red-600/20 flex items-center justify-center gap-2 cursor-pointer">
                     <i data-lucide="log-out" class="w-4 h-4 flex-shrink-0"></i>
-                    <span class="truncate">Keluar Akun</span>
-                  </button>
-                  <button type="button" onclick="resetDemoData()" class="h-11 px-3 bg-white hover:bg-slate-100 active:scale-[0.98] text-slate-700 border border-slate-200 rounded-xl font-bold text-xs transition flex items-center justify-center gap-1.5 cursor-pointer" title="Bersihkan riwayat cache offline">
-                    <i data-lucide="trash-2" class="w-4 h-4 text-slate-500 flex-shrink-0"></i>
-                    <span class="truncate">Hapus Cache Lokal</span>
+                    <span>Keluar Akun</span>
                   </button>
                 </div>
               </div>
