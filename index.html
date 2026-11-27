@@ -3169,6 +3169,58 @@
       }
     }
 
+    // --- HELPER NORMALISASI URL GOOGLE DRIVE & FORMAT TANGGAL/WAKTU SPREADSHEET ---
+    function normalizeDriveImageUrl(url) {
+      if (!url || typeof url !== 'string') return '';
+      const trimmed = url.trim();
+      if (!trimmed || trimmed === '-' || trimmed.toLowerCase().startsWith('error')) return '';
+      if (trimmed.startsWith('data:image')) return trimmed;
+      // Ekstrak File ID dari link Google Drive (/file/d/ID/view, ?id=ID, /uc?id=ID)
+      const fileMatch = trimmed.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/i)
+        || trimmed.match(/drive\.google\.com\/(?:open|uc|thumbnail)\?[^#]*\bid=([a-zA-Z0-9_-]+)/i);
+      if (fileMatch && fileMatch[1]) {
+        return `https://drive.google.com/thumbnail?id=${fileMatch[1]}&sz=w500`;
+      }
+      return trimmed;
+    }
+
+    function normalizeSheetDate(val) {
+      if (!val) return '';
+      const str = String(val).trim();
+      // Sudah format YYYY-MM-DD
+      if (/^\d{4}-\d{2}-\d{2}$/.test(str)) return str;
+      // Format DD/MM/YYYY
+      const dmy = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+      if (dmy) {
+        return `${dmy[3]}-${String(dmy[2]).padStart(2, '0')}-${String(dmy[1]).padStart(2, '0')}`;
+      }
+      // ISO Date dari Google Sheets (misal 2026-11-26T17:00:00.000Z -> konversi ke tanggal lokal WIB)
+      const parsed = new Date(str);
+      if (!isNaN(parsed.getTime())) {
+        const y = parsed.getFullYear();
+        const m = String(parsed.getMonth() + 1).padStart(2, '0');
+        const d = String(parsed.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+      }
+      return str;
+    }
+
+    function normalizeSheetTime(val) {
+      if (!val) return '-';
+      const str = String(val).trim();
+      const hm = str.match(/(\d{1,2})[:.](\d{2})/);
+      if (hm && !str.includes('T')) {
+        return `${String(hm[1]).padStart(2, '0')}:${hm[2]}`;
+      }
+      if (str.includes('T')) {
+        const parsed = new Date(str);
+        if (!isNaN(parsed.getTime())) {
+          return `${String(parsed.getHours()).padStart(2, '0')}:${String(parsed.getMinutes()).padStart(2, '0')}`;
+        }
+      }
+      return str;
+    }
+
     // --- SINKRONISASI DATA DATABASE LIVE (GOOGLE APPS SCRIPT / VERCEL PROXY) ---
     let isSyncingBackend = false;
 
@@ -3289,16 +3341,35 @@
               }
             }
 
-            // 2. Simpan Real Attendance Logs dari Log_Presensi
-            const realAttendances = Array.isArray(json.attendances) ? json.attendances : (Array.isArray(json.presensi) ? json.presensi : null);
-            if (realAttendances) {
-              localStorage.setItem('pkl_logs_presensi', JSON.stringify(realAttendances));
+            // 2. Simpan Real Attendance Logs dari Log_Presensi (Normalisasi tipe data NIM, Tanggal WIB, dan Drive URL)
+            const rawAttendances = Array.isArray(json.attendances) ? json.attendances : (Array.isArray(json.presensi) ? json.presensi : null);
+            if (rawAttendances) {
+              const normalizedAttendances = rawAttendances.map(p => ({
+                ...p,
+                logId: String(p.logId || ''),
+                nim: String(p.nim || '').trim(),
+                nama: String(p.nama || '').trim(),
+                tanggal: normalizeSheetDate(p.tanggal),
+                waktu: normalizeSheetTime(p.waktu),
+                tipe: String(p.tipe || '').trim().toUpperCase(),
+                jarak: (p.jarak !== undefined && p.jarak !== null && p.jarak !== '') ? Number(p.jarak) : 0,
+                photoUrl: normalizeDriveImageUrl(p.photoUrl) || '-'
+              }));
+              localStorage.setItem('pkl_logs_presensi', JSON.stringify(normalizedAttendances));
             }
 
-            // 3. Simpan Real Approvals dari Log_Perizinan
-            const realApprovals = Array.isArray(json.approvals) ? json.approvals : (Array.isArray(json.perizinan) ? json.perizinan : null);
-            if (realApprovals) {
-              localStorage.setItem('pkl_inbox_approvals', JSON.stringify(realApprovals));
+            // 3. Simpan Real Approvals dari Log_Perizinan (Normalisasi NIM & Tanggal)
+            const rawApprovals = Array.isArray(json.approvals) ? json.approvals : (Array.isArray(json.perizinan) ? json.perizinan : null);
+            if (rawApprovals) {
+              const normalizedApprovals = rawApprovals.map(a => ({
+                ...a,
+                izinId: String(a.izinId || ''),
+                nim: String(a.nim || '').trim(),
+                nama: String(a.nama || '').trim(),
+                tanggal: normalizeSheetDate(a.tanggal),
+                docUrl: normalizeDriveImageUrl(a.docUrl) || '-'
+              }));
+              localStorage.setItem('pkl_inbox_approvals', JSON.stringify(normalizedApprovals));
             }
 
             // 4. Simpan & Terapkan Real Branch Configs (Toleransi Radius & Koordinat Cabang dari Database)
@@ -3311,6 +3382,9 @@
             updateProfileDisplay();
             renderDashboardStats();
             renderRekapTable();
+            if (typeof updateOnlineAttendanceUI === 'function') {
+              updateOnlineAttendanceUI();
+            }
             if (currentUserRole === 'admin') {
               renderAdminRecentAttendance();
               renderAdminStudentsTable();
@@ -3501,7 +3575,14 @@
         try {
           const parsed = JSON.parse(saved);
           if (Array.isArray(parsed)) {
-            result = parsed;
+            result = parsed.map(p => ({
+              ...p,
+              nim: p.nim !== undefined && p.nim !== null ? String(p.nim).trim() : '',
+              tanggal: normalizeSheetDate(p.tanggal),
+              waktu: normalizeSheetTime(p.waktu),
+              tipe: String(p.tipe || '').trim().toUpperCase(),
+              photoUrl: normalizeDriveImageUrl(p.photoUrl) || p.photoUrl || '-'
+            }));
           }
         } catch(e) {}
       }
@@ -3510,12 +3591,16 @@
 
     function getIzinLogs() {
       let result = [];
-      const saved = localStorage.getItem('pkl_logs_izin');
+      const saved = localStorage.getItem('pkl_logs_izin') || localStorage.getItem('pkl_inbox_approvals');
       if (saved) {
         try {
           const parsed = JSON.parse(saved);
           if (Array.isArray(parsed)) {
-            result = parsed;
+            result = parsed.map(a => ({
+              ...a,
+              nim: a.nim !== undefined && a.nim !== null ? String(a.nim).trim() : '',
+              tanggal: normalizeSheetDate(a.tanggal)
+            }));
           }
         } catch(e) {}
       }
@@ -3817,25 +3902,21 @@
       if (settingsInitials) settingsInitials.innerText = initials;
       if (infoInitials) infoInitials.innerText = initials;
 
-      if (currentUser.foto) {
-        if (topbarImg) {
-          topbarImg.src = currentUser.foto;
-          topbarImg.classList.remove('hidden');
-        }
-        if (topbarInitials) topbarInitials.classList.add('hidden');
-
-        if (settingsImg) {
-          settingsImg.src = currentUser.foto;
-          settingsImg.classList.remove('hidden');
-        }
-        if (settingsInitials) settingsInitials.classList.add('hidden');
-
-        if (infoImg) {
-          infoImg.src = currentUser.foto;
-          infoImg.classList.remove('hidden');
-        }
-        if (infoInitials) infoInitials.classList.add('hidden');
-
+      const resolvedFoto = normalizeDriveImageUrl(currentUser.foto);
+      if (resolvedFoto) {
+        const setupAvatarImg = (imgEl, initEl) => {
+          if (!imgEl) return;
+          imgEl.onerror = function() {
+            this.classList.add('hidden');
+            if (initEl) initEl.classList.remove('hidden');
+          };
+          imgEl.src = resolvedFoto;
+          imgEl.classList.remove('hidden');
+          if (initEl) initEl.classList.add('hidden');
+        };
+        setupAvatarImg(topbarImg, topbarInitials);
+        setupAvatarImg(settingsImg, settingsInitials);
+        setupAvatarImg(infoImg, infoInitials);
         if (btnDeleteAvatar) btnDeleteAvatar.classList.remove('hidden');
       } else {
         if (topbarImg) topbarImg.classList.add('hidden');
@@ -4392,11 +4473,16 @@
       return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
     }
 
-    // Ambil log kehadiran hari ini
+    // Ambil log kehadiran hari ini milik pengguna aktif
     function getTodayAttendanceRecord() {
       const now = new Date();
       const dateStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
-      const logs = getAttendanceLogs();
+      const curNim = String(currentUser.nim || '').trim();
+      const logs = getAttendanceLogs().filter(l => {
+        if (!curNim || curNim === '-') return true;
+        if (!l.nim) return true;
+        return String(l.nim).trim() === curNim;
+      });
       const inLog = logs.find(l => l.tanggal === dateStr && l.tipe === 'IN');
       const outLog = logs.find(l => l.tanggal === dateStr && l.tipe === 'OUT');
       return { inLog, outLog, dateStr };
@@ -4932,8 +5018,9 @@
       } else {
         // --- B. METRIK DASHBOARD KHUSUS SISWA PKL ---
         if (currentUser.nim && currentUser.nim !== '-') {
-          presensiLogs = presensiLogs.filter(l => l.nim === currentUser.nim);
-          izinLogs = izinLogs.filter(l => l.nim === currentUser.nim);
+          const targetNim = String(currentUser.nim).trim();
+          presensiLogs = presensiLogs.filter(l => String(l.nim || '').trim() === targetNim);
+          izinLogs = izinLogs.filter(l => String(l.nim || '').trim() === targetNim);
         }
 
         const uniqueHadirDates = new Set();
@@ -5219,7 +5306,7 @@
       const dailyMap = {};
 
       presensiLogs.forEach(p => {
-        if (currentUserRole !== 'admin' && p.nim && currentUser.nim && currentUser.nim !== '-' && p.nim !== currentUser.nim) {
+        if (currentUserRole !== 'admin' && p.nim && currentUser.nim && currentUser.nim !== '-' && String(p.nim).trim() !== String(currentUser.nim).trim()) {
           return;
         }
         const groupKey = (currentUserRole === 'admin' ? (p.nim || 'self') : 'self') + '_' + p.tanggal;
@@ -5289,7 +5376,7 @@
 
       // 3. Tambahkan log pengajuan izin dan sakit
       izinLogs.forEach(i => {
-        if (currentUserRole !== 'admin' && i.nim && currentUser.nim && currentUser.nim !== '-' && i.nim !== currentUser.nim) {
+        if (currentUserRole !== 'admin' && i.nim && currentUser.nim && currentUser.nim !== '-' && String(i.nim).trim() !== String(currentUser.nim).trim()) {
           return;
         }
         combined.push({
