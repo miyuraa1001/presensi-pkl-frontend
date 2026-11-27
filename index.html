@@ -39,6 +39,22 @@
       font-family: 'Caveat', cursive !important;
     }
 
+    /* Custom App Dropdown Animations (Menggantikan Dropdown Bawaan OS/Browser) */
+    @keyframes ddSheetSlideUp {
+      from { transform: translateY(100%); opacity: 0.7; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes ddPopoverFade {
+      from { transform: translateY(-6px) scale(0.98); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    .dd-sheet-anim {
+      animation: ddSheetSlideUp 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .dd-popover-anim {
+      animation: ddPopoverFade 0.16s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
     /* Leaflet Map custom styles */
     #live-geofence-map {
       width: 100%;
@@ -4136,7 +4152,7 @@
     function checkGPS(manualAlert = false) {
       // Gunakan Sensor GPS Asli Perangkat (Strict High-Accuracy Geolocation)
       if (!navigator.geolocation) {
-        alert("Browser atau perangkat tidak mendukung sensor Geolocation.");
+        showAppAlert("Browser atau perangkat tidak mendukung sensor Geolocation.", "Sensor GPS Tidak Tersedia", "error");
         updateRadiusUI(userLocation.distance, userLocation.isInside);
         return;
       }
@@ -4164,13 +4180,21 @@
 
           updateRadiusUI(dist, userLocation.isInside);
           if (manualAlert) {
-            alert(`GPS Terkunci:\nPosisi Anda: ${userLocation.lat.toFixed(6)}, ${userLocation.lng.toFixed(6)}\nPusat Bengkel: ${workshopConfig.lat.toFixed(6)}, ${workshopConfig.lng.toFixed(6)}\nJarak: ${dist} meter (Radius: ${workshopConfig.radiusMeters} m, Akurasi: ±${userLocation.accuracy}m).`);
+            showAppAlert(
+              `Posisi Anda: ${userLocation.lat.toFixed(6)}, ${userLocation.lng.toFixed(6)}\nPusat Bengkel: ${workshopConfig.lat.toFixed(6)}, ${workshopConfig.lng.toFixed(6)}\nJarak: ${dist} meter (Radius: ${workshopConfig.radiusMeters} m, Akurasi: ±${userLocation.accuracy}m).`,
+              "GPS Terkunci",
+              "success"
+            );
           }
         },
         (err) => {
           console.warn("Sensor GPS gagal membaca posisi:", err);
           if (manualAlert) {
-            alert(`Gagal membaca sinyal GPS: ${err.message}.\nPastikan izin lokasi telah diizinkan di browser Anda.`);
+            showAppAlert(
+              `Gagal membaca sinyal GPS: ${err.message}.\nPastikan izin lokasi telah diizinkan di browser Anda.`,
+              "Gagal Membaca GPS",
+              "error"
+            );
           }
           updateRadiusUI(userLocation.distance, userLocation.isInside);
         },
@@ -5855,7 +5879,7 @@
       if (!file) return;
 
       if (!file.type.startsWith('image/')) {
-        alert("Pilih file foto yang valid (JPG, PNG, WebP)!");
+        showAppAlert("Pilih file foto yang valid (JPG, PNG, atau WebP)!", "Format Tidak Didukung", "warning");
         return;
       }
 
@@ -7615,6 +7639,228 @@
       renderAdminStudentsTable();
       showAppToast("Presensi Dicatat", `Presensi ${tipe} untuk ${st.nama} berhasil disimpan.`, "success");
     }
+
+    // =========================================================================
+    // GLOBAL CUSTOM DROPDOWN ENGINE (PENGGANTI POPUP DROPDOWN BAWAAN OS/BROWSER)
+    // =========================================================================
+    (function initGlobalCustomDropdownSystem() {
+      const DROPDOWN_TITLES = {
+        'rekap-filter-kategori': 'Filter Kategori Kehadiran',
+        'cfg-branch-select': 'Pilih Cabang Workshop',
+        'reg-cabang': 'Pilih Cabang Penempatan PKL',
+        'add-student-cabang': 'Pilih Cabang Penempatan PKL',
+        'manual-att-student': 'Pilih Peserta PKL',
+        'manual-att-type': 'Pilih Tipe Presensi'
+      };
+
+      let activeSelect = null;
+      let activeTrigger = null;
+      let portalEl = null;
+
+      function ensurePortal() {
+        if (portalEl) return portalEl;
+        portalEl = document.createElement('div');
+        portalEl.id = 'app-custom-dropdown-portal';
+        portalEl.className = 'fixed inset-0 z-[9999] hidden';
+        portalEl.innerHTML = `
+          <div id="app-dd-backdrop" class="fixed inset-0 bg-slate-900/40 sm:bg-transparent backdrop-blur-[1.5px] sm:backdrop-blur-none transition-opacity"></div>
+          <div id="app-dd-panel" class="fixed bg-white border border-slate-200/90 shadow-2xl shadow-slate-900/15 overflow-hidden flex flex-col">
+            <div id="app-dd-mobile-header" class="sm:hidden px-4 pt-3 pb-2.5 border-b border-slate-100 flex flex-col items-center">
+              <div class="w-10 h-1 rounded-full bg-slate-300 mb-2.5"></div>
+              <div class="w-full flex items-center justify-between">
+                <h4 id="app-dd-title" class="text-sm font-extrabold text-slate-900">Pilih Opsi</h4>
+                <button type="button" id="app-dd-close" class="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-500 cursor-pointer">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+              </div>
+            </div>
+            <div id="app-dd-options" class="overflow-y-auto p-1.5 space-y-1 max-h-[55vh] sm:max-h-64"></div>
+          </div>
+        `;
+        document.body.appendChild(portalEl);
+
+        portalEl.querySelector('#app-dd-backdrop').addEventListener('click', closeCustomDropdown);
+        portalEl.querySelector('#app-dd-close').addEventListener('click', closeCustomDropdown);
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && activeSelect) closeCustomDropdown();
+        });
+        window.addEventListener('resize', () => {
+          if (activeSelect) closeCustomDropdown();
+        });
+        return portalEl;
+      }
+
+      function closeCustomDropdown() {
+        if (!portalEl) return;
+        portalEl.classList.add('hidden');
+        if (activeTrigger) {
+          activeTrigger.setAttribute('aria-expanded', 'false');
+          const chev = activeTrigger.querySelector('.custom-dd-chevron');
+          if (chev) chev.style.transform = 'rotate(0deg)';
+          activeTrigger.classList.remove('ring-2', 'ring-blue-500', 'border-blue-500');
+        }
+        activeSelect = null;
+        activeTrigger = null;
+      }
+
+      function syncTriggerLabel(selectEl) {
+        if (!selectEl || !selectEl._customTrigger) return;
+        const labelSpan = selectEl._customTrigger.querySelector('.custom-dd-label');
+        if (!labelSpan) return;
+        const selectedOpt = selectEl.options[selectEl.selectedIndex];
+        labelSpan.textContent = selectedOpt ? selectedOpt.text : 'Pilih opsi...';
+      }
+
+      function openCustomDropdown(selectEl, triggerBtn) {
+        if (activeSelect === selectEl) {
+          closeCustomDropdown();
+          return;
+        }
+        closeCustomDropdown();
+
+        const portal = ensurePortal();
+        const panel = portal.querySelector('#app-dd-panel');
+        const optionsWrap = portal.querySelector('#app-dd-options');
+        const titleEl = portal.querySelector('#app-dd-title');
+
+        activeSelect = selectEl;
+        activeTrigger = triggerBtn;
+        triggerBtn.setAttribute('aria-expanded', 'true');
+        triggerBtn.classList.add('ring-2', 'ring-blue-500', 'border-blue-500');
+        const chev = triggerBtn.querySelector('.custom-dd-chevron');
+        if (chev) chev.style.transform = 'rotate(180deg)';
+
+        titleEl.textContent = DROPDOWN_TITLES[selectEl.id] || 'Pilih Opsi';
+        optionsWrap.innerHTML = '';
+
+        Array.from(selectEl.options).forEach((opt, idx) => {
+          const isSelected = idx === selectEl.selectedIndex;
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = isSelected
+            ? 'w-full text-left px-3.5 py-2.5 rounded-xl text-xs sm:text-[13px] font-extrabold bg-blue-50 text-blue-700 border border-blue-200/80 flex items-center justify-between gap-2.5 transition cursor-pointer'
+            : 'w-full text-left px-3.5 py-2.5 rounded-xl text-xs sm:text-[13px] font-semibold text-slate-700 hover:bg-slate-100 active:bg-slate-200/70 border border-transparent flex items-center justify-between gap-2.5 transition cursor-pointer';
+          btn.innerHTML = `
+            <span class="leading-snug">${opt.text}</span>
+            ${isSelected ? '<span class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center flex-shrink-0"><svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>' : ''}
+          `;
+          btn.addEventListener('click', () => {
+            selectEl.selectedIndex = idx;
+            syncTriggerLabel(selectEl);
+            selectEl.dispatchEvent(new Event('change', { bubbles: true }));
+            closeCustomDropdown();
+          });
+          optionsWrap.appendChild(btn);
+        });
+
+        const isMobile = window.innerWidth < 640;
+        panel.classList.remove('dd-sheet-anim', 'dd-popover-anim');
+        if (isMobile) {
+          panel.style.top = '';
+          panel.style.left = '0';
+          panel.style.right = '0';
+          panel.style.bottom = '0';
+          panel.style.width = '100%';
+          panel.className = 'fixed inset-x-0 bottom-0 bg-white border-t border-slate-200 shadow-2xl rounded-t-3xl overflow-hidden flex flex-col pb-[max(1rem,env(safe-area-inset-bottom,0px))] dd-sheet-anim';
+        } else {
+          const rect = triggerBtn.getBoundingClientRect();
+          const spaceBelow = window.innerHeight - rect.bottom;
+          const menuHeight = Math.min(280, selectEl.options.length * 44 + 20);
+          const openUp = spaceBelow < menuHeight && rect.top > menuHeight;
+
+          panel.style.right = '';
+          panel.style.width = Math.max(rect.width, 220) + 'px';
+          panel.style.left = Math.min(rect.left, window.innerWidth - Math.max(rect.width, 220) - 12) + 'px';
+          if (openUp) {
+            panel.style.top = '';
+            panel.style.bottom = (window.innerHeight - rect.top + 6) + 'px';
+          } else {
+            panel.style.bottom = '';
+            panel.style.top = (rect.bottom + 6) + 'px';
+          }
+          panel.className = 'fixed bg-white border border-slate-200/90 shadow-xl shadow-slate-900/12 rounded-2xl overflow-hidden flex flex-col dd-popover-anim';
+        }
+
+        portal.classList.remove('hidden');
+      }
+
+      function upgradeSelect(selectEl) {
+        if (!selectEl || selectEl.dataset.customDropdown === 'true') return;
+        selectEl.dataset.customDropdown = 'true';
+
+        // Sembunyikan select bawaan OS/browser, tetap simpan di DOM untuk kompatibilitas penuh form & JS
+        const origClass = selectEl.className || '';
+        const hasLeftIcon = /\bpl-(9|10)\b/.test(origClass);
+        const isTall = /\bh-11\b/.test(origClass);
+        const isMedium = /\bh-10\b/.test(origClass);
+        const heightCls = isTall ? 'h-11' : (isMedium ? 'h-10' : 'min-h-[38px] py-2');
+        const leftPad = hasLeftIcon ? (origClass.includes('pl-10') ? 'pl-10' : 'pl-9') : 'pl-3.5';
+
+        selectEl.classList.add('sr-only');
+        selectEl.setAttribute('tabindex', '-1');
+        selectEl.setAttribute('aria-hidden', 'true');
+
+        const triggerBtn = document.createElement('button');
+        triggerBtn.type = 'button';
+        triggerBtn.setAttribute('aria-haspopup', 'listbox');
+        triggerBtn.setAttribute('aria-expanded', 'false');
+        triggerBtn.className = `custom-dd-trigger w-full ${heightCls} ${leftPad} pr-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50/80 text-xs sm:text-[13px] font-bold text-slate-800 shadow-2xs transition flex items-center justify-between gap-2 text-left cursor-pointer focus:outline-none`;
+        triggerBtn.innerHTML = `
+          <span class="custom-dd-label truncate flex-1"></span>
+          <svg xmlns="http://www.w3.org/2000/svg" class="custom-dd-chevron w-4 h-4 text-slate-400 flex-shrink-0 transition-transform duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        `;
+
+        selectEl.parentNode.insertBefore(triggerBtn, selectEl.nextSibling);
+        selectEl._customTrigger = triggerBtn;
+
+        triggerBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          openCustomDropdown(selectEl, triggerBtn);
+        });
+
+        selectEl.addEventListener('change', () => syncTriggerLabel(selectEl));
+
+        // Pantau perubahan dinamis pada <option> (seperti daftar siswa PKL yang diisi lewat JS)
+        const mo = new MutationObserver(() => syncTriggerLabel(selectEl));
+        mo.observe(selectEl, { childList: true, subtree: true, characterData: true });
+
+        syncTriggerLabel(selectEl);
+      }
+
+      // Hook setter value & selectedIndex agar perubahan programatik (setAppBranch, applyUserRoleUI) otomatis update label custom dropdown
+      const valDesc = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value');
+      if (valDesc && valDesc.set) {
+        Object.defineProperty(HTMLSelectElement.prototype, 'value', {
+          get() { return valDesc.get.call(this); },
+          set(v) {
+            valDesc.set.call(this, v);
+            syncTriggerLabel(this);
+          }
+        });
+      }
+      const idxDesc = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'selectedIndex');
+      if (idxDesc && idxDesc.set) {
+        Object.defineProperty(HTMLSelectElement.prototype, 'selectedIndex', {
+          get() { return idxDesc.get.call(this); },
+          set(v) {
+            idxDesc.set.call(this, v);
+            syncTriggerLabel(this);
+          }
+        });
+      }
+
+      function upgradeAllSelects() {
+        document.querySelectorAll('select').forEach(upgradeSelect);
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', upgradeAllSelects);
+      } else {
+        upgradeAllSelects();
+      }
+      window.syncAllCustomDropdowns = upgradeAllSelects;
+    })();
   </script>
 </body>
 </html>
