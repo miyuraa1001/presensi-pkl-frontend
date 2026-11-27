@@ -28,15 +28,22 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700;1,800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
     
+    :root {
+      --brand-navy: #0d1a3a;
+      --brand-blue: #1d4ed8;
+      --brand-blue-hover: #1e40af;
+      --brand-red: #dc2626;
+    }
+
     * {
       font-family: 'Plus Jakarta Sans', sans-serif;
       -webkit-tap-highlight-color: transparent;
     }
 
-    .font-signature {
-      font-family: 'Caveat', cursive !important;
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
     }
 
     /* Custom App Dropdown Animations (Menggantikan Dropdown Bawaan OS/Browser) */
@@ -171,25 +178,25 @@
 
       <!-- Nav Menu Items (Desktop) -->
       <nav class="mt-5 space-y-1.5" id="nav-container">
-        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-bold transition-all bg-blue-600 text-white shadow-md shadow-blue-600/30">
+        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-[13px] font-bold transition-all bg-[#1d4ed8] text-white shadow-md shadow-blue-600/30 cursor-pointer">
           <i data-lucide="home" class="w-4 h-4"></i>
-          <span>Dashboard</span>
+          <span>Beranda</span>
         </button>
-        <button onclick="switchTab('presensi')" id="nav-presensi" class="nav-item w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800/80 hover:text-white transition-all">
+        <button onclick="switchTab('presensi')" id="nav-presensi" class="nav-item w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-[13px] font-semibold text-slate-300 hover:bg-slate-800/80 hover:text-white transition-all cursor-pointer">
           <i data-lucide="clock" class="w-4 h-4"></i>
-          <span>Online Attendance</span>
+          <span>Presensi</span>
         </button>
-        <button onclick="switchTab('izin')" id="nav-izin" class="nav-item w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800/80 hover:text-white transition-all">
+        <button onclick="switchTab('izin')" id="nav-izin" class="nav-item w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-[13px] font-semibold text-slate-300 hover:bg-slate-800/80 hover:text-white transition-all cursor-pointer">
           <i data-lucide="file-plus-2" class="w-4 h-4"></i>
-          <span>Pengajuan Izin/Sakit</span>
+          <span>Izin & Sakit</span>
         </button>
-        <button onclick="switchTab('rekap')" id="nav-rekap" class="nav-item w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800/80 hover:text-white transition-all">
+        <button onclick="switchTab('rekap')" id="nav-rekap" class="nav-item w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-[13px] font-semibold text-slate-300 hover:bg-slate-800/80 hover:text-white transition-all cursor-pointer">
           <i data-lucide="calendar-check" class="w-4 h-4"></i>
-          <span>Rekap Bulanan</span>
+          <span>Rekap Kehadiran</span>
         </button>
-        <button onclick="switchTab('pengaturan')" id="nav-pengaturan" class="nav-item w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800/80 hover:text-white transition-all">
+        <button onclick="switchTab('pengaturan')" id="nav-pengaturan" class="nav-item w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-[13px] font-semibold text-slate-300 hover:bg-slate-800/80 hover:text-white transition-all cursor-pointer">
           <i data-lucide="settings" class="w-4 h-4"></i>
-          <span>Pengaturan & Geofence</span>
+          <span>Pengaturan</span>
         </button>
       </nav>
     </div>
@@ -222,21 +229,21 @@
         
         <!-- Title & Subtitle Container (Clean, Truncated, Non-Wrapping) -->
         <div class="min-w-0 flex-1">
-          <h2 id="page-title" class="text-sm sm:text-lg md:text-xl font-black text-slate-900 tracking-tight leading-tight truncate">Dashboard Presensi</h2>
-          <p id="page-subtitle" class="text-[10px] sm:text-xs text-slate-500 font-medium tracking-normal truncate block mt-0.5">Sistem Monitoring &amp; Geofencing PKL Astra Daihatsu</p>
+          <h2 id="page-title" class="text-[15px] sm:text-lg md:text-xl font-extrabold text-slate-900 tracking-tight leading-tight truncate">Beranda Presensi</h2>
+          <p id="page-subtitle" class="hidden sm:block text-xs text-slate-500 font-medium tracking-normal truncate mt-0.5">Sistem Monitoring &amp; Geofencing PKL Astra Daihatsu</p>
         </div>
       </div>
       
       <!-- Right: Action Buttons & User Profile (Spacious & Clean) -->
       <div class="flex items-center gap-1.5 sm:gap-2.5 flex-shrink-0">
         <!-- Role Badge Button (Switch Role / Profile) -->
-        <button type="button" onclick="showLoginModal()" id="topbar-role-badge" class="h-8 sm:h-9 px-2.5 sm:px-3 rounded-xl text-[10px] sm:text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-2xs border bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100 whitespace-nowrap active:scale-95 flex-shrink-0" title="Klik untuk berganti akun / peran">
-          <span id="role-badge-icon">👨‍🎓</span>
+        <button type="button" onclick="showLoginModal()" id="topbar-role-badge" class="h-9 px-3 rounded-xl text-[11px] sm:text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-2xs border bg-blue-50 text-[#1d4ed8] border-blue-200 hover:bg-blue-100 whitespace-nowrap active:scale-95 flex-shrink-0" title="Klik untuk berganti akun / peran">
+          <span id="role-badge-icon" class="inline-flex items-center justify-center"><i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i></span>
           <span id="role-badge-text">Siswa PKL</span>
         </button>
 
         <!-- GPS Status Pill in Topbar (Visible on Large Tablet & Desktop to avoid crowding mobile) -->
-        <div id="topbar-gps-pill" class="hidden lg:flex items-center gap-1.5 h-9 px-3 rounded-xl text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/80 shadow-2xs whitespace-nowrap flex-shrink-0">
+        <div id="topbar-gps-pill" class="hidden lg:flex items-center gap-1.5 h-9 px-3 rounded-xl text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/80 shadow-2xs whitespace-nowrap flex-shrink-0 tabular-nums">
           <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
           <span id="topbar-gps-text">Radius: 0 m</span>
         </div>
@@ -246,13 +253,13 @@
 
         <!-- User Profile Pill / Avatar Button -->
         <div class="flex items-center gap-2 cursor-pointer p-0.5 rounded-xl hover:bg-slate-100 transition active:scale-95 flex-shrink-0" onclick="switchTab('pengaturan')" title="Buka Pengaturan & Profil Akun">
-          <div id="topbar-avatar-container" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-[#0d1a3a] flex items-center justify-center text-white font-bold text-xs overflow-hidden shadow-xs border border-slate-200 ring-2 ring-white flex-shrink-0">
+          <div id="topbar-avatar-container" class="w-9 h-9 rounded-xl bg-[#0d1a3a] flex items-center justify-center text-white font-bold text-xs overflow-hidden shadow-xs border border-slate-200 ring-2 ring-white flex-shrink-0">
             <span id="topbar-avatar-initials">M</span>
             <img id="topbar-avatar-img" src="" alt="Avatar" class="w-full h-full object-cover hidden">
           </div>
-          <div class="hidden md:block text-left pr-1 max-w-[120px]">
+          <div class="hidden md:block text-left pr-1 max-w-[130px]">
             <p class="text-xs font-bold text-slate-800 leading-tight truncate" id="user-display-name">Mekanik PKL</p>
-            <p class="text-[10px] text-slate-400 font-medium truncate" id="user-display-nim">NIM: -</p>
+            <p class="text-[11px] text-slate-500 font-medium truncate tabular-nums" id="user-display-nim">NIM: -</p>
           </div>
         </div>
       </div>
@@ -265,34 +272,34 @@
       <section id="view-dashboard" class="space-y-4 sm:space-y-5">
         
         <!-- Hero Banner Daihatsu -->
-        <div class="rounded-2xl overflow-hidden shadow-sm border border-slate-200/80 bg-slate-900">
+        <div class="rounded-2xl overflow-hidden shadow-sm border border-slate-200/80 bg-[#0d1a3a]">
           <img src="Image/Picture-Hero.png" 
                alt="Disiplin Hari Ini, Untuk Masa Depan Nanti - Astra Daihatsu" 
-               class="w-full h-28 sm:h-36 md:h-auto object-cover block">
+               class="w-full h-32 sm:h-40 lg:h-48 object-cover object-center block">
         </div>
 
         <!-- Onboarding Notice Banner (Wajib Melengkapi Profil bagi Peserta Baru) -->
-        <div id="onboarding-notice-banner" class="p-4 md:p-5 rounded-2xl bg-gradient-to-r from-blue-700 via-indigo-700 to-blue-800 text-white shadow-md border border-blue-600/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3.5">
+        <div id="onboarding-notice-banner" class="p-4 md:p-5 rounded-2xl bg-gradient-to-r from-[#0d1a3a] via-[#1d4ed8] to-[#1e40af] text-white shadow-md border border-blue-700/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3.5">
           <div class="flex items-center gap-3.5">
-            <div class="w-11 h-11 rounded-2xl bg-white/15 flex items-center justify-center flex-shrink-0 text-2xl backdrop-blur-xs shadow-inner">
-              📢
+            <div class="w-11 h-11 rounded-2xl bg-white/15 flex items-center justify-center flex-shrink-0 backdrop-blur-xs shadow-inner text-white">
+              <i data-lucide="megaphone" class="w-5 h-5"></i>
             </div>
             <div>
-              <div class="flex items-center gap-2">
-                <h4 class="font-black text-sm text-white tracking-wide">Pemberitahuan Peserta PKL Baru</h4>
-                <span class="px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-amber-400 text-amber-950">Wajib Diisi</span>
+              <div class="flex items-center gap-2 flex-wrap">
+                <h4 class="font-extrabold text-sm text-white tracking-tight">Pemberitahuan Peserta PKL Baru</h4>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-amber-400 text-amber-950">Wajib Diisi</span>
               </div>
-              <p class="text-xs text-blue-100 mt-0.5 leading-relaxed">
-                Bagi peserta PKL yang belum memiliki akun, disarankan untuk <strong>Registrasi & Lengkapi Profil</strong> terlebih dahulu agar penempatan cabang workshop, radius geofencing presensi, dan data tersimpan ke database Astra Daihatsu.
+              <p class="text-xs text-blue-100 mt-1 leading-relaxed font-normal">
+                Bagi peserta PKL yang belum memiliki akun, disarankan untuk <strong class="font-semibold text-white">Registrasi & Lengkapi Profil</strong> terlebih dahulu agar penempatan cabang workshop, radius geofencing presensi, dan data tersimpan ke database Astra Daihatsu.
               </p>
             </div>
           </div>
           <div class="flex items-center gap-2 self-stretch sm:self-auto flex-shrink-0">
-            <button type="button" onclick="showLoginModal('register')" class="w-full sm:w-auto px-4 py-2.5 bg-white text-blue-800 hover:bg-blue-50 active:scale-95 rounded-xl font-black text-xs transition shadow-sm flex items-center justify-center gap-1.5 cursor-pointer">
-              <i data-lucide="user-plus" class="w-3.5 h-3.5 text-blue-600"></i>
+            <button type="button" onclick="showLoginModal('register')" class="w-full sm:w-auto min-h-[40px] px-4 py-2.5 bg-white text-[#0d1a3a] hover:bg-blue-50 active:scale-95 rounded-xl font-bold text-xs transition shadow-sm flex items-center justify-center gap-1.5 cursor-pointer">
+              <i data-lucide="user-plus" class="w-4 h-4 text-[#1d4ed8]"></i>
               <span>Registrasi & Lengkapi Profil</span>
             </button>
-            <button type="button" onclick="document.getElementById('onboarding-notice-banner').classList.add('hidden')" class="p-2 rounded-xl text-blue-200 hover:text-white hover:bg-white/10 transition" title="Tutup Notifikasi">
+            <button type="button" onclick="document.getElementById('onboarding-notice-banner').classList.add('hidden')" class="min-h-[40px] min-w-[40px] flex items-center justify-center rounded-xl text-blue-200 hover:text-white hover:bg-white/10 transition cursor-pointer" title="Tutup Notifikasi" aria-label="Tutup Notifikasi">
               <i data-lucide="x" class="w-4 h-4"></i>
             </button>
           </div>
@@ -303,19 +310,19 @@
           <!-- Card 1: Total Hadir (Student) vs Total Siswa PKL (Admin) -->
           <div class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-sm transition">
             <div class="flex items-center gap-2.5">
-              <div id="stat-icon-wrap-1" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0">
+              <div id="stat-icon-wrap-1" class="w-9 h-9 rounded-xl bg-blue-50 text-[#1d4ed8] flex items-center justify-center flex-shrink-0">
                 <i data-lucide="calendar-check-2" class="w-4 h-4"></i>
               </div>
               <div class="min-w-0">
-                <p id="stat-title-1" class="text-[11px] sm:text-xs font-bold text-slate-600 leading-tight truncate">Total Hadir</p>
-                <p id="stat-sub-1" class="text-[10px] text-slate-400 font-medium truncate">(Bulan Ini)</p>
+                <p id="stat-title-1" class="text-xs font-bold text-slate-700 leading-tight truncate">Total Hadir</p>
+                <p id="stat-sub-1" class="text-[11px] text-slate-500 font-medium truncate">Bulan Ini</p>
               </div>
             </div>
-            <div class="flex items-baseline gap-1 mt-2">
-              <span class="text-xl sm:text-2xl md:text-3xl font-black text-slate-900" id="stat-hadir">0</span>
-              <span id="stat-unit-1" class="text-[11px] sm:text-xs font-semibold text-slate-400">Hari</span>
+            <div class="flex items-baseline gap-1.5 mt-2.5">
+              <span class="text-2xl sm:text-3xl font-extrabold text-slate-900 tabular-nums tracking-tight" id="stat-hadir">0</span>
+              <span id="stat-unit-1" class="text-xs font-medium text-slate-500">Hari</span>
             </div>
-            <div id="stat-footer-1" class="flex items-center gap-1 mt-1 text-[10px] sm:text-xs font-bold text-emerald-600 truncate">
+            <div id="stat-footer-1" class="flex items-center gap-1 mt-1 text-[11px] font-semibold text-emerald-700 truncate">
               <span>Presensi Valid Masuk</span>
             </div>
           </div>
@@ -323,39 +330,39 @@
           <!-- Card 2: Total Sakit (Student) vs Hadir Hari Ini (Admin) -->
           <div class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-sm transition">
             <div class="flex items-center gap-2.5">
-              <div id="stat-icon-wrap-2" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-red-50 text-red-500 flex items-center justify-center flex-shrink-0">
-                <i data-lucide="activity" class="w-4 h-4"></i>
+              <div id="stat-icon-wrap-2" class="w-9 h-9 rounded-xl bg-red-50 text-[#dc2626] flex items-center justify-center flex-shrink-0">
+                <i data-lucide="stethoscope" class="w-4 h-4"></i>
               </div>
               <div class="min-w-0">
-                <p id="stat-title-2" class="text-[11px] sm:text-xs font-bold text-slate-600 leading-tight truncate">Total Sakit</p>
-                <p id="stat-sub-2" class="text-[10px] text-slate-400 font-medium truncate">(SKD Dokter)</p>
+                <p id="stat-title-2" class="text-xs font-bold text-slate-700 leading-tight truncate">Total Sakit</p>
+                <p id="stat-sub-2" class="text-[11px] text-slate-500 font-medium truncate">Riwayat Sakit</p>
               </div>
             </div>
-            <div class="flex items-baseline gap-1 mt-2">
-              <span class="text-xl sm:text-2xl md:text-3xl font-black text-slate-900" id="stat-sakit">0</span>
-              <span id="stat-unit-2" class="text-[11px] sm:text-xs font-semibold text-slate-400">Hari</span>
+            <div class="flex items-baseline gap-1.5 mt-2.5">
+              <span class="text-2xl sm:text-3xl font-extrabold text-slate-900 tabular-nums tracking-tight" id="stat-sakit">0</span>
+              <span id="stat-unit-2" class="text-xs font-medium text-slate-500">Hari</span>
             </div>
-            <div id="stat-footer-2" class="flex items-center gap-1 mt-1 text-[10px] sm:text-xs font-semibold text-slate-400 truncate">
-              Surat Dokter Terverifikasi
+            <div id="stat-footer-2" class="flex items-center gap-1 mt-1 text-[11px] font-medium text-slate-500 truncate">
+              Pengajuan Terverifikasi
             </div>
           </div>
 
           <!-- Card 3: Total Izin (Student) vs Inbox Persetujuan (Admin) -->
           <div class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-sm transition">
             <div class="flex items-center gap-2.5">
-              <div id="stat-icon-wrap-3" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-orange-50 text-orange-500 flex items-center justify-center flex-shrink-0">
+              <div id="stat-icon-wrap-3" class="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center flex-shrink-0">
                 <i data-lucide="file-text" class="w-4 h-4"></i>
               </div>
               <div class="min-w-0">
-                <p id="stat-title-3" class="text-[11px] sm:text-xs font-bold text-slate-600 leading-tight truncate">Total Izin</p>
-                <p id="stat-sub-3" class="text-[10px] text-slate-400 font-medium truncate">(Dispensasi)</p>
+                <p id="stat-title-3" class="text-xs font-bold text-slate-700 leading-tight truncate">Total Izin</p>
+                <p id="stat-sub-3" class="text-[11px] text-slate-500 font-medium truncate">Dispensasi</p>
               </div>
             </div>
-            <div class="flex items-baseline gap-1 mt-2">
-              <span class="text-xl sm:text-2xl md:text-3xl font-black text-slate-900" id="stat-izin">0</span>
-              <span id="stat-unit-3" class="text-[11px] sm:text-xs font-semibold text-slate-400">Hari</span>
+            <div class="flex items-baseline gap-1.5 mt-2.5">
+              <span class="text-2xl sm:text-3xl font-extrabold text-slate-900 tabular-nums tracking-tight" id="stat-izin">0</span>
+              <span id="stat-unit-3" class="text-xs font-medium text-slate-500">Hari</span>
             </div>
-            <div id="stat-footer-3" class="flex items-center gap-1 mt-1 text-[10px] sm:text-xs font-semibold text-slate-400 truncate">
+            <div id="stat-footer-3" class="flex items-center gap-1 mt-1 text-[11px] font-medium text-slate-500 truncate">
               Dispensasi Disetujui
             </div>
           </div>
@@ -363,19 +370,19 @@
           <!-- Card 4: Total Jam Kerja (Student) vs Cabang PKL (Admin) -->
           <div class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 shadow-xs hover:shadow-sm transition">
             <div class="flex items-center gap-2.5">
-              <div id="stat-icon-wrap-4" class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
+              <div id="stat-icon-wrap-4" class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
                 <i data-lucide="clock" class="w-4 h-4"></i>
               </div>
               <div class="min-w-0">
-                <p id="stat-title-4" class="text-[11px] sm:text-xs font-bold text-slate-600 leading-tight truncate">Total Jam Kerja</p>
-                <p id="stat-sub-4" class="text-[10px] text-slate-400 font-medium truncate">(Akumulasi)</p>
+                <p id="stat-title-4" class="text-xs font-bold text-slate-700 leading-tight truncate">Total Jam Kerja</p>
+                <p id="stat-sub-4" class="text-[11px] text-slate-500 font-medium truncate">Akumulasi</p>
               </div>
             </div>
-            <div class="flex items-baseline gap-1 mt-2">
-              <span class="text-xl sm:text-2xl md:text-3xl font-black text-slate-900" id="stat-jam">0</span>
-              <span id="stat-unit-4" class="text-[11px] sm:text-xs font-semibold text-slate-400">Jam</span>
+            <div class="flex items-baseline gap-1.5 mt-2.5">
+              <span class="text-2xl sm:text-3xl font-extrabold text-slate-900 tabular-nums tracking-tight" id="stat-jam">0</span>
+              <span id="stat-unit-4" class="text-xs font-medium text-slate-500">Jam</span>
             </div>
-            <div id="stat-footer-4" class="flex items-center gap-1 mt-1 text-[10px] sm:text-xs font-semibold text-slate-400 truncate">
+            <div id="stat-footer-4" class="flex items-center gap-1 mt-1 text-[11px] font-medium text-slate-500 truncate">
               Akumulasi 8 Jam/Shift
             </div>
           </div>
@@ -572,150 +579,185 @@
       <section id="view-presensi" class="hidden w-full pb-6">
 
         <!-- STUDENT FLOW: ONLINE ATTENDANCE -->
-        <div id="student-attendance-flow" class="max-w-md mx-auto space-y-4">
+        <div id="student-attendance-flow" class="max-w-md lg:max-w-4xl mx-auto space-y-4">
 
         <!-- ==================== SUB-SCREEN 1: PRESENSI KEHADIRAN OVERVIEW ==================== -->
-        <div id="presensi-screen-overview" class="space-y-3">
+        <div id="presensi-screen-overview" class="space-y-3 lg:space-y-5">
           <!-- Top App Bar (Desktop Only - Mobile sudah tampil di Topbar utama) -->
-          <div class="hidden md:flex items-center justify-between pb-2 border-b border-slate-200">
-            <button onclick="switchTab('dashboard')" class="p-2 -ml-2 rounded-xl hover:bg-slate-100 text-slate-700 transition cursor-pointer" aria-label="Kembali ke Dashboard">
+          <div class="hidden md:flex items-center justify-between pb-3 border-b border-slate-200">
+            <button onclick="switchTab('dashboard')" class="p-2 -ml-2 rounded-xl hover:bg-slate-100 text-slate-700 transition cursor-pointer" aria-label="Kembali ke Beranda">
               <i data-lucide="chevron-left" class="w-5 h-5"></i>
             </button>
             <h3 class="font-extrabold text-slate-900 text-base">Presensi Kehadiran</h3>
             <div class="w-8"></div>
           </div>
 
-          <!-- Card 1: Compact Live Digital Clock & Date -->
-          <div class="bg-white rounded-2xl py-4 px-5 shadow-xs border border-slate-200/80 text-center space-y-1">
-            <h2 id="online-att-time" class="text-4xl sm:text-5xl font-extrabold text-[#1d4ed8] tracking-tight font-mono leading-none">
-              09:06
-            </h2>
-            <p id="online-att-date" class="text-xs sm:text-sm font-semibold text-slate-500">
-              Jumat, 27 November 2026
-            </p>
-          </div>
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 lg:gap-5 items-stretch">
+            <!-- Left Column (Desktop): Live Digital Clock & Primary CTA -->
+            <div class="lg:col-span-6 flex flex-col justify-between gap-3">
+              <!-- Card 1: Compact Live Digital Clock & Date -->
+              <div class="bg-white rounded-2xl py-5 lg:py-8 px-5 shadow-xs border border-slate-200/80 text-center space-y-1.5 flex-1 flex flex-col justify-center">
+                <p class="hidden lg:inline-flex items-center justify-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Waktu Server WIB
+                </p>
+                <h2 id="online-att-time" class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#1d4ed8] tracking-tight tabular-nums leading-none">
+                  09:06
+                </h2>
+                <p id="online-att-date" class="text-xs sm:text-sm font-medium text-slate-500">
+                  Jumat, 27 November 2026
+                </p>
+              </div>
 
-          <!-- Card 2 & 3: Jam Masuk & Jam Selesai Status Boxes -->
-          <div class="grid grid-cols-2 gap-3">
-            <!-- Jam Masuk Card -->
-            <div class="bg-white rounded-2xl p-3.5 shadow-xs border border-slate-200/80 flex flex-col justify-between h-24 sm:h-28">
-              <span class="text-xs font-bold text-[#1d4ed8]">Jam Masuk</span>
-              <span id="online-att-in-val" class="text-2xl sm:text-3xl font-extrabold text-[#1d4ed8] tracking-tight font-mono">
-                --:--
-              </span>
-              <span class="text-[10px] text-slate-400 font-medium">Waktu mulai PKL</span>
-            </div>
-
-            <!-- Jam Selesai Card -->
-            <div class="bg-white rounded-2xl p-3.5 shadow-xs border border-slate-200/80 flex flex-col justify-between h-24 sm:h-28">
-              <span class="text-xs font-bold text-[#1d4ed8]">Jam Selesai</span>
-              <span id="online-att-out-val" class="text-2xl sm:text-3xl font-extrabold text-[#1d4ed8] tracking-tight font-mono">
-                --:--
-              </span>
-              <span class="text-[10px] text-slate-400 font-medium">Waktu pulang PKL</span>
-            </div>
-          </div>
-
-          <!-- Geofence & Location Info Pill -->
-          <div class="p-3 rounded-xl bg-blue-50/70 border border-blue-100 flex items-center justify-between gap-2 text-xs">
-            <div class="flex items-center gap-2.5 min-w-0">
-              <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse flex-shrink-0"></div>
-              <div class="min-w-0">
-                <p class="font-bold text-slate-800 truncate app-branch-name">Workshop Astra Daihatsu A. Yani</p>
-                <p class="text-[11px] text-slate-500 truncate" id="online-att-gps-status">Jarak: 0 m • Dalam Radius Bengkel</p>
+              <!-- Bottom Action Button (Desktop placement under clock, Mobile stays below via order) -->
+              <div class="hidden lg:block pt-1">
+                <button onclick="handlePrimaryAttendanceAction()" class="w-full h-12 bg-[#1d4ed8] hover:bg-[#1e40af] active:scale-[0.98] text-white rounded-xl font-bold text-sm shadow-md shadow-blue-700/20 transition flex items-center justify-center gap-2 cursor-pointer">
+                  <i data-lucide="log-in" class="w-4 h-4"></i>
+                  <span class="desktop-att-btn-mirror">Lanjutkan Presensi</span>
+                </button>
               </div>
             </div>
-            <button onclick="checkGPS(true)" class="text-[11px] font-bold text-blue-600 hover:text-blue-700 underline whitespace-nowrap flex-shrink-0 cursor-pointer">
-              Cek GPS
-            </button>
+
+            <!-- Right Column (Desktop): Jam Masuk / Selesai & Geofence Pill -->
+            <div class="lg:col-span-6 flex flex-col justify-between gap-3">
+              <!-- Card 2 & 3: Jam Masuk & Jam Selesai Status Boxes -->
+              <div class="grid grid-cols-2 gap-3">
+                <!-- Jam Masuk Card -->
+                <div class="bg-white rounded-2xl p-3.5 sm:p-4 shadow-xs border border-slate-200/80 flex flex-col justify-between h-24 sm:h-28 lg:h-32">
+                  <span class="text-xs font-bold text-[#1d4ed8]">Jam Masuk</span>
+                  <span id="online-att-in-val" class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight tabular-nums">
+                    --:--
+                  </span>
+                  <span class="text-[11px] text-slate-500 font-medium">Waktu mulai PKL</span>
+                </div>
+
+                <!-- Jam Selesai Card -->
+                <div class="bg-white rounded-2xl p-3.5 sm:p-4 shadow-xs border border-slate-200/80 flex flex-col justify-between h-24 sm:h-28 lg:h-32">
+                  <span class="text-xs font-bold text-[#1d4ed8]">Jam Selesai</span>
+                  <span id="online-att-out-val" class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight tabular-nums">
+                    --:--
+                  </span>
+                  <span class="text-[11px] text-slate-500 font-medium">Waktu pulang PKL</span>
+                </div>
+              </div>
+
+              <!-- Geofence & Location Info Pill -->
+              <div class="p-3.5 rounded-2xl bg-blue-50/70 border border-blue-100 flex items-center justify-between gap-2 text-xs">
+                <div class="flex items-center gap-2.5 min-w-0">
+                  <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse flex-shrink-0"></div>
+                  <div class="min-w-0">
+                    <p class="font-bold text-slate-800 truncate app-branch-name">Workshop Astra Daihatsu A. Yani</p>
+                    <p class="text-[11px] text-slate-600 truncate tabular-nums" id="online-att-gps-status">Jarak: 0 m • Dalam Radius Bengkel</p>
+                  </div>
+                </div>
+                <button onclick="checkGPS(true)" class="min-h-[36px] px-2.5 rounded-lg text-xs font-bold text-[#1d4ed8] hover:bg-blue-100/70 transition whitespace-nowrap flex-shrink-0 cursor-pointer">
+                  Cek GPS
+                </button>
+              </div>
+            </div>
           </div>
 
-          <!-- Bottom Action Button -->
-          <div class="pt-1">
-            <button id="btn-online-att-action" onclick="handlePrimaryAttendanceAction()" class="w-full h-12 bg-[#0d59a8] hover:bg-[#0b4a8c] active:scale-[0.98] text-white rounded-xl font-bold text-sm shadow-md shadow-blue-700/25 transition flex items-center justify-center gap-2 cursor-pointer">
+          <!-- Bottom Action Button (Mobile Primary CTA) -->
+          <div class="pt-1 lg:hidden">
+            <button id="btn-online-att-action" onclick="handlePrimaryAttendanceAction()" class="w-full h-12 bg-[#1d4ed8] hover:bg-[#1e40af] active:scale-[0.98] text-white rounded-xl font-bold text-sm shadow-md shadow-blue-700/20 transition flex items-center justify-center gap-2 cursor-pointer">
               <span id="btn-online-att-label">Presensi Masuk</span>
             </button>
           </div>
         </div>
 
-        <!-- ==================== SUB-SCREEN 2: CLOCK IN / OUT DETAILS & LOCATION (IMAGE 1) ==================== -->
+        <!-- ==================== SUB-SCREEN 2: DETAIL PRESENSI & LOKASI ==================== -->
         <div id="presensi-screen-detail" class="hidden space-y-4">
           <!-- Top App Bar -->
           <div class="flex items-center justify-between pb-2 border-b border-slate-200">
-            <button onclick="backToAttendanceOverview()" class="p-2 -ml-2 rounded-xl hover:bg-slate-100 text-slate-700 transition" aria-label="Kembali">
-              <i data-lucide="chevron-left" class="w-6 h-6"></i>
+            <button onclick="backToAttendanceOverview()" class="min-h-[40px] min-w-[40px] flex items-center justify-center -ml-2 rounded-xl hover:bg-slate-100 text-slate-700 transition cursor-pointer" aria-label="Kembali">
+              <i data-lucide="chevron-left" class="w-5 h-5"></i>
             </button>
-            <h3 id="clock-flow-title" class="font-extrabold text-slate-900 text-lg">Clock In</h3>
+            <h3 id="clock-flow-title" class="font-extrabold text-slate-900 text-base sm:text-lg">Presensi Masuk</h3>
             <div class="w-8"></div>
           </div>
 
-          <!-- Card 1: Time & Working Date (Image 1) -->
-          <div class="bg-white rounded-3xl p-5 shadow-xs border border-slate-100 space-y-3.5">
-            <h4 id="clock-flow-type-lbl" class="font-bold text-sm text-[#1d4ed8]">Clock In</h4>
-            
-            <div>
-              <p id="clock-flow-time-lbl" class="text-xs font-semibold text-slate-400">Time In</p>
-              <p id="clock-flow-datetime" class="text-sm font-bold text-slate-800 mt-1">
-                November 13, 2026   07:48
-              </p>
-            </div>
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+            <!-- Left Col: Waktu & Tombol Konfirmasi -->
+            <div class="lg:col-span-5 space-y-3">
+              <!-- Card 1: Waktu & Tanggal Kerja -->
+              <div class="bg-white rounded-2xl p-4 sm:p-5 shadow-xs border border-slate-200/80 space-y-3.5">
+                <h4 id="clock-flow-type-lbl" class="font-bold text-sm text-[#1d4ed8]">Presensi Masuk</h4>
+                
+                <div>
+                  <p id="clock-flow-time-lbl" class="text-xs font-medium text-slate-500">Waktu Masuk</p>
+                  <p id="clock-flow-datetime" class="text-sm font-bold text-slate-900 mt-1 tabular-nums">
+                    27 November 2026 &nbsp;&nbsp; 07:48
+                  </p>
+                </div>
 
-            <div class="pt-1">
-              <p class="text-xs font-semibold text-slate-400">Working Date</p>
-              <div class="flex justify-between items-center pb-2 border-b border-slate-200 mt-1">
-                <span id="clock-flow-working-date" class="text-sm font-semibold text-slate-800">
-                  November 13, 2026
-                </span>
-                <i data-lucide="calendar" class="w-4 h-4 text-slate-400"></i>
-              </div>
-            </div>
-          </div>
-
-          <!-- Card 2: Location Map (Image 1) -->
-          <div class="bg-white rounded-3xl p-5 shadow-xs border border-slate-100 space-y-3">
-            <h4 class="font-bold text-sm text-[#1d4ed8]">Location</h4>
-
-            <!-- Map View Container with Roadmaps & Google Pin -->
-            <div class="relative w-full h-52 sm:h-56 rounded-2xl overflow-hidden border border-slate-200 shadow-inner bg-slate-100 isolate">
-              <div id="clock-flow-leaflet-map" class="absolute inset-0 w-full h-full z-0"></div>
-
-              <!-- Google Red Drop Pin Centered on Map -->
-              <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
-                <div class="relative flex flex-col items-center">
-                  <svg class="w-8 h-8 text-[#ea4335] drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)] -translate-y-2" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                  </svg>
-                  <div class="w-3.5 h-1.5 bg-black/50 rounded-full blur-[1px] -mt-2"></div>
+                <div class="pt-1">
+                  <p class="text-xs font-medium text-slate-500">Tanggal Kerja</p>
+                  <div class="flex justify-between items-center pb-2 border-b border-slate-200 mt-1">
+                    <span id="clock-flow-working-date" class="text-sm font-semibold text-slate-800">
+                      27 November 2026
+                    </span>
+                    <i data-lucide="calendar" class="w-4 h-4 text-slate-500"></i>
+                  </div>
                 </div>
               </div>
 
-              <!-- Watermark Google di pojok kiri bawah peta -->
-              <span class="absolute bottom-1.5 left-2 z-10 text-[9px] font-bold text-slate-700 bg-white/80 px-1.5 py-0.5 rounded shadow-xs">
-                Google
-              </span>
+              <!-- Bottom Action Buttons (Desktop) -->
+              <div class="hidden lg:block space-y-2.5 pt-1">
+                <button onclick="submitAttendance()" class="w-full h-12 bg-[#1d4ed8] hover:bg-[#1e40af] active:scale-[0.98] text-white rounded-xl font-bold text-sm shadow-md shadow-blue-700/20 transition flex items-center justify-center gap-2 cursor-pointer">
+                  <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                  <span class="desktop-confirm-att-mirror">Konfirmasi Presensi</span>
+                </button>
+                <button onclick="backToAttendanceOverview()" class="w-full h-11 bg-white hover:bg-slate-50 text-slate-700 rounded-xl font-bold text-xs border border-slate-200 transition cursor-pointer">
+                  Kembali
+                </button>
+              </div>
             </div>
 
-            <!-- Address & Coordinates text -->
-            <p id="clock-flow-address-text" class="text-[11px] leading-relaxed text-slate-600 font-medium">
-              Palapa, Jl. Jenderal Ahmad Yani No. 1, Gotong Royong, Kec. Tj. Karang Pusat, Kota Bandar Lampung, Lampung 35213 (-5.419142, 105.258416)
-            </p>
+            <!-- Right Col: Peta Lokasi & Validasi Geofencing -->
+            <div class="lg:col-span-7 bg-white rounded-2xl p-4 sm:p-5 shadow-xs border border-slate-200/80 space-y-3">
+              <h4 class="font-bold text-sm text-[#1d4ed8]">Lokasi Presensi</h4>
 
-            <!-- Geofencing Radius Callout -->
-            <div id="clock-flow-geofence-alert" class="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center justify-between">
-              <span id="clock-flow-geofence-msg">✅ Lokasi Valid: Terverifikasi di area workshop Astra Daihatsu (0 m)</span>
-              <button onclick="calibrateCurrentLocation()" class="text-[10px] underline font-bold text-emerald-700 hover:text-emerald-900">
-                Kalibrasi
-              </button>
+              <!-- Map View Container with Roadmaps & Google Pin -->
+              <div class="relative w-full h-52 sm:h-60 rounded-2xl overflow-hidden border border-slate-200 shadow-inner bg-slate-100 isolate">
+                <div id="clock-flow-leaflet-map" class="absolute inset-0 w-full h-full z-0"></div>
+
+                <!-- Google Red Drop Pin Centered on Map -->
+                <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+                  <div class="relative flex flex-col items-center">
+                    <svg class="w-8 h-8 text-[#dc2626] drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)] -translate-y-2" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                    </svg>
+                    <div class="w-3.5 h-1.5 bg-black/50 rounded-full blur-[1px] -mt-2"></div>
+                  </div>
+                </div>
+
+                <!-- Watermark Map -->
+                <span class="absolute bottom-1.5 left-2 z-10 text-[10px] font-bold text-slate-700 bg-white/85 px-1.5 py-0.5 rounded shadow-xs">
+                  Peta GPS
+                </span>
+              </div>
+
+              <!-- Address & Coordinates text -->
+              <p id="clock-flow-address-text" class="text-xs leading-relaxed text-slate-600 font-medium">
+                Palapa, Jl. Jenderal Ahmad Yani No. 1, Gotong Royong, Kec. Tj. Karang Pusat, Kota Bandar Lampung, Lampung 35213 (-5.419142, 105.258416)
+              </p>
+
+              <!-- Geofencing Radius Callout -->
+              <div id="clock-flow-geofence-alert" class="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center justify-between gap-2">
+                <span id="clock-flow-geofence-msg" class="inline-flex items-center gap-1.5"><i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600 flex-shrink-0"></i><span>Lokasi Valid: Terverifikasi di area workshop Astra Daihatsu (0 m)</span></span>
+                <button onclick="calibrateCurrentLocation()" class="min-h-[34px] px-2.5 rounded-lg text-xs font-bold text-emerald-700 hover:bg-emerald-100 transition whitespace-nowrap cursor-pointer">
+                  Kalibrasi
+                </button>
+              </div>
             </div>
           </div>
 
-          <!-- Bottom Action Buttons (Image 1 Back & Confirm) -->
-          <div class="space-y-2.5 pt-2">
-            <button id="btn-submit-attendance" onclick="submitAttendance()" class="w-full py-4 bg-[#0d59a8] hover:bg-[#0b4a8c] active:scale-[0.98] text-white rounded-2xl font-bold text-base shadow-lg shadow-blue-700/25 transition flex items-center justify-center gap-2">
-              <span id="btn-submit-attendance-label">Confirm Clock In</span>
+          <!-- Bottom Action Buttons (Mobile) -->
+          <div class="space-y-2.5 pt-1 lg:hidden">
+            <button id="btn-submit-attendance" onclick="submitAttendance()" class="w-full h-12 bg-[#1d4ed8] hover:bg-[#1e40af] active:scale-[0.98] text-white rounded-xl font-bold text-sm shadow-md shadow-blue-700/20 transition flex items-center justify-center gap-2 cursor-pointer">
+              <span id="btn-submit-attendance-label">Konfirmasi Presensi Masuk</span>
             </button>
-            <button onclick="backToAttendanceOverview()" class="w-full py-3.5 bg-white hover:bg-slate-100 text-slate-700 rounded-2xl font-bold text-sm border border-slate-200 transition">
-              Back
+            <button onclick="backToAttendanceOverview()" class="w-full h-11 bg-white hover:bg-slate-50 text-slate-700 rounded-xl font-bold text-xs border border-slate-200 transition cursor-pointer">
+              Kembali
             </button>
           </div>
         </div>
@@ -723,7 +765,7 @@
         <!-- END STUDENT FLOW -->
 
         <!-- ==================== ADMIN VIEW: DATA & MANAJEMEN SISWA PKL ==================== -->
-        <div id="admin-data-pkl-flow" class="hidden max-w-4xl mx-auto space-y-5">
+        <div id="admin-data-pkl-flow" class="hidden max-w-6xl mx-auto space-y-5">
           <!-- Header Bar with Action Buttons -->
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200">
             <div>
@@ -804,9 +846,9 @@
       <section id="view-izin" class="hidden space-y-5 w-full mx-auto">
         
         <!-- STUDENT VIEW: FORM PENGAJUAN IZIN / SAKIT -->
-        <div id="student-izin-form-container" class="max-w-xl mx-auto space-y-3 sm:space-y-4">
+        <div id="student-izin-form-container" class="max-w-xl lg:max-w-4xl mx-auto space-y-3 sm:space-y-4">
           <div class="hidden md:flex items-center gap-3 pb-3 border-b border-slate-200">
-            <button onclick="switchTab('dashboard')" class="p-2 rounded-lg hover:bg-slate-200 text-slate-700 transition cursor-pointer" aria-label="Kembali ke Dashboard">
+            <button onclick="switchTab('dashboard')" class="p-2 rounded-xl hover:bg-slate-200 text-slate-700 transition cursor-pointer" aria-label="Kembali ke Beranda">
               <i data-lucide="arrow-left" class="w-5 h-5"></i>
             </button>
             <div>
@@ -815,23 +857,24 @@
             </div>
           </div>
 
-          <form id="form-perizinan" onsubmit="submitPerizinan(event)" class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-3">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+          <form id="form-perizinan" onsubmit="submitPerizinan(event)" class="lg:col-span-7 bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-3.5">
             <!-- Jenis Pengajuan (Sakit vs Izin) -->
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1.5">Jenis Pengajuan</label>
               <div class="grid grid-cols-2 gap-2.5">
                 <label class="cursor-pointer">
                   <input type="radio" name="jenis_izin" value="Sakit" checked class="peer sr-only" onchange="updateFormIzinType()">
-                  <div class="p-3 rounded-xl border-2 border-slate-200 peer-checked:border-red-500 peer-checked:bg-red-50/50 flex items-center justify-center gap-1.5 font-bold text-xs text-slate-700 peer-checked:text-red-700 transition">
-                    <i data-lucide="activity" class="w-4 h-4 text-red-500 flex-shrink-0"></i>
+                  <div class="min-h-[44px] p-3 rounded-xl border-2 border-slate-200 peer-checked:border-[#dc2626] peer-checked:bg-red-50/50 flex items-center justify-center gap-1.5 font-bold text-xs text-slate-700 peer-checked:text-red-700 transition">
+                    <i data-lucide="stethoscope" class="w-4 h-4 text-[#dc2626] flex-shrink-0"></i>
                     <span>Sakit</span>
                   </div>
                 </label>
 
                 <label class="cursor-pointer">
                   <input type="radio" name="jenis_izin" value="Izin" class="peer sr-only" onchange="updateFormIzinType()">
-                  <div class="p-3 rounded-xl border-2 border-slate-200 peer-checked:border-blue-600 peer-checked:bg-blue-50/50 flex items-center justify-center gap-1.5 font-bold text-xs text-slate-700 peer-checked:text-blue-700 transition">
-                    <i data-lucide="file-text" class="w-4 h-4 text-slate-500 peer-checked:text-blue-600 flex-shrink-0"></i>
+                  <div class="min-h-[44px] p-3 rounded-xl border-2 border-slate-200 peer-checked:border-[#1d4ed8] peer-checked:bg-blue-50/50 flex items-center justify-center gap-1.5 font-bold text-xs text-slate-700 peer-checked:text-[#1d4ed8] transition">
+                    <i data-lucide="file-text" class="w-4 h-4 text-slate-500 peer-checked:text-[#1d4ed8] flex-shrink-0"></i>
                     <span>Izin Keperluan</span>
                   </div>
                 </label>
@@ -847,38 +890,66 @@
             <!-- Alasan / Catatan Keperluan -->
             <div>
               <label class="block text-xs font-bold text-slate-700 mb-1">Alasan / Catatan Detail</label>
-              <textarea id="izin-alasan" rows="2" required placeholder="Contoh: Demam tinggi, perlu istirahat berdasarkan diagnosa dokter..." class="w-full p-3 rounded-xl border border-slate-200 text-xs focus:outline-hidden focus:ring-2 focus:ring-blue-500 placeholder:text-slate-400"></textarea>
+              <textarea id="izin-alasan" rows="3" required placeholder="Contoh: Demam tinggi, perlu istirahat di rumah..." class="w-full p-3 rounded-xl border border-slate-200 text-xs sm:text-[13px] focus:outline-hidden focus:ring-2 focus:ring-blue-500 placeholder:text-slate-400"></textarea>
             </div>
 
-            <!-- Unggah Dokumen Bukti (SKD / Surat Dispensasi) -->
+            <!-- Unggah Dokumen Bukti (Opsional) -->
             <div>
               <div class="flex items-center justify-between mb-1">
                 <label class="text-xs font-bold text-slate-700">Lampiran Dokumen Bukti</label>
-                <span id="doc-req-badge" class="text-[10px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
+                <span id="doc-req-badge" class="text-[11px] font-semibold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200">
                   Opsional
                 </span>
               </div>
               
-              <div onclick="document.getElementById('file-dokumen').click()" class="border-2 border-dashed border-slate-200 hover:border-blue-500 rounded-xl py-4 px-4 text-center cursor-pointer bg-slate-50/50 hover:bg-blue-50/30 transition">
+              <div onclick="document.getElementById('file-dokumen').click()" class="border-2 border-dashed border-slate-200 hover:border-[#1d4ed8] rounded-xl py-4 px-4 text-center cursor-pointer bg-slate-50/50 hover:bg-blue-50/30 transition">
                 <input type="file" id="file-dokumen" accept="image/*,application/pdf" class="hidden" onchange="previewUploadDoc(this)">
-                <div class="w-8 h-8 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-1.5">
+                <div class="w-9 h-9 bg-blue-50 text-[#1d4ed8] rounded-full flex items-center justify-center mx-auto mb-1.5">
                   <i data-lucide="upload-cloud" class="w-4 h-4"></i>
                 </div>
                 <p class="text-xs font-bold text-slate-800" id="file-name-preview">Opsional: Klik untuk unggah foto / dokumen pendukung</p>
-                <p class="text-[10px] text-slate-400 mt-0.5">Format: JPG, PNG, PDF (Maksimal 2 MB)</p>
+                <p class="text-[11px] text-slate-500 mt-0.5">Format: JPG, PNG, PDF (Maksimal 2 MB)</p>
               </div>
             </div>
 
             <!-- Submit Button -->
-            <button type="submit" id="btn-submit-izin" class="w-full h-11 bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-sm shadow-blue-600/25 transition cursor-pointer">
+            <button type="submit" id="btn-submit-izin" class="w-full h-12 bg-[#1d4ed8] hover:bg-[#1e40af] active:scale-[0.98] text-white rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm shadow-blue-700/20 transition cursor-pointer">
               <i data-lucide="send" class="w-4 h-4"></i>
               <span>Kirim Permohonan Izin / Sakit</span>
             </button>
           </form>
+
+          <!-- Desktop Side Info Panel -->
+          <aside class="hidden lg:block lg:col-span-5 bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-4">
+            <div class="flex items-center gap-3 pb-3 border-b border-slate-100">
+              <div class="w-9 h-9 rounded-xl bg-blue-50 text-[#1d4ed8] flex items-center justify-center flex-shrink-0">
+                <i data-lucide="info" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <h4 class="font-extrabold text-slate-900 text-sm">Panduan Pengajuan</h4>
+                <p class="text-xs text-slate-500">Ketentuan ketidakhadiran siswa PKL</p>
+              </div>
+            </div>
+            <ul class="space-y-3 text-xs text-slate-600 leading-relaxed">
+              <li class="flex items-start gap-2.5">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5"></i>
+                <span>Lampiran dokumen bukti (SKD / surat izin) bersifat <strong class="text-slate-800">opsional</strong> untuk Sakit maupun Izin.</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5"></i>
+                <span>Permohonan langsung masuk ke <strong class="text-slate-800">Inbox Persetujuan HRD</strong> untuk diverifikasi.</span>
+              </li>
+              <li class="flex items-start gap-2.5">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5"></i>
+                <span>Status persetujuan dapat dipantau secara real-time di menu <strong class="text-slate-800">Rekap Kehadiran</strong>.</span>
+              </li>
+            </ul>
+          </aside>
+          </div>
         </div>
 
         <!-- ==================== ADMIN VIEW: INBOX PERSETUJUAN IZIN & SAKIT ==================== -->
-        <div id="admin-inbox-approvals-container" class="hidden max-w-4xl mx-auto space-y-5">
+        <div id="admin-inbox-approvals-container" class="hidden max-w-6xl mx-auto space-y-5">
           <!-- Top Header Bar & Filter Tabs -->
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200">
             <div>
@@ -1670,9 +1741,9 @@
     </div>
 
     <!-- ==================== GLOBAL FOOTER (ALL MENUS) ==================== -->
-    <footer id="app-global-footer" class="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 pt-6 pb-28 md:pb-8 mt-auto print:hidden">
-      <div class="w-full border-t border-slate-200/80 pt-5 text-center">
-        <p class="text-[11px] sm:text-xs font-medium text-slate-400">
+    <footer id="app-global-footer" class="w-full max-w-7xl mx-auto px-4 sm:px-6 md:px-8 pt-5 pb-24 md:pb-8 mt-auto print:hidden">
+      <div class="w-full border-t border-slate-200/80 pt-4 text-center">
+        <p class="text-[11px] sm:text-xs font-medium text-slate-500">
           &copy; 2026 Sistem Presensi PKL &ndash; Daihatsu DSO LAMPUNG
         </p>
       </div>
@@ -2098,7 +2169,7 @@
         <!-- Foto Profil Picker -->
         <div class="flex items-center gap-3 p-2.5 bg-slate-50 rounded-2xl border border-slate-100">
           <div class="relative w-12 h-12 rounded-full bg-slate-200 border-2 border-white shadow-2xs overflow-hidden flex items-center justify-center flex-shrink-0">
-            <span id="reg-avatar-placeholder" class="text-base font-bold text-slate-500">📷</span>
+            <span id="reg-avatar-placeholder" class="inline-flex items-center justify-center text-slate-500"><i data-lucide="camera" class="w-5 h-5"></i></span>
             <img id="reg-avatar-preview-img" src="" alt="Avatar" class="w-full h-full object-cover hidden">
           </div>
           <div class="flex-1 min-w-0">
@@ -4312,12 +4383,13 @@
       const geofenceMsg = document.getElementById('clock-flow-geofence-msg');
       if (geofenceAlert && geofenceMsg) {
         if (activeAttendanceType === 'IN' && !isInside) {
-          geofenceAlert.className = "p-3 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs font-semibold flex items-center justify-between";
-          geofenceMsg.innerText = `⚠️ Di luar radius bengkel (${distance} m > ${workshopConfig.radiusMeters} m).`;
+          geofenceAlert.className = "p-3 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs font-semibold flex items-center justify-between gap-2";
+          geofenceMsg.innerHTML = `<i data-lucide="alert-triangle" class="w-4 h-4 text-red-600 flex-shrink-0"></i><span>Di luar radius bengkel (${distance} m &gt; ${workshopConfig.radiusMeters} m).</span>`;
         } else {
-          geofenceAlert.className = "p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center justify-between";
-          geofenceMsg.innerText = `✅ Lokasi Valid: Terverifikasi di area workshop Astra Daihatsu (${distance} m)`;
+          geofenceAlert.className = "p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center justify-between gap-2";
+          geofenceMsg.innerHTML = `<i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600 flex-shrink-0"></i><span>Lokasi Valid: Terverifikasi di area workshop Astra Daihatsu (${distance} m)</span>`;
         }
+        if (window.lucide) lucide.createIcons();
       }
 
       // Dynamic Submit Button Appearance based on radius
@@ -4569,16 +4641,20 @@
       // 4. Tombol Aksi Utama
       const btnAction = document.getElementById('btn-online-att-action');
       const btnLabel = document.getElementById('btn-online-att-label');
+      const desktopMirrors = document.querySelectorAll('.desktop-att-btn-mirror');
       if (btnAction && btnLabel) {
         if (!inLog) {
           btnLabel.innerText = "Presensi Masuk";
-          btnAction.className = "w-full h-12 bg-[#0d59a8] hover:bg-[#0b4a8c] active:scale-[0.98] text-white rounded-xl font-bold text-sm shadow-md shadow-blue-700/25 transition flex items-center justify-center gap-2 cursor-pointer";
+          desktopMirrors.forEach(el => el.innerText = "Presensi Masuk");
+          btnAction.className = "w-full h-12 bg-[#1d4ed8] hover:bg-[#1e40af] active:scale-[0.98] text-white rounded-xl font-bold text-sm shadow-md shadow-blue-700/20 transition flex items-center justify-center gap-2 cursor-pointer";
         } else if (!outLog) {
           btnLabel.innerText = "Presensi Selesai";
-          btnAction.className = "w-full h-12 bg-[#0d59a8] hover:bg-[#0b4a8c] active:scale-[0.98] text-white rounded-xl font-bold text-sm shadow-md shadow-blue-700/25 transition flex items-center justify-center gap-2 cursor-pointer";
+          desktopMirrors.forEach(el => el.innerText = "Presensi Selesai");
+          btnAction.className = "w-full h-12 bg-[#1d4ed8] hover:bg-[#1e40af] active:scale-[0.98] text-white rounded-xl font-bold text-sm shadow-md shadow-blue-700/20 transition flex items-center justify-center gap-2 cursor-pointer";
         } else {
-          btnLabel.innerText = "Presensi Hari Ini Selesai ✓";
-          btnAction.className = "w-full h-12 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-sm shadow-md shadow-emerald-700/25 transition flex items-center justify-center gap-2 cursor-pointer";
+          btnLabel.innerText = "Presensi Hari Ini Selesai";
+          desktopMirrors.forEach(el => el.innerText = "Presensi Hari Ini Selesai");
+          btnAction.className = "w-full h-12 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-sm shadow-md shadow-emerald-700/20 transition flex items-center justify-center gap-2 cursor-pointer";
         }
       }
     }
@@ -4591,11 +4667,11 @@
       } else if (!outLog) {
         openClockFlow('OUT');
       } else {
-        showAppAlert("Anda sudah melakukan Clock IN dan Clock OUT untuk hari ini. Sampai jumpa di shift kerja berikutnya!", "Presensi Lengkap", "info");
+        showAppAlert("Anda sudah melakukan Presensi Masuk dan Presensi Selesai untuk hari ini. Sampai jumpa di shift kerja berikutnya!", "Presensi Lengkap", "info");
       }
     }
 
-    // Membuka Screen 2: Detail Clock In / Out (Image 1)
+    // Membuka Screen 2: Detail Presensi Masuk / Selesai
     function openClockFlow(type) {
       activeAttendanceType = type;
       
@@ -4607,40 +4683,48 @@
       const isClockIn = type === 'IN';
       const now = new Date();
       const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }).replace(/\./g, ':');
+      const idDateShort = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
 
-      // Update Text Header & Labels
+      // Update Text Header & Labels (Bahasa Indonesia Konsisten)
       const titleEl = document.getElementById('clock-flow-title');
-      if (titleEl) titleEl.innerText = isClockIn ? "Clock In" : "Clock Out";
+      if (titleEl) titleEl.innerText = isClockIn ? "Presensi Masuk" : "Presensi Selesai";
 
       const typeLbl = document.getElementById('clock-flow-type-lbl');
-      if (typeLbl) typeLbl.innerText = isClockIn ? "Clock In" : "Clock Out";
+      if (typeLbl) typeLbl.innerText = isClockIn ? "Presensi Masuk" : "Presensi Selesai";
 
       const timeLbl = document.getElementById('clock-flow-time-lbl');
-      if (timeLbl) timeLbl.innerText = isClockIn ? "Time In" : "Time Out";
+      if (timeLbl) timeLbl.innerText = isClockIn ? "Waktu Masuk" : "Waktu Selesai";
 
       const datetimeEl = document.getElementById('clock-flow-datetime');
       if (datetimeEl) {
-        datetimeEl.innerHTML = `${formatEnglishDateShort(now)}&nbsp;&nbsp;&nbsp;&nbsp;${timeStr}`;
+        datetimeEl.innerHTML = `${idDateShort}&nbsp;&nbsp;&bull;&nbsp;&nbsp;${timeStr} WIB`;
       }
 
       const workingDateEl = document.getElementById('clock-flow-working-date');
       if (workingDateEl) {
-        workingDateEl.innerText = formatEnglishDateShort(now);
+        workingDateEl.innerText = idDateShort;
       }
 
       const btnSubmit = document.getElementById('btn-submit-attendance');
       const btnSubmitLbl = document.getElementById('btn-submit-attendance-label');
+      const desktopConfirmMirrors = document.querySelectorAll('.desktop-confirm-att-mirror');
+      const confirmTxt = (isClockIn && !userLocation.isInside)
+        ? `Di Luar Radius (${userLocation.distance} m) - Klik Kalibrasi`
+        : (isClockIn ? "Konfirmasi Presensi Masuk" : "Konfirmasi Presensi Selesai");
+
+      desktopConfirmMirrors.forEach(el => el.innerText = confirmTxt);
+
       if (btnSubmit && btnSubmitLbl) {
         if (isClockIn && !userLocation.isInside) {
-          btnSubmit.className = "w-full py-4 bg-amber-600 hover:bg-amber-700 active:scale-[0.98] text-white rounded-2xl font-bold text-base shadow-lg shadow-amber-600/25 transition flex items-center justify-center gap-2 cursor-pointer";
-          btnSubmitLbl.innerText = `Di Luar Radius (${userLocation.distance} m) - Klik Kalibrasi`;
+          btnSubmit.className = "w-full h-12 bg-amber-600 hover:bg-amber-700 active:scale-[0.98] text-white rounded-xl font-bold text-sm shadow-md shadow-amber-600/20 transition flex items-center justify-center gap-2 cursor-pointer";
+          btnSubmitLbl.innerText = confirmTxt;
         } else {
-          btnSubmit.className = "w-full py-4 bg-[#0d59a8] hover:bg-[#0b4a8c] active:scale-[0.98] text-white rounded-2xl font-bold text-base shadow-lg shadow-blue-700/25 transition flex items-center justify-center gap-2 cursor-pointer";
-          btnSubmitLbl.innerText = isClockIn ? "Confirm Clock In" : "Confirm Clock Out";
+          btnSubmit.className = "w-full h-12 bg-[#1d4ed8] hover:bg-[#1e40af] active:scale-[0.98] text-white rounded-xl font-bold text-sm shadow-md shadow-blue-700/20 transition flex items-center justify-center gap-2 cursor-pointer";
+          btnSubmitLbl.innerText = confirmTxt;
         }
       }
 
-      // Update Alamat & Koordinat Riil Sesuai Referensi Gambar
+      // Update Alamat & Koordinat Riil
       const addrEl = document.getElementById('clock-flow-address-text');
       if (addrEl) {
         const pc = realLocationData.plusCode ? `${realLocationData.plusCode.toUpperCase()}, ` : '';
@@ -4652,11 +4736,11 @@
       const geofenceMsg = document.getElementById('clock-flow-geofence-msg');
       if (geofenceAlert && geofenceMsg) {
         if (isClockIn && !userLocation.isInside) {
-          geofenceAlert.className = "p-3 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs font-semibold flex items-center justify-between";
-          geofenceMsg.innerText = `⚠️ Di luar radius bengkel (${userLocation.distance} m > ${workshopConfig.radiusMeters} m).`;
+          geofenceAlert.className = "p-3 rounded-xl bg-red-50 border border-red-200 text-red-800 text-xs font-semibold flex items-center justify-between gap-2";
+          geofenceMsg.innerHTML = `<i data-lucide="alert-triangle" class="w-4 h-4 text-red-600 flex-shrink-0"></i><span>Di luar radius bengkel (${userLocation.distance} m &gt; ${workshopConfig.radiusMeters} m).</span>`;
         } else {
-          geofenceAlert.className = "p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center justify-between";
-          geofenceMsg.innerText = `✅ Lokasi Valid: Terverifikasi di area workshop Astra Daihatsu (${userLocation.distance} m)`;
+          geofenceAlert.className = "p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center justify-between gap-2";
+          geofenceMsg.innerHTML = `<i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600 flex-shrink-0"></i><span>Lokasi Valid: Terverifikasi di area workshop Astra Daihatsu (${userLocation.distance} m)</span>`;
         }
       }
 
@@ -6473,23 +6557,23 @@
 
       if (roleBadge && roleIcon && roleText) {
         if (isAdm) {
-          roleIcon.innerText = '👔';
+          roleIcon.innerHTML = '<i data-lucide="briefcase" class="w-3.5 h-3.5"></i>';
           roleText.innerText = 'HRD Admin';
-          roleBadge.className = "h-8 sm:h-9 px-2.5 sm:px-3 rounded-xl text-[10px] sm:text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-2xs border bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100 whitespace-nowrap active:scale-95 flex-shrink-0";
+          roleBadge.className = "h-9 px-3 rounded-xl text-[11px] sm:text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-2xs border bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100 whitespace-nowrap active:scale-95 flex-shrink-0";
         } else {
-          roleIcon.innerText = '👨‍🎓';
+          roleIcon.innerHTML = '<i data-lucide="graduation-cap" class="w-3.5 h-3.5"></i>';
           roleText.innerText = 'Siswa PKL';
-          roleBadge.className = "h-8 sm:h-9 px-2.5 sm:px-3 rounded-xl text-[10px] sm:text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-2xs border bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100 whitespace-nowrap active:scale-95 flex-shrink-0";
+          roleBadge.className = "h-9 px-3 rounded-xl text-[11px] sm:text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-2xs border bg-blue-50 text-[#1d4ed8] border-blue-200 hover:bg-blue-100 whitespace-nowrap active:scale-95 flex-shrink-0";
         }
       }
 
       // 3. Update Menu Sidebar Desktop & Dock Nav Mobile
-      // Menu Tab 2: Presensi -> Data PKL (Admin) vs Online Attendance (Student)
+      // Menu Tab 2: Presensi -> Data Siswa PKL (Admin) vs Presensi (Student)
       const navPresensi = document.getElementById('nav-presensi');
       if (navPresensi) {
         navPresensi.innerHTML = isAdm
           ? `<i data-lucide="users" class="w-4 h-4"></i><span>Data Siswa PKL</span>`
-          : `<i data-lucide="clock" class="w-4 h-4"></i><span>Online Attendance</span>`;
+          : `<i data-lucide="clock" class="w-4 h-4"></i><span>Presensi</span>`;
       }
       const bnavPresensi = document.getElementById('bnav-presensi');
       if (bnavPresensi) {
