@@ -71,6 +71,25 @@
     .leaflet-container {
       font-family: inherit;
     }
+    .leaflet-popup-content-wrapper {
+      border-radius: 14px !important;
+      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.18), 0 4px 10px -4px rgba(15, 23, 42, 0.08) !important;
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      padding: 0 !important;
+    }
+    .leaflet-popup-content {
+      margin: 10px 14px !important;
+      min-width: 210px !important;
+      max-width: 260px !important;
+      width: auto !important;
+      line-height: 1.4 !important;
+      word-break: break-word;
+    }
+    .leaflet-popup-close-button {
+      top: 6px !important;
+      right: 6px !important;
+      color: #64748b !important;
+    }
     .user-pulse-marker {
       position: relative;
     }
@@ -3196,12 +3215,12 @@
         if (workshopMarker) {
           workshopMarker.setLatLng([branch.lat, branch.lng]);
           workshopMarker.bindPopup(`
-            <div style="font-family: inherit; font-size: 12px; line-height: 1.4;">
-              <strong style="color: #dc2626; font-size: 13px;">${branch.name}</strong><br>
-              ${branch.address}<br>
-              <span style="color: #64748b; font-size: 11px;">Radius Geofence: ${branch.radiusMeters} meter</span>
+            <div style="font-family: inherit; font-size: 11.5px; line-height: 1.4;">
+              <strong style="color: #dc2626; font-size: 12.5px; display: block; margin-bottom: 2px;">${escapeHtml(branch.name)}</strong>
+              <span style="color: #334155; display: block;">${escapeHtml(branch.address)}</span>
+              <span style="color: #64748b; font-size: 10.5px; display: block; margin-top: 4px; font-weight: 600;">Radius Geofence: ${escapeHtml(branch.radiusMeters)} meter</span>
             </div>
-          `);
+          `, { minWidth: 215, maxWidth: 260, autoPanPaddingTopLeft: [12, 48], autoPanPaddingBottomRight: [12, 16] });
         }
         if (geofenceCircle) {
           geofenceCircle.setLatLng([branch.lat, branch.lng]);
@@ -3891,12 +3910,12 @@
         workshopMarker = L.marker([workshopConfig.lat, workshopConfig.lng], { icon: workshopIcon })
           .addTo(liveMap)
           .bindPopup(`
-            <div style="font-family: inherit; font-size: 12px; line-height: 1.4;">
-              <strong style="color: #dc2626; font-size: 13px;">Astra Daihatsu Ahmad Yani</strong><br>
-              Jl. Jend. A. Yani No. 1, Palapa, Tj. Karang Pusat<br>
-              <span style="color: #64748b; font-size: 11px;">Pusat Geofence Presensi PKL</span>
+            <div style="font-family: inherit; font-size: 11.5px; line-height: 1.4;">
+              <strong style="color: #dc2626; font-size: 12.5px; display: block; margin-bottom: 2px;">Astra Daihatsu Ahmad Yani</strong>
+              <span style="color: #334155; display: block;">Jl. Jend. A. Yani No. 1, Palapa, Tj. Karang Pusat</span>
+              <span style="color: #64748b; font-size: 10.5px; display: block; margin-top: 4px; font-weight: 600;">Pusat Geofence Presensi PKL</span>
             </div>
-          `);
+          `, { minWidth: 215, maxWidth: 260, autoPanPaddingTopLeft: [12, 48], autoPanPaddingBottomRight: [12, 16] });
 
         // Lingkaran Radius Geofence (150m)
         geofenceCircle = L.circle([workshopConfig.lat, workshopConfig.lng], {
@@ -3921,11 +3940,11 @@
         userMarker = L.marker([userLocation.lat, userLocation.lng], { icon: userDotIcon })
           .addTo(liveMap)
           .bindPopup(`
-            <div style="font-family: inherit; font-size: 11px;">
-              <strong style="color: #2563eb;">Posisi Anda Saat Ini</strong><br>
+            <div style="font-family: inherit; font-size: 11.5px; line-height: 1.4;">
+              <strong style="color: #1d4ed8; display: block; margin-bottom: 2px;">Posisi Anda Saat Ini</strong>
               Jarak ke Bengkel: <b>${userLocation.distance} meter</b>
             </div>
-          `);
+          `, { minWidth: 195, maxWidth: 250, autoPanPaddingTopLeft: [12, 48], autoPanPaddingBottomRight: [12, 16] });
 
         updateMapPositions();
       } catch (err) {
