@@ -1865,7 +1865,7 @@
             <li>Tambahkan 2 variabel rahasia berikut:
               <ul class="list-disc pl-4 mt-1 space-y-1 font-mono text-[10.5px]">
                 <li><strong>Key:</strong> <code class="bg-white px-1.5 py-0.5 rounded font-bold text-indigo-700">GAS_URL</code><br><strong>Value:</strong> <span class="text-slate-600">URL Web App Google Apps Script Anda (akhiran /exec)</span></li>
-                <li><strong>Key:</strong> <code class="bg-white px-1.5 py-0.5 rounded font-bold text-indigo-700">GAS_SECRET_CODE</code><br><strong>Value:</strong> <code class="bg-white px-1.5 py-0.5 rounded font-bold text-emerald-700">DAIHATSU_PKL_SEC_2026</code> (wajib sama dengan di Code.gs)</li>
+                <li><strong>Key:</strong> <code class="bg-white px-1.5 py-0.5 rounded font-bold text-indigo-700">GAS_SECRET_CODE</code><br><strong>Value:</strong> <code class="bg-white px-1.5 py-0.5 rounded font-bold text-emerald-700">&lt;kode-rahasia-acak-minimal-32-karakter&gt;</code> (wajib sama dengan di Code.gs)</li>
               </ul>
             </li>
             <li>Pastikan variabel <code class="bg-white px-1 py-0.5 rounded font-bold">API_SECRET_TOKEN</code> di baris 35 file <code class="bg-white px-1 py-0.5 rounded font-bold">Code.gs</code> nilainya sama persis!</li>
@@ -3092,7 +3092,7 @@
         ? (localStorage.getItem('pkl_admin_role_akses') || 'Super Admin')
         : 'Peserta PKL',
       apiUrl: localStorage.getItem('pkl_script_url') || '/api/presensi',
-      apiSecret: localStorage.getItem('pkl_script_secret') || 'DAIHATSU_PKL_SEC_2026',
+      apiSecret: '',
       foto: localStorage.getItem('pkl_foto_profil') || '',
       gpsMode: 'real'
     };
@@ -3335,7 +3335,7 @@
           headers: { 'Content-Type': isProxy ? 'application/json' : 'text/plain;charset=utf-8' },
           body: JSON.stringify({
             action: 'get_admin_data',
-            secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026",
+            secretToken: undefined,
             directGasUrl: (currentUser.apiUrl && currentUser.apiUrl.startsWith('http')) ? currentUser.apiUrl : undefined
           })
         });
@@ -4862,7 +4862,7 @@
         deviceTimestamp: now.toISOString(),
         fotoBase64: "-",
         address: fullAddr,
-        secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026",
+        secretToken: undefined,
         directGasUrl: (currentUser.apiUrl && currentUser.apiUrl.startsWith('http')) ? currentUser.apiUrl : undefined
       };
 
@@ -4996,7 +4996,7 @@
         fileBase64: fileBase64Data,
         fileName: fileNameData,
         fileType: fileTypeData,
-        secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026",
+        secretToken: undefined,
         directGasUrl: (currentUser.apiUrl && currentUser.apiUrl.startsWith('http')) ? currentUser.apiUrl : undefined
       };
 
@@ -6037,7 +6037,7 @@
               instansi: currentUser.instansi,
               jurusan: currentUser.jurusan,
               fotoBase64: dataUrl,
-              secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026",
+              secretToken: undefined,
               directGasUrl: (currentUser.apiUrl && currentUser.apiUrl.startsWith('http')) ? currentUser.apiUrl : undefined
             })
           }).catch(e => console.warn('GAS avatar sync:', e));
@@ -6216,7 +6216,7 @@
             instansi: currentUser.instansi,
             jurusan: currentUser.jurusan,
             fotoBase64: currentUser.foto || '',
-            secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026",
+            secretToken: undefined,
             directGasUrl: (currentUser.apiUrl && currentUser.apiUrl.startsWith('http')) ? currentUser.apiUrl : undefined
           })
         }).then(async res => {
@@ -6247,7 +6247,7 @@
       const scriptUrlEl = document.getElementById('cfg-script-url');
       const scriptSecretEl = document.getElementById('cfg-script-secret');
       const scriptUrl = scriptUrlEl ? scriptUrlEl.value.trim() : (currentUser.apiUrl || '/api/presensi');
-      const scriptSecret = scriptSecretEl ? scriptSecretEl.value.trim() : (currentUser.apiSecret || 'DAIHATSU_PKL_SEC_2026');
+      const scriptSecret = scriptSecretEl ? scriptSecretEl.value.trim() : '';
 
       if (isNaN(wLat) || isNaN(wLng) || isNaN(wRad) || wRad <= 0) {
         showAppAlert("Koordinat latitude, longitude, dan radius harus berupa angka valid!", "Peringatan", "warning");
@@ -6286,9 +6286,9 @@
       localStorage.setItem('pkl_user_cabang', branchKey);
 
       currentUser.apiUrl = scriptUrl || '/api/presensi';
-      currentUser.apiSecret = scriptSecret || 'DAIHATSU_PKL_SEC_2026';
+      currentUser.apiSecret = scriptSecret || '';
       localStorage.setItem('pkl_script_url', currentUser.apiUrl);
-      localStorage.setItem('pkl_script_secret', currentUser.apiSecret);
+      localStorage.removeItem('pkl_script_secret');
 
       setAppBranch(branchKey, false);
       updateProfileDisplay();
@@ -6308,7 +6308,7 @@
             lng: wLng,
             radius: wRad,
             updatedBy: currentUser.nama || 'HRD',
-            secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026",
+            secretToken: undefined,
             directGasUrl: (currentUser.apiUrl && currentUser.apiUrl.startsWith('http')) ? currentUser.apiUrl : undefined
           })
         }).then(async res => {
@@ -6343,25 +6343,14 @@
       if (window.lucide) lucide.createIcons();
     }
 
-    function saveNewPassword() {
+    async function saveNewPassword() {
       const oldPwd = document.getElementById('cfg-old-pwd').value;
       const newPwd = document.getElementById('cfg-new-pwd').value;
       const confirmPwd = document.getElementById('cfg-confirm-pwd').value;
-
-      const storedPwd = localStorage.getItem('pkl_user_password');
       const isAdm = currentUserRole === 'admin';
 
       if (!oldPwd) {
         showAppAlert("Masukkan kata sandi lama / saat ini terlebih dahulu!", "Perhatian", "warning");
-        return;
-      }
-
-      const validOld = storedPwd
-        ? (oldPwd === storedPwd)
-        : (oldPwd === '1234' || oldPwd === 'daihatsu123' || (isAdm && (oldPwd === 'daihatsu2026' || oldPwd === 'admin123')));
-
-      if (!validOld) {
-        showAppAlert("Kata sandi lama yang Anda masukkan tidak sesuai!", "Kata Sandi Salah", "error");
         return;
       }
       if (!newPwd || newPwd.length < 6) {
@@ -6373,16 +6362,37 @@
         return;
       }
 
-      localStorage.setItem('pkl_user_password', newPwd);
-
-      // Sinkronkan kata sandi baru ke database Google Sheets
-      const targetApi = currentUser.apiUrl || '/api/presensi';
-      if (targetApi && (targetApi.startsWith('http') || targetApi.startsWith('/'))) {
-        const isProxy = targetApi.startsWith('/');
-        fetch(targetApi, {
+      // Verifikasi kata sandi lama langsung ke backend (tanpa password hardcoded di client)
+      try {
+        const verifyRes = await fetch('/api/presensi', {
           method: 'POST',
-          mode: isProxy ? 'same-origin' : 'no-cors',
-          headers: { 'Content-Type': isProxy ? 'application/json' : 'text/plain;charset=utf-8' },
+          mode: 'same-origin',
+          cache: 'no-store',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'login_user',
+            loginInput: currentUser.nim || currentUser.username || currentUser.nama,
+            password: oldPwd,
+            directGasUrl: (currentUser.apiUrl && currentUser.apiUrl.startsWith('http')) ? currentUser.apiUrl : undefined
+          })
+        });
+        const verifyData = await verifyRes.json();
+        if (!verifyData || verifyData.status !== 'success') {
+          showAppAlert("Kata sandi lama yang Anda masukkan tidak sesuai!", "Kata Sandi Salah", "error");
+          return;
+        }
+      } catch (err) {
+        showAppAlert("Gagal memverifikasi kata sandi ke server. Periksa koneksi internet Anda.", "Koneksi Gagal", "error");
+        return;
+      }
+
+      // Sinkronkan kata sandi baru ke database Google Sheets melalui Vercel Proxy
+      try {
+        await fetch('/api/presensi', {
+          method: 'POST',
+          mode: 'same-origin',
+          cache: 'no-store',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             action: 'update_profil',
             role: isAdm ? 'admin' : 'student',
@@ -6391,12 +6401,14 @@
             nama: currentUser.nama,
             username: currentUser.username || currentUser.nama,
             password: newPwd,
-            secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026",
             directGasUrl: (currentUser.apiUrl && currentUser.apiUrl.startsWith('http')) ? currentUser.apiUrl : undefined
           })
-        }).catch(err => console.warn('GAS password sync error:', err));
+        });
+      } catch (err) {
+        console.warn('GAS password sync error:', err);
       }
 
+      localStorage.removeItem('pkl_user_password');
       document.getElementById('cfg-old-pwd').value = '';
       document.getElementById('cfg-new-pwd').value = '';
       document.getElementById('cfg-confirm-pwd').value = '';
@@ -6437,7 +6449,7 @@
       const scriptUrlEl = document.getElementById('cfg-script-url');
       const scriptSecretEl = document.getElementById('cfg-script-secret');
       const url = (scriptUrlEl ? scriptUrlEl.value.trim() : '') || currentUser.apiUrl || '/api/presensi';
-      const secret = (scriptSecretEl ? scriptSecretEl.value.trim() : '') || currentUser.apiSecret || 'DAIHATSU_PKL_SEC_2026';
+      const secret = (scriptSecretEl ? scriptSecretEl.value.trim() : '') || '';
       
       showToast("Mengirim ping tes koneksi backend...", "info");
       
@@ -7147,7 +7159,7 @@
           nim: String(item.nim || '').trim(),
           status: newStatus,
           approvedBy: currentUser.nama,
-          secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026",
+          secretToken: undefined,
           directGasUrl: (currentUser.apiUrl && currentUser.apiUrl.startsWith('http')) ? currentUser.apiUrl : undefined
         })
       }).catch(err => console.warn('GAS approve sync error:', err));
@@ -7292,169 +7304,86 @@
         showAppAlert("Masukkan NIM / NISN atau Username Anda!", "Peringatan", "warning");
         return;
       }
-
-      // 1. Akun Sunoo (Siswa PKL - 654553)
-      if ((inputNim.toLowerCase() === 'sunoo' || inputNim === '654553') && (inputPwd === '1234' || inputPwd === 'daihatsu123')) {
-        currentUser.nim = '654553';
-        currentUser.nama = 'Sunoo';
-        currentUser.username = 'Sunoo';
-        currentUser.instansi = 'SMKN 2 Bandar Lampung';
-        currentUser.jurusan = 'Teknik Kendaraan Ringan (TKR)';
-        currentUser.cabang = 'Ahmad Yani';
-        currentUserRole = 'student';
-
-        localStorage.setItem('pkl_user_role', 'student');
-        localStorage.setItem('pkl_nim', '654553');
-        localStorage.setItem('pkl_nama', 'Sunoo');
-        localStorage.setItem('pkl_username', 'Sunoo');
-        localStorage.setItem('pkl_instansi', 'SMKN 2 Bandar Lampung');
-        localStorage.setItem('pkl_jurusan', 'Teknik Kendaraan Ringan (TKR)');
-        localStorage.setItem('pkl_user_cabang', 'Ahmad Yani');
-        localStorage.setItem('pkl_user_password', inputPwd);
-        localStorage.setItem('pkl_is_logged_in', 'true');
-        localStorage.setItem('pkl_profile_completed', 'true');
-
-        setAppBranch('Ahmad Yani');
-        closeLoginModal();
-        applyUserRoleUI('student');
-        showAppToast("Login Berhasil", "Selamat datang kembali, Sunoo! Cabang: Astra Daihatsu Ahmad Yani", "success");
+      if (!inputPwd) {
+        showAppAlert("Masukkan kata sandi Anda terlebih dahulu!", "Peringatan", "warning");
         return;
       }
 
-      // 2. Akun Indah Pratiwi / Admin HRD
-      if ((inputNim.toLowerCase() === 'admin' || inputNim.toLowerCase() === 'indah pratiwi' || inputNim === '14325') && (inputPwd === '1234' || inputPwd === 'daihatsu2026' || inputPwd === 'admin123')) {
-        const adminName = (inputNim.toLowerCase() === 'indah pratiwi' || inputNim === '14325') ? 'Indah Pratiwi' : (localStorage.getItem('pkl_admin_nama') || 'Indah Pratiwi');
-        const adminNim = '14325';
-        currentUserRole = 'admin';
-        currentUser.nim = adminNim;
-        currentUser.nama = adminName;
-        currentUser.username = adminName;
-        currentUser.instansi = 'PT. Astra International Tbk - Daihatsu';
-        currentUser.jabatan = localStorage.getItem('pkl_admin_jabatan') || 'HRD & Personalia (PIC PKL)';
-        currentUser.divisi = localStorage.getItem('pkl_admin_divisi') || 'Human Capital & General Affair';
-        currentUser.phone = localStorage.getItem('pkl_admin_phone') || '0811-9876-1234';
-        currentUser.email = localStorage.getItem('pkl_admin_email') || 'indah.pratiwi@daihatsu.astra.co.id';
-        currentUser.roleAkses = localStorage.getItem('pkl_admin_role_akses') || 'Super Admin';
-        currentUser.jurusan = currentUser.jabatan;
-        currentUser.cabang = 'Semua Cabang (Pusat)';
+      // Autentikasi 100% melalui server backend (/api/presensi -> GAS login_user) tanpa kredensial hardcoded di client
+      try {
+        const res = await fetch('/api/presensi', {
+          method: 'POST',
+          mode: 'same-origin',
+          cache: 'no-store',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'login_user',
+            loginInput: inputNim,
+            password: inputPwd,
+            directGasUrl: (currentUser.apiUrl && currentUser.apiUrl.startsWith('http')) ? currentUser.apiUrl : undefined
+          })
+        });
+        const data = await res.json();
+        if (data && data.status === 'success' && data.user) {
+          const u = data.user;
+          const isAdm = (u.role && u.role.toString().toLowerCase() === 'admin') || 
+                        (u.statusRole && u.statusRole.toString().toLowerCase() === 'admin') ||
+                        (u.roleAkses && u.roleAkses.toString().toLowerCase().includes('admin'));
+          const role = isAdm ? 'admin' : 'student';
+          currentUserRole = role;
+          localStorage.setItem('pkl_user_role', role);
+          localStorage.setItem('pkl_nim', u.nim || inputNim);
+          localStorage.setItem('pkl_nama', u.nama || inputNim);
+          localStorage.setItem('pkl_username', u.username || inputNim);
+          localStorage.setItem('pkl_user_cabang', u.cabang || 'Ahmad Yani');
+          localStorage.setItem('pkl_instansi', u.instansi || '-');
+          localStorage.setItem('pkl_jurusan', u.jurusan || '-');
+          localStorage.setItem('pkl_is_logged_in', 'true');
+          localStorage.setItem('pkl_profile_completed', 'true');
+          localStorage.removeItem('pkl_user_password');
 
-        localStorage.setItem('pkl_user_role', 'admin');
-        localStorage.setItem('pkl_admin_nama', adminName);
-        localStorage.setItem('pkl_nama', adminName);
-        localStorage.setItem('pkl_nim', adminNim);
-        localStorage.setItem('pkl_username', adminName);
-        localStorage.setItem('pkl_admin_jabatan', currentUser.jabatan);
-        localStorage.setItem('pkl_admin_divisi', currentUser.divisi);
-        localStorage.setItem('pkl_admin_phone', currentUser.phone);
-        localStorage.setItem('pkl_admin_email', currentUser.email);
-        localStorage.setItem('pkl_admin_role_akses', currentUser.roleAkses);
-        localStorage.setItem('pkl_user_cabang', 'Ahmad Yani');
-        localStorage.setItem('pkl_is_logged_in', 'true');
-        localStorage.setItem('pkl_profile_completed', 'true');
+          currentUser.nim = u.nim || inputNim;
+          currentUser.nama = u.nama || inputNim;
+          currentUser.username = u.username || inputNim;
+          currentUser.cabang = u.cabang || 'Ahmad Yani';
+          currentUser.instansi = u.instansi || '-';
+          currentUser.jurusan = u.jurusan || '-';
 
-        setAppBranch('Ahmad Yani');
-        closeLoginModal();
-        applyUserRoleUI('admin');
-        syncDataFromDatabase(false);
-        showAppAlert(`Selamat datang di Panel HRD Astra Daihatsu Ahmad Yani, ${adminName}!\n\nAnda dapat memverifikasi approvals izin anak PKL, memantau riwayat presensi live seluruh peserta, dan mengelola database Master PKL.`, "Login Berhasil", "success");
-        return;
-      }
+          if (isAdm) {
+            currentUser.jabatan = u.jabatan || u.jurusan || 'HRD & Personalia (PIC PKL)';
+            currentUser.divisi = u.divisi || u.instansi || 'Human Capital & General Affair';
+            currentUser.phone = (u.phone && u.phone !== '-') ? u.phone : (currentUser.phone || '-');
+            currentUser.email = (u.email && u.email !== '-') ? u.email : (currentUser.email || '-');
+            currentUser.roleAkses = u.roleAkses || 'Super Admin';
+            currentUser.jurusan = currentUser.jabatan;
 
-      // 3. Akun lokal yang pernah registrasi
-      const localNim = localStorage.getItem('pkl_nim');
-      const localPwd = localStorage.getItem('pkl_user_password');
-      const localUser = localStorage.getItem('pkl_username');
-      if ((inputNim === localNim || (localUser && inputNim.toLowerCase() === localUser.toLowerCase())) && (!localPwd || inputPwd === localPwd || inputPwd === '1234' || inputPwd === 'daihatsu123')) {
-        currentUserRole = 'student';
-        localStorage.setItem('pkl_user_role', 'student');
-        localStorage.setItem('pkl_is_logged_in', 'true');
-        localStorage.setItem('pkl_profile_completed', 'true');
-        const c = localStorage.getItem('pkl_user_cabang') || 'Ahmad Yani';
-        setAppBranch(c);
-        closeLoginModal();
-        applyUserRoleUI('student');
-        showAppToast("Login Berhasil", `Selamat datang kembali, ${currentUser.nama}!`, "success");
-        return;
-      }
-
-      // 5. Cek ke backend GAS / Vercel jika online
-      const targetApi = currentUser.apiUrl || '/api/presensi';
-      if (targetApi) {
-        try {
-          const isProxy = targetApi.startsWith('/');
-          const res = await fetch(targetApi, {
-            method: 'POST',
-            mode: isProxy ? 'same-origin' : 'no-cors',
-            headers: { 'Content-Type': isProxy ? 'application/json' : 'text/plain;charset=utf-8' },
-            body: JSON.stringify({
-              action: 'login_user',
-              loginInput: inputNim,
-              password: inputPwd,
-              secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026",
-              directGasUrl: (currentUser.apiUrl && currentUser.apiUrl.startsWith('http')) ? currentUser.apiUrl : undefined
-            })
-          });
-          if (isProxy) {
-            const data = await res.json();
-            if (data.status === 'success' && data.user) {
-              const u = data.user;
-              const isAdm = (u.role && u.role.toString().toLowerCase() === 'admin') || 
-                            (u.statusRole && u.statusRole.toString().toLowerCase() === 'admin') ||
-                            (u.roleAkses && u.roleAkses.toString().toLowerCase().includes('admin'));
-              const role = isAdm ? 'admin' : 'student';
-              currentUserRole = role;
-              localStorage.setItem('pkl_user_role', role);
-              localStorage.setItem('pkl_nim', u.nim || inputNim);
-              localStorage.setItem('pkl_nama', u.nama || inputNim);
-              localStorage.setItem('pkl_username', u.username || inputNim);
-              localStorage.setItem('pkl_user_cabang', u.cabang || 'Ahmad Yani');
-              localStorage.setItem('pkl_instansi', u.instansi || '-');
-              localStorage.setItem('pkl_jurusan', u.jurusan || '-');
-              localStorage.setItem('pkl_is_logged_in', 'true');
-              localStorage.setItem('pkl_profile_completed', 'true');
-
-              currentUser.nim = u.nim || inputNim;
-              currentUser.nama = u.nama || inputNim;
-              currentUser.username = u.username || inputNim;
-              currentUser.cabang = u.cabang || 'Ahmad Yani';
-              currentUser.instansi = u.instansi || '-';
-              currentUser.jurusan = u.jurusan || '-';
-
-              if (isAdm) {
-                currentUser.jabatan = u.jabatan || u.jurusan || 'HRD & Personalia (PIC PKL)';
-                currentUser.divisi = u.divisi || u.instansi || 'Human Capital & General Affair';
-                currentUser.phone = (u.phone && u.phone !== '-') ? u.phone : (currentUser.phone || '0811-9876-1234');
-                currentUser.email = (u.email && u.email !== '-') ? u.email : (currentUser.email || 'indah.pratiwi@daihatsu.astra.co.id');
-                currentUser.roleAkses = u.roleAkses || 'Super Admin';
-                currentUser.jurusan = currentUser.jabatan;
-
-                localStorage.setItem('pkl_admin_nama', currentUser.nama);
-                localStorage.setItem('pkl_admin_jabatan', currentUser.jabatan);
-                localStorage.setItem('pkl_admin_divisi', currentUser.divisi);
-                localStorage.setItem('pkl_admin_phone', currentUser.phone);
-                localStorage.setItem('pkl_admin_email', currentUser.email);
-                localStorage.setItem('pkl_admin_role_akses', currentUser.roleAkses);
-              }
-
-              if (u.avatar && u.avatar !== '-' && u.avatar.startsWith('http')) {
-                currentUser.foto = u.avatar;
-                localStorage.setItem('pkl_foto_profil', u.avatar);
-              }
-
-              setAppBranch(u.cabang || 'Ahmad Yani');
-              closeLoginModal();
-              applyUserRoleUI(role);
-              syncDataFromDatabase(false);
-              showAppToast("Login Berhasil", `Selamat datang, ${u.nama}!`, "success");
-              return;
-            } else if (data.status === 'error') {
-              showAppAlert(data.message || "Username/NIM atau kata sandi tidak cocok di database!", "Gagal Masuk", "error");
-              return;
-            }
+            localStorage.setItem('pkl_admin_nama', currentUser.nama);
+            localStorage.setItem('pkl_admin_jabatan', currentUser.jabatan);
+            localStorage.setItem('pkl_admin_divisi', currentUser.divisi);
+            localStorage.setItem('pkl_admin_phone', currentUser.phone);
+            localStorage.setItem('pkl_admin_email', currentUser.email);
+            localStorage.setItem('pkl_admin_role_akses', currentUser.roleAkses);
           }
-        } catch (e) {
-          console.warn("GAS backend login check failed:", e);
+
+          if (u.avatar && u.avatar !== '-' && u.avatar.startsWith('http')) {
+            currentUser.foto = normalizeDriveImageUrl(u.avatar);
+            localStorage.setItem('pkl_foto_profil', currentUser.foto);
+          }
+
+          setAppBranch(u.cabang || 'Ahmad Yani');
+          closeLoginModal();
+          applyUserRoleUI(role);
+          syncDataFromDatabase(false);
+          showAppToast("Login Berhasil", `Selamat datang, ${u.nama}!`, "success");
+          return;
+        } else if (data && data.status === 'error') {
+          showAppAlert(data.message || "Username/NIM atau kata sandi tidak cocok di database!", "Gagal Masuk", "error");
+          return;
         }
+      } catch (e) {
+        console.warn("GAS backend login check failed:", e);
+        showAppAlert("Gagal terhubung ke server autentikasi. Pastikan koneksi internet aktif dan coba lagi.", "Koneksi Gagal", "error");
+        return;
       }
 
       showAppAlert("NIM / Username atau kata sandi tidak terdaftar!\n\nBagi peserta PKL baru, silakan klik 'Daftar & Lengkapi Profil' terlebih dahulu.", "Akun Tidak Ditemukan", "warning");
@@ -7518,7 +7447,7 @@
             phone: phone,
             password: pwd,
             fotoBase64: avatarBase64,
-            secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026",
+            secretToken: undefined,
             directGasUrl: (currentUser.apiUrl && currentUser.apiUrl.startsWith('http')) ? currentUser.apiUrl : undefined
           })
         }).catch(err => console.warn('GAS register sync error:', err));
@@ -7737,7 +7666,7 @@
           waktu: waktu,
           tanggal: tanggal,
           catatan: notes,
-          secretToken: currentUser.apiSecret || "DAIHATSU_PKL_SEC_2026",
+          secretToken: undefined,
           directGasUrl: (currentUser.apiUrl && currentUser.apiUrl.startsWith('http')) ? currentUser.apiUrl : undefined
         })
       }).catch(err => console.warn('GAS manual att sync error:', err));
