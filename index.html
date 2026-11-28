@@ -1189,474 +1189,366 @@
       <!-- ==================== TAB 5: PENGATURAN & GPS CONFIG ==================== -->
       <section id="view-pengaturan" class="hidden w-full max-w-7xl mx-auto overflow-x-hidden pb-2">
 
-        <!-- ==================== SCREEN A: MAIN SETTINGS & INFO OVERVIEW (macOS / Notion Sidebar Style) ==================== -->
-        <div id="settings-main-screen" class="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 items-start">
+        <!-- ==================== SCREEN A: MAIN SETTINGS & INFO OVERVIEW (CLEAN VERTICAL FLOW) ==================== -->
+        <div id="settings-main-screen" class="max-w-5xl mx-auto space-y-5">
 
-          <!-- ==================== LEFT SUB-SIDEBAR (CATEGORIES) ==================== -->
-          <aside class="lg:col-span-3 lg:sticky lg:top-6 bg-white rounded-2xl border border-slate-200/80 shadow-sm p-2 lg:p-3">
-            <div class="hidden lg:flex items-center justify-between px-3 pt-1 pb-2.5 mb-1 border-b border-slate-100">
-              <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Kategori Pengaturan</span>
-              <span class="w-2 h-2 rounded-full bg-emerald-500" title="Sesi Aktif"></span>
+          <!-- 1. HERO SECTION: DETAIL PROFIL DIGITAL -->
+          <div class="bg-white rounded-2xl border border-slate-200/80 shadow-md shadow-slate-200/50 overflow-hidden flex flex-col">
+            <!-- Astra Daihatsu Top Accent Bar -->
+            <div class="h-1 w-full bg-gradient-to-r from-red-600 via-blue-600 to-cyan-400"></div>
+
+            <!-- Premium Dark Navy Hero Banner (Integrated Avatar + Name + Role + Verified) -->
+            <div class="relative bg-gradient-to-br from-[#08132b] via-[#112550] to-[#1d4ed8] p-5 sm:p-6 text-white overflow-hidden">
+              <!-- Decorative Mesh & Glow -->
+              <div class="absolute inset-0 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:18px_18px] opacity-15 pointer-events-none"></div>
+              <div class="absolute -top-12 -right-12 w-40 h-40 bg-cyan-400/20 rounded-full blur-2xl pointer-events-none"></div>
+              <div class="absolute -bottom-10 -left-10 w-36 h-36 bg-red-500/15 rounded-full blur-2xl pointer-events-none"></div>
+
+              <div class="relative z-10 space-y-4">
+                <!-- Top Meta Strip -->
+                <div class="flex items-center justify-between gap-2 pb-3 border-b border-white/10">
+                  <div class="flex items-center gap-2 min-w-0">
+                    <div class="w-7 h-7 rounded-lg bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/15 flex-shrink-0">
+                      <i id="info-card-icon" data-lucide="user-check" class="w-3.5 h-3.5 text-cyan-300"></i>
+                    </div>
+                    <div class="min-w-0">
+                      <h4 id="info-card-title" class="font-extrabold text-xs sm:text-sm text-white leading-tight truncate">Informasi Peserta PKL</h4>
+                      <p id="info-card-subtitle" class="text-[10px] text-blue-200/80 truncate">Kartu Identitas Digital Astra Daihatsu</p>
+                    </div>
+                  </div>
+                  <span id="info-card-verified-badge" class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-300 bg-emerald-500/15 px-2.5 py-1 rounded-full border border-emerald-400/30 whitespace-nowrap flex-shrink-0">
+                    <i data-lucide="badge-check" class="w-3 h-3"></i>
+                    <span>Terverifikasi</span>
+                  </span>
+                </div>
+
+                <!-- Integrated Profile Identity Row -->
+                <div class="flex items-center gap-3.5 sm:gap-5">
+                  <div class="relative flex-shrink-0">
+                    <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-slate-800 to-blue-900 flex items-center justify-center text-white font-black text-2xl sm:text-3xl overflow-hidden shadow-lg ring-2 ring-white/30">
+                      <span id="info-avatar-initials">M</span>
+                      <img id="info-avatar-img" src="" alt="Foto Profil" class="w-full h-full object-cover hidden">
+                    </div>
+                    <span class="w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-[#0f2147] absolute -bottom-0.5 -right-0.5 shadow-sm" title="Akun Aktif"></span>
+                  </div>
+
+                  <div class="flex-1 min-w-0">
+                    <div class="flex flex-wrap items-center gap-1.5">
+                      <span id="info-profile-role-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-cyan-400/20 text-cyan-200 border border-cyan-300/30">
+                        Siswa PKL Teknisi
+                      </span>
+                      <span id="info-profile-sub-badge" class="hidden sm:inline text-[11px] text-blue-200/75 font-medium">Workshop Astra Daihatsu</span>
+                    </div>
+                    <h3 id="info-profile-nama" class="font-black text-white text-lg sm:text-2xl tracking-tight mt-1 truncate drop-shadow-xs">Mekanik PKL</h3>
+                    <div class="inline-flex items-center gap-1.5 mt-1 px-2.5 py-0.5 rounded-lg bg-white/10 backdrop-blur-xs border border-white/15 text-[11px] font-mono">
+                      <span id="info-profile-nim-label" class="text-blue-200/80">NISN / NIM:</span>
+                      <span id="info-profile-nim" class="font-bold text-white tracking-wide">-</span>
+                    </div>
+                  </div>
+
+                  <!-- Desktop Action Button -->
+                  <div class="hidden sm:block flex-shrink-0">
+                    <button type="button" onclick="openEditProfilePage()" class="h-10 px-4 bg-white hover:bg-blue-50 active:scale-[0.98] text-[#0d1a3a] rounded-xl font-extrabold text-xs transition shadow-md flex items-center gap-2 cursor-pointer whitespace-nowrap">
+                      <i data-lucide="edit-3" class="w-3.5 h-3.5 text-blue-600"></i>
+                      <span>Edit Profil</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <nav class="flex lg:flex-col gap-1.5 overflow-x-auto no-scrollbar" aria-label="Kategori Pengaturan">
-              <button type="button" onclick="switchSettingsSection('profil')" data-settings-nav="profil" class="settings-nav-btn flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-left transition cursor-pointer flex-shrink-0 lg:w-full bg-blue-50 text-[#1d4ed8] font-bold ring-1 ring-blue-200/80">
-                <div class="settings-nav-icon w-8 h-8 rounded-lg bg-[#1d4ed8] text-white flex items-center justify-center flex-shrink-0 shadow-xs">
-                  <i data-lucide="user-circle-2" class="w-4 h-4"></i>
+            <!-- Structured Icon-Accented Bento Details -->
+            <div class="p-4 sm:p-6 space-y-3.5">
+              <!-- Row 1: 2-Column Academic / Work Identity -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div class="p-4 rounded-xl bg-slate-50/80 hover:bg-slate-50 border border-slate-200/70 flex items-start gap-3 transition min-w-0">
+                  <div class="w-9 h-9 rounded-xl bg-indigo-100/80 text-indigo-700 flex items-center justify-center flex-shrink-0">
+                    <i data-lucide="graduation-cap" class="w-4 h-4"></i>
+                  </div>
+                  <div class="min-w-0">
+                    <p id="info-profile-lbl-col1" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Asal Sekolah / Kampus</p>
+                    <p id="info-profile-instansi" class="font-extrabold text-slate-800 text-xs sm:text-sm mt-0.5 leading-snug">-</p>
+                  </div>
                 </div>
-                <div class="min-w-0">
-                  <p class="text-xs sm:text-sm leading-tight whitespace-nowrap">Profil &amp; Identitas</p>
-                  <p class="hidden lg:block text-[10px] font-medium text-blue-600/80 truncate mt-0.5 settings-nav-sub">Kartu akun &amp; data diri</p>
-                </div>
-              </button>
 
-              <button type="button" onclick="switchSettingsSection('lokasi')" data-settings-nav="lokasi" class="settings-nav-btn flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-left transition cursor-pointer flex-shrink-0 lg:w-full text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-semibold">
-                <div class="settings-nav-icon w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center flex-shrink-0">
+                <div class="p-4 rounded-xl bg-slate-50/80 hover:bg-slate-50 border border-slate-200/70 flex items-start gap-3 transition min-w-0">
+                  <div class="w-9 h-9 rounded-xl bg-blue-100/80 text-blue-700 flex items-center justify-center flex-shrink-0">
+                    <i data-lucide="award" class="w-4 h-4"></i>
+                  </div>
+                  <div class="min-w-0">
+                    <p id="info-profile-lbl-col2" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Program Keahlian</p>
+                    <p id="info-profile-jurusan" class="font-extrabold text-slate-800 text-xs sm:text-sm mt-0.5 leading-snug">Teknik Kendaraan Ringan (TKR)</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Row 2: Featured Placement Highlight Strip -->
+              <div class="p-4 rounded-xl bg-gradient-to-r from-blue-50/90 via-indigo-50/40 to-white border border-blue-200/70 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3 min-w-0">
+                  <div class="w-9 h-9 rounded-xl bg-[#0d59a8] text-white flex items-center justify-center flex-shrink-0 shadow-xs">
+                    <i data-lucide="map-pin" class="w-4 h-4"></i>
+                  </div>
+                  <div class="min-w-0">
+                    <p id="info-profile-lbl-col3" class="text-[10px] font-bold text-blue-600/80 uppercase tracking-wider">Penempatan Praktik (PKL)</p>
+                    <p id="info-profile-cabang" class="font-extrabold text-slate-900 text-xs sm:text-sm mt-0.5 leading-snug">Astra Daihatsu Ahmad Yani</p>
+                  </div>
+                </div>
+                <span id="info-profile-tag-col3" class="px-2.5 py-1 rounded-lg text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 whitespace-nowrap flex-shrink-0">
+                  Cabang Resmi
+                </span>
+              </div>
+
+              <!-- Row 3: Unified Contact Strip (WhatsApp & Email) -->
+              <div id="info-profile-contact-row" class="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-slate-200/70 rounded-xl border border-slate-200/80 bg-white overflow-hidden">
+                <div class="p-3.5 flex items-center gap-3 min-w-0">
+                  <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center flex-shrink-0">
+                    <i data-lucide="phone" class="w-3.5 h-3.5"></i>
+                  </div>
+                  <div class="min-w-0">
+                    <p id="info-profile-lbl-phone" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">No. WhatsApp</p>
+                    <p id="info-profile-phone" class="font-bold text-slate-800 text-xs sm:text-sm mt-0.5 truncate">-</p>
+                  </div>
+                </div>
+                <div class="p-3.5 flex items-center gap-3 min-w-0">
+                  <div class="w-8 h-8 rounded-lg bg-sky-50 text-sky-600 border border-sky-100 flex items-center justify-center flex-shrink-0">
+                    <i data-lucide="mail" class="w-3.5 h-3.5"></i>
+                  </div>
+                  <div class="min-w-0">
+                    <p id="info-profile-lbl-email" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Email Akun</p>
+                    <p id="info-profile-email" class="font-bold text-slate-800 text-xs sm:text-sm mt-0.5 truncate">-</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Mobile-Only Action Button -->
+              <div class="sm:hidden pt-1">
+                <button type="button" onclick="openEditProfilePage()" class="w-full h-11 px-4 bg-gradient-to-r from-[#0d59a8] to-[#1d4ed8] hover:from-[#0b4a8c] hover:to-[#1e40af] active:scale-[0.98] text-white rounded-xl font-bold text-xs transition shadow-md shadow-blue-700/20 flex items-center justify-center gap-2 cursor-pointer">
+                  <i data-lucide="edit-3" class="w-4 h-4"></i>
+                  <span>Edit Informasi Profil</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. LOKASI & GEOFENCING BENGKEL -->
+          <!-- 2A. MODE ADMIN / HRD: INTERACTIVE CONTROL CARD -->
+          <div id="card-workshop-geofence-admin-only" class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-5">
+            <div class="flex items-center justify-between gap-3 border-b border-slate-100 pb-3.5">
+              <div class="flex items-center gap-3 min-w-0">
+                <div class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-700 border border-indigo-100 flex items-center justify-center flex-shrink-0">
                   <i data-lucide="map-pin" class="w-4 h-4"></i>
                 </div>
                 <div class="min-w-0">
-                  <p class="text-xs sm:text-sm leading-tight whitespace-nowrap">Lokasi &amp; Geofencing</p>
-                  <p class="hidden lg:block text-[10px] font-medium text-slate-400 truncate mt-0.5 settings-nav-sub">Titik pusat &amp; radius cabang</p>
+                  <h4 class="font-extrabold text-sm sm:text-base text-slate-900 leading-tight truncate">Titik Pusat &amp; Radius Bengkel</h4>
+                  <p class="text-[11px] text-slate-500 mt-0.5 truncate">Koordinat geofence acuan cabang Astra Daihatsu</p>
                 </div>
-              </button>
+              </div>
+              <span class="text-[10px] text-indigo-700 font-bold bg-indigo-50 border border-indigo-200/80 px-2.5 py-1 rounded-full whitespace-nowrap flex-shrink-0">Khusus Admin</span>
+            </div>
 
-              <button type="button" onclick="switchSettingsSection('keamanan')" data-settings-nav="keamanan" class="settings-nav-btn flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-left transition cursor-pointer flex-shrink-0 lg:w-full text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-semibold">
-                <div class="settings-nav-icon w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center flex-shrink-0">
-                  <i data-lucide="shield-check" class="w-4 h-4"></i>
+            <div class="space-y-4">
+              <!-- Pilihan Cabang Workshop -->
+              <div>
+                <label for="cfg-branch-select" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5">Pilih Cabang Workshop *</label>
+                <div class="relative">
+                  <select id="cfg-branch-select" onchange="handleBranchChange(this.value)" class="w-full h-11 px-3.5 pl-10 rounded-xl border border-slate-200 text-xs sm:text-sm font-bold text-slate-800 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 cursor-pointer shadow-2xs">
+                    <option value="BDL_AYANI">Astra Daihatsu - Ahmad Yani (Bandar Lampung Pusat)</option>
+                    <option value="BDL_SOETTA">Astra Daihatsu - Soekarno Hatta (Bypass)</option>
+                    <option value="BDJ_PROKLAMATOR">Astra Daihatsu - Bandar Jaya (Lampung Tengah)</option>
+                    <option value="KTB_LAMPURA">Astra Daihatsu - Kotabumi (Lampung Utara)</option>
+                    <option value="LTM_SRIBAWONO">Astra Daihatsu - Bandar Sribawono (Lampung Timur)</option>
+                  </select>
+                  <i data-lucide="building-2" class="w-4 h-4 text-blue-600 absolute left-3.5 top-3.5 pointer-events-none"></i>
+                </div>
+                <p class="text-[11px] text-slate-500 mt-1.5 leading-relaxed" id="cfg-branch-address-hint">Alamat: Palapa, Jl. Jenderal Ahmad Yani No. 1, Gotong Royong, Kec. Tj. Karang Pusat, Kota Bandar Lampung, Lampung 35213</p>
+              </div>
+
+              <!-- Grid 2 Kolom Latitude & Longitude -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label for="cfg-workshop-lat" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5">Latitude Pusat</label>
+                  <input type="number" step="any" id="cfg-workshop-lat" class="w-full h-11 px-3.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-mono font-semibold text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                  <label for="cfg-workshop-lng" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5">Longitude Pusat</label>
+                  <input type="number" step="any" id="cfg-workshop-lng" class="w-full h-11 px-3.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-mono font-semibold text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                </div>
+              </div>
+
+              <!-- Slider Toleransi Radius & 4 Preset -->
+              <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/60 space-y-3">
+                <div class="flex justify-between items-center gap-2">
+                  <label for="cfg-workshop-radius" class="text-xs font-semibold uppercase tracking-wider text-slate-600 leading-snug">Toleransi Radius Geofencing</label>
+                  <span id="radius-val-display" class="text-xs sm:text-sm font-extrabold text-[#1d4ed8] bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-200/80 whitespace-nowrap flex-shrink-0 tabular-nums">150 meter</span>
+                </div>
+                <input type="range" id="cfg-workshop-radius" min="30" max="300" step="5" value="150" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#1d4ed8]" oninput="setRadiusPreset(this.value)">
+                <div class="grid grid-cols-4 gap-2 pt-0.5">
+                  <button type="button" data-radius-preset="70" onclick="setRadiusPreset(70)" class="radius-preset-btn h-10 bg-white hover:bg-slate-100 border border-slate-200 text-xs font-bold rounded-xl text-slate-700 transition active:scale-95 text-center shadow-2xs cursor-pointer tabular-nums">70m</button>
+                  <button type="button" data-radius-preset="100" onclick="setRadiusPreset(100)" class="radius-preset-btn h-10 bg-white hover:bg-slate-100 border border-slate-200 text-xs font-bold rounded-xl text-slate-700 transition active:scale-95 text-center shadow-2xs cursor-pointer tabular-nums">100m</button>
+                  <button type="button" data-radius-preset="150" onclick="setRadiusPreset(150)" class="radius-preset-btn h-10 bg-blue-50 hover:bg-blue-100 border-[#1d4ed8] text-xs font-bold rounded-xl text-[#1d4ed8] ring-1 ring-blue-500/20 transition active:scale-95 text-center shadow-2xs cursor-pointer tabular-nums">150m</button>
+                  <button type="button" data-radius-preset="200" onclick="setRadiusPreset(200)" class="radius-preset-btn h-10 bg-white hover:bg-slate-100 border border-slate-200 text-xs font-bold rounded-xl text-slate-700 transition active:scale-95 text-center shadow-2xs cursor-pointer tabular-nums">200m</button>
+                </div>
+              </div>
+
+              <!-- Baris Tombol Kalibrasi 2 Kolom -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <button type="button" onclick="calibrateCurrentLocation()" class="h-11 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-xs active:scale-[0.98] cursor-pointer">
+                  <i data-lucide="crosshair" class="w-4 h-4 flex-shrink-0"></i>
+                  <span class="truncate">Gunakan Lokasi Saya Saat Ini</span>
+                </button>
+                <button type="button" onclick="resetWorkshopLocationDefault()" class="h-11 px-4 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-xl text-xs font-bold transition active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer" title="Kembalikan koordinat ke titik default resmi">
+                  <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-slate-500 flex-shrink-0"></i>
+                  <span>Reset Default</span>
+                </button>
+              </div>
+
+              <!-- Status Bar Sensor GPS & Tombol Simpan -->
+              <div class="pt-3.5 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3.5">
+                <div class="flex items-center gap-3 min-w-0">
+                  <div class="min-w-0">
+                    <p class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                      <i data-lucide="satellite" class="w-3.5 h-3.5 text-blue-600 flex-shrink-0"></i>
+                      <span>Sensor Geolocation GPS</span>
+                    </p>
+                    <p class="text-[11px] text-slate-400 mt-0.5 truncate">High-Accuracy WGS84 GPS asli perangkat</p>
+                  </div>
+                  <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1.5 whitespace-nowrap flex-shrink-0">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    GPS Aktif
+                  </span>
+                  <input type="hidden" id="cfg-gps-mode" value="real">
+                </div>
+
+                <button type="button" onclick="saveGeofenceSettings()" class="w-full sm:w-auto h-11 px-6 bg-[#0F172A] hover:bg-[#1E293B] active:scale-[0.98] text-white rounded-xl font-bold text-xs sm:text-sm transition shadow-md shadow-slate-900/15 flex items-center justify-center gap-2 cursor-pointer flex-shrink-0">
+                  <i data-lucide="save" class="w-4 h-4 text-cyan-300"></i>
+                  <span>Simpan Parameter Geofencing</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2B. MODE SISWA PKL: READ-ONLY BRANCH CARD -->
+          <div id="card-intern-branch-info" class="hidden bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
+            <div class="flex items-center justify-between gap-3 border-b border-slate-100 pb-3.5">
+              <div class="flex items-center gap-3 min-w-0">
+                <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-700 border border-blue-100 flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="building-2" class="w-4 h-4"></i>
                 </div>
                 <div class="min-w-0">
-                  <p class="text-xs sm:text-sm leading-tight whitespace-nowrap">Keamanan &amp; Sesi</p>
-                  <p class="hidden lg:block text-[10px] font-medium text-slate-400 truncate mt-0.5 settings-nav-sub">Kata sandi &amp; keluar akun</p>
+                  <h4 class="font-extrabold text-sm sm:text-base text-slate-900 leading-tight truncate">Cabang Penempatan PKL</h4>
+                  <p class="text-[11px] text-slate-500 mt-0.5 truncate">Lokasi workshop acuan kehadiran presensi Anda</p>
                 </div>
-              </button>
+              </div>
+              <span class="text-[10px] text-blue-700 font-bold bg-blue-50 border border-blue-200/80 px-2.5 py-1 rounded-full whitespace-nowrap flex-shrink-0">Penempatan Resmi</span>
+            </div>
 
-              <button type="button" onclick="switchSettingsSection('aplikasi')" data-settings-nav="aplikasi" class="settings-nav-btn flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-left transition cursor-pointer flex-shrink-0 lg:w-full text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-semibold">
-                <div class="settings-nav-icon w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center flex-shrink-0">
-                  <i data-lucide="monitor-smartphone" class="w-4 h-4"></i>
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/60 space-y-3">
+              <div class="flex items-center justify-between gap-2">
+                <span class="text-xs sm:text-sm font-black text-slate-900 app-branch-name">Astra Daihatsu Lampung - Ahmad Yani</span>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 whitespace-nowrap">Aktif</span>
+              </div>
+              <p class="text-xs text-slate-600 leading-relaxed" id="intern-branch-address-display">
+                Palapa, Jl. Jenderal Ahmad Yani No. 1, Gotong Royong, Kec. Tj. Karang Pusat, Kota Bandar Lampung, Lampung 35213
+              </p>
+              <div class="flex items-center gap-2 pt-2.5 text-xs text-slate-600 font-medium border-t border-slate-200/70">
+                <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600 flex-shrink-0"></i>
+                <span>Radius geofencing aktif diatur terpusat oleh Admin HRD (<strong id="intern-view-radius-meters" class="text-slate-900">150 meter</strong>)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. PASANG APLIKASI (PWA — HP & DESKTOP) -->
+          <div class="bg-gradient-to-br from-[#0F172A] via-[#142338] to-[#1E3A8A] text-white p-5 sm:p-6 rounded-2xl shadow-sm border border-slate-700/60 relative overflow-hidden">
+            <div class="absolute inset-0 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:16px_16px] opacity-15 pointer-events-none"></div>
+
+            <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-5">
+              <div class="flex items-start gap-4 min-w-0">
+                <div class="w-14 h-14 rounded-2xl bg-white p-2 shadow-md flex items-center justify-center flex-shrink-0">
+                  <img src="Image/Logo-PWA.png" alt="Presensi PKL" class="w-full h-full object-contain rounded-lg">
                 </div>
                 <div class="min-w-0">
-                  <p class="text-xs sm:text-sm leading-tight whitespace-nowrap">Aplikasi (PWA)</p>
-                  <p class="hidden lg:block text-[10px] font-medium text-slate-400 truncate mt-0.5 settings-nav-sub">Install di HP &amp; Desktop</p>
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <h4 class="font-extrabold text-base sm:text-lg text-white leading-tight">Pasang Aplikasi (HP &amp; Desktop)</h4>
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 whitespace-nowrap">PWA App</span>
+                  </div>
+                  <p class="text-xs text-slate-300 mt-1.5 leading-relaxed max-w-xl">
+                    Pasang aplikasi presensi langsung di layar utama <strong>HP (Android / iPhone)</strong> maupun <strong>Laptop / PC Desktop (Windows / Mac via Chrome &amp; Edge)</strong> untuk akses lebih cepat, tampilan layar penuh, dan dukungan mode offline.
+                  </p>
                 </div>
-              </button>
-            </nav>
+              </div>
 
-            <!-- Desktop Subtle Session Status Footer -->
-            <div class="hidden lg:flex items-center justify-between gap-2 mt-3 pt-3 px-3 border-t border-slate-100">
-              <span class="text-[11px] font-semibold text-slate-500">Status Sesi</span>
-              <span class="inline-flex items-center gap-1.5 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200/80">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                Aktif
-              </span>
+              <div class="flex flex-col sm:flex-row gap-2.5 flex-shrink-0">
+                <button type="button" onclick="triggerPwaInstall()" id="btn-pwa-install" class="h-11 px-5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs rounded-xl shadow-md shadow-emerald-500/25 flex items-center justify-center gap-2 transition active:scale-[0.98] cursor-pointer whitespace-nowrap">
+                  <i data-lucide="download" class="w-4 h-4 flex-shrink-0"></i>
+                  <span id="btn-pwa-install-txt">Pasang Aplikasi</span>
+                </button>
+                <button type="button" onclick="showPwaGuideModal()" class="h-11 px-4 bg-white/15 hover:bg-white/25 text-white font-semibold text-xs rounded-xl border border-white/20 flex items-center justify-center gap-2 transition active:scale-[0.98] cursor-pointer whitespace-nowrap">
+                  <i data-lucide="monitor-smartphone" class="w-4 h-4 text-cyan-300 flex-shrink-0"></i>
+                  <span>Petunjuk Pasang</span>
+                </button>
+              </div>
             </div>
-          </aside>
+          </div>
 
-          <!-- ==================== RIGHT FOCUSED CONTENT PANEL ==================== -->
-          <div class="lg:col-span-9 space-y-5">
+          <!-- 4. KEAMANAN KATA SANDI & LOGOUT (2 KOLOM SEJAJAR DI BAGIAN BAWAH) -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 items-stretch">
 
-            <!-- PANEL 1: PROFIL & IDENTITAS -->
-            <div data-settings-panel="profil" class="settings-panel-section">
-              <div class="bg-white rounded-2xl border border-slate-200/80 shadow-md shadow-slate-200/50 overflow-hidden flex flex-col">
-                <!-- Astra Daihatsu Top Accent Bar -->
-                <div class="h-1 w-full bg-gradient-to-r from-red-600 via-blue-600 to-cyan-400"></div>
-
-                <!-- Premium Dark Navy Hero Banner (Integrated Avatar + Name + Role + Verified) -->
-                <div class="relative bg-gradient-to-br from-[#08132b] via-[#112550] to-[#1d4ed8] p-4 sm:p-6 text-white overflow-hidden">
-                  <!-- Decorative Mesh & Glow -->
-                  <div class="absolute inset-0 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:18px_18px] opacity-15 pointer-events-none"></div>
-                  <div class="absolute -top-12 -right-12 w-40 h-40 bg-cyan-400/20 rounded-full blur-2xl pointer-events-none"></div>
-                  <div class="absolute -bottom-10 -left-10 w-36 h-36 bg-red-500/15 rounded-full blur-2xl pointer-events-none"></div>
-
-                  <div class="relative z-10 space-y-4">
-                    <!-- Top Meta Strip -->
-                    <div class="flex items-center justify-between gap-2 pb-3 border-b border-white/10">
-                      <div class="flex items-center gap-2 min-w-0">
-                        <div class="w-7 h-7 rounded-lg bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/15 flex-shrink-0">
-                          <i id="info-card-icon" data-lucide="user-check" class="w-3.5 h-3.5 text-cyan-300"></i>
-                        </div>
-                        <div class="min-w-0">
-                          <h4 id="info-card-title" class="font-extrabold text-xs sm:text-sm text-white leading-tight truncate">Informasi Peserta PKL</h4>
-                          <p id="info-card-subtitle" class="text-[10px] text-blue-200/80 truncate">Kartu Identitas Digital Astra Daihatsu</p>
-                        </div>
-                      </div>
-                      <span id="info-card-verified-badge" class="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-300 bg-emerald-500/15 px-2.5 py-1 rounded-full border border-emerald-400/30 whitespace-nowrap flex-shrink-0">
-                        <i data-lucide="badge-check" class="w-3 h-3"></i>
-                        <span>Terverifikasi</span>
-                      </span>
-                    </div>
-
-                    <!-- Integrated Profile Identity Row -->
-                    <div class="flex items-center gap-3.5 sm:gap-5">
-                      <div class="relative flex-shrink-0">
-                        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-slate-800 to-blue-900 flex items-center justify-center text-white font-black text-2xl sm:text-3xl overflow-hidden shadow-lg ring-2 ring-white/30">
-                          <span id="info-avatar-initials">M</span>
-                          <img id="info-avatar-img" src="" alt="Foto Profil" class="w-full h-full object-cover hidden">
-                        </div>
-                        <span class="w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-[#0f2147] absolute -bottom-0.5 -right-0.5 shadow-sm" title="Akun Aktif"></span>
-                      </div>
-
-                      <div class="flex-1 min-w-0">
-                        <div class="flex flex-wrap items-center gap-1.5">
-                          <span id="info-profile-role-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-cyan-400/20 text-cyan-200 border border-cyan-300/30">
-                            Siswa PKL Teknisi
-                          </span>
-                          <span id="info-profile-sub-badge" class="hidden sm:inline text-[11px] text-blue-200/75 font-medium">Workshop Astra Daihatsu</span>
-                        </div>
-                        <h3 id="info-profile-nama" class="font-black text-white text-lg sm:text-2xl tracking-tight mt-1 truncate drop-shadow-xs">Mekanik PKL</h3>
-                        <div class="inline-flex items-center gap-1.5 mt-1 px-2.5 py-0.5 rounded-lg bg-white/10 backdrop-blur-xs border border-white/15 text-[11px] font-mono">
-                          <span id="info-profile-nim-label" class="text-blue-200/80">NISN / NIM:</span>
-                          <span id="info-profile-nim" class="font-bold text-white tracking-wide">-</span>
-                        </div>
-                      </div>
-
-                      <!-- Desktop Action Button -->
-                      <div class="hidden sm:block flex-shrink-0">
-                        <button type="button" onclick="openEditProfilePage()" class="h-10 px-4 bg-white hover:bg-blue-50 active:scale-[0.98] text-[#0d1a3a] rounded-xl font-extrabold text-xs transition shadow-md flex items-center gap-2 cursor-pointer whitespace-nowrap">
-                          <i data-lucide="edit-3" class="w-3.5 h-3.5 text-blue-600"></i>
-                          <span>Edit Profil</span>
-                        </button>
-                      </div>
-                    </div>
+            <!-- CARD: KEAMANAN & KATA SANDI -->
+            <div class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between gap-4">
+              <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-3.5">
+                <div class="flex items-center gap-3 min-w-0">
+                  <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-700 border border-amber-200/70 flex items-center justify-center flex-shrink-0">
+                    <i data-lucide="shield-check" class="w-4 h-4"></i>
+                  </div>
+                  <div class="min-w-0">
+                    <h4 class="font-extrabold text-sm sm:text-base text-slate-900 leading-snug">Keamanan &amp; Kata Sandi</h4>
+                    <p class="text-[11px] text-slate-500 mt-0.5">Kelola kata sandi untuk keamanan akun</p>
                   </div>
                 </div>
+                <span class="text-[10px] font-bold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200/70 whitespace-nowrap flex-shrink-0">Terlindungi</span>
+              </div>
 
-                <!-- Structured Icon-Accented Bento Details -->
-                <div class="p-4 sm:p-6 space-y-3.5">
-                  <!-- Row 1: 2-Column Academic / Work Identity -->
-                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                    <div class="p-4 rounded-xl bg-slate-50/80 hover:bg-slate-50 border border-slate-200/70 flex items-start gap-3 transition min-w-0">
-                      <div class="w-9 h-9 rounded-xl bg-indigo-100/80 text-indigo-700 flex items-center justify-center flex-shrink-0">
-                        <i data-lucide="graduation-cap" class="w-4 h-4"></i>
-                      </div>
-                      <div class="min-w-0">
-                        <p id="info-profile-lbl-col1" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Asal Sekolah / Kampus</p>
-                        <p id="info-profile-instansi" class="font-extrabold text-slate-800 text-xs sm:text-sm mt-0.5 leading-snug">-</p>
-                      </div>
-                    </div>
-
-                    <div class="p-4 rounded-xl bg-slate-50/80 hover:bg-slate-50 border border-slate-200/70 flex items-start gap-3 transition min-w-0">
-                      <div class="w-9 h-9 rounded-xl bg-blue-100/80 text-blue-700 flex items-center justify-center flex-shrink-0">
-                        <i data-lucide="award" class="w-4 h-4"></i>
-                      </div>
-                      <div class="min-w-0">
-                        <p id="info-profile-lbl-col2" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Program Keahlian</p>
-                        <p id="info-profile-jurusan" class="font-extrabold text-slate-800 text-xs sm:text-sm mt-0.5 leading-snug">Teknik Kendaraan Ringan (TKR)</p>
-                      </div>
-                    </div>
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 p-4 rounded-xl bg-slate-50 border border-slate-200/60">
+                <div class="flex items-center gap-3 min-w-0">
+                  <div class="w-9 h-9 rounded-xl bg-white border border-slate-200/80 text-slate-600 flex items-center justify-center flex-shrink-0 shadow-2xs">
+                    <i data-lucide="key-round" class="w-4 h-4"></i>
                   </div>
-
-                  <!-- Row 2: Featured Placement Highlight Strip (Full Width, Non-Truncated) -->
-                  <div class="p-4 rounded-xl bg-gradient-to-r from-blue-50/90 via-indigo-50/40 to-white border border-blue-200/70 flex items-center justify-between gap-3">
-                    <div class="flex items-center gap-3 min-w-0">
-                      <div class="w-9 h-9 rounded-xl bg-[#0d59a8] text-white flex items-center justify-center flex-shrink-0 shadow-xs">
-                        <i data-lucide="map-pin" class="w-4 h-4"></i>
-                      </div>
-                      <div class="min-w-0">
-                        <p id="info-profile-lbl-col3" class="text-[10px] font-bold text-blue-600/80 uppercase tracking-wider">Penempatan Praktik (PKL)</p>
-                        <p id="info-profile-cabang" class="font-extrabold text-slate-900 text-xs sm:text-sm mt-0.5 leading-snug">Astra Daihatsu Ahmad Yani</p>
-                      </div>
-                    </div>
-                    <span id="info-profile-tag-col3" class="px-2.5 py-1 rounded-lg text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 whitespace-nowrap flex-shrink-0">
-                      Cabang Resmi
-                    </span>
-                  </div>
-
-                  <!-- Row 3: Unified Contact Strip (WhatsApp & Email) -->
-                  <div id="info-profile-contact-row" class="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-slate-200/70 rounded-xl border border-slate-200/80 bg-white overflow-hidden">
-                    <div class="p-3.5 flex items-center gap-3 min-w-0">
-                      <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center flex-shrink-0">
-                        <i data-lucide="phone" class="w-3.5 h-3.5"></i>
-                      </div>
-                      <div class="min-w-0">
-                        <p id="info-profile-lbl-phone" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">No. WhatsApp</p>
-                        <p id="info-profile-phone" class="font-bold text-slate-800 text-xs sm:text-sm mt-0.5 truncate">-</p>
-                      </div>
-                    </div>
-                    <div class="p-3.5 flex items-center gap-3 min-w-0">
-                      <div class="w-8 h-8 rounded-lg bg-sky-50 text-sky-600 border border-sky-100 flex items-center justify-center flex-shrink-0">
-                        <i data-lucide="mail" class="w-3.5 h-3.5"></i>
-                      </div>
-                      <div class="min-w-0">
-                        <p id="info-profile-lbl-email" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Email Akun</p>
-                        <p id="info-profile-email" class="font-bold text-slate-800 text-xs sm:text-sm mt-0.5 truncate">-</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Mobile-Only Action Button -->
-                  <div class="sm:hidden pt-1">
-                    <button type="button" onclick="openEditProfilePage()" class="w-full h-11 px-4 bg-gradient-to-r from-[#0d59a8] to-[#1d4ed8] hover:from-[#0b4a8c] hover:to-[#1e40af] active:scale-[0.98] text-white rounded-xl font-bold text-xs transition shadow-md shadow-blue-700/20 flex items-center justify-center gap-2 cursor-pointer">
-                      <i data-lucide="edit-3" class="w-4 h-4"></i>
-                      <span>Edit Informasi Profil</span>
-                    </button>
+                  <div class="min-w-0">
+                    <p class="text-xs font-bold text-slate-800">Kata Sandi Akun</p>
+                    <p class="text-[11px] text-slate-500 font-mono tracking-widest mt-0.5">••••••••••••</p>
                   </div>
                 </div>
+                <button type="button" onclick="openChangePasswordPage()" class="w-full sm:w-auto h-10 px-4 bg-amber-600 hover:bg-amber-700 active:scale-[0.98] text-white rounded-xl font-bold text-xs transition shadow-sm shadow-amber-600/20 flex items-center justify-center gap-1.5 cursor-pointer flex-shrink-0 whitespace-nowrap">
+                  <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+                  <span>Ubah Kata Sandi</span>
+                  <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                </button>
               </div>
             </div>
 
-            <!-- PANEL 2: LOKASI & GEOFENCING -->
-            <div data-settings-panel="lokasi" class="settings-panel-section hidden space-y-4">
-              <!-- 2A. MODE ADMIN / HRD: INTERACTIVE CONTROL CARD -->
-              <div id="card-workshop-geofence-admin-only" class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-5">
-                <div class="flex items-center justify-between gap-3 border-b border-slate-100 pb-3.5">
-                  <div class="flex items-center gap-3 min-w-0">
-                    <div class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-700 border border-indigo-100 flex items-center justify-center flex-shrink-0">
-                      <i data-lucide="map-pin" class="w-4 h-4"></i>
-                    </div>
-                    <div class="min-w-0">
-                      <h4 class="font-extrabold text-sm sm:text-base text-slate-900 leading-tight truncate">Titik Pusat &amp; Radius Bengkel</h4>
-                      <p class="text-[11px] text-slate-500 mt-0.5 truncate">Koordinat geofence acuan cabang Astra Daihatsu</p>
-                    </div>
+            <!-- CARD: SESI & KELUAR AKUN (LOGOUT) -->
+            <div class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between gap-4">
+              <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-3.5">
+                <div class="flex items-center gap-3 min-w-0">
+                  <div class="w-9 h-9 rounded-xl bg-red-50 text-red-600 border border-red-100 flex items-center justify-center flex-shrink-0">
+                    <i data-lucide="shield-alert" class="w-4 h-4"></i>
                   </div>
-                  <span class="text-[10px] text-indigo-700 font-bold bg-indigo-50 border border-indigo-200/80 px-2.5 py-1 rounded-full whitespace-nowrap flex-shrink-0">Khusus Admin</span>
-                </div>
-
-                <div class="space-y-4">
-                  <!-- Pilihan Cabang Workshop -->
-                  <div>
-                    <label for="cfg-branch-select" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5">Pilih Cabang Workshop *</label>
-                    <div class="relative">
-                      <select id="cfg-branch-select" onchange="handleBranchChange(this.value)" class="w-full h-11 px-3.5 pl-10 rounded-xl border border-slate-200 text-xs sm:text-sm font-bold text-slate-800 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 cursor-pointer shadow-2xs">
-                        <option value="BDL_AYANI">Astra Daihatsu - Ahmad Yani (Bandar Lampung Pusat)</option>
-                        <option value="BDL_SOETTA">Astra Daihatsu - Soekarno Hatta (Bypass)</option>
-                        <option value="BDJ_PROKLAMATOR">Astra Daihatsu - Bandar Jaya (Lampung Tengah)</option>
-                        <option value="KTB_LAMPURA">Astra Daihatsu - Kotabumi (Lampung Utara)</option>
-                        <option value="LTM_SRIBAWONO">Astra Daihatsu - Bandar Sribawono (Lampung Timur)</option>
-                      </select>
-                      <i data-lucide="building-2" class="w-4 h-4 text-blue-600 absolute left-3.5 top-3.5 pointer-events-none"></i>
-                    </div>
-                    <p class="text-[11px] text-slate-500 mt-1.5 leading-relaxed" id="cfg-branch-address-hint">Alamat: Palapa, Jl. Jenderal Ahmad Yani No. 1, Gotong Royong, Kec. Tj. Karang Pusat, Kota Bandar Lampung, Lampung 35213</p>
-                  </div>
-
-                  <!-- Grid 2 Kolom Latitude & Longitude -->
-                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label for="cfg-workshop-lat" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5">Latitude Pusat</label>
-                      <input type="number" step="any" id="cfg-workshop-lat" class="w-full h-11 px-3.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-mono font-semibold text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                    <div>
-                      <label for="cfg-workshop-lng" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-1.5">Longitude Pusat</label>
-                      <input type="number" step="any" id="cfg-workshop-lng" class="w-full h-11 px-3.5 rounded-xl border border-slate-200 text-xs sm:text-sm font-mono font-semibold text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                    </div>
-                  </div>
-
-                  <!-- Slider Toleransi Radius & 4 Preset -->
-                  <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/60 space-y-3">
-                    <div class="flex justify-between items-center gap-2">
-                      <label for="cfg-workshop-radius" class="text-xs font-semibold uppercase tracking-wider text-slate-600 leading-snug">Toleransi Radius Geofencing</label>
-                      <span id="radius-val-display" class="text-xs sm:text-sm font-extrabold text-[#1d4ed8] bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-200/80 whitespace-nowrap flex-shrink-0 tabular-nums">150 meter</span>
-                    </div>
-                    <input type="range" id="cfg-workshop-radius" min="30" max="300" step="5" value="150" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#1d4ed8]" oninput="setRadiusPreset(this.value)">
-                    <div class="grid grid-cols-4 gap-2 pt-0.5">
-                      <button type="button" data-radius-preset="70" onclick="setRadiusPreset(70)" class="radius-preset-btn h-10 bg-white hover:bg-slate-100 border border-slate-200 text-xs font-bold rounded-xl text-slate-700 transition active:scale-95 text-center shadow-2xs cursor-pointer tabular-nums">70m</button>
-                      <button type="button" data-radius-preset="100" onclick="setRadiusPreset(100)" class="radius-preset-btn h-10 bg-white hover:bg-slate-100 border border-slate-200 text-xs font-bold rounded-xl text-slate-700 transition active:scale-95 text-center shadow-2xs cursor-pointer tabular-nums">100m</button>
-                      <button type="button" data-radius-preset="150" onclick="setRadiusPreset(150)" class="radius-preset-btn h-10 bg-blue-50 hover:bg-blue-100 border-[#1d4ed8] text-xs font-bold rounded-xl text-[#1d4ed8] ring-1 ring-blue-500/20 transition active:scale-95 text-center shadow-2xs cursor-pointer tabular-nums">150m</button>
-                      <button type="button" data-radius-preset="200" onclick="setRadiusPreset(200)" class="radius-preset-btn h-10 bg-white hover:bg-slate-100 border border-slate-200 text-xs font-bold rounded-xl text-slate-700 transition active:scale-95 text-center shadow-2xs cursor-pointer tabular-nums">200m</button>
-                    </div>
-                  </div>
-
-                  <!-- Baris Tombol Kalibrasi 2 Kolom -->
-                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <button type="button" onclick="calibrateCurrentLocation()" class="h-11 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-xs active:scale-[0.98] cursor-pointer">
-                      <i data-lucide="crosshair" class="w-4 h-4 flex-shrink-0"></i>
-                      <span class="truncate">Gunakan Lokasi Saya Saat Ini</span>
-                    </button>
-                    <button type="button" onclick="resetWorkshopLocationDefault()" class="h-11 px-4 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-xl text-xs font-bold transition active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer" title="Kembalikan koordinat ke titik default resmi">
-                      <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-slate-500 flex-shrink-0"></i>
-                      <span>Reset Default</span>
-                    </button>
-                  </div>
-
-                  <!-- Status Bar Sensor GPS & Tombol Simpan -->
-                  <div class="pt-3.5 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3.5">
-                    <div class="flex items-center gap-3 min-w-0">
-                      <div class="min-w-0">
-                        <p class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                          <i data-lucide="satellite" class="w-3.5 h-3.5 text-blue-600 flex-shrink-0"></i>
-                          <span>Sensor Geolocation GPS</span>
-                        </p>
-                        <p class="text-[11px] text-slate-400 mt-0.5 truncate">High-Accuracy WGS84 GPS asli perangkat</p>
-                      </div>
-                      <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1.5 whitespace-nowrap flex-shrink-0">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                        GPS Aktif
-                      </span>
-                      <input type="hidden" id="cfg-gps-mode" value="real">
-                    </div>
-
-                    <button type="button" onclick="saveGeofenceSettings()" class="w-full sm:w-auto h-11 px-6 bg-[#0F172A] hover:bg-[#1E293B] active:scale-[0.98] text-white rounded-xl font-bold text-xs sm:text-sm transition shadow-md shadow-slate-900/15 flex items-center justify-center gap-2 cursor-pointer flex-shrink-0">
-                      <i data-lucide="save" class="w-4 h-4 text-cyan-300"></i>
-                      <span>Simpan Parameter Geofencing</span>
-                    </button>
+                  <div class="min-w-0">
+                    <h4 class="font-extrabold text-sm sm:text-base text-slate-900 leading-snug">Sesi &amp; Keluar Akun</h4>
+                    <p class="text-[11px] text-slate-500 mt-0.5">Kunci aplikasi atau berganti akun lainnya</p>
                   </div>
                 </div>
+                <span class="text-[10px] text-emerald-700 font-bold bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200/80 whitespace-nowrap flex-shrink-0">Sesi Aktif</span>
               </div>
 
-              <!-- 2B. MODE SISWA PKL: READ-ONLY BRANCH CARD -->
-              <div id="card-intern-branch-info" class="hidden bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
-                <div class="flex items-center justify-between gap-3 border-b border-slate-100 pb-3.5">
-                  <div class="flex items-center gap-3 min-w-0">
-                    <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-700 border border-blue-100 flex items-center justify-center flex-shrink-0">
-                      <i data-lucide="building-2" class="w-4 h-4"></i>
-                    </div>
-                    <div class="min-w-0">
-                      <h4 class="font-extrabold text-sm sm:text-base text-slate-900 leading-tight truncate">Cabang Penempatan PKL</h4>
-                      <p class="text-[11px] text-slate-500 mt-0.5 truncate">Lokasi workshop acuan kehadiran presensi Anda</p>
-                    </div>
-                  </div>
-                  <span class="text-[10px] text-blue-700 font-bold bg-blue-50 border border-blue-200/80 px-2.5 py-1 rounded-full whitespace-nowrap flex-shrink-0">Penempatan Resmi</span>
-                </div>
-
-                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200/60 space-y-3">
-                  <div class="flex items-center justify-between gap-2">
-                    <span class="text-xs sm:text-sm font-black text-slate-900 app-branch-name">Astra Daihatsu Lampung - Ahmad Yani</span>
-                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 whitespace-nowrap">Aktif</span>
-                  </div>
-                  <p class="text-xs text-slate-600 leading-relaxed" id="intern-branch-address-display">
-                    Palapa, Jl. Jenderal Ahmad Yani No. 1, Gotong Royong, Kec. Tj. Karang Pusat, Kota Bandar Lampung, Lampung 35213
-                  </p>
-                  <div class="flex items-center gap-2 pt-2.5 text-xs text-slate-600 font-medium border-t border-slate-200/70">
-                    <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600 flex-shrink-0"></i>
-                    <span>Radius geofencing aktif diatur terpusat oleh Admin HRD (<strong id="intern-view-radius-meters" class="text-slate-900">150 meter</strong>)</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- PANEL 3: KEAMANAN & SESI AKUN -->
-            <div data-settings-panel="keamanan" class="settings-panel-section hidden space-y-4">
-              <!-- CARD: KEAMANAN & KATA SANDI -->
-              <div class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
-                <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-3.5">
-                  <div class="flex items-center gap-3 min-w-0">
-                    <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-700 border border-amber-200/70 flex items-center justify-center flex-shrink-0">
-                      <i data-lucide="shield-check" class="w-4 h-4"></i>
-                    </div>
-                    <div class="min-w-0">
-                      <h4 class="font-extrabold text-sm sm:text-base text-slate-900 leading-snug">Keamanan &amp; Kata Sandi</h4>
-                      <p class="text-[11px] text-slate-500 mt-0.5">Kelola kata sandi untuk melindungi akses akun presensi Anda</p>
-                    </div>
-                  </div>
-                  <span class="text-[10px] font-bold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200/70 whitespace-nowrap flex-shrink-0">Terlindungi</span>
-                </div>
-
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 p-4 rounded-xl bg-slate-50 border border-slate-200/60">
-                  <div class="flex items-center gap-3 min-w-0">
-                    <div class="w-9 h-9 rounded-xl bg-white border border-slate-200/80 text-slate-600 flex items-center justify-center flex-shrink-0 shadow-2xs">
-                      <i data-lucide="key-round" class="w-4 h-4"></i>
-                    </div>
-                    <div class="min-w-0">
-                      <p class="text-xs sm:text-sm font-bold text-slate-800">Kata Sandi Akun</p>
-                      <p class="text-[11px] text-slate-500 font-mono tracking-widest mt-0.5">••••••••••••</p>
-                    </div>
-                  </div>
-                  <button type="button" onclick="openChangePasswordPage()" class="w-full sm:w-auto h-10 px-4 bg-amber-600 hover:bg-amber-700 active:scale-[0.98] text-white rounded-xl font-bold text-xs transition shadow-sm shadow-amber-600/20 flex items-center justify-center gap-1.5 cursor-pointer flex-shrink-0 whitespace-nowrap">
-                    <i data-lucide="lock" class="w-3.5 h-3.5"></i>
-                    <span>Ubah Kata Sandi</span>
-                    <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
-                  </button>
-                </div>
-              </div>
-
-              <!-- CARD: SESI & MANAJEMEN AKUN -->
-              <div class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
-                <div class="flex items-center justify-between gap-2 border-b border-slate-100 pb-3.5">
-                  <div class="flex items-center gap-3 min-w-0">
-                    <div class="w-9 h-9 rounded-xl bg-red-50 text-red-600 border border-red-100 flex items-center justify-center flex-shrink-0">
-                      <i data-lucide="shield-alert" class="w-4 h-4"></i>
-                    </div>
-                    <div class="min-w-0">
-                      <h4 class="font-extrabold text-sm sm:text-base text-slate-900 leading-snug">Sesi &amp; Manajemen Akun</h4>
-                      <p class="text-[11px] text-slate-500 mt-0.5">Akhiri sesi login aktif di perangkat ini</p>
-                    </div>
-                  </div>
-                  <span class="text-[10px] text-emerald-700 font-bold bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200/80 whitespace-nowrap flex-shrink-0">Sesi Aktif</span>
-                </div>
-
-                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-red-50/40 border border-red-100">
-                  <p class="text-xs text-slate-600 leading-relaxed max-w-xl">
-                    Keluar dari sesi untuk mengunci aplikasi atau berganti ke akun HRD / Siswa PKL lainnya di perangkat ini.
-                  </p>
-                  <button type="button" onclick="handleLogout()" class="w-full sm:w-auto h-10 px-5 bg-red-600 hover:bg-red-700 active:scale-[0.98] text-white rounded-xl font-bold text-xs sm:text-sm transition shadow-sm shadow-red-600/20 flex items-center justify-center gap-2 cursor-pointer flex-shrink-0 whitespace-nowrap">
-                    <i data-lucide="log-out" class="w-4 h-4 flex-shrink-0"></i>
-                    <span>Keluar Akun</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <!-- PANEL 4: APLIKASI PWA (HP & DESKTOP) -->
-            <div data-settings-panel="aplikasi" class="settings-panel-section hidden space-y-4">
-              <!-- Compact Hero Install Banner -->
-              <div class="bg-gradient-to-br from-[#0F172A] via-[#142338] to-[#1E3A8A] text-white p-5 sm:p-6 rounded-2xl shadow-sm border border-slate-700/60 relative overflow-hidden">
-                <div class="absolute inset-0 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:16px_16px] opacity-15 pointer-events-none"></div>
-
-                <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-5">
-                  <div class="flex items-start gap-4 min-w-0">
-                    <div class="w-14 h-14 rounded-2xl bg-white p-2 shadow-md flex items-center justify-center flex-shrink-0">
-                      <img src="Image/Logo-PWA.png" alt="Presensi PKL" class="w-full h-full object-contain rounded-lg">
-                    </div>
-                    <div class="min-w-0">
-                      <div class="flex items-center gap-2 flex-wrap">
-                        <h4 class="font-extrabold text-base sm:text-lg text-white leading-tight">Pasang Aplikasi (HP &amp; Desktop)</h4>
-                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 whitespace-nowrap">PWA App</span>
-                      </div>
-                      <p class="text-xs text-slate-300 mt-1.5 leading-relaxed max-w-xl">
-                        Pasang aplikasi presensi langsung di layar utama <strong>HP (Android / iPhone)</strong> maupun <strong>Laptop / PC Desktop (Windows / Mac)</strong> untuk akses instan, tampilan layar penuh, dan dukungan mode offline.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div class="flex flex-col sm:flex-row md:flex-col lg:flex-row gap-2.5 flex-shrink-0">
-                    <button type="button" onclick="triggerPwaInstall()" id="btn-pwa-install" class="h-11 px-5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs rounded-xl shadow-md shadow-emerald-500/25 flex items-center justify-center gap-2 transition active:scale-[0.98] cursor-pointer whitespace-nowrap">
-                      <i data-lucide="download" class="w-4 h-4 flex-shrink-0"></i>
-                      <span id="btn-pwa-install-txt">Pasang Aplikasi</span>
-                    </button>
-                    <button type="button" onclick="showPwaGuideModal()" class="h-11 px-4 bg-white/15 hover:bg-white/25 text-white font-semibold text-xs rounded-xl border border-white/20 flex items-center justify-center gap-2 transition active:scale-[0.98] cursor-pointer whitespace-nowrap">
-                      <i data-lucide="book-open" class="w-4 h-4 text-cyan-300 flex-shrink-0"></i>
-                      <span>Panduan Lengkap</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <!-- 3-Column Platform Quick Guide -->
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-2.5">
-                  <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center flex-shrink-0">
-                      <i data-lucide="smartphone" class="w-4 h-4"></i>
-                    </div>
-                    <h5 class="font-bold text-xs sm:text-sm text-slate-900">Android (Chrome)</h5>
-                  </div>
-                  <p class="text-xs text-slate-500 leading-relaxed">
-                    Klik tombol <strong>Pasang Aplikasi</strong> di atas, atau buka menu titik tiga <strong>(&#8942;)</strong> di pojok kanan atas lalu pilih <strong>Instal aplikasi</strong>.
-                  </p>
-                </div>
-
-                <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-2.5">
-                  <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center flex-shrink-0">
-                      <i data-lucide="tablet-smartphone" class="w-4 h-4"></i>
-                    </div>
-                    <h5 class="font-bold text-xs sm:text-sm text-slate-900">iPhone / iPad (Safari)</h5>
-                  </div>
-                  <p class="text-xs text-slate-500 leading-relaxed">
-                    Ketuk ikon <strong>Bagikan (Share)</strong> di bar bawah Safari, gulir ke bawah lalu pilih <strong>Tambahkan ke Layar Utama</strong>.
-                  </p>
-                </div>
-
-                <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-2.5">
-                  <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-100 flex items-center justify-center flex-shrink-0">
-                      <i data-lucide="laptop" class="w-4 h-4"></i>
-                    </div>
-                    <h5 class="font-bold text-xs sm:text-sm text-slate-900">Laptop / PC Desktop</h5>
-                  </div>
-                  <p class="text-xs text-slate-500 leading-relaxed">
-                    Buka di <strong>Chrome / Edge</strong>, lalu klik ikon <strong>Instal (komputer + panah)</strong> di ujung kanan address bar dan pilih <strong>Instal</strong>.
-                  </p>
-                </div>
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 p-4 rounded-xl bg-red-50/40 border border-red-100">
+                <p class="text-xs text-slate-600 leading-relaxed">
+                  Keluar dari sesi aktif di perangkat ini.
+                </p>
+                <button type="button" onclick="handleLogout()" class="w-full sm:w-auto h-10 px-5 bg-red-600 hover:bg-red-700 active:scale-[0.98] text-white rounded-xl font-bold text-xs transition shadow-sm shadow-red-600/20 flex items-center justify-center gap-2 cursor-pointer flex-shrink-0 whitespace-nowrap">
+                  <i data-lucide="log-out" class="w-4 h-4 flex-shrink-0"></i>
+                  <span>Keluar Akun</span>
+                </button>
               </div>
             </div>
 
@@ -6355,49 +6247,6 @@
         updateProfileDisplay();
         showToast("Foto profil berhasil dihapus.", "info");
       }
-    }
-
-    function switchSettingsSection(sectionId) {
-      const target = sectionId || 'profil';
-      document.querySelectorAll('.settings-panel-section').forEach(panel => {
-        if (panel.dataset.settingsPanel === target) {
-          panel.classList.remove('hidden');
-        } else {
-          panel.classList.add('hidden');
-        }
-      });
-
-      document.querySelectorAll('.settings-nav-btn').forEach(btn => {
-        const isActive = btn.dataset.settingsNav === target;
-        const iconWrap = btn.querySelector('.settings-nav-icon');
-        const subText = btn.querySelector('.settings-nav-sub');
-
-        if (isActive) {
-          btn.classList.remove('text-slate-600', 'hover:bg-slate-50', 'hover:text-slate-900', 'font-semibold');
-          btn.classList.add('bg-blue-50', 'text-[#1d4ed8]', 'font-bold', 'ring-1', 'ring-blue-200/80');
-          if (iconWrap) {
-            iconWrap.classList.remove('bg-slate-100', 'text-slate-500');
-            iconWrap.classList.add('bg-[#1d4ed8]', 'text-white', 'shadow-xs');
-          }
-          if (subText) {
-            subText.classList.remove('text-slate-400');
-            subText.classList.add('text-blue-600/80');
-          }
-        } else {
-          btn.classList.remove('bg-blue-50', 'text-[#1d4ed8]', 'font-bold', 'ring-1', 'ring-blue-200/80');
-          btn.classList.add('text-slate-600', 'hover:bg-slate-50', 'hover:text-slate-900', 'font-semibold');
-          if (iconWrap) {
-            iconWrap.classList.remove('bg-[#1d4ed8]', 'text-white', 'shadow-xs');
-            iconWrap.classList.add('bg-slate-100', 'text-slate-500');
-          }
-          if (subText) {
-            subText.classList.remove('text-blue-600/80');
-            subText.classList.add('text-slate-400');
-          }
-        }
-      });
-
-      if (window.lucide) lucide.createIcons();
     }
 
     function openEditProfilePage() {
