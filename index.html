@@ -175,7 +175,7 @@
 <body class="bg-[#F4F6FA] text-slate-800 antialiased min-h-screen flex flex-col md:flex-row overflow-x-hidden">
 
   <!-- ==================== DESKTOP SIDEBAR ==================== -->
-  <aside id="sidebar" class="hidden md:flex md:static inset-y-0 left-0 w-64 bg-[#0d1a3a] text-white flex-shrink-0 flex-col justify-between p-4 z-40 shadow-xl">
+  <aside id="sidebar" class="hidden md:flex md:sticky md:top-0 md:h-screen w-64 bg-[#0d1a3a] text-white flex-shrink-0 flex-col justify-between p-4 z-40 shadow-xl">
     <div>
       <!-- Brand & Header -->
       <div class="px-2 pt-2 pb-4 border-b border-slate-700/60">
@@ -598,19 +598,10 @@
       <section id="view-presensi" class="hidden w-full pb-6">
 
         <!-- STUDENT FLOW: ONLINE ATTENDANCE -->
-        <div id="student-attendance-flow" class="max-w-md lg:max-w-4xl mx-auto space-y-4">
+        <div id="student-attendance-flow" class="max-w-md lg:max-w-none w-full mx-auto space-y-4">
 
         <!-- ==================== SUB-SCREEN 1: PRESENSI KEHADIRAN OVERVIEW ==================== -->
         <div id="presensi-screen-overview" class="space-y-3 lg:space-y-5">
-          <!-- Top App Bar (Desktop Only - Mobile sudah tampil di Topbar utama) -->
-          <div class="hidden md:flex items-center justify-between pb-3 border-b border-slate-200">
-            <button onclick="switchTab('dashboard')" class="p-2 -ml-2 rounded-xl hover:bg-slate-100 text-slate-700 transition cursor-pointer" aria-label="Kembali ke Beranda">
-              <i data-lucide="chevron-left" class="w-5 h-5"></i>
-            </button>
-            <h3 class="font-extrabold text-slate-900 text-base">Presensi Kehadiran</h3>
-            <div class="w-8"></div>
-          </div>
-
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 lg:gap-5 items-stretch">
             <!-- Left Column (Desktop): Live Digital Clock & Primary CTA -->
             <div class="lg:col-span-6 flex flex-col justify-between gap-3">
@@ -785,44 +776,49 @@
         <!-- END STUDENT FLOW -->
 
         <!-- ==================== ADMIN VIEW: DATA & MANAJEMEN SISWA PKL ==================== -->
-        <div id="admin-data-pkl-flow" class="hidden max-w-6xl mx-auto space-y-5">
-          <!-- Header Bar with Action Buttons -->
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200">
-            <div>
-              <h3 class="font-extrabold text-slate-900 text-lg">Direktori Siswa PKL</h3>
-              <p class="text-xs text-slate-500">Manajemen peserta PKL aktif Bengkel Astra Daihatsu Ahmad Yani</p>
+        <div id="admin-data-pkl-flow" class="hidden w-full space-y-4 sm:space-y-5">
+          <!-- Compact Action Toolbar (Tanpa Duplikasi Judul Topbar) -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 shadow-xs">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <div class="w-9 h-9 rounded-xl bg-blue-50 text-[#1d4ed8] flex items-center justify-center flex-shrink-0">
+                <i data-lucide="users" class="w-4 h-4"></i>
+              </div>
+              <div class="min-w-0">
+                <p class="text-xs sm:text-sm font-extrabold text-slate-900 truncate">Manajemen Peserta PKL Aktif</p>
+                <p class="text-[11px] text-slate-500 truncate">Tambah peserta baru atau catat presensi manual HRD</p>
+              </div>
             </div>
-            <div class="flex items-center gap-2">
-              <button onclick="openAddStudentModal()" class="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm transition cursor-pointer">
+            <div class="flex items-center gap-2 flex-shrink-0">
+              <button onclick="openAddStudentModal()" class="flex-1 sm:flex-none h-10 px-4 bg-[#1d4ed8] hover:bg-[#1e40af] active:scale-95 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm transition cursor-pointer">
                 <i data-lucide="user-plus" class="w-3.5 h-3.5"></i>
                 <span>Tambah Siswa</span>
               </button>
-              <button onclick="openManualAttendanceModal()" class="px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-2xs transition cursor-pointer">
-                <i data-lucide="calendar-plus" class="w-3.5 h-3.5 text-blue-600"></i>
+              <button onclick="openManualAttendanceModal()" class="flex-1 sm:flex-none h-10 px-4 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-2xs transition cursor-pointer">
+                <i data-lucide="calendar-plus" class="w-3.5 h-3.5 text-[#1d4ed8]"></i>
                 <span>Absensi Manual</span>
               </button>
             </div>
           </div>
 
           <!-- 4 Summary Stat Cards -->
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-2xs">
-              <p class="text-[11px] font-bold text-slate-400">Total PKL</p>
-              <p class="text-xl font-black text-slate-900 mt-0.5" id="admin-stat-total-students">4</p>
-              <p class="text-[10px] text-blue-600 font-semibold mt-1">Siswa Terdaftar</p>
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+            <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs">
+              <p class="text-xs font-bold text-slate-500">Total PKL</p>
+              <p class="text-2xl font-extrabold text-slate-900 mt-1 tabular-nums" id="admin-stat-total-students">0</p>
+              <p class="text-[11px] text-[#1d4ed8] font-semibold mt-1">Siswa Terdaftar</p>
             </div>
-            <div class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-2xs">
-              <p class="text-[11px] font-bold text-slate-400">Hadir Hari Ini</p>
-              <p class="text-xl font-black text-emerald-600 mt-0.5" id="admin-stat-today-in">3</p>
-              <p class="text-[10px] text-emerald-600 font-medium mt-1">Clock IN Valid</p>
+            <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs">
+              <p class="text-xs font-bold text-slate-500">Hadir Hari Ini</p>
+              <p class="text-2xl font-extrabold text-emerald-600 mt-1 tabular-nums" id="admin-stat-today-in">0</p>
+              <p class="text-[11px] text-emerald-600 font-semibold mt-1">Presensi Masuk Valid</p>
             </div>
-            <div class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-2xs">
-              <p class="text-[11px] font-bold text-slate-400">Izin / Sakit</p>
-              <p class="text-xl font-black text-amber-600 mt-0.5" id="admin-stat-today-permit">1</p>
-              <p class="text-[10px] text-amber-600 font-medium mt-1">Dispensasi</p>
+            <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs">
+              <p class="text-xs font-bold text-slate-500">Izin / Sakit</p>
+              <p class="text-2xl font-extrabold text-amber-600 mt-1 tabular-nums" id="admin-stat-today-permit">0</p>
+              <p class="text-[11px] text-amber-600 font-semibold mt-1">Dispensasi Disetujui</p>
             </div>
-            <div class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-2xs">
-              <p class="text-[11px] font-bold text-slate-400">Sekolah Mitra</p>
+            <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs">
+              <p class="text-xs font-bold text-slate-500">Sekolah Mitra</p>
               <p class="text-xl font-black text-indigo-600 mt-0.5" id="admin-stat-total-schools">3</p>
               <p class="text-[10px] text-indigo-600 font-medium mt-1">SMK & Politeknik</p>
             </div>
@@ -866,17 +862,7 @@
       <section id="view-izin" class="hidden space-y-5 w-full mx-auto">
         
         <!-- STUDENT VIEW: FORM PENGAJUAN IZIN / SAKIT -->
-        <div id="student-izin-form-container" class="max-w-xl lg:max-w-4xl mx-auto space-y-3 sm:space-y-4">
-          <div class="hidden md:flex items-center gap-3 pb-3 border-b border-slate-200">
-            <button onclick="switchTab('dashboard')" class="p-2 rounded-xl hover:bg-slate-200 text-slate-700 transition cursor-pointer" aria-label="Kembali ke Beranda">
-              <i data-lucide="arrow-left" class="w-5 h-5"></i>
-            </button>
-            <div>
-              <h3 class="font-extrabold text-slate-900 text-lg">Pengajuan Izin / Sakit</h3>
-              <p class="text-xs text-slate-500">Formulir ketidakhadiran siswa PKL</p>
-            </div>
-          </div>
-
+        <div id="student-izin-form-container" class="max-w-xl lg:max-w-none w-full mx-auto space-y-3 sm:space-y-4">
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
           <form id="form-perizinan" onsubmit="submitPerizinan(event)" class="lg:col-span-7 bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-3.5">
             <!-- Jenis Pengajuan (Sakit vs Izin) -->
@@ -969,16 +955,21 @@
         </div>
 
         <!-- ==================== ADMIN VIEW: INBOX PERSETUJUAN IZIN & SAKIT ==================== -->
-        <div id="admin-inbox-approvals-container" class="hidden max-w-6xl mx-auto space-y-5">
-          <!-- Top Header Bar & Filter Tabs -->
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200">
-            <div>
-              <h3 class="font-extrabold text-slate-900 text-lg">Inbox Persetujuan Izin & Sakit</h3>
-              <p class="text-xs text-slate-500">Verifikasi permohonan dispensasi dan berkas SKD dokter anak PKL</p>
+        <div id="admin-inbox-approvals-container" class="hidden w-full space-y-4 sm:space-y-5">
+          <!-- Compact Filter Toolbar (Tanpa Duplikasi Judul Topbar) -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 shadow-xs">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center flex-shrink-0">
+                <i data-lucide="inbox" class="w-4 h-4"></i>
+              </div>
+              <div class="min-w-0">
+                <p class="text-xs sm:text-sm font-extrabold text-slate-900 truncate">Filter Status Permohonan</p>
+                <p class="text-[11px] text-slate-500 truncate">Verifikasi izin keperluan &amp; sakit peserta PKL</p>
+              </div>
             </div>
             
             <!-- Segmented Filter Buttons -->
-            <div class="flex overflow-x-auto no-scrollbar p-1 rounded-xl bg-slate-200/70 border border-slate-300/60 text-xs w-full sm:w-auto">
+            <div class="flex overflow-x-auto no-scrollbar p-1 rounded-xl bg-slate-100 border border-slate-200/80 text-xs w-full sm:w-auto flex-shrink-0">
               <button type="button" onclick="setInboxApprovalFilter('ALL')" id="btn-inbox-filter-all" class="px-3 py-1.5 rounded-lg font-bold transition text-blue-700 bg-white shadow-xs cursor-pointer">
                 Semua (<span id="inbox-count-all">0</span>)
               </button>
@@ -4501,8 +4492,8 @@
 
         if (viewEl) viewEl.classList.add('hidden');
         if (navEl) {
-          navEl.classList.remove('bg-blue-600', 'text-white', 'shadow-md', 'shadow-blue-600/30');
-          navEl.classList.add('text-slate-300');
+          navEl.classList.remove('bg-[#1d4ed8]', 'bg-blue-600', 'text-white', 'font-bold', 'shadow-md', 'shadow-blue-600/30');
+          navEl.classList.add('text-slate-300', 'font-semibold', 'hover:bg-slate-800/80', 'hover:text-white');
         }
         if (bnavEl) {
           bnavEl.classList.remove('text-blue-600');
@@ -4527,8 +4518,8 @@
 
       if (activeView) activeView.classList.remove('hidden');
       if (activeNav) {
-        activeNav.classList.add('bg-blue-600', 'text-white', 'shadow-md', 'shadow-blue-600/30');
-        activeNav.classList.remove('text-slate-300');
+        activeNav.classList.remove('text-slate-300', 'font-semibold', 'hover:bg-slate-800/80', 'hover:text-white');
+        activeNav.classList.add('bg-[#1d4ed8]', 'text-white', 'font-bold', 'shadow-md', 'shadow-blue-600/30');
       }
       if (activeBnav) {
         activeBnav.classList.add('text-blue-600');
