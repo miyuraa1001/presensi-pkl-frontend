@@ -4679,6 +4679,24 @@
       return { inLog, outLog, dateStr };
     }
 
+    // Cek apakah siswa sudah mengajukan Izin / Sakit untuk hari ini (status Pending / Disetujui)
+    function getTodayActiveIzinRecord() {
+      if (currentUserRole === 'admin') return null;
+      const now = new Date();
+      const todayISO = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+      const curNim = String(currentUser.nim || '').trim();
+
+      const combinedIzin = [...getIzinLogs(), ...getInboxApprovals()];
+      return combinedIzin.find(item => {
+        if (!item) return false;
+        const itemDate = normalizeSheetDate(item.tanggal);
+        if (itemDate !== todayISO) return false;
+        if (curNim && curNim !== '-' && item.nim && String(item.nim).trim() !== curNim) return false;
+        const st = String(item.statusApproval || item.status || 'Pending').trim().toLowerCase();
+        return st !== 'ditolak' && st !== 'rejected';
+      }) || null;
+    }
+
     // Update Tampilan Screen 1: Online Attendance Overview (Image 2)
     function updateOnlineAttendanceUI() {
       const now = new Date();
@@ -4716,11 +4734,19 @@
       }
 
       // 4. Tombol Aksi Utama
+      const activeIzin = getTodayActiveIzinRecord();
       const btnAction = document.getElementById('btn-online-att-action');
       const btnLabel = document.getElementById('btn-online-att-label');
       const desktopMirrors = document.querySelectorAll('.desktop-att-btn-mirror');
       if (btnAction && btnLabel) {
-        if (!inLog) {
+        if (activeIzin) {
+          const jenisTxt = activeIzin.jenis || activeIzin.kategori || 'Izin';
+          const statusTxt = activeIzin.statusApproval || activeIzin.status || 'Pending';
+          const lbl = `Sedang ${jenisTxt} Hari Ini (${statusTxt})`;
+          btnLabel.innerText = lbl;
+          desktopMirrors.forEach(el => el.innerText = lbl);
+          btnAction.className = "w-full h-12 bg-amber-50 text-amber-800 border border-amber-300 rounded-xl font-bold text-sm transition flex items-center justify-center gap-2 cursor-not-allowed";
+        } else if (!inLog) {
           btnLabel.innerText = "Presensi Masuk";
           desktopMirrors.forEach(el => el.innerText = "Presensi Masuk");
           btnAction.className = "w-full h-12 bg-[#1d4ed8] hover:bg-[#1e40af] active:scale-[0.98] text-white rounded-xl font-bold text-sm shadow-md shadow-blue-700/20 transition flex items-center justify-center gap-2 cursor-pointer";
@@ -4738,6 +4764,17 @@
 
     // Handler klik tombol utama di Screen 1
     function handlePrimaryAttendanceAction() {
+      const activeIzin = getTodayActiveIzinRecord();
+      if (activeIzin) {
+        const jenisTxt = activeIzin.jenis || activeIzin.kategori || 'Izin';
+        const statusTxt = activeIzin.statusApproval || activeIzin.status || 'Pending';
+        showAppAlert(
+          `Anda sudah mengajukan ${jenisTxt} untuk hari ini (Status: ${statusTxt}).\n\nPeserta yang telah mengajukan izin/sakit 1 hari penuh tidak dapat melakukan presensi pada hari yang sama.`,
+          "Presensi Dinonaktifkan",
+          "warning"
+        );
+        return;
+      }
       const { inLog, outLog } = getTodayAttendanceRecord();
       if (!inLog) {
         openClockFlow('IN');
@@ -4750,6 +4787,17 @@
 
     // Membuka Screen 2: Detail Presensi Masuk / Selesai
     function openClockFlow(type) {
+      const activeIzin = getTodayActiveIzinRecord();
+      if (activeIzin) {
+        const jenisTxt = activeIzin.jenis || activeIzin.kategori || 'Izin';
+        const statusTxt = activeIzin.statusApproval || activeIzin.status || 'Pending';
+        showAppAlert(
+          `Anda sudah mengajukan ${jenisTxt} untuk hari ini (Status: ${statusTxt}).\n\nPresensi tidak dapat dilakukan pada hari yang sama.`,
+          "Presensi Dinonaktifkan",
+          "warning"
+        );
+        return;
+      }
       activeAttendanceType = type;
       
       const screenOverview = document.getElementById('presensi-screen-overview');
@@ -4995,12 +5043,13 @@
         });
         if (res.ok) {
           const resJson = await res.json().catch(() => null);
-          if (resJson && resJson.status === 'error' && (resJson.code === 'OUT_OF_RADIUS' || resJson.code === 'INVALID_COORDS')) {
+          if (resJson && resJson.status === 'error' && (resJson.code === 'OUT_OF_RADIUS' || resJson.code === 'INVALID_COORDS' || resJson.code === 'IZIN_ACTIVE_TODAY')) {
             if (btnSubmit) {
               btnSubmit.disabled = false;
               btnSubmit.innerHTML = `<span id="btn-submit-attendance-label">${activeAttendanceType === 'IN' ? 'Konfirmasi Presensi Masuk' : 'Konfirmasi Presensi Selesai'}</span>`;
             }
-            showAppAlert(resJson.message || "Lokasi Anda berada di luar radius resmi workshop.", "Validasi Radius Ditolak", "error");
+            const errTitle = resJson.code === 'IZIN_ACTIVE_TODAY' ? "Presensi Dinonaktifkan" : "Validasi Radius Ditolak";
+            showAppAlert(resJson.message || "Presensi ditolak oleh server.", errTitle, "error");
             return;
           }
           if (resJson && resJson.status === 'success') {
