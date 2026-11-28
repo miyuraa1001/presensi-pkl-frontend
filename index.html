@@ -1513,15 +1513,15 @@
                     </div>
                     <div class="min-w-0 flex-1">
                       <div class="flex items-center gap-2 flex-wrap">
-                        <h4 class="font-extrabold text-sm sm:text-base text-white leading-tight">Download Aplikasi ke HP</h4>
-                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 whitespace-nowrap">Web APK</span>
+                        <h4 class="font-extrabold text-sm sm:text-base text-white leading-tight">Pasang Aplikasi (HP &amp; Desktop)</h4>
+                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 whitespace-nowrap">PWA App</span>
                       </div>
-                      <p class="text-[11px] text-slate-300 mt-0.5">Pasang ikon aplikasi di Home Screen HP Anda</p>
+                      <p class="text-[11px] text-slate-300 mt-0.5">Tersedia untuk HP Android, iPhone, dan Laptop / PC Desktop</p>
                     </div>
                   </div>
 
                   <p class="text-xs text-slate-200/90 leading-relaxed bg-white/10 p-3.5 rounded-xl border border-white/10">
-                    Pasang aplikasi presensi langsung di layar utama smartphone Android / iPhone untuk akses lebih cepat, hemat kuota, dan dukungan mode offline.
+                    Pasang aplikasi presensi langsung di layar utama <strong>HP (Android / iPhone)</strong> maupun <strong>Laptop / PC Desktop (Windows / Mac via Chrome &amp; Edge)</strong> untuk akses lebih cepat, tampilan layar penuh, dan dukungan mode offline.
                   </p>
 
                   <div class="grid grid-cols-2 gap-3">
@@ -1530,8 +1530,8 @@
                       <span id="btn-pwa-install-txt" class="truncate">Pasang Aplikasi</span>
                     </button>
                     <button type="button" onclick="showPwaGuideModal()" class="h-11 px-3 bg-white/15 hover:bg-white/25 text-white font-semibold text-xs rounded-xl border border-white/20 flex items-center justify-center gap-1.5 transition active:scale-[0.98] cursor-pointer">
-                      <i data-lucide="smartphone" class="w-4 h-4 text-cyan-300 flex-shrink-0"></i>
-                      <span>Petunjuk HP</span>
+                      <i data-lucide="monitor-smartphone" class="w-4 h-4 text-cyan-300 flex-shrink-0"></i>
+                      <span>Petunjuk Pasang</span>
                     </button>
                   </div>
                 </div>
@@ -1881,10 +1881,10 @@
           </div>
           <div>
             <div class="flex items-center gap-2">
-              <h4 class="font-extrabold text-sm text-white">Download Web APK ke HP</h4>
+              <h4 class="font-extrabold text-sm text-white">Pasang Aplikasi (HP &amp; Desktop)</h4>
               <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500 text-white">Resmi PWA</span>
             </div>
-            <p class="text-[11px] text-slate-300">Tampilkan icon di Layar Utama HP tanpa install dari Play Store</p>
+            <p class="text-[11px] text-slate-300">Tampilkan ikon aplikasi di HP Android, iPhone, maupun Laptop / PC Desktop</p>
           </div>
         </div>
         <button onclick="closePwaGuideModal()" class="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 flex items-center justify-center transition" aria-label="Tutup Modal">
@@ -1939,6 +1939,22 @@
             <li>Tap ikon <strong>Share / Bagikan</strong> <i data-lucide="share" class="inline w-3 h-3 text-blue-600"></i> (kotak dengan panah ke atas) di bar navigasi bawah Safari.</li>
             <li>Scroll ke bawah pada menu yang muncul, lalu pilih <span class="font-bold text-slate-800 bg-white px-1.5 py-0.5 rounded border border-slate-200">"Tambah ke Layar Utama"</span> (Add to Home Screen <i data-lucide="plus-square" class="inline w-3 h-3"></i>).</li>
             <li>Tap tombol <strong>"Tambah"</strong> di pojok kanan atas layar. Selesai! Icon aplikasi presensi akan muncul di Home Screen iPhone Anda.</li>
+          </ol>
+        </div>
+
+        <!-- Desktop Laptop / PC Guide -->
+        <div class="bg-blue-50/60 border border-blue-200/80 rounded-2xl p-4 space-y-2.5">
+          <div class="flex items-center gap-2">
+            <div class="w-6 h-6 rounded-lg bg-[#1d4ed8] text-white flex items-center justify-center text-[10px] font-black">
+              PC
+            </div>
+            <h5 class="font-bold text-slate-900 text-xs">Cara Pasang di Laptop / PC Desktop (Windows &amp; Mac)</h5>
+          </div>
+          <ol class="list-decimal pl-4 space-y-1.5 text-[11.5px] text-slate-600 leading-relaxed">
+            <li>Buka aplikasi ini menggunakan browser <strong>Google Chrome</strong> atau <strong>Microsoft Edge</strong> di Laptop/PC Anda.</li>
+            <li>Klik tombol hijau <strong>"Pasang"</strong> di atas, atau klik ikon <strong>Instal Aplikasi</strong> (<i data-lucide="download" class="inline w-3 h-3 text-[#1d4ed8]"></i>) yang muncul di sisi kanan bilah alamat (address bar).</li>
+            <li>Anda juga bisa klik menu titik tiga (<strong>⋮</strong>) di pojok kanan atas Chrome → pilih <span class="font-bold text-slate-800 bg-white px-1.5 py-0.5 rounded border border-slate-200">"Instal Presensi PKL..."</span> lalu klik <strong>Instal</strong>.</li>
+            <li>Aplikasi akan tampil dalam jendela mandiri seperti aplikasi desktop asli dan otomatis memiliki pintasan di Desktop / Start Menu / Taskbar.</li>
           </ol>
         </div>
 
